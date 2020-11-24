@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<!--
+
+  Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+
+  This code is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License version 2 only, as
+  published by the Free Software Foundation.  Oracle designates this
+  particular file as subject to the "Classpath" exception as provided
+  by Oracle in the LICENSE file that accompanied this code.
+
+  This code is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+  version 2 for more details (a copy is included in the LICENSE file that
+  accompanied this code).
+
+  You should have received a copy of the GNU General Public License version
+  2 along with this work; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+  Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+  or visit www.oracle.com if you need additional information or have any
+  questions.
+
+-->
+
+<report-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns="http://xmlns.oracle.com/coherence/coherence-report-config"
+               xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-report-config coherence-report-config.xsd">
+
+    <!--
+    This report is for use by the Coherence JVisualVM plugin only.
+    Note: This report requires parameter substitution for %SERVICE_NAME%
+    See DataRetriever.preProcessReporterXML().
+    -->
+    <report>
+        <file-name>{date}-http-stats.txt</file-name>
+        <delim>{tab}</delim>
+
+        <!-- Only include services where Protocol == 'http'
+             This attribute was introduced with 12.2.1.1 -->
+        <filters>
+            <filter id="equals">
+                <type>equals</type>
+                <params>
+                    <column-ref>Protocol</column-ref>
+                    <column-ref>ConstHTTP</column-ref>
+                </params>
+            </filter>
+        </filters>
+
+        <query>
+            <pattern>Coherence:type=ConnectionManager,name=%SERVICE_NAME%,*</pattern>
+            <filter-ref>equals</filter-ref>
+        </query>
+
+        <row>
+            <column id="NodeId">
+                <type>key</type>
+                <name>nodeId</name>
+                <header>NodeId</header>
+            </column>
+
+            <column id="HostIp">
+                <name>HostIP</name>
+                <group-by>true</group-by>
+            </column>
+
+            <column id="AverageRequestTime">
+                <name>AverageRequestTime</name>
+            </column>
+
+            <column id="RequestsPerSecond">
+                <name>RequestsPerSecond</name>
+            </column>
+
+            <column id="TotalErrorCount">
+                <name>TotalErrorCount</name>
+            </column>
+
+            <column id="TotalRequestCount">
+                <name>TotalRequestCount</name>
+            </column>
+
+            <column id="DomainPartition">
+                <type>key</type>
+                <name>domainPartition</name>
+                <header>Domain Partition</header>
+                <!-- <hidden>{non-MT}</hidden> -->
+                <group-by>true</group-by>
+            </column>
+
+            <column id="ResponseCount1xx">
+                <name>ResponseCount1xx</name>
+            </column>
+
+            <column id="ResponseCount2xx">
+                <name>ResponseCount2xx</name>
+            </column>
+
+            <column id="ResponseCount3xx">
+                <name>ResponseCount3xx</name>
+            </column>
+
+            <column id="ResponseCount4xx">
+                <name>ResponseCount4xx</name>
+            </column>
+
+            <column id="ResponseCount5xx">
+                <name>ResponseCount5xx</name>
+            </column>
+
+            <column id="Protocol">
+                <name>Protocol</name>
+                <hidden>true</hidden>
+            </column>
+
+            <column id="ConstHTTP">
+                <type>constant</type>
+                <name>ConstHTTP</name>
+                <hidden>true</hidden>
+                <data-type>string</data-type>
+                <value>http</value>
+            </column>
+        </row>
+    </report>
+</report-config>

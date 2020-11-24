@@ -1,0 +1,250 @@
+<?xml version="1.0"?>
+<!--
+
+  Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+
+  This code is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License version 2 only, as
+  published by the Free Software Foundation.  Oracle designates this
+  particular file as subject to the "Classpath" exception as provided
+  by Oracle in the LICENSE file that accompanied this code.
+
+  This code is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+  version 2 for more details (a copy is included in the LICENSE file that
+  accompanied this code).
+
+  You should have received a copy of the GNU General Public License version
+  2 along with this work; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+  Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+  or visit www.oracle.com if you need additional information or have any
+  questions.
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.oracle.coherence.plugin.visualvm</groupId>
+  <artifactId>coherence-visualvm-main</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>Coherence VisualVM Plugin Parent</name>
+
+  <description>
+    Developer JVisualVM Plugin to provide a summarized view of Coherence
+    Cluster runtime JMX statistics.
+  </description>
+
+  <url>https://coherence.community/</url>
+
+  <modules>
+    <module>coherence-visualvm-plugin</module>
+    <module>coherence-visualvm-tests</module>
+  </modules>
+
+  <properties>
+    <com.sun.xml.bind.version>2.3.0</com.sun.xml.bind.version>
+
+    <!-- default coherence versions -->
+    <default.coherence.ce.version>20.06.1</default.coherence.ce.version>
+    <default.coherence.commercial.version>14.1.2-0-0-SNAPSHOT</default.coherence.commercial.version>
+
+    <failsafe.argLine>-Xmx1g -XX:+HeapDumpOnOutOfMemoryError
+      -XX:HeapDumpPath=${project.build.directory} -XX:+ExitOnOutOfMemoryError
+      -Dfile.encoding=UTF-8 --illegal-access=permit
+    </failsafe.argLine>
+    <jackson.version>2.11.3</jackson.version>
+    <jackson.databind.version>${jackson.version}</jackson.databind.version>
+    <java.version>1.8</java.version>
+    <java.version.eight>1.8</java.version.eight>
+    <java.version.release>8</java.version.release>
+    <javax.activation.version>1.2.0</javax.activation.version>
+    <junit.version>4.13.1</junit.version>
+    <jvisualvm.version>RELEASE204</jvisualvm.version>
+
+    <hamcrest.version>2.2</hamcrest.version>
+    <maven.version>3.6.0</maven.version>
+
+    <oracle.bedrock.version>5.0.20</oracle.bedrock.version>
+
+    <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
+    <maven.bundle.plugin.version>4.2.1</maven.bundle.plugin.version>
+
+    <maven.failsafe.plugin.version>3.0.0-M5</maven.failsafe.plugin.version>
+    <maven.enforcer.plugin.version>3.0.0-M5</maven.enforcer.plugin.version>
+    <maven.flatten.plugin.version>1.2.2</maven.flatten.plugin.version>
+    <maven.gmaven.plugin.version>1.5</maven.gmaven.plugin.version>
+    <maven.install.plugin.version>2.5.1</maven.install.plugin.version>
+    <maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
+    <maven.javadoc.plugin.version>3.2.0</maven.javadoc.plugin.version>
+    <maven.nbm.plugin.version>2.6.2</maven.nbm.plugin.version>
+    <maven.replacer.plugin.version>1.5.2</maven.replacer.plugin.version>
+    <maven.resources.plugin.version>2.7</maven.resources.plugin.version>
+    <maven.surefire.plugin.version>3.0.0-M5</maven.surefire.plugin.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- jvisualvm -->
+      <dependency>
+        <groupId>org.graalvm.visualvm.api</groupId>
+        <artifactId>org-graalvm-visualvm-application</artifactId>
+        <version>${jvisualvm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.graalvm.visualvm.api</groupId>
+        <artifactId>org-graalvm-visualvm-application-views</artifactId>
+        <version>${jvisualvm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.graalvm.visualvm.api</groupId>
+        <artifactId>org-graalvm-visualvm-charts</artifactId>
+        <version>${jvisualvm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.graalvm.visualvm.api</groupId>
+        <artifactId>org-graalvm-visualvm-core</artifactId>
+        <version>${jvisualvm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.graalvm.visualvm.api</groupId>
+        <artifactId>org-graalvm-visualvm-tools</artifactId>
+        <version>${jvisualvm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.graalvm.visualvm.api</groupId>
+        <artifactId>org-openide-modules</artifactId>
+        <version>${jvisualvm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.graalvm.visualvm.api</groupId>
+        <artifactId>org-openide-util</artifactId>
+        <version>${jvisualvm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.graalvm.visualvm.api</groupId>
+        <artifactId>org-openide-dialogs</artifactId>
+        <version>${jvisualvm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.graalvm.visualvm.api</groupId>
+        <artifactId>org-openide-windows</artifactId>
+        <version>${jvisualvm.version}</version>
+      </dependency>
+
+      <!-- jackson -->
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.databind.version}</version>
+        <!-- exclude conflicting dependency on older version of jackson
+             than ${jackson.version} -->
+        <exclusions>
+          <exclusion>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+
+        <!-- maven-enforcer-plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>${maven.enforcer.plugin.version}</version>
+          <executions>
+            <execution>
+              <id>enforce</id>
+              <phase>validate</phase>
+              <goals>
+                <goal>enforce</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <requireMavenVersion>
+                    <version>[${maven.version},)</version>
+                  </requireMavenVersion>
+                  <requireJavaVersion>
+                    <version>${java.version}</version>
+                  </requireJavaVersion>
+                </rules>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- maven-compiler-plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven.compiler.plugin.version}</version>
+          <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+            <release>${java.version.release}</release>
+          </configuration>
+        </plugin>
+
+        <!-- maven-replacer-plugin -->
+        <plugin>
+          <groupId>com.google.code.maven-replacer-plugin</groupId>
+          <artifactId>replacer</artifactId>
+          <version>${maven.replacer.plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>flatten-maven-plugin</artifactId>
+          <version>${maven.flatten.plugin.version}</version>
+        </plugin>
+
+        <!-- nbm-maven-plugin -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>nbm-maven-plugin</artifactId>
+          <version>${maven.nbm.plugin.version}</version>
+        </plugin>
+
+
+        <!-- maven-jar-plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${maven.jar.plugin.version}</version>
+          <configuration>
+            <archive>
+              <addMavenDescriptor>false</addMavenDescriptor>
+              <!--  TODO: The following should be resolved!  We shouldn't force every project to define a MANIFEST.MF
+              <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+              -->
+            </archive>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+</project>

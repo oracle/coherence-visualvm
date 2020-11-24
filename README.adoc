@@ -1,0 +1,213 @@
+///////////////////////////////////////////////////////////////////////////////
+Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+
+This code is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License version 2 only, as
+published by the Free Software Foundation.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the LICENSE file that accompanied this code.
+
+This code is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+version 2 for more details (a copy is included in the LICENSE file that
+accompanied this code).
+
+You should have received a copy of the GNU General Public License version
+2 along with this work; if not, write to the Free Software Foundation,
+Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+or visit www.oracle.com if you need additional information or have any
+questions.
+///////////////////////////////////////////////////////////////////////////////
+= Coherence VisualVM Plugin
+
+The Coherence-VisualVM Plugin provides management and monitoring of a single Coherence cluster using the VisualVM management utility.
+
+The plugin aggregates Coherence MBean data and shows a concise operational view of a single Coherence cluster.
+Some management information is presented over time, which allows real-time analysis and troubleshooting.
+You can connect to clusters via JMX or via management over REST with Coherence versions 14.1.1 or above.
+
+The Plugin ideal tool for monitoring and managing Coherence clusters during the development and testing lifecycle and supports connecting to both
+Community Edition and open source versions of Coherence.
+
+NOTE: This version of the plugin requires VisualVM release 2.0.4 or later which is available from https://visualvm.github.io/.
+
+image::assets/coherence-visualvm.png[Coherence VisualVM Plugin,800,479]
+
+== Installing the Plugin from VisualVM
+
+The Coherence VisualVM Plugin is available from the list of plugins in VisualVM versions 2.0.4 and above.
+
+To install the Plugin carry out the following:
+
+1. Choose `Tools` -> `Plugins` from the main menu.
+2. In the `Available Plugins` tab, select the Install checkbox for the `VisualVM-Coherence`. Click Install.
+3. Step through and complete the plugin installer.
+
+For more information about using the Coherence VisualVM plugin see the official https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/using-jmx-manage-oracle-coherence.html[Coherence Documentation].
+
+Other useful resources:
+
+* https://coherence.community/[The Coherence Community - all things Coherence]
+* https://github.com/oracle/coherence[Coherence Community Edition on GitHub]
+* https://github.com/oracle/coherence/tree/master/examples[Various Coherence Examples]
+* https://github.com/oracle/coherence-operator[The Coherence Operator - Run your clusters in Kubernetes]
+
+Read on if you want to build the Plugin manually.
+
+== Changing the Plugin Behaviour via System Properties
+
+There are a number of properties that change the behaviour of the VisualVM Plugin. To pass these properties
+to VisvualVM you have to use the `-J` option. For example to change the refresh time from the default
+of 30 seconds, you can do the following:
+
+[source,shell]
+----
+$ visualvm -J-Dcoherence.plugin.visualvm.refreshtime=10
+----
+
+The following table outlines all the available properties and their use.
+
+.Table Coherence VisualVM Properties
+!===
+|Property | Default | Usage
+| coherence.plugin.visualvm.refreshtime| 30 |  Time (in seconds) between refreshing data from the cluster. Do not set too low as this could adversely affect performance in large clusters
+| coherence.plugin.visualvm.log.query.times| false | Enables logging of query times when retrieving data
+| coherence.plugin.visualvm.sorting.enabled | true | Enables JTable sorting
+| coherence.plugin.visualvm.heatmap.enabled | false | Enables experimental heat map in Caches tab
+| coherence.plugin.visualvm.persistence.list | true | Enables dropdown list of snapshots when performing snapshot operations
+| coherence.plugin.visualvm.zoom.enabled | false | Enables additional zoom function for all graphs
+| coherence.plugin.visualvm.rest.request.timeout | 30000 | The request timeout (in ms) when using REST to connect to a cluster
+| coherence.plugin.visualvm.disable.mbean.check | false | Disables the MBean check when connecting to WebLogic Server
+!===
+
+NOTE: If you have used older versions of the Coherence VisualVM plugin available with Coherence, you should
+ensure you are using the new property names above.
+
+== Building the Plugin
+
+If you wish to build the Plugin from scratch you need to build the VisualVM dependencies first.
+To build the plugin is a two step process:
+
+1. Generate the VisualVM dependencies
+2. Build the Coherence VisualVM Plugin
+
+=== Pre-requisites
+
+You must have the following:
+
+1. Java JDK 1.8 - To build VisualVM dependencies
+2. Java JDK 11+ - To build and test the plugin
+3. Ant version >= 1.9.9
+4. Maven 3.6.3+
+5. Git
+
+=== Clone the Repository
+
+1. Clone the Coherence VisualVM repository
++
+[source,shell]
+----
+$ git clone https://github.com/coherence-community/visualvm-coherence.git
+----
+
+=== Generate the VisualVM dependencies
+
+NOTE: These instructions have been summarized from https://github.com/oracle/visualvm/blob/release204/README.md.
+
+NOTE: A Script `install-artifacts.sh` is available in the `bin` directory to run this for a Linux/Mac environment.
+
+1. Ensure you have JDK8 in you PATH.
+
+1. Checkout the VisualVM repository
++
+[source,shell]
+----
+$ git clone https://github.com/oracle/visualvm.git
+
+Cloning into 'visualvm'...
+----
+
+1. Checkout the `release204` branch
++
+[source,shell]
+----
+$ cd visualvm
+
+$ git checkout release204
+
+Switched to a new branch 'release204'
+----
+
+1. Unzip the NetBeans Platform 13
++
+[source,shell]
+----
+$ cd visualvm
+
+$ unzip nb113_platform_19062020.zip
+----
+
+1. Build the Plugins
++
+[source,shell]
+----
+$ ant build-zip
+----
+
+1. Unzip the artefacts
++
+[source,shell]
+----
+$ cd dist
+
+$ unzip visualvm.zip
+
+$ cd ..
+----
+
+1. Generate the NBM's
++
+[source,shell]
+----
+$ ant nbms
+----
+
+1. Install into the local repository
++
+[source,shell]
+----
+$ mvn -DnetbeansInstallDirectory=dist/visualvm   \
+    -DnetbeansNbmDirectory=build/updates   \
+    -DgroupIdPrefix=org.graalvm.visualvm  \
+    -DforcedVersion=RELEASE204 org.apache.netbeans.utilities:nb-repository-plugin:populate
+----
+
+NOTE: See https://github.com/oracle/visualvm/blob/release204/README.md[here] for instructions on how to
+push the artefacts to a remote Maven repository.
+
+=== Build the VisualVM Plugin
+NOTE: Ensure you change to a completely new directory to clone the Coherence CE repository.
+
+1. Ensure you have JDK11 or above in your PATH.
+
+1. Build the Plugin
++
+From the `coherence-visualvm` directory:
++
+[source,shell]
+----
+$ mvn clean install -DskipTests
+----
++
+If you wish to run the Community Edition tests then leave out the `-DskipTests`.
+
+1. Install the Plugin
++
+The plugin will be available in the location `coherence-visualvm-plugin/target/coherence-visualvm-plugin-{version}`
+
+Follow the instructions https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/using-jmx-manage-oracle-coherence.html[here]
+to install the plugin.

@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: com.oracle.coherence.plugin.visualvm
+OpenIDE-Module-Install: com/oracle/coherence/plugin/visualvm/VisualVMInstaller.class
+OpenIDE-Module-Localizing-Bundle: com/oracle/coherence/plugin/visualvm/Bundle.properties
+OpenIDE-Module-Specification-Version: %VERSION%
+OpenIDE-Module-Layer: com/oracle/coherence/plugin/visualvm/layer.xml

@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<!--
+
+  Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+
+  This code is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License version 2 only, as
+  published by the Free Software Foundation.  Oracle designates this
+  particular file as subject to the "Classpath" exception as provided
+  by Oracle in the LICENSE file that accompanied this code.
+
+  This code is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+  version 2 for more details (a copy is included in the LICENSE file that
+  accompanied this code).
+
+  You should have received a copy of the GNU General Public License version
+  2 along with this work; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+  Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+  or visit www.oracle.com if you need additional information or have any
+  questions.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.oracle.coherence.plugin.visualvm</groupId>
+    <artifactId>coherence-visualvm-main</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>coherence-visualvm-plugin</artifactId>
+  <packaging>nbm</packaging>
+  <name>Coherence VisualVM Plugin Core</name>
+
+  <description>
+    Developer VisualVM Plugin to provide a summarized view of Coherence
+    Cluster runtime JMX statistics.
+  </description>
+
+  <url>https://coherence.community/</url>
+
+  <dependencies>
+    <!-- VisualVM -->
+    <dependency>
+      <groupId>org.graalvm.visualvm.api</groupId>
+      <artifactId>org-graalvm-visualvm-application</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.visualvm.api</groupId>
+      <artifactId>org-graalvm-visualvm-application-views</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.visualvm.api</groupId>
+      <artifactId>org-graalvm-visualvm-charts</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.visualvm.api</groupId>
+      <artifactId>org-graalvm-visualvm-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.visualvm.api</groupId>
+      <artifactId>org-graalvm-visualvm-tools</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.visualvm.api</groupId>
+      <artifactId>org-openide-modules</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.visualvm.api</groupId>
+      <artifactId>org-openide-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.visualvm.api</groupId>
+      <artifactId>org-openide-dialogs</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.visualvm.api</groupId>
+      <artifactId>org-openide-windows</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>${maven.bundle.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>manifest</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>manifest</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- maven-compiler-plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.plugin.version}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <release>${java.version.release}</release>
+        </configuration>
+      </plugin>
+
+      <!-- flatten POM to remove build-specific content -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>flatten-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.gmaven</groupId>
+        <artifactId>gmaven-plugin</artifactId>
+        <version>${maven.gmaven.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>add-dynamic-properties</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <source>
+                project.properties.setProperty("official.version", ("${project.version}").replaceAll("-SNAPSHOT", ""))
+              </source>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>nbm-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <id>nbm</id>
+            <phase>package</phase>
+            <goals>
+              <goal>nbm</goal>
+            </goals>
+            <configuration>
+              <descriptor>src/main/nbm/module.xml</descriptor>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>replacer</artifactId>
+        <executions>
+          <execution>
+            <id>replace</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <file>${project.basedir}/src/main/nbm/manifest.mf</file>
+          <regex>true</regex>
+          <replacements>
+            <replacement>
+              <token>%VERSION%</token>
+              <value>${official.version}</value>
+            </replacement>
+          </replacements>
+          <outputFile>${project.basedir}/target/manifest.mf</outputFile>
+        </configuration>
+      </plugin>
+
+      <!-- attach javadoc -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${maven.javadoc.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs-jdk11</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <source>8</source>
+          <additionalDependencies>
+            <additionalDependency>
+              <groupId>com.sun.xml.bind</groupId>
+              <artifactId>jaxb-core</artifactId>
+              <version>${com.sun.xml.bind.version}</version>
+            </additionalDependency>
+            <additionalDependency>
+              <groupId>com.sun.xml.bind</groupId>
+              <artifactId>jaxb-impl</artifactId>
+              <version>${com.sun.xml.bind.version}</version>
+            </additionalDependency>
+            <additionalDependency>
+              <groupId>javax.xml.bind</groupId>
+              <artifactId>jaxb-api</artifactId>
+              <version>${com.sun.xml.bind.version}</version>
+            </additionalDependency>
+            <additionalDependency>
+              <groupId>javax.activation</groupId>
+              <artifactId>javax.activation-api</artifactId>
+              <version>${javax.activation.version}</version>
+            </additionalDependency>
+          </additionalDependencies>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

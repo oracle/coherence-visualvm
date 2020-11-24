@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!--
+
+  Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+
+  This code is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License version 2 only, as
+  published by the Free Software Foundation.  Oracle designates this
+  particular file as subject to the "Classpath" exception as provided
+  by Oracle in the LICENSE file that accompanied this code.
+
+  This code is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+  version 2 for more details (a copy is included in the LICENSE file that
+  accompanied this code).
+
+  You should have received a copy of the GNU General Public License version
+  2 along with this work; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+  Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+  or visit www.oracle.com if you need additional information or have any
+  questions.
+
+-->
+
+<report-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://xmlns.oracle.com/coherence/coherence-report-config"
+    xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-report-config coherence-report-config.xsd">
+
+    <!--
+    This report is for use by the Coherence JVisualVM plugin only.
+     -->
+    <report>
+        <file-name>{date}-federation-destination-stats.txt</file-name>
+        <delim>{tab}</delim>
+
+        <query>
+            <pattern>Coherence:type=Federation,subType=Destination,*</pattern>
+        </query>
+
+        <row>
+            <column id ="Service">
+                <type>key</type>
+                <name>service</name>
+                <header>Service</header>
+                <group-by>true</group-by>
+            </column>
+
+            <column id="Participant">
+               <type>key</type>
+               <name>name</name>
+               <header>Participant</header>
+                <group-by>true</group-by>
+            </column>
+
+            <column id ="ParticipantStatus">
+                <name>Status</name>
+                <hidden>true</hidden>
+            </column>
+
+            <column id ="Status">
+                <type>function</type>
+                <header>Status</header>
+                <column-ref>ParticipantStatus</column-ref>
+                <function-name>max</function-name>
+            </column>
+
+            <column id="BytesSent">
+                <name>BytesSentSecs</name>
+                <hidden>true</hidden>
+            </column>
+
+            <column id="TotalBytesSentSecs">
+                <type>function</type>
+                <header>TotalBytesSentSecs</header>
+                <column-ref>BytesSent</column-ref>
+                <function-name>sum</function-name>
+            </column>
+
+            <column id="MsgsSent">
+                <name>MsgsSentSecs</name>
+                <hidden>true</hidden>
+            </column>
+
+            <column id="TotalMsgsSentSecs">
+                <type>function</type>
+                <header>TotalMsgSentSecs</header>
+                <column-ref>MsgsSent</column-ref>
+                <function-name>sum</function-name>
+            </column>
+        </row>
+    </report>
+</report-config>

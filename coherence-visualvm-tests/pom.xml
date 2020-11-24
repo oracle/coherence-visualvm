@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<!--
+
+  Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+
+  This code is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License version 2 only, as
+  published by the Free Software Foundation.  Oracle designates this
+  particular file as subject to the "Classpath" exception as provided
+  by Oracle in the LICENSE file that accompanied this code.
+
+  This code is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+  version 2 for more details (a copy is included in the LICENSE file that
+  accompanied this code).
+
+  You should have received a copy of the GNU General Public License version
+  2 along with this work; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+  Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+  or visit www.oracle.com if you need additional information or have any
+  questions.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.oracle.coherence.plugin.visualvm</groupId>
+    <artifactId>coherence-visualvm-main</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>coherence-visualvm-tests</artifactId>
+  <packaging>pom</packaging>
+  <name>Coherence VisualVM Plugin Tests Parent</name>
+
+  <modules>
+      <module>coherence-visualvm-tests-core</module>
+  </modules>
+  
+  <profiles>
+    <!-- commercial 1221+ includes REST -->
+    <profile>
+      <id>commercial</id>
+      <modules>
+        <module>coherence-visualvm-tests-commercial</module>
+      </modules>
+    </profile>
+    
+    <profile>
+      <id>ce</id>
+      <activation>
+        <!-- This is a work-around for the fact that activeByDefault does not do what you'd think it should -->
+        <file>
+          <exists>.</exists>
+        </file>
+      </activation>
+      <modules>
+        <module>coherence-visualvm-tests-ce</module>
+      </modules>
+    </profile>
+  </profiles>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- test dependencies -->
+      <dependency>
+        <groupId>com.oracle.bedrock.coherence</groupId>
+        <artifactId>coherence-12.2.1-testing-support</artifactId>
+        <version>${oracle.bedrock.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.oracle.bedrock</groupId>
+        <artifactId>bedrock-runtime</artifactId>
+        <version>${oracle.bedrock.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.oracle.bedrock</groupId>
+        <artifactId>bedrock-runtime-remote</artifactId>
+        <version>${oracle.bedrock.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest</artifactId>
+        <version>${hamcrest.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- JUnit 4 -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- maven-failsafe-plugin runs integration tests -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${maven.failsafe.plugin.version}</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <reuseForks>false</reuseForks>
+            <failIfNoTests>false</failIfNoTests>
+            <includes>
+              <include>**/*IT.java</include>
+            </includes>
+            <argLine>${failsafe.argLine}</argLine>
+            <systemPropertyVariables>
+              <java.awt.headless>true</java.awt.headless>
+              <java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
+              <test.tmp.dir>${java.io.tmpdir}</test.tmp.dir>
+              <test.project.dir>${project.basedir}</test.project.dir>
+              <test.project.version>${project.version}</test.project.version>
+            </systemPropertyVariables>
+            <useSystemClassLoader>true</useSystemClassLoader>
+            <useManifestOnlyJar>false</useManifestOnlyJar>
+            <useModulePath>false</useModulePath>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>
