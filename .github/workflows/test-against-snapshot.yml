@@ -102,7 +102,7 @@ jobs:
       shell: bash
       run: |
         if [ $COH_BRANCH != "main" ] ; then
-           VERSION=`cat ../coherence/prj/pom.xml | grep '<version>' | sed 1q | sed -e 's,^.*<version>,,' -e 's,</version>.*$,,'
+           VERSION=`cat ../coherence/prj/pom.xml | grep '<version>' | sed 1q | sed -e 's,^.*<version>,,' -e 's,</version>.*$,,'`
         else
            VERSION=`cat ../coherence/prj/pom.xml | grep '<revision>' | sed -e 's,^.*<revision>,,' -e 's,</revision>.*$,,'`
         fi
