@@ -80,16 +80,16 @@ jobs:
         COH_BRANCH: ${{ matrix.branch }} 
       run: |
         # Checkout the git repo for coherence snapshot and build
-	DIR=`pwd`
+        DIR=`pwd`
         CLONE_DIR=coherence-$COH_BRANCH
-	cd /tmp
+        cd /tmp
         git clone https://github.com/oracle/coherence.git
         cd coherence
         if [ $COH_BRANCH != "main" ] ; then
-	   git checkout $COH_BRANCH
-	fi
-	mvn --file prj/pom.xml --batch-mode -e -DskipTests clean install
-	cd $DIR
+           git checkout $COH_BRANCH
+        fi
+        mvn --file prj/pom.xml --batch-mode -e -DskipTests clean install
+        cd $DIR
 
     - name: Build Plugin
       shell: bash
@@ -102,16 +102,16 @@ jobs:
       shell: bash
       run: |
         if [ $COH_BRANCH != "main" ] ; then
-	   VERSION=`cat ../coherence/prj/pom.xml | grep '<version>' | sed 1q | sed -e 's,^.*<version>,,' -e 's,</version>.*$,,'
-	else
-	   VERSION=`cat ../coherence/prj/pom.xml | grep '<revision>' | sed -e 's,^.*<revision>,,' -e 's,</revision>.*$,,'`
-	fi
+           VERSION=`cat ../coherence/prj/pom.xml | grep '<version>' | sed 1q | sed -e 's,^.*<version>,,' -e 's,</version>.*$,,'
+        else
+           VERSION=`cat ../coherence/prj/pom.xml | grep '<revision>' | sed -e 's,^.*<revision>,,' -e 's,</revision>.*$,,'`
+        fi
         echo "Running verify against $VERSION"
         mvn --file coherence-visualvm-tests/coherence-visualvm-tests-ce/pom.xml --batch-mode -e -Dcoherence.version=$VERSION clean install
 
-	echo "Removing Coherence cloned directory"
-	CLONE_DIR=coherence-$COH_BRANCH
-	rm -rf /tmp/${CLONE_DIR}
+        echo "Removing Coherence cloned directory"
+        CLONE_DIR=coherence-$COH_BRANCH
+        rm -rf /tmp/${CLONE_DIR}
 
     - name: Build Artifacts test logs
       uses: actions/upload-artifact@v2
