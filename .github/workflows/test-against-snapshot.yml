@@ -83,8 +83,8 @@ jobs:
         DIR=`pwd`
         CLONE_DIR=coherence-$COH_BRANCH
         cd /tmp
-        git clone https://github.com/oracle/coherence.git
-        cd coherence
+        git clone https://github.com/oracle/coherence.git $CLONE_DIR
+        cd $CLONE_DIR
         if [ $COH_BRANCH != "main" ] ; then
            git checkout $COH_BRANCH
         fi
@@ -101,10 +101,11 @@ jobs:
         COH_BRANCH: ${{ matrix.branch }} 
       shell: bash
       run: |
+        CLONE_DIR=coherence-$COH_BRANCH
         if [ $COH_BRANCH != "main" ] ; then
-           VERSION=`cat ../coherence/prj/pom.xml | grep '<version>' | sed 1q | sed -e 's,^.*<version>,,' -e 's,</version>.*$,,'`
+           VERSION=`cat /tmp/${CLONE_DIR}/prj/pom.xml | grep '<version>' | sed 1q | sed -e 's,^.*<version>,,' -e 's,</version>.*$,,'`
         else
-           VERSION=`cat ../coherence/prj/pom.xml | grep '<revision>' | sed -e 's,^.*<revision>,,' -e 's,</revision>.*$,,'`
+           VERSION=`cat /tmp/${CLONE_DIR}/prj/pom.xml | grep '<revision>' | sed -e 's,^.*<revision>,,' -e 's,</revision>.*$,,'`
         fi
         echo "Running verify against $VERSION"
         mvn --file coherence-visualvm-tests/coherence-visualvm-tests-ce/pom.xml --batch-mode -e -Dcoherence.version=$VERSION clean install
