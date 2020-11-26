@@ -112,7 +112,7 @@ You must have the following:
 +
 [source,shell]
 ----
-$ git clone https://github.com/coherence-community/visualvm-coherence.git
+$ git clone https://github.com/oracle/coherence-visualvm.git
 ----
 
 === Generate the VisualVM dependencies
@@ -143,7 +143,7 @@ $ git checkout release204
 Switched to a new branch 'release204'
 ----
 
-1. Unzip the NetBeans Platform 13
+1. Unzip the NetBeans Platform 11.3
 +
 [source,shell]
 ----
