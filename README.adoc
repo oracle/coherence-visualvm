@@ -30,7 +30,7 @@ The plugin aggregates Coherence MBean data and shows a concise operational view 
 Some management information is presented over time, which allows real-time analysis and troubleshooting.
 You can connect to clusters via JMX or via management over REST with Coherence versions 14.1.1 or above.
 
-The Plugin ideal tool for monitoring and managing Coherence clusters during the development and testing lifecycle and supports connecting to both
+The Plugin is an ideal tool for monitoring and managing Coherence clusters during the development and testing lifecycle and supports connecting to both
 Community Edition and open source versions of Coherence.
 
 NOTE: This version of the plugin requires VisualVM release 2.0.4 or later which is available from https://visualvm.github.io/.
@@ -52,6 +52,7 @@ For more information about using the Coherence VisualVM plugin see the official 
 Other useful resources:
 
 * https://coherence.community/[The Coherence Community - all things Coherence]
+* https://visualvm.github.io/[VisualVM Home Page]
 * https://github.com/oracle/coherence[Coherence Community Edition on GitHub]
 * https://github.com/oracle/coherence/tree/master/examples[Various Coherence Examples]
 * https://github.com/oracle/coherence-operator[The Coherence Operator - Run your clusters in Kubernetes]
