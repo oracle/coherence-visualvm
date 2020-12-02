@@ -24,18 +24,28 @@ questions.
 ///////////////////////////////////////////////////////////////////////////////
 = Coherence VisualVM Plugin
 
-The Coherence-VisualVM Plugin provides management and monitoring of a single Coherence cluster using the VisualVM management utility.
+The Coherence-VisualVM Plugin (the Plugin) provides management and monitoring of a single Coherence cluster using the VisualVM management utility.
 
-The plugin aggregates Coherence MBean data and shows a concise operational view of a single Coherence cluster.
+The Plugin aggregates Coherence MBean data and shows a concise operational view of a single Coherence cluster.
 Some management information is presented over time, which allows real-time analysis and troubleshooting.
 You can connect to clusters via JMX or via management over REST with Coherence versions 14.1.1 or above.
 
 The Plugin is an ideal tool for monitoring and managing Coherence clusters during the development and testing lifecycle and supports connecting to both
 Community Edition and open source versions of Coherence.
 
-NOTE: This version of the plugin requires VisualVM release 2.0.4 or later which is available from https://visualvm.github.io/.
+NOTE: This version of the Plugin requires VisualVM release 2.0.4 or later which is available from https://visualvm.github.io/.
 
 image::assets/coherence-visualvm.png[Coherence VisualVM Plugin,800,479]
+
+== Supported Coherence Versions
+
+The Plugin will connect to and display data for the following Coherence versions:
+
+**Community Editions**: 14.1.1.0.x, 20.06, 20.06.1
+
+**Commercial Editions**: 12.2.1.5.x,  12.2.1.4.x, 12.1.3.x, 12.1.2.x and 3.7.1.x
+
+NOTE: If you wish to connect to Coherence version 12.2.1.4.x via REST you should have Coherence version 12.2.1.4.7 or greater.
 
 == Installing the Plugin from VisualVM
 
@@ -59,9 +69,19 @@ Other useful resources:
 
 Read on if you want to build the Plugin manually.
 
+== Connecting to a Coherence Cluster
+
+Once the Plugin is installed, you can double-click to a Coherence process, usually
+`com.tangosol.net.DefaultCacheServer`, and the `Coherence` tab is displayed.
+
+You can also connect via Coherence Management over REST by right-clicking on the
+`Coherence Clusters` tree item and choose `Add Coherence Cluster`. See the https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/using-jmx-manage-oracle-coherence.html#GUID-9A5B5F14-26A6-49CF-8C0C-3533A5DFB9C6[Coherence Documentation]
+for more information on connecting via REST.
+
+
 == Changing the Plugin Behaviour via System Properties
 
-There are a number of properties that change the behaviour of the VisualVM Plugin. To pass these properties
+There are a number of properties that change the behaviour of the Plugin. To pass these properties
 to VisvualVM you have to use the `-J` option. For example to change the refresh time from the default
 of 30 seconds, you can do the following:
 
@@ -190,8 +210,7 @@ $ mvn -DnetbeansInstallDirectory=dist/visualvm   \
 NOTE: See https://github.com/oracle/visualvm/blob/release204/README.md[here] for instructions on how to
 push the artefacts to a remote Maven repository.
 
-=== Build the VisualVM Plugin
-NOTE: Ensure you change to a completely new directory to clone the Coherence CE repository.
+==== Build the VisualVM Plugin
 
 1. Ensure you have JDK11 or above in your PATH.
 
@@ -211,4 +230,4 @@ If you wish to run the Community Edition tests then leave out the `-DskipTests`.
 The plugin will be available in the location `coherence-visualvm-plugin/target/coherence-visualvm-plugin-{version}`
 
 Follow the instructions https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/using-jmx-manage-oracle-coherence.html[here]
-to install the plugin.
+to install the plugin manually.
