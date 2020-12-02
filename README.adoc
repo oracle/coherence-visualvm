@@ -71,13 +71,12 @@ Read on if you want to build the Plugin manually.
 
 == Connecting to a Coherence Cluster
 
-Once the Plugin is installed, you can double-click to a Coherence process, usually
-`com.tangosol.net.DefaultCacheServer`, and the `Coherence` tab is displayed.
+Once the Plugin is installed, you can double-click on a Coherence process in the left pane, usually
+`com.tangosol.net.DefaultCacheServer`, after which a `Coherence` tab will be displayed.
 
 You can also connect via Coherence Management over REST by right-clicking on the
 `Coherence Clusters` tree item and choose `Add Coherence Cluster`. See the https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/using-jmx-manage-oracle-coherence.html#GUID-9A5B5F14-26A6-49CF-8C0C-3533A5DFB9C6[Coherence Documentation]
 for more information on connecting via REST.
-
 
 == Changing the Plugin Behaviour via System Properties
 
