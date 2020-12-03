@@ -54,8 +54,11 @@ The Coherence VisualVM Plugin is available from the list of plugins in VisualVM 
 To install the Plugin carry out the following:
 
 1. Choose `Tools` -> `Plugins` from the main menu.
-2. In the `Available Plugins` tab, select the Install checkbox for the `VisualVM-Coherence`. Click Install.
-3. Step through and complete the plugin installer.
+2. The Plugin will be displayed as `VisualVM-Coherence`. If it is not present in the list then click on the `Check for Newest` button
+3. In the `Available Plugins` tab, select the Install checkbox for the `VisualVM-Coherence`. Click Install.
+4. Step through and complete the plugin installer.
+
+image::assets/coherence-visualvm-install.png[Coherence VisualVM Plugin Install,800,479]
 
 For more information about using the Coherence VisualVM plugin see the official https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/using-jmx-manage-oracle-coherence.html[Coherence Documentation].
 
