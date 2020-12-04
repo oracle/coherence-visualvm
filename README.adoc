@@ -31,7 +31,7 @@ Some management information is presented over time, which allows real-time analy
 You can connect to clusters via JMX or via management over REST with Coherence versions 14.1.1 or above.
 
 The Plugin is an ideal tool for monitoring and managing Coherence clusters during the development and testing lifecycle and supports connecting to both
-Community Edition and open source versions of Coherence.
+Community Edition and Commercial versions of Coherence.
 
 NOTE: This version of the Plugin requires VisualVM release 2.0.4 or later which is available from https://visualvm.github.io/.
 
