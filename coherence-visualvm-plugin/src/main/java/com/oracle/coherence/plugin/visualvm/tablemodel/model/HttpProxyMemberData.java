@@ -83,20 +83,20 @@ public class HttpProxyMemberData extends AbstractData
         Data data   = new HttpProxyMemberData();
         int  nStart = 1;
 
-        data.setColumn(HttpProxyMemberData.NODE_ID, new Integer(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(HttpProxyMemberData.NODE_ID, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
         data.setColumn(HttpProxyMemberData.HOST_IP, aoColumns[nStart++]);
-        data.setColumn(HttpProxyMemberData.AVG_REQ_TIME, new Float(aoColumns[nStart++].toString()));
-        data.setColumn(HttpProxyMemberData.REQ_PER_SECOND, new Float(aoColumns[nStart++].toString()));
-        data.setColumn(HttpProxyMemberData.TOTAL_ERROR_COUNT, new Long(getNumberValue(aoColumns[nStart++].toString())));
-        data.setColumn(HttpProxyMemberData.TOTAL_REQUEST_COUNT, new Long(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(HttpProxyMemberData.AVG_REQ_TIME, Float.valueOf(aoColumns[nStart++].toString()));
+        data.setColumn(HttpProxyMemberData.REQ_PER_SECOND, Float.valueOf(aoColumns[nStart++].toString()));
+        data.setColumn(HttpProxyMemberData.TOTAL_ERROR_COUNT, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(HttpProxyMemberData.TOTAL_REQUEST_COUNT, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
         // skip domainPartition
         nStart++;
 
-        data.setColumn(HttpProxyMemberData.RESPONSE_COUNT_1, new Long(getNumberValue(aoColumns[nStart++].toString())));
-        data.setColumn(HttpProxyMemberData.RESPONSE_COUNT_2, new Long(getNumberValue(aoColumns[nStart++].toString())));
-        data.setColumn(HttpProxyMemberData.RESPONSE_COUNT_3, new Long(getNumberValue(aoColumns[nStart++].toString())));
-        data.setColumn(HttpProxyMemberData.RESPONSE_COUNT_4, new Long(getNumberValue(aoColumns[nStart++].toString())));
-        data.setColumn(HttpProxyMemberData.RESPONSE_COUNT_5, new Long(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(HttpProxyMemberData.RESPONSE_COUNT_1, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(HttpProxyMemberData.RESPONSE_COUNT_2, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(HttpProxyMemberData.RESPONSE_COUNT_3, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(HttpProxyMemberData.RESPONSE_COUNT_4, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(HttpProxyMemberData.RESPONSE_COUNT_5, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
 
         return data;
         }

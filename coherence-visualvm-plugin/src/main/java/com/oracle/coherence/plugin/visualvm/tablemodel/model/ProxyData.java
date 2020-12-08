@@ -162,14 +162,14 @@ public class ProxyData
 
             data.setColumn(ProxyData.HOST_PORT, aoColumns[2].toString());
             data.setColumn(ProxyData.SERVICE_NAME, aoColumns[3].toString());
-            data.setColumn(ProxyData.NODE_ID, new Integer(getNumberValue(aoColumns[4].toString())));
+            data.setColumn(ProxyData.NODE_ID, Integer.valueOf(getNumberValue(aoColumns[4].toString())));
 
-            data.setColumn(ProxyData.CONNECTION_COUNT, new Integer(getNumberValue(aoColumns[5].toString())));
-            data.setColumn(ProxyData.OUTGOING_MSG_BACKLOG, new Long(getNumberValue(aoColumns[6].toString())));
-            data.setColumn(ProxyData.TOTAL_BYTES_RECEIVED, new Long(getNumberValue(aoColumns[7].toString())));
-            data.setColumn(ProxyData.TOTAL_BYTES_SENT, new Long(getNumberValue(aoColumns[8].toString())));
-            data.setColumn(ProxyData.TOTAL_MSG_RECEIVED, new Long(getNumberValue(aoColumns[9].toString())));
-            data.setColumn(ProxyData.TOTAL_MSG_SENT, new Long(getNumberValue(aoColumns[10].toString())));
+            data.setColumn(ProxyData.CONNECTION_COUNT, Integer.valueOf(getNumberValue(aoColumns[5].toString())));
+            data.setColumn(ProxyData.OUTGOING_MSG_BACKLOG, Long.valueOf(getNumberValue(aoColumns[6].toString())));
+            data.setColumn(ProxyData.TOTAL_BYTES_RECEIVED, Long.valueOf(getNumberValue(aoColumns[7].toString())));
+            data.setColumn(ProxyData.TOTAL_BYTES_SENT, Long.valueOf(getNumberValue(aoColumns[8].toString())));
+            data.setColumn(ProxyData.TOTAL_MSG_RECEIVED, Long.valueOf(getNumberValue(aoColumns[9].toString())));
+            data.setColumn(ProxyData.TOTAL_MSG_SENT, Long.valueOf(getNumberValue(aoColumns[10].toString())));
 
             if (aoColumns.length == 12 && aoColumns[11] != null)
                 {

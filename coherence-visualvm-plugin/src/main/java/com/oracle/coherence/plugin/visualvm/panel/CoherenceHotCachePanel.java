@@ -234,7 +234,7 @@ public class CoherenceHotCachePanel
                         }
                     if((int) entry.getValue().getColumn(HotCacheData.Max3)!=Integer.MIN_VALUE)
                         {
-                        GraphHelper.addValuesToHotcacheGraph(m_hotcacheGraph3,(double) entry.getValue().getColumn(HotCacheData.Mean3), new Integer((int) entry.getValue().getColumn(HotCacheData.Max3)).longValue(), new Integer((int) entry.getValue().getColumn(HotCacheData.Min3)).longValue());
+                        GraphHelper.addValuesToHotcacheGraph(m_hotcacheGraph3,(double) entry.getValue().getColumn(HotCacheData.Mean3), Integer.valueOf((int) entry.getValue().getColumn(HotCacheData.Max3)).longValue(), Integer.valueOf((int) entry.getValue().getColumn(HotCacheData.Min3)).longValue());
                         }
                     if((long) entry.getValue().getColumn(HotCacheData.Max4)!=Long.MIN_VALUE)
                         {
@@ -250,7 +250,7 @@ public class CoherenceHotCachePanel
                         }
                     if((int) entry.getValue().getColumn(HotCacheData.Max7)!=Integer.MIN_VALUE)
                         {
-                        GraphHelper.addValuesToHotcacheGraph(m_hotcacheGraph7, (double) entry.getValue().getColumn(HotCacheData.Mean7), new Integer((int) entry.getValue().getColumn(HotCacheData.Max7)).longValue(), new Integer((int) entry.getValue().getColumn(HotCacheData.Min7)).longValue());
+                        GraphHelper.addValuesToHotcacheGraph(m_hotcacheGraph7, (double) entry.getValue().getColumn(HotCacheData.Mean7), Integer.valueOf((int) entry.getValue().getColumn(HotCacheData.Max7)).longValue(), Integer.valueOf((int) entry.getValue().getColumn(HotCacheData.Min7)).longValue());
                         }
                     break;
                     }

@@ -141,14 +141,14 @@ public class MemberData
         {
         Data data = new MemberData();
 
-        data.setColumn(MemberData.NODE_ID, new Integer(getNumberValue(aoColumns[2].toString())));
+        data.setColumn(MemberData.NODE_ID, Integer.valueOf(getNumberValue(aoColumns[2].toString())));
         data.setColumn(MemberData.PUBLISHER_SUCCESS, new Float(aoColumns[3].toString()));
         data.setColumn(MemberData.RECEIVER_SUCCESS, new Float(aoColumns[4].toString()));
 
-        data.setColumn(MemberData.SENDQ_SIZE, new Integer(getNumberValue(aoColumns[5].toString())));
+        data.setColumn(MemberData.SENDQ_SIZE, Integer.valueOf(getNumberValue(aoColumns[5].toString())));
 
-        data.setColumn(MemberData.MAX_MEMORY, new Integer(getNumberValue(aoColumns[6].toString())));
-        data.setColumn(MemberData.FREE_MEMORY, new Integer(getNumberValue(aoColumns[7].toString())));
+        data.setColumn(MemberData.MAX_MEMORY, Integer.valueOf(getNumberValue(aoColumns[6].toString())));
+        data.setColumn(MemberData.FREE_MEMORY, Integer.valueOf(getNumberValue(aoColumns[7].toString())));
 
         data.setColumn(MemberData.USED_MEMORY,
                        (Integer) data.getColumn(MemberData.MAX_MEMORY)
@@ -157,7 +157,7 @@ public class MemberData
         data.setColumn(MemberData.ADDRESS, aoColumns[8].toString());
 
         data.setColumn(MemberData.ROLE_NAME, aoColumns[9].toString());
-        data.setColumn(MemberData.PORT, new Integer(getNumberValue(aoColumns[10].toString())));
+        data.setColumn(MemberData.PORT, Integer.valueOf(getNumberValue(aoColumns[10].toString())));
         data.setColumn(MemberData.PRODUCT_EDITION, aoColumns[14].toString());
         data.setColumn(MemberData.STORAGE_ENABLED, "true");
 

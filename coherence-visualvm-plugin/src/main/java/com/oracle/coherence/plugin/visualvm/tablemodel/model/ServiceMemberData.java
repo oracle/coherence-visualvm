@@ -91,7 +91,7 @@ public class ServiceMemberData
                     {
                     ObjectName serviceNameObjName = serviceNameIter.next();
 
-                    int    nodeId = Integer.valueOf(serviceNameObjName.getKeyProperty("nodeId"));
+                    int nodeId = Integer.valueOf(serviceNameObjName.getKeyProperty("nodeId"));
 
                     // ignore if have no domain partition in selected service and we cant find the domain partition key
                     if (sDomainPartition == null && serviceNameObjName.getKeyProperty("domainPartition") != null)
@@ -170,10 +170,10 @@ public class ServiceMemberData
             {
             data = new ServiceMemberData();
 
-            data.setColumn(ServiceMemberData.NODE_ID, new Integer(getNumberValue(aoColumns[nStart++].toString())));
-            data.setColumn(ServiceMemberData.TASK_BACKLOG, new Integer(getNumberValue(aoColumns[nStart++].toString())));
-            data.setColumn(ServiceMemberData.THREAD_COUNT, new Integer(getNumberValue(aoColumns[nStart++].toString())));
-            data.setColumn(ServiceMemberData.THREAD_IDLE_COUNT, new Integer(getNumberValue(aoColumns[nStart++].toString())));
+            data.setColumn(ServiceMemberData.NODE_ID, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+            data.setColumn(ServiceMemberData.TASK_BACKLOG, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+            data.setColumn(ServiceMemberData.THREAD_COUNT, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+            data.setColumn(ServiceMemberData.THREAD_IDLE_COUNT, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
             data.setColumn(ServiceMemberData.REQUEST_AVERAGE_DURATION, new Float(aoColumns[nStart++].toString()));
             data.setColumn(ServiceMemberData.TASK_AVERAGE_DURATION, new Float(aoColumns[nStart++].toString()));
 

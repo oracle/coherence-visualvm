@@ -64,7 +64,7 @@ public class CacheFrontDetailData
                           ATTR_CACHE_MISSES, ATTR_TOTAL_GETS, ATTR_TOTAL_PUTS,
                           ATTR_HIT_PROBABILITY });
 
-        data.setColumn(CacheFrontDetailData.NODE_ID, new Integer(objName.getKeyProperty("nodeId")));
+        data.setColumn(CacheFrontDetailData.NODE_ID, Integer.valueOf(objName.getKeyProperty("nodeId")));
 
         data.setColumn(CacheFrontDetailData.SIZE, Integer.parseInt(getAttributeValueAsString(listAttr, ATTR_SIZE)));
         data.setColumn(CacheFrontDetailData.CACHE_HITS, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_CACHE_HITS)));
@@ -84,13 +84,13 @@ public class CacheFrontDetailData
         {
         Data data = new CacheFrontDetailData();
 
-        data.setColumn(CacheFrontDetailData.NODE_ID, new Integer(getNumberValue(aoColumns[4].toString())));
-        data.setColumn(CacheFrontDetailData.SIZE, new Integer(getNumberValue(aoColumns[5].toString())));
-        data.setColumn(CacheFrontDetailData.TOTAL_GETS, new Long(getNumberValue(aoColumns[7].toString())));
-        data.setColumn(CacheFrontDetailData.TOTAL_PUTS, new Long(getNumberValue(aoColumns[8].toString())));
-        data.setColumn(CacheFrontDetailData.CACHE_HITS, new Long(getNumberValue(aoColumns[9].toString())));
-        data.setColumn(CacheFrontDetailData.CACHE_MISSES, new Integer(getNumberValue(aoColumns[10].toString())));
-        data.setColumn(CacheFrontDetailData.HIT_PROBABILITY, new Float(aoColumns[11].toString()));
+        data.setColumn(CacheFrontDetailData.NODE_ID, Integer.valueOf(getNumberValue(aoColumns[4].toString())));
+        data.setColumn(CacheFrontDetailData.SIZE, Integer.valueOf(getNumberValue(aoColumns[5].toString())));
+        data.setColumn(CacheFrontDetailData.TOTAL_GETS, Long.valueOf(getNumberValue(aoColumns[7].toString())));
+        data.setColumn(CacheFrontDetailData.TOTAL_PUTS, Long.valueOf(getNumberValue(aoColumns[8].toString())));
+        data.setColumn(CacheFrontDetailData.CACHE_HITS, Long.valueOf(getNumberValue(aoColumns[9].toString())));
+        data.setColumn(CacheFrontDetailData.CACHE_MISSES, Integer.valueOf(getNumberValue(aoColumns[10].toString())));
+        data.setColumn(CacheFrontDetailData.HIT_PROBABILITY, Float.valueOf(aoColumns[11].toString()));
 
         return data;
         }

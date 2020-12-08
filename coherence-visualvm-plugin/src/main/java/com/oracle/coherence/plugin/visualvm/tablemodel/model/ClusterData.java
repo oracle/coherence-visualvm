@@ -91,8 +91,8 @@ public class ClusterData
         data.setColumn(ClusterData.CLUSTER_NAME, aoColumns[2]);
         data.setColumn(ClusterData.LICENSE_MODE, aoColumns[3]);
         data.setColumn(ClusterData.VERSION, aoColumns[4]);
-        data.setColumn(ClusterData.DEPARTURE_COUNT, new Integer(getNumberValue(aoColumns[5].toString())));
-        data.setColumn(ClusterData.CLUSTER_SIZE, new Integer(getNumberValue(aoColumns[6].toString())));
+        data.setColumn(ClusterData.DEPARTURE_COUNT, Integer.valueOf(getNumberValue(aoColumns[5].toString())));
+        data.setColumn(ClusterData.CLUSTER_SIZE, Integer.valueOf(getNumberValue(aoColumns[6].toString())));
 
         return data;
         }

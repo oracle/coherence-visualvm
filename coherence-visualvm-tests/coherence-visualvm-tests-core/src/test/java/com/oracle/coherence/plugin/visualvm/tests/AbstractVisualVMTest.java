@@ -350,7 +350,7 @@ public abstract class AbstractVisualVMTest
 
         for (int j = 0; j < cEntries; j++)
             {
-            buffer.put(new Integer(j), sData);
+            buffer.put(j, sData);
             }
 
         nc.putAll(buffer);

@@ -100,12 +100,12 @@ public class HttpSessionData
                 data.setColumn(HttpSessionData.PLATFORM, isWebLogicServer ? "WebLogic" : "Other");
                 data.setColumn(HttpSessionData.SESSION_TIMEOUT,
                                Integer.parseInt(requestSender.getAttribute(objName, "SessionTimeout")));
-                data.setColumn(HttpSessionData.LAST_REAP_DURATION_MAX, new Long(0L));
-                data.setColumn(HttpSessionData.SESSION_UPDATES, new Integer(0));
-                data.setColumn(HttpSessionData.AVG_SESSION_SIZE, new Integer(0));
-                data.setColumn(HttpSessionData.AVG_REAP_DURATION, new Long(0L));
-                data.setColumn(HttpSessionData.AVG_REAPED_SESSIONS, new Long(0L));
-                data.setColumn(HttpSessionData.TOTAL_REAPED_SESSIONS, new Long(0L));
+                data.setColumn(HttpSessionData.LAST_REAP_DURATION_MAX, 0L);
+                data.setColumn(HttpSessionData.SESSION_UPDATES, 0);
+                data.setColumn(HttpSessionData.AVG_SESSION_SIZE, 0);
+                data.setColumn(HttpSessionData.AVG_REAP_DURATION, 0L);
+                data.setColumn(HttpSessionData.AVG_REAPED_SESSIONS, 0L);
+                data.setColumn(HttpSessionData.TOTAL_REAPED_SESSIONS, 0L);
                 data.setColumn(HttpSessionData.SESSION_CACHE_NAME,
                         requestSender.getAttribute(objName, "SessionCacheName").toString());
                 data.setColumn(HttpSessionData.OVERFLOW_CACHE_NAME,
@@ -142,7 +142,7 @@ public class HttpSessionData
                     if (nCurrentLastReapDuration
                         > ((Long) data.getColumn(HttpSessionData.LAST_REAP_DURATION_MAX)).longValue())
                         {
-                        data.setColumn(HttpSessionData.LAST_REAP_DURATION_MAX, new Long(nCurrentLastReapDuration));
+                        data.setColumn(HttpSessionData.LAST_REAP_DURATION_MAX, Long.valueOf(nCurrentLastReapDuration));
                         }
 
                     data.setColumn(HttpSessionData.SESSION_UPDATES,

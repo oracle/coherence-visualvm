@@ -98,8 +98,8 @@ public class ServiceData
                 data = new ServiceData();
 
                 data.setColumn(ServiceData.SERVICE_NAME, sServiceName);
-                data.setColumn(ServiceData.MEMBERS, new Integer(0));
-                data.setColumn(ServiceData.STORAGE_MEMBERS, new Integer(0));
+                data.setColumn(ServiceData.MEMBERS, Integer.valueOf(0));
+                data.setColumn(ServiceData.STORAGE_MEMBERS, Integer.valueOf(0));
 
                 mapData.put(sServiceName, data);
 
@@ -202,13 +202,13 @@ public class ServiceData
             }
 
         data.setColumn(ServiceData.STATUS_HA, aoColumns[nStart++]);
-        data.setColumn(ServiceData.PARTITION_COUNT, new Integer(getNumberValue(aoColumns[nStart++].toString())));
-        data.setColumn(ServiceData.PARTITIONS_ENDANGERED, new Integer(getNumberValue(aoColumns[nStart++].toString())));
-        data.setColumn(ServiceData.PARTITIONS_VULNERABLE, new Integer(getNumberValue(aoColumns[nStart++].toString())));
-        data.setColumn(ServiceData.PARTITIONS_UNBALANCED, new Integer(getNumberValue(aoColumns[nStart++].toString())));
-        data.setColumn(ServiceData.STORAGE_MEMBERS, new Integer(getNumberValue(aoColumns[nStart++].toString())));
-        data.setColumn(ServiceData.MEMBERS, new Integer(getNumberValue(aoColumns[nStart++].toString())));
-        data.setColumn(ServiceData.PARTITIONS_PENDING, new Integer(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(ServiceData.PARTITION_COUNT, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(ServiceData.PARTITIONS_ENDANGERED, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(ServiceData.PARTITIONS_VULNERABLE, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(ServiceData.PARTITIONS_UNBALANCED, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(ServiceData.STORAGE_MEMBERS, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(ServiceData.MEMBERS, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(ServiceData.PARTITIONS_PENDING, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
 
         // record the list of distributed & federated caches
         if (DISTRIBUTED_CACHE_TYPE.equals(aoColumns[nStart]) || FEDERATED_CACHE_TYPE.equals(aoColumns[nStart]))

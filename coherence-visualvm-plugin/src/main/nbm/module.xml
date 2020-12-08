@@ -27,6 +27,5 @@
 -->
 <nbm>
    <manifest>target/manifest.mf</manifest>
-   <licenseName>GNU General Public License version 2 + CPE</licenseName>
    <licenseFile>license.txt</licenseFile>
 </nbm>
