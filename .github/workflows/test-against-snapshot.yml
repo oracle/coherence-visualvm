@@ -105,6 +105,7 @@ jobs:
         if [ $COH_BRANCH != "main" ] ; then
            VERSION=`cat /tmp/${CLONE_DIR}/prj/pom.xml | grep '<version>' | sed 1q | sed -e 's,^.*<version>,,' -e 's,</version>.*$,,'`
         else
+           cat /tmp/${CLONE_DIR}/prj/pom.xml
            VERSION=`cat /tmp/${CLONE_DIR}/prj/pom.xml | grep '<revision>' | sed -e 's,^.*<revision>,,' -e 's,</revision>.*$,,'`
         fi
         echo "Running verify against $VERSION"
