@@ -1288,4 +1288,4 @@ Fourth Party Dependencies
 This project includes or depends on code from third party projects.
 Attributions are contained in THIRD_PARTY_LICENSES.txt.
 
-https://github.com/oracle/coherence/blob/20.06.1/THIRD_PARTY_LICENSES.txt
+https://github.com/oracle/coherence/blob/20.12/THIRD_PARTY_LICENSES.txt
