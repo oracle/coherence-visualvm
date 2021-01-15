@@ -34,6 +34,9 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  schedule:
+    # Schedule every hour (initial test)
+    - cron: '0 * * * *'
 
 jobs:
   build:
