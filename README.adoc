@@ -26,6 +26,8 @@ questions.
 
 image::https://oracle.github.io/coherence/assets/images/logo-red.png[Coherence CE]
 
+image:https://github.com/oracle/coherence-visualvm/workflows/Java%20CI%20-%20Released%20versions/badge.svg)[CI Build]
+
 The Coherence-VisualVM Plugin (the Plugin) provides management and monitoring of a single Coherence cluster using the VisualVM management utility.
 
 The Plugin aggregates Coherence MBean data and shows a concise operational view of a single Coherence cluster.
