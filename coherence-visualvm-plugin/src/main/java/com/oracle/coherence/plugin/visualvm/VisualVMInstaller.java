@@ -55,6 +55,7 @@ public class VisualVMInstaller
         CoherenceClusterDataSourceDescriptorProvider.register();
         CoherenceClusterDataSourceViewProvider.register();
         CoherenceClusterProvider.initCoherenceClustersDataSource();
+        CoherenceApplicationTypeFactory.initialize();
         }
 
     /**
@@ -67,5 +68,6 @@ public class VisualVMInstaller
         CoherenceClustersDataSource.unregister();
         CoherenceClusterDataSourceDescriptorProvider.unregister();
         CoherenceClusterDataSourceViewProvider.unregister();
+        CoherenceApplicationTypeFactory.shutdown();
         }
     }
