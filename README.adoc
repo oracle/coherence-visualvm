@@ -68,7 +68,7 @@ For more information about using the Coherence VisualVM plugin see the official 
 
 Other useful resources:
 
-* https://coherence.community/[The Coherence Community - all things Coherence]
+* https://coherence.community/[The Coherence Community - All things Coherence]
 * https://visualvm.github.io/[VisualVM Home Page]
 * https://github.com/oracle/coherence[Coherence Community Edition on GitHub]
 * https://github.com/oracle/coherence/tree/master/examples[Various Coherence Examples]
@@ -84,6 +84,53 @@ Once the Plugin is installed, you can double-click on a Coherence process in the
 You can also connect via Coherence Management over REST by right-clicking on the
 `Coherence Clusters` tree item and choose `Add Coherence Cluster`. See the https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/using-jmx-manage-oracle-coherence.html#GUID-9A5B5F14-26A6-49CF-8C0C-3533A5DFB9C6[Coherence Documentation]
 for more information on connecting via REST.
+
+== Connecting to Coherence in WebLogic Server
+
+If you have Coherence running within WebLogic Server using the `Managed Coherence Servers` functionality you can either
+connect via REST as described above or if you want to connect to the `domain runtime MBean server`, use the instructions below.
+
+1. Ensure you have the same version of WebLogic Server installed locally as the instance you are connecting to.
+
+2. Use the following (on one line) to start VisualVM replacing WLS_HOME with your WebLogic Server home.
++
+[source,shell]
+----
+/path/to/visualvm --cp WLS_HOME/server/lib/wljmxclient.jar:WLS_HOME/server/lib/weblogic.jar
+   -J-Djmx.remote.protocol.provider.pkgs=weblogic.management.remote
+   -J-Dcoherence.plugin.visualvm.disable.mbean.check=true
+----
++
+NOTE: On a Mac, the default VisualVM installed is usually `/Applications/VisualVM.app/Contents/MacOS/visualvm`.
+For Windows ensure that you use `visualvm.exe` and change the `/` to `\` and change the classpath separator from `:` to `;`.
+
+3. From the VisualVM Applications tree, right-click `Local` and select `Add JMX Connection`. The Add JMX Connection dialog box displays.
+
+4. Use either of the following connect strings depending upon the WebLogic Version you are connecting to.
++
+For WebLogic Server 14.1.1.X and above use **t3** protocol:
++
+[source,shell]
+----
+service:jmx:t3://hostname:port/jndi/weblogic.management.mbeanservers.domainruntime
+----
++
+For WebLogic Server 12.2.1.5 and below use **iiop** protocol:
++
+[source,shell]
+----
+service:jmx:iiop://hostname:port/jndi/weblogic.management.mbeanservers.domainruntime
+----
++
+NOTE: in WebLogic Server 14.1.1.x and above the `wljmxclient.jar` no longer exists and will be ignored in the classpath.
+You may remove it from the above `--cp` statement if you like.
+
+5. Click `Use security credentials` and enter the WebLogic Server username and password.
+
+6. Check `Do not require SSL connection` if your connection is not SSL and select `Connect Immediately`.
+
+7. Right-Click on the connection and select `Open`. The Coherence tab will be displayed.
+
 
 == Changing the Plugin Behaviour via System Properties
 
