@@ -26,6 +26,7 @@ package com.oracle.coherence.plugin.visualvm;
 
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
+import com.oracle.coherence.plugin.visualvm.panel.AbstractCoherencePanel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheDetailData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheFrontDetailData;
@@ -55,6 +56,7 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.ProxyData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.RamJournalData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceMemberData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Tuple;
 
 import java.io.BufferedReader;
@@ -76,10 +78,13 @@ import java.util.TreeMap;
 
 import java.util.Map.Entry;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.management.MBeanServerConnection;
+
+import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
 /**
  * A class that is used to store and update Coherence cluster
@@ -146,6 +151,7 @@ public class VisualVMModel
         f_mapDataRetrievers.put(MachineData.class, new MachineData());
         f_mapDataRetrievers.put(CacheDetailData.class, new CacheDetailData());
         f_mapDataRetrievers.put(CacheFrontDetailData.class, new CacheFrontDetailData());
+        f_mapDataRetrievers.put(TopicData.class, new TopicData());
         f_mapDataRetrievers.put(PersistenceData.class, new PersistenceData());
         f_mapDataRetrievers.put(PersistenceNotificationsData.class, new PersistenceNotificationsData());
         f_mapDataRetrievers.put(CacheStorageManagerData.class, new CacheStorageManagerData());
@@ -818,6 +824,17 @@ public class VisualVMModel
         }
 
     /**
+     * Returns if Topics is configured.
+     *
+     * @return true if Topics is configured.
+     */
+    public boolean isTopicsConfigured()
+        {
+        return m_mapCollectedData.get(DataType.TOPICS_DETAIL) != null
+               && m_mapCollectedData.get(DataType.TOPICS_DETAIL).size() != 0;
+       }
+
+    /**
      * Return if Federation is configured.
      *
      * @return true if Federation is configured.
@@ -1003,6 +1020,31 @@ public class VisualVMModel
         }
 
     /**
+     * Adds a chart to the Map of charts.
+     *
+     * @param panel  The originating {@link AbstractCoherencePanel}
+     * @param chart      the chart
+     */
+    public void addChart(AbstractCoherencePanel panel, SimpleXYChartSupport chart)
+        {
+
+        if (panel == null || chart == null)
+            {
+            throw new IllegalArgumentException("You must supply tab name, chart name and chart");
+            }
+
+        f_mapCharts.put(new Pair<>(panel.getClass().getName(), chart.getChart().getName()), chart);
+        }
+
+    /**
+     * Returns all the charts.
+     * @return all the charts
+     */
+    public Map<Pair<String, String>, SimpleXYChartSupport> getCharts() {
+        return f_mapCharts;
+    }
+
+    /**
      * Defines the type of data we can collect.
      * Note: The order of these is important. Please do not change. e.g. cluster
      * need to go first so we can determine the version. Also service needs
@@ -1017,6 +1059,7 @@ public class VisualVMModel
         CACHE_DETAIL(CacheDetailData.class, CACHE_DETAIL_LABELS),
         CACHE_FRONT_DETAIL(CacheFrontDetailData.class, CACHE_FRONT_DETAIL_LABELS),
         CACHE_STORAGE_MANAGER(CacheStorageManagerData.class, CACHE_STORAGE_MANAGER_LABELS),
+        TOPICS_DETAIL(TopicData.class, TOPICS_LABELS),
         MEMBER(MemberData.class, MEMBER_LABELS),
         NODE_STORAGE(NodeStorageData.class, new String[] {}),
         MACHINE(MachineData.class, MACHINE_LABELS),
@@ -1107,10 +1150,20 @@ public class VisualVMModel
     /**
      * Labels for cache table.
      */
+    private static final String[] TOPICS_LABELS = new String[] {Localization.getLocalText("LBL_topic_name"),
+        Localization.getLocalText("LBL_topic_size"), Localization.getLocalText("LBL_memory_bytes"),
+        Localization.getLocalText("LBL_memory_mb"), Localization.getLocalText("LBL_average_object_size"),
+        Localization.getLocalText("LBL_publisher_sends"), Localization.getLocalText("LBL_subscriber_receives")
+    };
+
+    /**
+     * Labels for topics table.
+     */
     private static final String[] CACHE_LABELS = new String[] {Localization.getLocalText("LBL_service_cache_name"),
         Localization.getLocalText("LBL_size"), Localization.getLocalText("LBL_memory_bytes"),
         Localization.getLocalText("LBL_memory_mb"), Localization.getLocalText("LBL_average_object_size"),
-        Localization.getLocalText("LBL_unit_calculator")};
+        Localization.getLocalText("LBL_unit_calculator")
+    };
 
     /**
      * Labels for cache detail table.
@@ -1452,7 +1505,6 @@ public class VisualVMModel
      */
     private Pair<String, String> m_selectedJCache = null;
 
-
     /**
      * The selected service / participants pair in federation tab.
      */
@@ -1495,6 +1547,11 @@ public class VisualVMModel
      * or optimistic caches.
      */
     private Set<String> m_setKnownDistributedCaches;
+
+    /**
+     * A Map of the charts created in the Panels. Keyed by a Pair with Tab and Chart Name.
+     */
+    private final Map<Pair<String, String>, SimpleXYChartSupport> f_mapCharts = new ConcurrentHashMap<>();
 
     /**
      * The set of domainPartition key values to check for connection

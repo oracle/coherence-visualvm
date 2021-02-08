@@ -124,7 +124,6 @@ public class ClusterData
             for (Iterator<ObjectName> cacheNameIter = clusterSet.iterator(); cacheNameIter.hasNext(); )
                 {
                 ClusterData data           = new ClusterData();
-
                 ObjectName  clusterObjName = cacheNameIter.next();
 
                 AttributeList listAttr = requestSender.getAttributes(clusterObjName,

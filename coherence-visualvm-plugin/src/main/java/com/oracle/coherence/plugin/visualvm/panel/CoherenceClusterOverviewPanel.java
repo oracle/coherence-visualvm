@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,6 +27,7 @@ package com.oracle.coherence.plugin.visualvm.panel;
 
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
+import com.oracle.coherence.plugin.visualvm.helper.ClusterReportGenerator;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.MemberData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceData;
@@ -34,21 +35,34 @@ import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ClusterData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.MachineData;
 
+
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.File;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
+
+import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
 
 /**
  * An implementation of an {@link AbstractCoherencePanel} to
@@ -98,12 +112,19 @@ public class CoherenceClusterOverviewPanel
         pnlHeader.add(getLocalizedLabel("LBL_cluster_statusha", f_txtClusterStatusHA));
         pnlHeader.add(f_txtClusterStatusHA);
 
+        m_btnClusterReport = new JButton(getLocalizedText("BTN_cluster_report"));
+        m_btnClusterReport.setMnemonic(KeyEvent.VK_R);
+        m_btnClusterReport.addActionListener(new ClusterReportListener());
+        m_btnClusterReport.setToolTipText(getLocalizedText("TTIP_report"));
+        pnlHeader.add(m_btnClusterReport);
+
         JPanel pnlData = new JPanel();
 
         pnlData.setLayout(new GridLayout(2, 2));
 
         // create a chart for total cluster memory
         f_memoryGraph = GraphHelper.createClusterMemoryGraph();
+        f_model.addChart(this, f_memoryGraph);
 
         JPanel pnlPlotter = new JPanel(new GridLayout(1, 1));
 
@@ -113,6 +134,7 @@ public class CoherenceClusterOverviewPanel
 
         // create a chart for publisher success rate
         f_publisherGraph = GraphHelper.createPublisherGraph();
+        f_model.addChart(this, f_publisherGraph);
 
         JPanel pnlPlotter2 = new JPanel(new GridLayout(1, 1));
 
@@ -121,6 +143,7 @@ public class CoherenceClusterOverviewPanel
 
         // create a chart for machine load average
         f_loadAverageGraph = GraphHelper.createMachineLoadAverageGraph(model);
+        f_model.addChart(this, f_loadAverageGraph);
 
         JPanel pnlPlotter4 = new JPanel(new GridLayout(1, 1));
 
@@ -129,6 +152,7 @@ public class CoherenceClusterOverviewPanel
 
         // create a chart for receiver success rate
         f_receiverGraph = GraphHelper.createReceiverGraph();
+        f_model.addChart(this, f_receiverGraph);
 
         JPanel pnlPlotter3 = new JPanel(new GridLayout(1, 1));
 
@@ -325,6 +349,73 @@ public class CoherenceClusterOverviewPanel
 
         }
 
+    // ----- inner classes --------------------------------------------------
+
+    /**
+     * A class to react to button press for cluster report.
+     */
+    private class ClusterReportListener implements ActionListener
+        {
+        public ClusterReportListener()
+            {
+            fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle(getLocalText("TXT_choose_directory"));
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            fileChooser.setCurrentDirectory(new java.io.File("."));
+            }
+
+        // ----- ActionListener methods -------------------------------------
+
+        @Override
+        public void actionPerformed(ActionEvent event)
+            {
+            int result = fileChooser.showSaveDialog(CoherenceClusterOverviewPanel.this);
+
+            if (result == JFileChooser.APPROVE_OPTION)
+                {
+                File          dirOutput = fileChooser.getSelectedFile();
+                LocalDateTime dateNow   = LocalDateTime.now();
+                File fileOutput = new File(dirOutput, "CoherenceReport_" + f_formatter.format(dateNow) + ".html");
+                 if (JOptionPane.showConfirmDialog(null,
+                         getLocalText("LBL_confirm_report", fileOutput.toString()),
+                                                   getLocalText("LBL_confirm"),
+                                                   JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+                     {
+                     try
+                         {
+                         ClusterReportGenerator generator = new ClusterReportGenerator(dateNow, fileOutput, f_model);
+                         generator.generateReport();
+                         JOptionPane.showMessageDialog(null,
+                                                       getLocalText("LBL_report_generated", fileOutput.toString()));
+                         if (Desktop.isDesktopSupported())
+                             {
+                             Desktop.getDesktop().browse(fileOutput.toURI());
+                             }
+                         }
+                     catch (Exception e)
+                         {
+                         JOptionPane.showMessageDialog(null,
+                                                       getLocalText("LBL_unable_to_generate_report", fileOutput.toString(),
+                                                                        e.getCause().getMessage()));
+                         }
+
+                     }
+                 else
+                     {
+                     JOptionPane.showMessageDialog(null, getLocalizedText("LBL_report_not_generated"));
+                     }
+                }
+            }
+            
+            /**
+             * File chooser to select a directory to output to.
+             */
+            private JFileChooser fileChooser;
+
+            private final DateTimeFormatter f_formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");
+        }
+
     // ----- constants ------------------------------------------------------
 
     /**
@@ -334,6 +425,11 @@ public class CoherenceClusterOverviewPanel
         "RACK-SAFE", "SITE-SAFE"};
 
     private static final long serialVersionUID = 2602085070795849149L;
+
+    /**
+     * The logger object to use.
+     */
+    private static final Logger LOGGER = Logger.getLogger(CoherenceClusterOverviewPanel.class.getName());
 
     // ----- data members ---------------------------------------------------
 
@@ -362,6 +458,11 @@ public class CoherenceClusterOverviewPanel
      * The cluster size.
      */
     private final JTextField f_txtClusterSize;
+
+    /**
+     * A button to generate a cluster report.
+     */
+    private JButton m_btnClusterReport = null;
 
     /**
      * The graph of overall cluster memory.

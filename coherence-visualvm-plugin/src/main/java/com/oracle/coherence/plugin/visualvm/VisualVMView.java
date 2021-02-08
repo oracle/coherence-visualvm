@@ -30,6 +30,7 @@ import com.oracle.coherence.plugin.visualvm.datasource.CoherenceClusterDataSourc
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.JMXRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
+import com.oracle.coherence.plugin.visualvm.panel.CoherenceTopicPanel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.panel.CoherenceHttpProxyPanel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ClusterData;
@@ -161,6 +162,7 @@ public class VisualVMView
         final CoherenceMemberPanel          pnlMember          = new CoherenceMemberPanel(model);
         final CoherenceServicePanel         pnlService         = new CoherenceServicePanel(model);
         final CoherenceCachePanel           pnlCache           = new CoherenceCachePanel(model);
+        final CoherenceTopicPanel           pnlTopic           = new CoherenceTopicPanel(model);
         final CoherenceProxyPanel           pnlProxy           = new CoherenceProxyPanel(model);
         final CoherenceHotCachePanel        pnlHotCache        = new CoherenceHotCachePanel(model);
         final CoherencePersistencePanel     pnlPersistence     = new CoherencePersistencePanel(model);
@@ -233,6 +235,12 @@ public class VisualVMView
                     null, 10, pnlHttpProxy, null), DataViewComponent.TOP_RIGHT);
             }
 
+        if (model.isTopicsConfigured())
+            {
+              m_dvc.addDetailsView(new DataViewComponent.DetailsView(Localization.getLocalText("LBL_topics"),
+                null, 10, pnlTopic, null), DataViewComponent.TOP_RIGHT);
+            }
+
         if (model.isPersistenceConfigured())
             {
             m_dvc.addDetailsView(new DataViewComponent.DetailsView(Localization.getLocalText("LBL_persistence"),
@@ -268,6 +276,7 @@ public class VisualVMView
         pnlPersistence.setRequestSender(requestSender);
         pnlHttpSession.setRequestSender(requestSender);
         pnlFederation.setRequestSender(requestSender);
+        pnlTopic.setRequestSender(requestSender);
         pnlJCache.setRequestSender(requestSender);
 
         // display a warning if we are connected to a WLS domain and we can
@@ -336,6 +345,11 @@ public class VisualVMView
                                     pnlPersistence.updateData();
                                     pnlPersistence.updateGUI();
                                     }
+
+                                if (model.isTopicsConfigured()) {
+                                    pnlTopic.updateData();
+                                    pnlTopic.updateGUI();
+                                }
 
                                 if (model.isCoherenceWebConfigured())
                                     {
