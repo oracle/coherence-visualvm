@@ -1522,7 +1522,7 @@ public class VisualVMModel
     public static final String PROP_REST_TIMEOUT = "coherence.plugin.visualvm.rest.request.timeout";
 
     /**
-     * Property to set the request debugging using REST to connect to a cluster.
+     * Property to enable the HTTP request debugging using REST to connect to a cluster.
      */
     public static final String PROP_REST_DEBUG = "coherence.plugin.visualvm.rest.request.debug";
 
