@@ -91,7 +91,7 @@ public class Localization
      *
      * @return the localized message
      */
-    public static String getLocalText(String sKey, String asParams[])
+    public static String getLocalText(String sKey, String ... asParams)
         {
         return NbBundle.getMessage(Localization.class, sKey, asParams);
         }

@@ -178,6 +178,21 @@ public class GraphHelper
         }
 
     /**
+     * Create a graph representing the total unconsumed topic messages.
+     *
+     * @return a {@link SimpleXYChartSupport} representing the graph
+     */
+    public static SimpleXYChartSupport createTotalUnconsumedMessagesGraph()
+        {
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
+
+        sxycd.setChartTitle(getLocalText("GRPH_total_unconsumed"));
+        sxycd.addLineItems(getLocalText("GRPH_message_count"));
+
+        return createChart(sxycd);
+        }
+
+    /**
      * Add values to the total proxy connections graph.
      *
      * @param graph             {@link SimpleXYChartSupport} to add values to
@@ -186,6 +201,17 @@ public class GraphHelper
     public static void addValuesToTotalProxyConnectionsGraph(SimpleXYChartSupport graph, int cTotalConnections)
         {
         graph.addValues(System.currentTimeMillis(), new long[] {(long) cTotalConnections});
+        }
+
+        /**
+     * Add values to the total topics unconsumed graph.
+     *
+     * @param graph             {@link SimpleXYChartSupport} to add values to
+     * @param cTotalConnections total unconsumed topics messages
+     */
+    public static void addValuesToTotalUnconsumedTopicsGraph(SimpleXYChartSupport graph, long cTotalConnections)
+        {
+        graph.addValues(System.currentTimeMillis(), new long[] { cTotalConnections});
         }
 
     /**
@@ -1019,6 +1045,21 @@ public class GraphHelper
         }
 
     /**
+     * Create a graph representing the send/ receive topic rates.
+     *
+     * @return a {@link SimpleXYChartSupport} representing the graph
+     */
+    public static SimpleXYChartSupport createTopicsRateGraph()
+        {
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
+
+        sxycd.setChartTitle(Localization.getLocalText("GRPH_topics_stats"));
+        sxycd.addLineItems(getLocalText("LBL_publisher_sends"),
+                           getLocalText("LBL_subscriber_receives"));
+        return createChart(sxycd);
+        }
+
+    /**
      * Add values to the proxy server stats graph.
      *
      * @param graph       {@link SimpleXYChartSupport} to add values to
@@ -1026,6 +1067,19 @@ public class GraphHelper
      * @param cBytesRec   number of bytes received for time period
      */
     public static void addValuesToProxyServerStatsGraph(SimpleXYChartSupport graph, long cBytesSent,
+                                                    long cBytesRec)
+        {
+        graph.addValues(System.currentTimeMillis(), new long[] { cBytesSent, cBytesRec });
+        }
+
+    /**
+     * Add values to the topics rate graph.
+     *
+     * @param graph       {@link SimpleXYChartSupport} to add values to
+     * @param cBytesSent  number of publisher sends for time period
+     * @param cBytesRec   number of subsciber receives for time period
+     */
+    public static void addValuesToTopicsRateGraph(SimpleXYChartSupport graph, long cBytesSent,
                                                     long cBytesRec)
         {
         graph.addValues(System.currentTimeMillis(), new long[] { cBytesSent, cBytesRec });

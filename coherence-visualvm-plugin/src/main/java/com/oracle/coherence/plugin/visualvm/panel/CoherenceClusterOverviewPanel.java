@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -34,21 +34,34 @@ import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ClusterData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.MachineData;
 
+
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.File;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
+
+import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
 
 /**
  * An implementation of an {@link AbstractCoherencePanel} to
@@ -97,6 +110,11 @@ public class CoherenceClusterOverviewPanel
         f_txtClusterStatusHA = getTextField(10, JTextField.LEFT);
         pnlHeader.add(getLocalizedLabel("LBL_cluster_statusha", f_txtClusterStatusHA));
         pnlHeader.add(f_txtClusterStatusHA);
+
+        m_btnClusterReport = new JButton(getLocalizedText("BTN_cluster_report"));
+        m_btnClusterReport.setMnemonic(KeyEvent.VK_R);
+        m_btnClusterReport.setToolTipText(getLocalizedText("TTIP_report"));
+        pnlHeader.add(m_btnClusterReport);
 
         JPanel pnlData = new JPanel();
 
@@ -154,12 +172,12 @@ public class CoherenceClusterOverviewPanel
         float cMinReceiverRate    = -1;
 
         // get the min /max values for publisher and receiver success rates
-        if (memberData != null)
+        if (m_memberData != null)
             {
             int   count = 0;
             float cRate = 0;
 
-            for (Entry<Object, Data> entry : memberData)
+            for (Entry<Object, Data> entry : m_memberData)
                 {
                 // only include memory is the node is storage enabled
                 if (isNodeStorageEnabled((Integer) entry.getValue().getColumn(MemberData.NODE_ID)))
@@ -296,7 +314,7 @@ public class CoherenceClusterOverviewPanel
     @Override
     public void updateData()
         {
-        memberData  = f_model.getData(VisualVMModel.DataType.MEMBER);
+        m_memberData = f_model.getData(VisualVMModel.DataType.MEMBER);
         m_clusterData = f_model.getData(VisualVMModel.DataType.CLUSTER);
         m_serviceData = f_model.getData(VisualVMModel.DataType.SERVICE);
         m_machineData = f_model.getData(VisualVMModel.DataType.MACHINE);
@@ -324,7 +342,7 @@ public class CoherenceClusterOverviewPanel
         return -1;
 
         }
-
+        
     // ----- constants ------------------------------------------------------
 
     /**
@@ -334,6 +352,11 @@ public class CoherenceClusterOverviewPanel
         "RACK-SAFE", "SITE-SAFE"};
 
     private static final long serialVersionUID = 2602085070795849149L;
+
+    /**
+     * The logger object to use.
+     */
+    private static final Logger LOGGER = Logger.getLogger(CoherenceClusterOverviewPanel.class.getName());
 
     // ----- data members ---------------------------------------------------
 
@@ -364,6 +387,11 @@ public class CoherenceClusterOverviewPanel
     private final JTextField f_txtClusterSize;
 
     /**
+     * A button to generate a cluster report.
+     */
+    private JButton m_btnClusterReport = null;
+
+    /**
      * The graph of overall cluster memory.
      */
     private final SimpleXYChartSupport f_memoryGraph;
@@ -386,7 +414,7 @@ public class CoherenceClusterOverviewPanel
     /**
      * The member statistics data retrieved from the {@link VisualVMModel}.
      */
-    private List<Entry<Object, Data>> memberData;
+    private List<Entry<Object, Data>> m_memberData;
 
     /**
      * The cluster statistics data retrieved from the {@link VisualVMModel}.

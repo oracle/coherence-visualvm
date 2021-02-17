@@ -41,7 +41,7 @@
         </filters>
 
         <query>
-            <pattern>Coherence:type=Cache,tier=back,*</pattern>
+            <pattern>Coherence:type=Cache,tier=back,name=$topic$*,*</pattern>
         </query>
 
         <row>
@@ -72,6 +72,16 @@
 
             <column id ="Size">
                 <name>Size</name>
+                <hidden>true</hidden>
+            </column>
+
+            <column id ="TotalGets">
+                <name>TotalGets</name>
+                <hidden>true</hidden>
+            </column>
+
+            <column id ="TotalPuts">
+                <name>TotalPuts</name>
                 <hidden>true</hidden>
             </column>
 
@@ -119,7 +129,20 @@
                     <column-ref>CacheSize</column-ref>
                 </params>
             </column>
+            
+            <column id ="Puts">
+                <type>function</type>
+                <header>Puts</header>
+                <column-ref>TotalPuts</column-ref>
+                <function-name>sum</function-name>
+            </column>
 
+            <column id ="Gets">
+                <type>function</type>
+                <header>Gets</header>
+                <column-ref>TotalGets</column-ref>
+                <function-name>sum</function-name>
+            </column>
         </row>
     </report>
 </report-config>

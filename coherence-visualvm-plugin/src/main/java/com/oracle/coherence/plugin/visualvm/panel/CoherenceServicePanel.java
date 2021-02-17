@@ -463,30 +463,13 @@ public class CoherenceServicePanel
                     String   sDomainPartition = asParts.length == 1 ? null : asParts[0];
                     sService                  = sDomainPartition == null ? sRawService : asParts[1];
 
-
-
                     if (f_nOption == REPORT_DISTRIBUTIONS)
                         {
                         sResult = m_requestSender.getScheduledDistributions(sService, sDomainPartition);
-
-/*
-                        // look up the full name of the MBean in case we are in container
-                        Set<ObjectName> setResult = requestSender.getPartitionAssignmentObjectName();
-
-                        for (Object oResult : setResult)
-                            {
-                            sFQN = oResult.toString();
-                            break;
-                            }
-                        sResult = (String) requestSender.invoke(new ObjectName(sFQN), "reportScheduledDistributions",
-                                new Object[]{true}, new String[]{boolean.class.getName()});
-*/
                         }
                     else if (f_nOption == SHOW_PARTITION_STATS)
                         {
-
                         Set<Object[]> setResults = m_requestSender.getPartitionAssignmentAttributes(sService, sDomainPartition);
-
 
                          for (Object[] aoResults : setResults)
                              {

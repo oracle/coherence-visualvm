@@ -146,7 +146,6 @@ public class CoherenceProxyPanel
         f_proxyGraph = GraphHelper.createTotalProxyConnectionsGraph();
         f_proxyStatsGraph = GraphHelper.createProxyServerStatsGraph();
 
-
         pneSplitPlotter.add(f_proxyGraph.getChart());
         pneSplitPlotter.add(f_proxyStatsGraph.getChart());
 
@@ -183,7 +182,6 @@ public class CoherenceProxyPanel
 
             f_txtTotalConnections.setText(String.format(MEM_FORMAT, cTotalConnections));
             }
-
         else
             {
             f_txtTotalProxyServers.setText(String.format(MEM_FORMAT, 0));

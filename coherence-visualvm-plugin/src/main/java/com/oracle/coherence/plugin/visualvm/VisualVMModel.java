@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,6 +26,7 @@ package com.oracle.coherence.plugin.visualvm;
 
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
+import com.oracle.coherence.plugin.visualvm.panel.AbstractCoherencePanel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheDetailData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheFrontDetailData;
@@ -55,6 +56,7 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.ProxyData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.RamJournalData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceMemberData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Tuple;
 
 import java.io.BufferedReader;
@@ -76,10 +78,13 @@ import java.util.TreeMap;
 
 import java.util.Map.Entry;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.management.MBeanServerConnection;
+
+import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
 /**
  * A class that is used to store and update Coherence cluster
@@ -146,6 +151,7 @@ public class VisualVMModel
         f_mapDataRetrievers.put(MachineData.class, new MachineData());
         f_mapDataRetrievers.put(CacheDetailData.class, new CacheDetailData());
         f_mapDataRetrievers.put(CacheFrontDetailData.class, new CacheFrontDetailData());
+        f_mapDataRetrievers.put(TopicData.class, new TopicData());
         f_mapDataRetrievers.put(PersistenceData.class, new PersistenceData());
         f_mapDataRetrievers.put(PersistenceNotificationsData.class, new PersistenceNotificationsData());
         f_mapDataRetrievers.put(CacheStorageManagerData.class, new CacheStorageManagerData());
@@ -200,14 +206,32 @@ public class VisualVMModel
             // as such we are relying on the order of types in the enum.
             for (DataType type : DataType.values())
                 {
-                long ldtCollectionStart = System.currentTimeMillis();
-                m_mapCollectedData.put(type, getData(requestSender, type.getClassName()));
-                long ldtCollectionTime  = System.currentTimeMillis() - ldtCollectionStart;
-
-                if (m_fLogJMXQueryTimes)
+                // optimize the retrieval if this is not the first time and only query
+                // specific data types if the functionality is enabled.
+                // this can improve performance especially over REST
+                if (m_fIsFirstRefresh || shouldRetrieveData(type))
                     {
-                    LOGGER.info("Time to query statistics for " + type.toString() + " was " +
-                                ldtCollectionTime + " ms");
+                    if (m_fLogJMXQueryTimes)
+                        {
+                        LOGGER.info("Starting querying statistics for " + type.toString());
+                        }
+
+                    long ldtCollectionStart = System.currentTimeMillis();
+                    m_mapCollectedData.put(type, getData(requestSender, type.getClassName()));
+                    long ldtCollectionTime  = System.currentTimeMillis() - ldtCollectionStart;
+
+                    if (m_fLogJMXQueryTimes)
+                        {
+                        LOGGER.info("Time to query statistics for " + type.toString() + " was " +
+                                    ldtCollectionTime + " ms");
+                        }
+                    }
+                else
+                    {
+                    if (m_fLogJMXQueryTimes)
+                        {
+                        LOGGER.info("Skipping querying statistics for " + type.toString() + " as it is not configured");
+                        }
                     }
                 }
 
@@ -220,6 +244,97 @@ public class VisualVMModel
 
             m_ldtLastUpdate = System.currentTimeMillis();
             }
+        }
+
+
+    /**
+     * Returns true if the {@link DataType} should be refreshed. E.g. If after the
+     * first refresh, Federation is not enabled then don't refresh data on subsequent calls.
+     *
+     * @param type the {@link DataType} to check
+     *
+     * @return true if the {@link DataType} should be refreshed
+     */
+    private boolean shouldRetrieveData(DataType type)
+        {
+        Class<?> clazz = type.getClassName();
+
+        if (!isHotcacheConfigured() &&
+            (
+            clazz.equals(DataType.HOTCACHE.getClassName()) ||
+            clazz.equals(DataType.HOTCACHE_PERCACHE.getClassName())
+            ))
+            {
+            return false;
+            }
+
+        if (!isFederationCongfigured() &&
+             (
+             clazz.equals(DataType.FEDERATION_DESTINATION.getClassName()) ||
+             clazz.equals(DataType.FEDERATION_DESTINATION_DETAILS.getClassName()) ||
+             clazz.equals(DataType.FEDERATION_ORIGIN.getClassName()) ||
+             clazz.equals(DataType.FEDERATION_ORIGIN_DETAILS.getClassName())
+             ))
+            {
+            return false;
+            }
+
+        if (!isCoherenceExtendConfigured() && clazz.equals(DataType.PROXY.getClassName()))
+            {
+            return false;
+            }
+
+        if (!isPersistenceConfigured() &&
+            (
+            clazz.equals(DataType.PERSISTENCE.getClassName()) ||
+            clazz.equals(DataType.PERSISTENCE_NOTIFICATIONS.getClassName())
+            ))
+            {
+            return false;
+            }
+
+        if (!isCoherenceWebConfigured() && clazz.equals(DataType.HTTP_SESSION.getClassName()))
+            {
+            return false;
+            }
+
+        if (!isElasticDataConfigured() &&
+            (
+            clazz.equals(DataType.RAMJOURNAL.getClassName()) ||
+            clazz.equals(DataType.FLASHJOURNAL.getClassName())
+            ))
+            {
+            return false;
+            }
+
+        if (!isHotcacheConfigured() &&
+            (
+            clazz.equals(DataType.HOTCACHE.getClassName()) ||
+            clazz.equals(DataType.HOTCACHE_PERCACHE.getClassName())
+            ))
+            {
+            return false;
+            }
+
+        if (!isJCacheConfigured() &&
+            (
+            clazz.equals(DataType.JCACHE_CONFIG.getClassName()) ||
+            clazz.equals(DataType.JCACHE_STATS.getClassName())
+            ))
+            {
+            return false;
+            }
+
+        if (!isHttpProxyConfigured() &&
+            (
+            clazz.equals(DataType.HTTP_PROXY.getClassName()) ||
+            clazz.equals(DataType.HTTP_PROXY_DETAIL.getClassName())
+            ))
+            {
+            return false;
+            }
+
+        return true;
         }
 
     /**
@@ -707,6 +822,15 @@ public class VisualVMModel
         }
 
     /**
+     * Sets the value for is first refresh.
+     * @param fIsFirstRefresh the value for is first refresh
+     */
+    public void setIsFirstRefresh(boolean fIsFirstRefresh)
+        {
+        this.m_fIsFirstRefresh = fIsFirstRefresh;
+        }
+
+    /**
      * Returns the currently selected cache.
      *
      * @return the currently selected cache
@@ -816,6 +940,17 @@ public class VisualVMModel
         return m_mapCollectedData.get(DataType.PERSISTENCE) != null
                && m_mapCollectedData.get(DataType.PERSISTENCE).size() != 0;
         }
+
+    /**
+     * Returns if Topics is configured.
+     *
+     * @return true if Topics is configured.
+     */
+    public boolean isTopicsConfigured()
+        {
+        return m_mapCollectedData.get(DataType.TOPICS_DETAIL) != null
+               && m_mapCollectedData.get(DataType.TOPICS_DETAIL).size() != 0;
+       }
 
     /**
      * Return if Federation is configured.
@@ -1017,6 +1152,7 @@ public class VisualVMModel
         CACHE_DETAIL(CacheDetailData.class, CACHE_DETAIL_LABELS),
         CACHE_FRONT_DETAIL(CacheFrontDetailData.class, CACHE_FRONT_DETAIL_LABELS),
         CACHE_STORAGE_MANAGER(CacheStorageManagerData.class, CACHE_STORAGE_MANAGER_LABELS),
+        TOPICS_DETAIL(TopicData.class, TOPICS_LABELS),
         MEMBER(MemberData.class, MEMBER_LABELS),
         NODE_STORAGE(NodeStorageData.class, new String[] {}),
         MACHINE(MachineData.class, MACHINE_LABELS),
@@ -1107,10 +1243,20 @@ public class VisualVMModel
     /**
      * Labels for cache table.
      */
+    private static final String[] TOPICS_LABELS = new String[] {Localization.getLocalText("LBL_topic_name"),
+        Localization.getLocalText("LBL_topic_size"), Localization.getLocalText("LBL_memory_bytes"),
+        Localization.getLocalText("LBL_memory_mb"), Localization.getLocalText("LBL_average_object_size"),
+        Localization.getLocalText("LBL_publisher_sends"), Localization.getLocalText("LBL_subscriber_receives")
+    };
+
+    /**
+     * Labels for topics table.
+     */
     private static final String[] CACHE_LABELS = new String[] {Localization.getLocalText("LBL_service_cache_name"),
         Localization.getLocalText("LBL_size"), Localization.getLocalText("LBL_memory_bytes"),
         Localization.getLocalText("LBL_memory_mb"), Localization.getLocalText("LBL_average_object_size"),
-        Localization.getLocalText("LBL_unit_calculator")};
+        Localization.getLocalText("LBL_unit_calculator")
+    };
 
     /**
      * Labels for cache detail table.
@@ -1376,6 +1522,11 @@ public class VisualVMModel
     public static final String PROP_REST_TIMEOUT = "coherence.plugin.visualvm.rest.request.timeout";
 
     /**
+     * Property to set the request debugging using REST to connect to a cluster.
+     */
+    public static final String PROP_REST_DEBUG = "coherence.plugin.visualvm.rest.request.debug";
+
+    /**
      * Property for disabling the MBean check when connecting to WebLogic Server.
      */
     public static final String PROP_DISABLE_MBEAN_CHECK = "coherence.plugin.visualvm.disable.mbean.check";
@@ -1452,7 +1603,6 @@ public class VisualVMModel
      */
     private Pair<String, String> m_selectedJCache = null;
 
-
     /**
      * The selected service / participants pair in federation tab.
      */
@@ -1518,4 +1668,9 @@ public class VisualVMModel
      * Windows (tm) platform and we should use the "SystemCPULoad" instead.
      */
     private boolean m_fIsLoadAverageAvailable = true;
+
+    /**
+     * Indicates if this is the first refresh.
+     */
+    private boolean m_fIsFirstRefresh = true;
     }

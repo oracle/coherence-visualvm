@@ -157,7 +157,6 @@ public class CoherenceJCachePanel
         m_pneSplitBottom.add(m_hitRateGraph.getChart());
 
         f_pnlBottom.add(m_pneSplitBottom, BorderLayout.CENTER);
-
         }
 
     // ----- AbstractCoherencePanel methods ---------------------------------
