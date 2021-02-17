@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -28,6 +28,7 @@ package com.oracle.coherence.plugin.visualvm.panel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -116,20 +117,28 @@ public class CoherenceTopicPanel
         pnlTop.add(pnlHeader, BorderLayout.PAGE_START);
         pnlTop.add(pneScroll, BorderLayout.CENTER);
 
-        JSplitPane pneSplitPlotter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        pneSplitPlotter.setResizeWeight(0.5);
-        pneSplitPlotter.setOpaque(false);
-
-        // create a chart for the count of proxy server connections
+        // TODO: Fix when uncomsumed messages verified
+//        JSplitPane pneSplitPlotter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+//        pneSplitPlotter.setResizeWeight(0.5);
+//        pneSplitPlotter.setOpaque(false);
+//
+//        // create a chart for the count of proxy server connections
+//        f_unconsumedGraph = GraphHelper.createTotalUnconsumedMessagesGraph();
+//        f_topicsRatesGraph = GraphHelper.createTopicsRateGraph();
+//
+//        pneSplitPlotter.add(f_unconsumedGraph.getChart());
+//        pneSplitPlotter.add(f_topicsRatesGraph.getChart());
+//
+//        pneSplit.add(pneSplitPlotter);
+        
         f_unconsumedGraph = GraphHelper.createTotalUnconsumedMessagesGraph();
         f_topicsRatesGraph = GraphHelper.createTopicsRateGraph();
+        JPanel pnlPlotter = new JPanel(new GridLayout(1, 1));
 
-        pneSplitPlotter.add(f_unconsumedGraph.getChart());
-        pneSplitPlotter.add(f_topicsRatesGraph.getChart());
+        pnlPlotter.add(f_topicsRatesGraph.getChart());
 
         pneSplit.add(pnlTop);
-        pneSplit.add(pneSplitPlotter);
-
+        pneSplit.add(pnlPlotter);
         add(pneSplit);
         }
 

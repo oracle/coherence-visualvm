@@ -1138,31 +1138,6 @@ public class VisualVMModel
         }
 
     /**
-     * Adds a chart to the Map of charts.
-     *
-     * @param panel  The originating {@link AbstractCoherencePanel}
-     * @param chart      the chart
-     */
-    public void addChart(AbstractCoherencePanel panel, SimpleXYChartSupport chart)
-        {
-
-        if (panel == null || chart == null)
-            {
-            throw new IllegalArgumentException("You must supply tab name, chart name and chart");
-            }
-
-        f_mapCharts.put(new Pair<>(panel.getClass().getName(), chart.getChart().getName()), chart);
-        }
-
-    /**
-     * Returns all the charts.
-     * @return all the charts
-     */
-    public Map<Pair<String, String>, SimpleXYChartSupport> getCharts() {
-        return f_mapCharts;
-    }
-
-    /**
      * Defines the type of data we can collect.
      * Note: The order of these is important. Please do not change. e.g. cluster
      * need to go first so we can determine the version. Also service needs
@@ -1547,6 +1522,11 @@ public class VisualVMModel
     public static final String PROP_REST_TIMEOUT = "coherence.plugin.visualvm.rest.request.timeout";
 
     /**
+     * Property to set the request debugging using REST to connect to a cluster.
+     */
+    public static final String PROP_REST_DEBUG = "coherence.plugin.visualvm.rest.request.debug";
+
+    /**
      * Property for disabling the MBean check when connecting to WebLogic Server.
      */
     public static final String PROP_DISABLE_MBEAN_CHECK = "coherence.plugin.visualvm.disable.mbean.check";
@@ -1665,11 +1645,6 @@ public class VisualVMModel
      * or optimistic caches.
      */
     private Set<String> m_setKnownDistributedCaches;
-
-    /**
-     * A Map of the charts created in the Panels. Keyed by a Pair with Tab and Chart Name.
-     */
-    private final Map<Pair<String, String>, SimpleXYChartSupport> f_mapCharts = new ConcurrentHashMap<>();
 
     /**
      * The set of domainPartition key values to check for connection

@@ -27,7 +27,6 @@ package com.oracle.coherence.plugin.visualvm.panel;
 
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
-import com.oracle.coherence.plugin.visualvm.helper.ClusterReportGenerator;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.MemberData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceData;
@@ -114,7 +113,6 @@ public class CoherenceClusterOverviewPanel
 
         m_btnClusterReport = new JButton(getLocalizedText("BTN_cluster_report"));
         m_btnClusterReport.setMnemonic(KeyEvent.VK_R);
-        m_btnClusterReport.addActionListener(new ClusterReportListener());
         m_btnClusterReport.setToolTipText(getLocalizedText("TTIP_report"));
         pnlHeader.add(m_btnClusterReport);
 
@@ -124,7 +122,6 @@ public class CoherenceClusterOverviewPanel
 
         // create a chart for total cluster memory
         f_memoryGraph = GraphHelper.createClusterMemoryGraph();
-        f_model.addChart(this, f_memoryGraph);
 
         JPanel pnlPlotter = new JPanel(new GridLayout(1, 1));
 
@@ -134,7 +131,6 @@ public class CoherenceClusterOverviewPanel
 
         // create a chart for publisher success rate
         f_publisherGraph = GraphHelper.createPublisherGraph();
-        f_model.addChart(this, f_publisherGraph);
 
         JPanel pnlPlotter2 = new JPanel(new GridLayout(1, 1));
 
@@ -143,7 +139,6 @@ public class CoherenceClusterOverviewPanel
 
         // create a chart for machine load average
         f_loadAverageGraph = GraphHelper.createMachineLoadAverageGraph(model);
-        f_model.addChart(this, f_loadAverageGraph);
 
         JPanel pnlPlotter4 = new JPanel(new GridLayout(1, 1));
 
@@ -152,7 +147,6 @@ public class CoherenceClusterOverviewPanel
 
         // create a chart for receiver success rate
         f_receiverGraph = GraphHelper.createReceiverGraph();
-        f_model.addChart(this, f_receiverGraph);
 
         JPanel pnlPlotter3 = new JPanel(new GridLayout(1, 1));
 
@@ -178,12 +172,12 @@ public class CoherenceClusterOverviewPanel
         float cMinReceiverRate    = -1;
 
         // get the min /max values for publisher and receiver success rates
-        if (memberData != null)
+        if (m_memberData != null)
             {
             int   count = 0;
             float cRate = 0;
 
-            for (Entry<Object, Data> entry : memberData)
+            for (Entry<Object, Data> entry : m_memberData)
                 {
                 // only include memory is the node is storage enabled
                 if (isNodeStorageEnabled((Integer) entry.getValue().getColumn(MemberData.NODE_ID)))
@@ -320,7 +314,7 @@ public class CoherenceClusterOverviewPanel
     @Override
     public void updateData()
         {
-        memberData  = f_model.getData(VisualVMModel.DataType.MEMBER);
+        m_memberData = f_model.getData(VisualVMModel.DataType.MEMBER);
         m_clusterData = f_model.getData(VisualVMModel.DataType.CLUSTER);
         m_serviceData = f_model.getData(VisualVMModel.DataType.SERVICE);
         m_machineData = f_model.getData(VisualVMModel.DataType.MACHINE);
@@ -348,74 +342,7 @@ public class CoherenceClusterOverviewPanel
         return -1;
 
         }
-
-    // ----- inner classes --------------------------------------------------
-
-    /**
-     * A class to react to button press for cluster report.
-     */
-    private class ClusterReportListener implements ActionListener
-        {
-        public ClusterReportListener()
-            {
-            fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle(getLocalText("TXT_choose_directory"));
-            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            fileChooser.setAcceptAllFileFilterUsed(false);
-            fileChooser.setCurrentDirectory(new java.io.File("."));
-            }
-
-        // ----- ActionListener methods -------------------------------------
-
-        @Override
-        public void actionPerformed(ActionEvent event)
-            {
-            int result = fileChooser.showSaveDialog(CoherenceClusterOverviewPanel.this);
-
-            if (result == JFileChooser.APPROVE_OPTION)
-                {
-                File          dirOutput = fileChooser.getSelectedFile();
-                LocalDateTime dateNow   = LocalDateTime.now();
-                File fileOutput = new File(dirOutput, "CoherenceReport_" + f_formatter.format(dateNow) + ".html");
-                 if (JOptionPane.showConfirmDialog(null,
-                         getLocalText("LBL_confirm_report", fileOutput.toString()),
-                                                   getLocalText("LBL_confirm"),
-                                                   JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
-                     {
-                     try
-                         {
-                         ClusterReportGenerator generator = new ClusterReportGenerator(dateNow, fileOutput, f_model);
-                         generator.generateReport();
-                         JOptionPane.showMessageDialog(null,
-                                                       getLocalText("LBL_report_generated", fileOutput.toString()));
-                         if (Desktop.isDesktopSupported())
-                             {
-                             Desktop.getDesktop().browse(fileOutput.toURI());
-                             }
-                         }
-                     catch (Exception e)
-                         {
-                         JOptionPane.showMessageDialog(null,
-                                                       getLocalText("LBL_unable_to_generate_report", fileOutput.toString(),
-                                                                        e.getCause().getMessage()));
-                         }
-
-                     }
-                 else
-                     {
-                     JOptionPane.showMessageDialog(null, getLocalizedText("LBL_report_not_generated"));
-                     }
-                }
-            }
-            
-            /**
-             * File chooser to select a directory to output to.
-             */
-            private JFileChooser fileChooser;
-
-            private final DateTimeFormatter f_formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");
-        }
-
+        
     // ----- constants ------------------------------------------------------
 
     /**
@@ -487,7 +414,7 @@ public class CoherenceClusterOverviewPanel
     /**
      * The member statistics data retrieved from the {@link VisualVMModel}.
      */
-    private List<Entry<Object, Data>> memberData;
+    private List<Entry<Object, Data>> m_memberData;
 
     /**
      * The cluster statistics data retrieved from the {@link VisualVMModel}.

@@ -60,6 +60,7 @@ import javax.management.AttributeList;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
+import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_REST_DEBUG;
 import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_REST_TIMEOUT;
 
 /**
@@ -1047,7 +1048,12 @@ public class HttpRequestSender
             }
 
         InputStream inputStream = connection.getInputStream();
-        LOGGER.fine((System.currentTimeMillis() - start) + "ms to open connection to " + urlBuilder.getUrl().toString() + " ");
+        if (REQUEST_DEBUG)
+            {
+            LOGGER.info((System.currentTimeMillis() - start) + "ms to open connection to "
+                        + urlBuilder.getUrl().toString() + " ");
+            }
+
         return inputStream;
         }
 
@@ -1430,6 +1436,11 @@ public class HttpRequestSender
      * Timeout for HTTP requests in ms.
      */
     private static final int REQUEST_TIMEOUT = Integer.parseInt(System.getProperty(PROP_REST_TIMEOUT, "30000"));
+
+    /**
+     * Enable debug for HTTP requests.
+     */
+    private static final boolean REQUEST_DEBUG = Boolean.parseBoolean(System.getProperty(PROP_REST_DEBUG, "false"));
 
     // ----- data members ---------------------------------------------------
 
