@@ -172,8 +172,8 @@ public class CoherenceTopicPanel
 
             for (Entry<Object, Data> entry : m_topicData)
                 {
-                cTotalTopicsSize += new Float((Long) entry.getValue().getColumn(TopicData.MEMORY_USAGE_BYTES));
-                cTotalUnconsumed += new Float((Integer) entry.getValue().getColumn(TopicData.SIZE));
+                cTotalTopicsSize += Float.valueOf((Long) entry.getValue().getColumn(TopicData.MEMORY_USAGE_BYTES));
+                cTotalUnconsumed += Float.valueOf((Integer) entry.getValue().getColumn(TopicData.SIZE));
                 nSendCount += (Long) entry.getValue().getColumn(TopicData.PUBLISHER_SENDS);
                 nRecCount += (Long) entry.getValue().getColumn(TopicData.SUBSCRIBER_RECEIVES);
                 }

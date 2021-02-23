@@ -718,7 +718,7 @@ public class CoherencePersistencePanel
             if (sType.indexOf(BEGIN) > 0 && !sType.equals("recover.begin"))
                 {
                 // save the begin time
-                f_mapNotifications.put(sKey, new Long(notification.getTimeStamp()));
+                f_mapNotifications.put(sKey, notification.getTimeStamp());
                 }
             else if (sType.indexOf(END) > 0)
                 {

@@ -83,17 +83,17 @@ public class JCacheStatisticsData
         Pair<String, String> key = new Pair<String, String>(aoColumns[2].toString(), aoColumns[3].toString());
 
         data.setColumn(JCacheStatisticsData.CACHE_MANAGER, key);
-        data.setColumn(JCacheStatisticsData.CACHE_GETS, new Long(getNumberValue(aoColumns[4].toString())));
-        data.setColumn(JCacheStatisticsData.CACHE_PUTS, new Long(getNumberValue(aoColumns[5].toString())));
-        data.setColumn(JCacheStatisticsData.CACHE_REMOVALS, new Long(getNumberValue(aoColumns[6].toString())));
-        data.setColumn(JCacheStatisticsData.CACHE_HITS, new Long(getNumberValue(aoColumns[7].toString())));
-        data.setColumn(JCacheStatisticsData.CACHE_MISSES, new Long(getNumberValue(aoColumns[8].toString())));
-        data.setColumn(JCacheStatisticsData.CACHE_EVICTIONS, new Long(getNumberValue(aoColumns[9].toString())));
-        data.setColumn(JCacheStatisticsData.AVERAGE_GET_TIME, new Float(aoColumns[10].toString()));
-        data.setColumn(JCacheStatisticsData.AVERAGE_PUT_TIME, new Float(aoColumns[11].toString()));
-        data.setColumn(JCacheStatisticsData.AVERAGE_REMOVE_TIME, new Float(aoColumns[12].toString()));
-        data.setColumn(JCacheStatisticsData.CACHE_HIT_PERCENTAGE, new Float(aoColumns[13].toString()));
-        data.setColumn(JCacheStatisticsData.CACHE_MISS_PERCENTAGE, new Float(aoColumns[14].toString()));
+        data.setColumn(JCacheStatisticsData.CACHE_GETS, Long.valueOf(getNumberValue(aoColumns[4].toString())));
+        data.setColumn(JCacheStatisticsData.CACHE_PUTS, Long.valueOf(getNumberValue(aoColumns[5].toString())));
+        data.setColumn(JCacheStatisticsData.CACHE_REMOVALS, Long.valueOf(getNumberValue(aoColumns[6].toString())));
+        data.setColumn(JCacheStatisticsData.CACHE_HITS, Long.valueOf(getNumberValue(aoColumns[7].toString())));
+        data.setColumn(JCacheStatisticsData.CACHE_MISSES, Long.valueOf(getNumberValue(aoColumns[8].toString())));
+        data.setColumn(JCacheStatisticsData.CACHE_EVICTIONS, Long.valueOf(getNumberValue(aoColumns[9].toString())));
+        data.setColumn(JCacheStatisticsData.AVERAGE_GET_TIME, Float.valueOf(aoColumns[10].toString()));
+        data.setColumn(JCacheStatisticsData.AVERAGE_PUT_TIME, Float.valueOf(aoColumns[11].toString()));
+        data.setColumn(JCacheStatisticsData.AVERAGE_REMOVE_TIME, Float.valueOf(aoColumns[12].toString()));
+        data.setColumn(JCacheStatisticsData.CACHE_HIT_PERCENTAGE, Float.valueOf(aoColumns[13].toString()));
+        data.setColumn(JCacheStatisticsData.CACHE_MISS_PERCENTAGE, Float.valueOf(aoColumns[14].toString()));
 
         return data;
         }

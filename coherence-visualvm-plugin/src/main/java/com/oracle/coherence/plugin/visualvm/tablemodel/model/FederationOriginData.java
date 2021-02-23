@@ -84,7 +84,7 @@ public class FederationOriginData
                     break;
                 case TOTAL_BYTES_RECEIVED:
                 case TOTAL_MSGS_RECEIVED:
-                    data.setColumn(ordinal, new Long (getNumberValue(aoColumns[col.getColumn()] == null ? "0" :  aoColumns[col.getColumn()].toString())));
+                    data.setColumn(ordinal, Long.valueOf(getNumberValue(aoColumns[col.getColumn()] == null ? "0" :  aoColumns[col.getColumn()].toString())));
                     break;
                 }
             }

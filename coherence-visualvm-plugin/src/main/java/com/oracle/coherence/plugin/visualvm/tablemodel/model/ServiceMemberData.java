@@ -174,8 +174,8 @@ public class ServiceMemberData
             data.setColumn(ServiceMemberData.TASK_BACKLOG, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
             data.setColumn(ServiceMemberData.THREAD_COUNT, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
             data.setColumn(ServiceMemberData.THREAD_IDLE_COUNT, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
-            data.setColumn(ServiceMemberData.REQUEST_AVERAGE_DURATION, new Float(aoColumns[nStart++].toString()));
-            data.setColumn(ServiceMemberData.TASK_AVERAGE_DURATION, new Float(aoColumns[nStart++].toString()));
+            data.setColumn(ServiceMemberData.REQUEST_AVERAGE_DURATION, Float.valueOf(aoColumns[nStart++].toString()));
+            data.setColumn(ServiceMemberData.TASK_AVERAGE_DURATION, Float.valueOf(aoColumns[nStart++].toString()));
 
             if ((Integer) data.getColumn(ServiceMemberData.THREAD_COUNT) > 0)
                 {

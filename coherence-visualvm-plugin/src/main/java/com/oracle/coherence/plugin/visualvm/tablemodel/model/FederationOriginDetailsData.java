@@ -119,7 +119,7 @@ public class FederationOriginDetailsData
                 case TOTAL_MSG_UNACKED:
                 case MSG_APPLY_TIME_PERCENTILE_MILLIS:
                 case RECORD_BACKLOG_DELAY_TIME_PERCENTILE_MILLIS:
-                    data.setColumn(ordinal, new Long (getNumberValue(aoColumns[col.getColumn()].toString())));
+                    data.setColumn(ordinal, Long.valueOf(getNumberValue(aoColumns[col.getColumn()].toString())));
                     break;
                 default:
                     LOGGER.log(Level.SEVERE, "Unknown column name " + col);

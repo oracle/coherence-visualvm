@@ -150,7 +150,7 @@ public class RenderHelper
             boolean hasFocus, int row, int column)
             {
             Component c      = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            float     fValue = new Float(getText());
+            float     fValue = Float.valueOf(getText());
 
             if (fValue <= 0.500)
                 {
@@ -262,7 +262,7 @@ public class RenderHelper
 
             if (!"".equals(getText()) && getText() != null)
                 {
-                float fValue = new Float(getText());
+                float fValue = Float.valueOf(getText());
 
                 if (fValue < .15)
                     {
@@ -496,7 +496,7 @@ public class RenderHelper
             boolean hasFocus, int row, int column)
             {
             Component c      = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            float     fValue = new Float(getText());
+            float     fValue = Float.valueOf(getText());
 
             if (fValue <= 0.900)
                 {
@@ -550,7 +550,7 @@ public class RenderHelper
 
             if (!"".equals(getText()) && getText() != null)
                 {
-                float fValue = new Float(getText());
+                float fValue = Float.valueOf(getText());
 
                 if (fValue >= 0.90)
                     {

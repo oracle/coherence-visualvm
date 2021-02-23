@@ -125,10 +125,10 @@ public class FederationDestinationDetailsData
                 case MSG_APPLY_TIME_PERCENTILE_MILLIS:
                 case BYTES_REPLICATED_SECS:
                 case MSG_REPLICATED_SECS:
-                    data.setColumn(ordinal, new Long (getNumberValue(aoColumns[col.getColumn()].toString())));
+                    data.setColumn(ordinal, Long.valueOf(getNumberValue(aoColumns[col.getColumn()].toString())));
                     break;
                 case CURRENT_BANDWIDTH:
-                    data.setColumn(ordinal, new Float (aoColumns[col.getColumn()].toString()));
+                    data.setColumn(ordinal, Float.valueOf(aoColumns[col.getColumn()].toString()));
                     break;
                 case MAX_BANDWIDTH:
                 case ERROR_DESCRIPTION:

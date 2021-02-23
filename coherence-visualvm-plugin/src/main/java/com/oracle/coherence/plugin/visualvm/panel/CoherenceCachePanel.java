@@ -372,7 +372,7 @@ public class CoherenceCachePanel
 
             for (Entry<Object, Data> entry : m_cacheData)
                 {
-                cTotalCacheSize += new Float((Integer) entry.getValue().getColumn(CacheData.MEMORY_USAGE_MB));
+                cTotalCacheSize += Float.valueOf((Integer) entry.getValue().getColumn(CacheData.MEMORY_USAGE_MB));
                 }
 
             f_txtTotalMemory.setText(String.format("%,10.2f", cTotalCacheSize));

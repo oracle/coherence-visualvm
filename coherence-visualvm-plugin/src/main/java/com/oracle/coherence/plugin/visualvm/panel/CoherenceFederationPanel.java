@@ -452,7 +452,7 @@ public class CoherenceFederationPanel
 
                             // add new values  to graphs
                             GraphHelper.addValuesToOutboundPercentileDelayGraph(m_recordBacklogDelayGraph, backlog, network, apply);
-                            GraphHelper.addValuesToBandwidthUtilGraph(m_bandwidthUtilGraph, new Float(maxBandwidth), currentBandwidth);
+                            GraphHelper.addValuesToBandwidthUtilGraph(m_bandwidthUtilGraph, Float.valueOf(maxBandwidth), currentBandwidth);
 
                             // update the error description in textfield
                             m_txtOutboundErrorDesp.setText(sErrorDesp);

@@ -142,8 +142,8 @@ public class MemberData
         Data data = new MemberData();
 
         data.setColumn(MemberData.NODE_ID, Integer.valueOf(getNumberValue(aoColumns[2].toString())));
-        data.setColumn(MemberData.PUBLISHER_SUCCESS, new Float(aoColumns[3].toString()));
-        data.setColumn(MemberData.RECEIVER_SUCCESS, new Float(aoColumns[4].toString()));
+        data.setColumn(MemberData.PUBLISHER_SUCCESS, Float.valueOf(aoColumns[3].toString()));
+        data.setColumn(MemberData.RECEIVER_SUCCESS, Float.valueOf(aoColumns[4].toString()));
 
         data.setColumn(MemberData.SENDQ_SIZE, Integer.valueOf(getNumberValue(aoColumns[5].toString())));
 
