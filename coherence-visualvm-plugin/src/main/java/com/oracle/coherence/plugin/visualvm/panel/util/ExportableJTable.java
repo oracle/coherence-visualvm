@@ -25,6 +25,7 @@
 
 package com.oracle.coherence.plugin.visualvm.panel.util;
 
+import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.Localization;
 
 import java.awt.Color;
@@ -49,8 +50,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
-
-import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_SORTING_ENABLED;
 
 /**
  * An implementation of a {@link JTable} that allows exporting table data as CSV
@@ -435,7 +434,7 @@ public class ExportableJTable
     /**
      * Provide ability to turn off JTable sorting via hidden option - on by default.
      */
-    private static final boolean fUseJTableSorting = "true".equals(System.getProperty(PROP_SORTING_ENABLED, "true"));
+    private static final boolean fUseJTableSorting = GlobalPreferences.sharedInstance().isSortingAvailable();
 
     /**
      * Initialize so that we only get one instance.

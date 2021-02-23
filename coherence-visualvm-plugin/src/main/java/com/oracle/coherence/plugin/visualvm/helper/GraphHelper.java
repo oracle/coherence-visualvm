@@ -25,14 +25,13 @@
 
 package com.oracle.coherence.plugin.visualvm.helper;
 
+import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 
 import org.graalvm.visualvm.charts.ChartFactory;
 import org.graalvm.visualvm.charts.SimpleXYChartDescriptor;
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
-
-import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_ZOOM_ENABLED;
 
 /**
  * Various helper methods for creating graphs based on JVisualVM graphs.
@@ -1138,5 +1137,5 @@ public class GraphHelper
      * This functionality is only introduced in 12.2.1.1 of the plugin which uses 1.3.8 of
      * VisualVM libraries.
      */
-    private static final boolean ZOOM_ENABLED = "true".equals(System.getProperty(PROP_ZOOM_ENABLED));
+    private static final boolean ZOOM_ENABLED = GlobalPreferences.sharedInstance().isZoomEnabled();
     }

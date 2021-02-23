@@ -25,6 +25,7 @@
 
 package com.oracle.coherence.plugin.visualvm.panel;
 
+import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.JMXRequestSender;
@@ -924,8 +925,7 @@ public class CoherencePersistencePanel
      * the snapshot name. By default this is true, but can be changed by setting the following:
      * <pre>-J-Dcoherence.plugin.visualvm.persistence.list=false</pre>
      */
-    private final boolean f_fShowSnapshotList =
-            "true".equals(System.getProperty(PROP_PERSISTENCE_LIST_ENABLED, "true"));
+    private final boolean f_fShowSnapshotList = GlobalPreferences.sharedInstance().isPersistenceListEnabled();
 
     /**
      * Indicated to add notifications on startup.

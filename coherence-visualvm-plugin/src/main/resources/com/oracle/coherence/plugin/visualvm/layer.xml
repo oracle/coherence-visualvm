@@ -47,22 +47,18 @@
 
     <folder name="VisualVM">
         <folder name="ExplorerPopupSelection">
-
             <file name="com-oracle-coherence-plugin-visualvm-AddCoherenceClusterAction-selectionAware.instance">
                 <attr name="instanceCreate" methodvalue="com.oracle.coherence.plugin.visualvm.impl.AddCoherenceClusterAction.selectionAware"/>
                 <attr name="position" intvalue="0"/>
                 <attr name="default" boolvalue="true"/>
             </file>
-
         </folder>
 
         <folder name="ExplorerPopupNoSelection">
-
             <file name="com-oracle-coherence-plugin-visualvm-AddCoherenceCoherenceAction-alwaysEnabled.shadow">
                 <attr name="originalFile" stringvalue="Actions/Other/com-oracle-coherence-plugin-visualvm-AddCoherenceClusterAction-alwaysEnabled.instance"/>
                 <attr name="position" intvalue="300"/>
             </file>
-
         </folder>
     </folder>
 </filesystem>

@@ -78,13 +78,11 @@ import java.util.TreeMap;
 
 import java.util.Map.Entry;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.management.MBeanServerConnection;
 
-import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
 /**
  * A class that is used to store and update Coherence cluster
@@ -112,17 +110,10 @@ public class VisualVMModel
      */
     private void init()
         {
-        m_nRefreshTime = DEFAULT_REFRESH_TIME;
+        m_nRefreshTime = getRefreshTime();
+        m_fLogJMXQueryTimes = isLogQueryTimes();
 
-        String sRefreshTime      = System.getProperty(PROP_REFRESH_TIME);
         String sReporterDisabled = System.getProperty(PROP_REPORTER_DISABLED);
-        m_fLogJMXQueryTimes = Boolean.getBoolean(PROP_LOG_QUERY_TIMES);
-
-        if (sRefreshTime != null)
-            {
-            m_nRefreshTime = Long.parseLong(sRefreshTime) * 1000L;
-            }
-
         // if this option is set we are specifically disabling the reporter even if Coherence
         // version >= 12.1.3
         if ("true".equalsIgnoreCase(sReporterDisabled))
@@ -190,6 +181,20 @@ public class VisualVMModel
         }
 
     /**
+     * Returns the current refresh time in millis.
+     * 
+     * @return the current refresh time in millis
+     */
+    private long getRefreshTime()
+        {
+        return GlobalPreferences.sharedInstance().getRefreshTime() * 1000L;
+        }
+
+    private boolean isLogQueryTimes() {
+        return GlobalPreferences.sharedInstance().isLogQueryTimes();
+        }
+
+    /**
      * Refresh the statistics from the given {@link MBeanServerConnection}
      * connection. This method will only refresh data if at least the REFRESH_TIME
      * has passed since last refresh.
@@ -201,6 +206,8 @@ public class VisualVMModel
         if (System.currentTimeMillis() - m_ldtLastUpdate >= m_nRefreshTime)
             {
             long ldtStart = System.currentTimeMillis();
+            // refresh every iteration so we can enable and disable on the fly
+            m_fLogJMXQueryTimes = isLogQueryTimes();
 
             // its important that the CACHE data is refreshed first and
             // as such we are relying on the order of types in the enum.
@@ -242,6 +249,7 @@ public class VisualVMModel
                LOGGER.info("Time to query all statistics was " + ldtTotalDuration + " ms");
                }
 
+            m_nRefreshTime  = getRefreshTime();
             m_ldtLastUpdate = System.currentTimeMillis();
             }
         }
@@ -783,6 +791,7 @@ public class VisualVMModel
     public void setReporterAvailable(Boolean value)
         {
         m_fReporterAvailable = value;
+        GlobalPreferences.sharedInstance().setReporterDisabled(value);
         }
 
     /**
@@ -1470,11 +1479,6 @@ public class VisualVMModel
         Localization.getLocalText("LBL_avg_request_time"), Localization.getLocalText("LBL_avg_request_per_second"),
         Localization.getLocalText("LBL_total_request_count"), Localization.getLocalText("LBL_total_error_count")
         };
-
-    /**
-     * Default refresh time of 30 seconds.
-     */
-    private static final long DEFAULT_REFRESH_TIME = 30 * 1000L;
 
     /**
      * The logger object to use.

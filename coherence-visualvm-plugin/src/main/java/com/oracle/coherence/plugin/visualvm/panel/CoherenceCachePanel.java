@@ -25,6 +25,7 @@
 
 package com.oracle.coherence.plugin.visualvm.panel;
 
+import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.panel.util.MenuOption;
@@ -78,8 +79,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ToolTipManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_HEATMAP_ENABLED;
 
 /**
  * An implementation of an {@link AbstractCoherencePanel} to view summarized cache
@@ -195,7 +194,7 @@ public class CoherenceCachePanel
         table.setRowHeight(table.getRowHeight() + 4);
 
         // experimental heat map
-        if ("true".equals(System.getProperty(PROP_HEATMAP_ENABLED)))
+        if (GlobalPreferences.sharedInstance().isHeatMapEnabled())
             {
             table.setMenuOptions(
                     new MenuOption[]{new ShowHeatMapMenuOption(model, m_requestSender,
