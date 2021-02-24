@@ -25,24 +25,30 @@
 
 package com.oracle.coherence.plugin.visualvm;
 
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import org.graalvm.visualvm.core.options.UISupport;
 import org.graalvm.visualvm.core.ui.components.SectionSeparator;
 import org.graalvm.visualvm.core.ui.components.Spacer;
+
 import org.openide.awt.Mnemonics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+
 
 /**
  * A controller for Coherence options.
  *
- * @author Tim Middleton 2020.02.23
+ * @author Tim Middleton 2021.02.23
  */
 public class CoherenceOptionsPanel
         extends JPanel
@@ -50,6 +56,11 @@ public class CoherenceOptionsPanel
 
     // ----- constructors --------------------------------------------------
 
+    /**
+     * Constructs a {@link CoherenceOptionsPanel}.
+     *
+     * @param controller {@link CoherenceOptionsPanelController}
+     */
     CoherenceOptionsPanel(CoherenceOptionsPanelController controller)
         {
         f_controller = controller;
@@ -67,36 +78,45 @@ public class CoherenceOptionsPanel
             }
         };
 
+    /**
+     * Read all settings.
+     */
     void load()
         {
-        // TODO read settings and initialize GUI
-        // Example:
-        // someCheckBox.setSelected(Preferences.userNodeForPackage(CorePanel.class).getBoolean("someFlag", false));
-        // or for org.openide.util with API spec. version >= 7.4:
-        // someCheckBox.setSelected(NbPreferences.forModule(CorePanel.class).getBoolean("someFlag", false));
-        // or:
-        // someTextField.setText(SomeSystemOption.getDefault().getSomeStringProperty());
-        m_refreshTime.setValue(GlobalPreferences.sharedInstance().getRefreshTime());
-        //        plottersSpinner.setValue(GlobalPreferences.sharedInstance().getPlottersPoll());
-        //        propertyListField.setText(GlobalPreferences.sharedInstance().getOrderedKeyPropertyList());
+        GlobalPreferences preferences = GlobalPreferences.sharedInstance();
+        m_refreshTime.setValue(preferences.getRefreshTime());
+        m_logQueryTimes.setSelected(preferences.isLogQueryTimes());
+        m_disableMBeanCheck.setSelected(preferences.isMBeanCheckDisabled());
+        m_restRequestTimout.setValue(preferences.getRestTimeout());
+        m_enableRestDebug.setSelected(preferences.isRestDebugEnabled());
+        m_enableHeatMap.setSelected(preferences.isHeatMapEnabled());
+        m_enableZoom.setSelected(preferences.isZoomEnabled());
+        m_enablePersistenceList.setSelected(preferences.isPersistenceListEnabled());
+        m_enableClusterSnapshot.setSelected(preferences.isClusterSnapshotEnabled());
         }
 
+    /**
+     * Store all settings.
+     */
     void store()
         {
-        GlobalPreferences.sharedInstance().setRefreshTime((Integer) m_refreshTime.getValue());
-
-        //        GlobalPreferences.sharedInstance().setPlottersPoll((Integer) plottersSpinner.getValue());
-        //        GlobalPreferences.sharedInstance().setOrderedKeyPropertyList(propertyListField.getText());
-        //        // TODO store modified settings
-        // Example:
-        // Preferences.userNodeForPackage(CorePanel.class).putBoolean("someFlag", someCheckBox.isSelected());
-        // or for org.openide.util with API spec. version >= 7.4:
-        // NbPreferences.forModule(CorePanel.class).putBoolean("someFlag", someCheckBox.isSelected());
-        // or:
-        // SomeSystemOption.getDefault().setSomeStringProperty(someTextField.getText());
-        //        GlobalPreferences.sharedInstance().store();
+        GlobalPreferences preferences = GlobalPreferences.sharedInstance();
+        preferences.setRefreshTime((Integer) m_refreshTime.getValue());
+        preferences.setLogQueryTimes(m_logQueryTimes.isSelected());
+        preferences.setDisableMbeanCheck(m_disableMBeanCheck.isSelected());
+        preferences.setRestDebugEnabled(m_enableRestDebug.isSelected());
+        preferences.setRestTimeout((Integer) m_restRequestTimout.getValue());
+        preferences.setHeatMapEnabled(m_enableHeatMap.isSelected());
+        preferences.setZoomEnabled(m_enableZoom.isSelected());
+        preferences.setPersistenceListEnabled(m_enablePersistenceList.isSelected());
+        preferences.setClusterSnapshotEnabled(m_enableClusterSnapshot.isSelected());
         }
 
+    /**
+     * Ensure that settings are valid.
+     *
+     * @return true if settings are valid
+     */
     boolean valid()
         {
         try
@@ -107,25 +127,21 @@ public class CoherenceOptionsPanel
             {
             }
         return false;
-         }
+        }
 
+    /**
+     * Initialize UI components.
+     */
     private void initComponents()
         {
         GridBagConstraints c;
 
         setLayout(new GridBagLayout());
 
-        // pollingSeparator
-        SectionSeparator pollingSeparator = UISupport.createSectionSeparator(Localization.getLocalText("LBL_oracle"));
-        c = new GridBagConstraints();
-        c.gridy = 0;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.anchor = GridBagConstraints.WEST;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(0, 0, 5, 0);
-        add(pollingSeparator, c);
+        // ---- Header General ----
+        addHeader(0, "LBL_general");
 
-        // plottersLabel
+        // ---- Refresh Time Label ----
         JLabel plottersLabel = new JLabel();
         Mnemonics.setLocalizedText(plottersLabel, Localization.getLocalText("LBL_refresh_time"));
         c = new GridBagConstraints();
@@ -156,26 +172,195 @@ public class CoherenceOptionsPanel
         c.insets = new Insets(3, 0, 3, 0);
         add(plottersUnits, c);
 
+        m_logQueryTimes = new JCheckBox();
+        addCheckBox(2, "LBL_log_query_times", m_logQueryTimes);
+
+        m_disableMBeanCheck = new JCheckBox();
+        addCheckBox(3, "LBL_disable_mbean_check", m_disableMBeanCheck);
+
+        // ---- REST ----
+        addHeader(4, "LBL_rest");
+
+        // ---- REST Request Timeout ----
+        JLabel lblRest = new JLabel();
+        Mnemonics.setLocalizedText(lblRest, Localization.getLocalText("LBL_rest_request_timeout"));
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 5;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(3, 15, 3, 0);
+        add(lblRest, c);
+
+        m_restRequestTimout = new JSpinner();
+        lblRest.setLabelFor(m_restRequestTimout);
+        m_restRequestTimout.setModel(new SpinnerNumberModel(30000, 1000, 99999999, 1000));
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 5;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(3, 5, 3, 4);
+        add(m_restRequestTimout, c);
+
+        JLabel requestUnits = new JLabel();
+        Mnemonics.setLocalizedText(requestUnits, Localization.getLocalText("LBL_millis")); // NOI18N
+        c = new GridBagConstraints();
+        c.gridx = 2;
+        c.gridy = 5;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(3, 0, 3, 0);
+        add(requestUnits, c);
+
+        m_enableRestDebug = new JCheckBox();
+        addCheckBox(6, "LBL_enable_rest_debug", m_enableRestDebug);
+
+        // ---- Other / Experimental ----
+        addHeader(7, "LBL_other");
+
+        m_enableHeatMap = new JCheckBox();
+        addCheckBox(8, "LBL_enable_heatmap", m_enableHeatMap);
+
+        m_enablePersistenceList = new JCheckBox();
+        addCheckBox(9, "LBL_enable_persistence_list", m_enablePersistenceList);
+
+        m_enableZoom = new JCheckBox();
+        addCheckBox(10, "LBL_enable_zoom", m_enableZoom);
+
+        m_enableClusterSnapshot = new JCheckBox();
+        addCheckBox(11, "LBL_enable_cluster_snapshot", m_enableClusterSnapshot);
+
+        JLabel appsLabel = new JLabel();
+        Mnemonics.setLocalizedText(appsLabel, Localization.getLocalText("LBL_reconnect")); // NOI18N
+        c = new GridBagConstraints();
+        c.gridy = 12;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.anchor = GridBagConstraints.WEST;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(6, 15, 6, 0);
+        add(appsLabel, c);
+
         // filler
         c = new GridBagConstraints();
         c.gridx = 0;
-        c.gridy = 3;
+        c.gridy = 13;
         c.weightx = 1;
         c.weighty = 1;
         c.anchor = GridBagConstraints.NORTHWEST;
         c.fill = GridBagConstraints.BOTH;
         c.gridwidth = GridBagConstraints.REMAINDER;
         add(Spacer.create(), c);
-    }
+        }
 
+    /**
+     * Adds a checkbox.
+     *
+     * @param y        y position
+     * @param sLabel   label bundle key
+     * @param checkBox the {@link JCheckBox}
+     */
+    private void addCheckBox(int y, String sLabel, JCheckBox checkBox)
+        {
+        JLabel label = new JLabel();
+        Mnemonics.setLocalizedText(label, Localization.getLocalText(sLabel));
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = y;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(3, 15, 3, 0);
+        add(label, c);
+
+        label.setLabelFor(checkBox);
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = y;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(3, 5, 3, 4);
+        add(checkBox, c);
+
+        }
+
+    /**
+     * Adds a header.
+     *
+     * @param y      y position
+     * @param sLabel the {@link JCheckBox}
+     */
+    private void addHeader(int y, String sLabel)
+        {
+        SectionSeparator sectionSeparator = UISupport.createSectionSeparator(Localization.getLocalText(sLabel));
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridy = y;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.anchor = GridBagConstraints.WEST;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(5, 0, 5, 0);
+        add(sectionSeparator, c);
+        }
+
+    /**
+     * Start tracking changes.
+     */
     private void startTrackingChanges()
         {
-        // plottersSpinner.getModel().addChangeListener(changeListener);
+        m_refreshTime.getModel().addChangeListener(changeListener);
+        m_logQueryTimes.getModel().addChangeListener(changeListener);
+        m_disableMBeanCheck.getModel().addChangeListener(changeListener);
+        m_enableRestDebug.getModel().addChangeListener(changeListener);
+        m_restRequestTimout.getModel().addChangeListener(changeListener);
+        m_enableZoom.getModel().addChangeListener(changeListener);
+        m_enableHeatMap.getModel().addChangeListener(changeListener);
+        m_enablePersistenceList.getModel().addChangeListener(changeListener);
+        m_enableClusterSnapshot.getModel().addChangeListener(changeListener);
         }
 
     //----- data members ----------------------------------------------------
 
+    /**
+     * Controller associated with this panel.
+     */
     private final CoherenceOptionsPanelController f_controller;
 
+    /**
+     * Refresh time spinner.
+     */
     private JSpinner m_refreshTime;
-}
+
+    /**
+     * Reqest request time spinner.
+     */
+    private JSpinner m_restRequestTimout;
+
+    /**
+     * Log query times checkbox.
+     */
+    private JCheckBox m_logQueryTimes;
+
+    /**
+     * Disable MBean Check checkbox.
+     */
+    private JCheckBox m_disableMBeanCheck;
+
+    /**
+     * Enable REST Debug checkbox.
+     */
+    private JCheckBox m_enableRestDebug;
+
+    /**
+     * Enable HeatMap checkbox.
+     */
+    private JCheckBox m_enableHeatMap;
+
+    /**
+     * Enable Zoom checkbox.
+     */
+    private JCheckBox m_enableZoom;
+
+    /**
+     * Enable Persistence list checkbox.
+     */
+    private JCheckBox m_enablePersistenceList;
+
+    /**
+     * Enable cluster snapshot checkbox.
+     */
+    private JCheckBox m_enableClusterSnapshot;
+    }

@@ -51,6 +51,14 @@
   <dependencies>
     <!-- VisualVM -->
     <dependency>
+      <groupId>org.graalvm.visualvm.modules</groupId>
+      <artifactId>org-graalvm-visualvm-uisupport</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.visualvm.api</groupId>
+      <artifactId>org-openide-awt</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.graalvm.visualvm.api</groupId>
       <artifactId>org-graalvm-visualvm-application</artifactId>
     </dependency>
@@ -86,6 +94,15 @@
       <groupId>org.graalvm.visualvm.api</groupId>
       <artifactId>org-openide-windows</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.graalvm.visualvm.api</groupId>
+      <artifactId>org-netbeans-modules-options-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.visualvm.modules</groupId>
+      <artifactId>org-graalvm-visualvm-lib-ui</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>

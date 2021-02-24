@@ -73,10 +73,8 @@ public class ExportableJTable
         {
         super(model);
 
-        if  (fUseJTableSorting)
-            {
-            setAutoCreateRowSorter(true);
-            }
+        setAutoCreateRowSorter(true);
+
 
         // ensure users can only ever select one row at a time
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -430,11 +428,6 @@ public class ExportableJTable
      * The logger object to use.
      */
     private static final Logger LOGGER = Logger.getLogger(ExportableJTable.class.getName());
-
-    /**
-     * Provide ability to turn off JTable sorting via hidden option - on by default.
-     */
-    private static final boolean fUseJTableSorting = GlobalPreferences.sharedInstance().isSortingAvailable();
 
     /**
      * Initialize so that we only get one instance.

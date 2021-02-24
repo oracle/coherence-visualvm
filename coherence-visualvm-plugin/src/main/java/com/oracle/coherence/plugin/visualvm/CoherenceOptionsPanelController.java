@@ -26,19 +26,21 @@
 package com.oracle.coherence.plugin.visualvm;
 
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 import javax.swing.JComponent;
+
 import org.graalvm.visualvm.core.options.UISupport;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 
 
 /**
  * A controller for Coherence options.
  *
- * @author Tim Middleton 2020.02.23
+ * @author Tim Middleton 2021.02.23
  */
 @OptionsPanelController.TopLevelRegistration(
         id = "CoherenceOptions",
@@ -49,9 +51,13 @@ import java.beans.PropertyChangeSupport;
 public final class CoherenceOptionsPanelController
         extends OptionsPanelController
     {
-
     //----- accessors -------------------------------------------------------
 
+    /**
+     * Returns the {@link CoherenceOptionsPanel}.
+     *
+     * @return the {@link CoherenceOptionsPanel}
+     */
     private CoherenceOptionsPanel getPanel()
         {
         if (m_panel == null)
@@ -61,6 +67,9 @@ public final class CoherenceOptionsPanelController
         return m_panel;
         }
 
+    /**
+     * Indicate that a change has happened.
+     */
     void changed()
         {
         if (!m_fChanged)
@@ -69,6 +78,20 @@ public final class CoherenceOptionsPanelController
             m_pcs.firePropertyChange(OptionsPanelController.PROP_CHANGED, false, true);
             }
         m_pcs.firePropertyChange(OptionsPanelController.PROP_VALID, null, null);
+        }
+
+    /**
+     * Returns the component.
+     *
+     * @return the {@link JComponent}
+     */
+    private JComponent getComponent()
+        {
+        if (m_component == null)
+            {
+            m_component = UISupport.createScrollableContainer(getPanel());
+            }
+        return m_component;
         }
 
     //----- OptionsPanelController methods ----------------------------------
@@ -108,11 +131,7 @@ public final class CoherenceOptionsPanelController
     @Override
     public JComponent getComponent(Lookup lookup)
         {
-        if (m_component == null)
-            {
-            m_component = UISupport.createScrollableContainer(getPanel());
-            }
-        return m_component;
+        return getComponent();
         }
 
     @Override
@@ -135,11 +154,23 @@ public final class CoherenceOptionsPanelController
 
     // ----- data members ---------------------------------------------------
 
+    /**
+     * Coherence options panel.
+     */
     private CoherenceOptionsPanel m_panel;
 
+    /**
+     * Component.
+     */
     private JComponent m_component;
 
+    /**
+     * Property change support.
+     */
     private final PropertyChangeSupport m_pcs = new PropertyChangeSupport(this);
 
+    /**
+     * Indicates if values have changed.
+     */
     private boolean m_fChanged;
     }

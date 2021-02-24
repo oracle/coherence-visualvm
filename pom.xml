@@ -54,7 +54,8 @@
 
     <!-- default coherence versions -->
     <default.coherence.ce.version>20.12</default.coherence.ce.version>
-    <default.coherence.commercial.version>14.1.2-0-0-SNAPSHOT</default.coherence.commercial.version>
+    <default.coherence.commercial.version>14.1.2-0-0-SNAPSHOT
+    </default.coherence.commercial.version>
 
     <failsafe.argLine>-Xmx1g -XX:+HeapDumpOnOutOfMemoryError
       -XX:HeapDumpPath=${project.build.directory} -XX:+ExitOnOutOfMemoryError
@@ -92,7 +93,12 @@
 
   <dependencyManagement>
     <dependencies>
-      <!-- jvisualvm -->
+      <!-- VisualVM -->
+      <dependency>
+        <groupId>org.graalvm.visualvm.modules</groupId>
+        <artifactId>org-graalvm-visualvm-uisupport</artifactId>
+        <version>${jvisualvm.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.graalvm.visualvm.api</groupId>
         <artifactId>org-graalvm-visualvm-application</artifactId>
@@ -125,6 +131,11 @@
       </dependency>
       <dependency>
         <groupId>org.graalvm.visualvm.api</groupId>
+        <artifactId>org-openide-awt</artifactId>
+        <version>${jvisualvm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.graalvm.visualvm.api</groupId>
         <artifactId>org-openide-util</artifactId>
         <version>${jvisualvm.version}</version>
       </dependency>
@@ -136,6 +147,16 @@
       <dependency>
         <groupId>org.graalvm.visualvm.api</groupId>
         <artifactId>org-openide-windows</artifactId>
+        <version>${jvisualvm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.graalvm.visualvm.api</groupId>
+        <artifactId>org-netbeans-modules-options-api</artifactId>
+        <version>${jvisualvm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.graalvm.visualvm.modules</groupId>
+        <artifactId>org-graalvm-visualvm-lib-ui</artifactId>
         <version>${jvisualvm.version}</version>
       </dependency>
 

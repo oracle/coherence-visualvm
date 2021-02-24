@@ -111,11 +111,6 @@ public class CoherenceClusterOverviewPanel
         pnlHeader.add(getLocalizedLabel("LBL_cluster_statusha", f_txtClusterStatusHA));
         pnlHeader.add(f_txtClusterStatusHA);
 
-        m_btnClusterReport = new JButton(getLocalizedText("BTN_cluster_report"));
-        m_btnClusterReport.setMnemonic(KeyEvent.VK_R);
-        m_btnClusterReport.setToolTipText(getLocalizedText("TTIP_report"));
-        pnlHeader.add(m_btnClusterReport);
-
         JPanel pnlData = new JPanel();
 
         pnlData.setLayout(new GridLayout(2, 2));
@@ -385,11 +380,6 @@ public class CoherenceClusterOverviewPanel
      * The cluster size.
      */
     private final JTextField f_txtClusterSize;
-
-    /**
-     * A button to generate a cluster report.
-     */
-    private JButton m_btnClusterReport = null;
 
     /**
      * The graph of overall cluster memory.

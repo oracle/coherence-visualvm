@@ -190,7 +190,13 @@ public class VisualVMModel
         return GlobalPreferences.sharedInstance().getRefreshTime() * 1000L;
         }
 
-    private boolean isLogQueryTimes() {
+    /**
+     * Indicates if we should log query times.
+     *
+     * @return if we should log query times
+     */
+    private boolean isLogQueryTimes()
+        {
         return GlobalPreferences.sharedInstance().isLogQueryTimes();
         }
 
@@ -1486,6 +1492,11 @@ public class VisualVMModel
     private static final Logger LOGGER = Logger.getLogger(VisualVMModel.class.getName());
 
     /**
+     * Property to display cluster snapshot.
+     */
+    public static final String PROP_CLUSTER_SNAPSHOT = "coherence.plugin.visualvm.cluster.snapshot.enabled";
+
+    /**
      * Property to set the time in seconds between refreshing data from the cluster.
      */
     public static final String PROP_REFRESH_TIME = "coherence.plugin.visualvm.refreshtime";
@@ -1499,11 +1510,6 @@ public class VisualVMModel
      * Property to disable use of the Coherence Reporter.
      */
     public static final String PROP_REPORTER_DISABLED = "coherence.plugin.visualvm.reporter.disabled";
-
-    /**
-     * Property to turn off JTable sorting - on by default
-     */
-    public static final String PROP_SORTING_ENABLED = "coherence.plugin.visualvm.sorting.enabled";
 
     /**
      * Property to enable experimental heat map for caches.
