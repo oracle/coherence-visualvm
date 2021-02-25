@@ -106,7 +106,6 @@ jobs:
       shell: bash
       run: |
         CLONE_DIR=coherence-$COH_BRANCH
-	# coherence-bom does not exist in 14.1.1.0
         POM_FILE=/tmp/${CLONE_DIR}/prj/coherence-bom/pom.xml
         if [ ! -r $POM_FILE ] ; then
 	   POM_FILE=/tmp/${CLONE_DIR}/prj/pom.xml
