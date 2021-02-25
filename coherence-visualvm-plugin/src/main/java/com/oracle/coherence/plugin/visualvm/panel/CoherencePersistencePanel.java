@@ -25,6 +25,8 @@
 
 package com.oracle.coherence.plugin.visualvm.panel;
 
+
+import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.JMXRequestSender;
@@ -84,12 +86,13 @@ import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
 import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_PERSISTENCE_LIST_ENABLED;
 
+
 /**
- * An implementation of an {@link AbstractCoherencePanel} to
- * view summarized persistence data.<br>
+ * An implementation of an {@link AbstractCoherencePanel} to view summarized
+ * persistence data.<br>
  *
  * @author tam  2013.11.14
- * @since  12.2.1.0.0
+ * @since 12.2.1.0.0
  */
 public class CoherencePersistencePanel
         extends AbstractCoherencePanel
@@ -149,42 +152,42 @@ public class CoherencePersistencePanel
         if (model.getClusterVersionAsInt() >= 122100)
             {
             MenuOption optionListSnapshots = new PersistenceInvokeMenuOption(model, m_requestSender, f_table,
-                                                  "LBL_list_snapshots", GET_SNAPSHOTS, false, false);
+                                                                             "LBL_list_snapshots", GET_SNAPSHOTS, false, false);
             MenuOption optionListArchivedSnapshots = new PersistenceInvokeMenuOption(model, m_requestSender, f_table,
-                                                  "LBL_list_archived_snapshots", LIST_ARCHIVED_SNAPSHOTS, false, false);
+                                                                                     "LBL_list_archived_snapshots", LIST_ARCHIVED_SNAPSHOTS, false, false);
             MenuOption optionCurrentStatus = new PersistenceInvokeMenuOption(model, m_requestSender, f_table,
-                                                  "LBL_current_status", GET_OPERATION_STATUS, false, false);
+                                                                             "LBL_current_status", GET_OPERATION_STATUS, false, false);
             MenuOption optionCreateSnapshot = new PersistenceInvokeMenuOption(model, m_requestSender, f_table,
-                                                  "LBL_create_snapshot", CREATE_SNAPSHOT, true, true);
+                                                                              "LBL_create_snapshot", CREATE_SNAPSHOT, true, true);
             MenuOption optionRecoverSnapshot = new PersistenceInvokeMenuOption(model, m_requestSender, f_table,
-                                                  "LBL_recover_snapshot", RECOVER_SNAPSHOT, true, true);
+                                                                               "LBL_recover_snapshot", RECOVER_SNAPSHOT, true, true);
             MenuOption optionRemoveSnapshot = new PersistenceInvokeMenuOption(model, m_requestSender, f_table,
-                                                  "LBL_remove_snapshot", REMOVE_SNAPSHOT, true, true);
+                                                                              "LBL_remove_snapshot", REMOVE_SNAPSHOT, true, true);
             MenuOption optionArchiveSnapshot = new PersistenceInvokeMenuOption(model, m_requestSender, f_table,
-                                                  "LBL_archive_snapshot", ARCHIVE_SNAPSHOT, true, true);
+                                                                               "LBL_archive_snapshot", ARCHIVE_SNAPSHOT, true, true);
             MenuOption optionRetrieveArchivedSnapshot = new PersistenceInvokeMenuOption(model, m_requestSender, f_table,
-                                                  "LBL_retrieve_snapshot", RETRIEVE_ARCHIVED_SNAPSHOT, true, true);
+                                                                                        "LBL_retrieve_snapshot", RETRIEVE_ARCHIVED_SNAPSHOT, true, true);
             MenuOption optionRemoveArchivedSnapshot = new PersistenceInvokeMenuOption(model, m_requestSender, f_table,
-                                                  "LBL_purge_snapshot", REMOVE_ARCHIVED_SNAPSHOT, true, true);
+                                                                                      "LBL_purge_snapshot", REMOVE_ARCHIVED_SNAPSHOT, true, true);
             MenuOption separator = new SeparatorMenuOption(model, m_requestSender, f_table);
 
             // force recovery option only available in 12.2.1.1.0 and above
             if (model.getClusterVersionAsInt() >= 122110)
                 {
-                 MenuOption optionForceRecovery = new PersistenceInvokeMenuOption(model, m_requestSender, f_table,
-                                                  "LBL_force_recovery", FORCE_RECOVERY, true, false);
-                 f_table.setMenuOptions(new MenuOption[]
-                    {optionListSnapshots, optionListArchivedSnapshots, optionCurrentStatus, separator,
-                     optionCreateSnapshot, optionRecoverSnapshot, optionRemoveSnapshot, separator,
-                     optionArchiveSnapshot, optionRetrieveArchivedSnapshot, optionRemoveArchivedSnapshot,
-                     separator, optionForceRecovery});
+                MenuOption optionForceRecovery = new PersistenceInvokeMenuOption(model, m_requestSender, f_table,
+                                                                                 "LBL_force_recovery", FORCE_RECOVERY, true, false);
+                f_table.setMenuOptions(new MenuOption[]
+                                               {optionListSnapshots, optionListArchivedSnapshots, optionCurrentStatus, separator,
+                                                optionCreateSnapshot, optionRecoverSnapshot, optionRemoveSnapshot, separator,
+                                                optionArchiveSnapshot, optionRetrieveArchivedSnapshot, optionRemoveArchivedSnapshot,
+                                                separator, optionForceRecovery});
                 }
             else
                 {
                 f_table.setMenuOptions(new MenuOption[]
-                       {optionListSnapshots, optionListArchivedSnapshots, optionCurrentStatus, separator,
-                        optionCreateSnapshot, optionRecoverSnapshot, optionRemoveSnapshot, separator,
-                        optionArchiveSnapshot, optionRetrieveArchivedSnapshot, optionRemoveArchivedSnapshot});
+                                               {optionListSnapshots, optionListArchivedSnapshots, optionCurrentStatus, separator,
+                                                optionCreateSnapshot, optionRecoverSnapshot, optionRemoveSnapshot, separator,
+                                                optionArchiveSnapshot, optionRetrieveArchivedSnapshot, optionRemoveArchivedSnapshot});
                 }
             }
 
@@ -225,13 +228,13 @@ public class CoherencePersistencePanel
 
         f_tableNotifications.setPreferredScrollableViewportSize(new Dimension(500, 150));
         RenderHelper.setColumnRenderer(f_tableNotifications, PersistenceNotificationsData.SEQUENCE,
-                    new RenderHelper.IntegerRenderer());
+                                       new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_tableNotifications, PersistenceNotificationsData.SERVICE,
-                    new RenderHelper.ToolTipRenderer());
+                                       new RenderHelper.ToolTipRenderer());
         RenderHelper.setColumnRenderer(f_tableNotifications, PersistenceNotificationsData.MESSAGE,
-                    new RenderHelper.ToolTipRenderer());
+                                       new RenderHelper.ToolTipRenderer());
         RenderHelper.setColumnRenderer(f_tableNotifications, PersistenceNotificationsData.DURATION,
-                    new RenderHelper.IntegerRenderer());
+                                       new RenderHelper.IntegerRenderer());
         RenderHelper.setHeaderAlignment(f_tableNotifications, JLabel.CENTER);
 
         // Add some space
@@ -270,39 +273,25 @@ public class CoherencePersistencePanel
     @Override
     public void updateGUI()
         {
-        long         cTotalMemory    = 0;
-        final String MEM_FORMAT      = "%,10.2f";
-        long         cLatencyMax     = 0L;
-        float        cLatencyTotal   = 0.0f;
-        float        cLatencyAverage = 0.0f;
-        int          c               = 0;
+        final String MEM_FORMAT = "%,10.2f";
+
+        Object[] persistenceData = getPersistenceData(m_persistenceData);
+        long cTotalMemory = (Long) persistenceData[0];
+        long cLatencyMax = (Long) persistenceData[1];
+        float cLatencyTotal = (Float) persistenceData[2];
+        int count = (Integer) persistenceData[3];
+        float cLatencyAverage = 0.0f;
+
 
         if (m_persistenceData != null)
             {
-            for (Entry<Object, Data> entry : m_persistenceData)
-                {
-                // only include services with active persistence
-                if (entry.getValue().getColumn(PersistenceData.PERSISTENCE_MODE).equals("active"))
-                    {
-                    long cTotalMem = (Long) entry.getValue().getColumn(PersistenceData.TOTAL_ACTIVE_SPACE_USED);
-
-                    cTotalMemory  += cTotalMem == -1 ? 0 : cTotalMem;
-                    cLatencyTotal += (Float) entry.getValue().getColumn(PersistenceData.AVERAGE_LATENCY);
-
-                    cLatencyMax = (Long) entry.getValue().getColumn(PersistenceData.MAX_LATENCY);
-
-                    if (cLatencyMax > m_cMaxMaxLatency)
-                        {
-                        m_cMaxMaxLatency = cLatencyMax;
-                        }
-
-                    c++;
-                    }
-                }
-
+            m_cMaxMaxLatency = cLatencyMax;
             f_txtTotalActiveSpaceUsed.setText(String.format(MEM_FORMAT, (cTotalMemory * 1.0f) / GraphHelper.MB));
-            cLatencyAverage = cLatencyTotal / c;
-
+            cLatencyAverage = cLatencyTotal / count;
+            if (cLatencyMax > m_cMaxMaxLatency)
+                {
+                m_cMaxMaxLatency = cLatencyMax;
+                }
             }
         else
             {
@@ -349,8 +338,8 @@ public class CoherencePersistencePanel
      * An implementation of a {@link MenuOption} providing default functionality
      * to call a JMX operation for persistence operations.
      *
-     * @since 12.2.1
      * @author tam  2014.08.25
+     * @since 12.2.1
      */
     private class PersistenceInvokeMenuOption
             extends AbstractMenuOption
@@ -358,26 +347,31 @@ public class CoherencePersistencePanel
         // ---- constructors ------------------------------------------------
 
         /**
-         *  Construct a new implementation of a {@link MenuOption} providing default functionality.
+         * Construct a new implementation of a {@link MenuOption} providing
+         * default functionality.
          *
-         * @param model          the {@link VisualVMModel} to get collected data from
-         * @param requestSender  the {@link MBeanServerConnection} to perform additional queries
-         * @param jtable         the {@link ExportableJTable} that this applies to
-         * @param sLabel         the label key for the menu option from Bundle.properties
-         * @param sOperation     the JMX operation to call
-         * @param fConfirm       if true a confirmation should be displayed
-         * @param fPrompt        if true, prompt for a snapshot name otherwise the operation
-         *                       will just be called. See below for special processing of
-         *                       getSnapshots().
+         * @param model         the {@link VisualVMModel} to get collected data
+         *                      from
+         * @param requestSender the {@link MBeanServerConnection} to perform
+         *                      additional queries
+         * @param jtable        the {@link ExportableJTable} that this applies
+         *                      to
+         * @param sLabel        the label key for the menu option from
+         *                      Bundle.properties
+         * @param sOperation    the JMX operation to call
+         * @param fConfirm      if true a confirmation should be displayed
+         * @param fPrompt       if true, prompt for a snapshot name otherwise
+         *                      the operation will just be called. See below for
+         *                      special processing of getSnapshots().
          */
         public PersistenceInvokeMenuOption(VisualVMModel model, RequestSender requestSender, ExportableJTable jtable,
                                            String sLabel, String sOperation, boolean fConfirm, boolean fPrompt)
             {
             super(model, requestSender, jtable);
-            f_sLabel     = sLabel;
+            f_sLabel = sLabel;
             f_sOperation = sOperation;
-            f_fConfirm   = fConfirm;
-            f_fPrompt    = fPrompt;
+            f_fConfirm = fConfirm;
+            f_fPrompt = fPrompt;
             }
 
         /**
@@ -395,12 +389,12 @@ public class CoherencePersistencePanel
         @Override
         public void actionPerformed(ActionEvent e)
             {
-            int      nRow           = getSelectedRow();
-            String   sServiceName   = null;
-            String   sQuery         = null;
-            String   sSnapshotName  = null;
-            String   sResult        = null;
-            boolean  fGetArchived  ;
+            int nRow = getSelectedRow();
+            String sServiceName = null;
+            String sQuery = null;
+            String sSnapshotName = null;
+            String sResult = null;
+            boolean fGetArchived;
             String[] asSnapshotList = null;
 
             if (nRow == -1)
@@ -413,9 +407,13 @@ public class CoherencePersistencePanel
                     {
                     sServiceName = (String) getJTable().getModel().getValueAt(nRow, 0);
 
-                    String[] asParts          = ServiceData.getServiceParts(sServiceName);
-                    String   sService         = asParts.length == 2 ? asParts[1] : sServiceName;
-                    String   sDomainPartition = asParts.length == 2 ? asParts[0] : null;
+                    String[] asParts = ServiceData.getServiceParts(sServiceName);
+                    String sService = asParts.length == 2
+                                      ? asParts[1]
+                                      : sServiceName;
+                    String sDomainPartition = asParts.length == 2
+                                              ? asParts[0]
+                                              : null;
 
                     if (f_fPrompt)
                         {
@@ -443,8 +441,11 @@ public class CoherencePersistencePanel
                             if (asSnapshotList == null || asSnapshotList.length == 0)
                                 {
                                 JOptionPane.showMessageDialog(null,
-                                        Localization.getLocalText("LBL_no_snapshots",
-                                                    new String[] {fGetArchived ? "archived " : ""}));
+                                                              Localization.getLocalText("LBL_no_snapshots",
+                                                                                        new String[] {
+                                                                                                fGetArchived
+                                                                                                ? "archived "
+                                                                                                : ""}));
                                 return;
                                 }
 
@@ -453,13 +454,16 @@ public class CoherencePersistencePanel
                             listSnapshots.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
                             sSnapshotName = (String) JOptionPane.showInputDialog(
-                                        null, "Snapshpot",
-                                        Localization.getLocalText("LBL_enter_snapshot",
-                                                new String[] {fGetArchived ? "archived " : ""}),
-                                        JOptionPane.QUESTION_MESSAGE,
-                                        null, // default icon
-                                        asSnapshotList,
-                                        asSnapshotList[0]);
+                                    null, "Snapshpot",
+                                    Localization.getLocalText("LBL_enter_snapshot",
+                                                              new String[] {
+                                                                      fGetArchived
+                                                                      ? "archived "
+                                                                      : ""}),
+                                    JOptionPane.QUESTION_MESSAGE,
+                                    null, // default icon
+                                    asSnapshotList,
+                                    asSnapshotList[0]);
                             }
                         }
 
@@ -467,10 +471,12 @@ public class CoherencePersistencePanel
                         {
                         if (f_fConfirm)
                             {
-                            String sQuestion = FORCE_RECOVERY.equals(f_sOperation) ?
-                                    Localization.getLocalText("LBL_confirm_recovery") :
-                                    Localization.getLocalText("LBL_confirm_snapshot",
-                                    new String[] {f_sOperation, sSnapshotName});
+                            String sQuestion = FORCE_RECOVERY.equals(f_sOperation)
+                                               ?
+                                               Localization.getLocalText("LBL_confirm_recovery")
+                                               :
+                                               Localization.getLocalText("LBL_confirm_snapshot",
+                                                                         new String[] {f_sOperation, sSnapshotName});
 
                             if (JOptionPane.showConfirmDialog(null, sQuestion,
                                                               Localization.getLocalText("LBL_confirm_operation"),
@@ -483,7 +489,7 @@ public class CoherencePersistencePanel
                         if (f_fPrompt)
                             {
                             m_requestSender.executePersistenceOperation(sService, sDomainPartition,
-                                    f_sOperation, sSnapshotName);
+                                                                        f_sOperation, sSnapshotName);
                             }
                         else
                             {
@@ -498,7 +504,7 @@ public class CoherencePersistencePanel
                                 String sStatus = m_requestSender.getAttribute(new ObjectName(getFullyQualifiedName(
                                         m_requestSender, PersistenceData.getMBeanName(sServiceName)))
                                         , "OperationStatus");
-                                sResult = Localization.getLocalText("LBL_current_status_result", new String[] { sServiceName, sStatus});
+                                sResult = Localization.getLocalText("LBL_current_status_result", new String[] {sServiceName, sStatus});
                                 }
                             else
                                 {
@@ -510,21 +516,23 @@ public class CoherencePersistencePanel
                                     {
                                     String[] asArchivedSnapshots = m_requestSender.getArchivedSnapshots(sService, sDomainPartition);
                                     sResult = getSnapshotList(Localization.getLocalText("LBL_archived_snapshots", new String[] {sServiceName}),
-                                                          asArchivedSnapshots);
+                                                              asArchivedSnapshots);
                                     }
                                 }
                             }
 
                         if (sResult == null)
                             {
-                            sResult = Localization.getLocalText(f_sOperation.equals(REMOVE_ARCHIVED_SNAPSHOT) ?
-                                            "LBL_operation_ok" : "LBL_operation_submitted",
-                                         new String[] {f_sOperation, sSnapshotName, sServiceName});
+                            sResult = Localization.getLocalText(f_sOperation.equals(REMOVE_ARCHIVED_SNAPSHOT)
+                                                                ?
+                                                                "LBL_operation_ok"
+                                                                : "LBL_operation_submitted",
+                                                                new String[] {f_sOperation, sSnapshotName, sServiceName});
                             }
                         if (RECOVER_SNAPSHOT.equals(f_sOperation))
                             {
                             sResult = sResult + "\n\n" + Localization.getLocalText("LBL_recover_note",
-                                    new String[] {sServiceName});
+                                                                                   new String[] {sServiceName});
                             }
 
                         showMessageDialog(Localization.getLocalText("LBL_result"), sResult,
@@ -535,8 +543,8 @@ public class CoherencePersistencePanel
                 catch (Exception ee)
                     {
                     showMessageDialog(Localization.getLocalText("ERR_error_invoking",
-                        new String[] {f_sOperation + " " + sQuery}), ee.getMessage() +
-                            "\n" + ee.getCause(), JOptionPane.ERROR_MESSAGE);
+                                                                new String[] {f_sOperation + " " + sQuery}), ee.getMessage() +
+                                                                                                             "\n" + ee.getCause(), JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -546,9 +554,8 @@ public class CoherencePersistencePanel
         /**
          * Return a formatted list of snapshots.
          *
-         * @param sTitle  the title to display on first line
-         * @param asList  the {@link String}[] of snapshots
-         *
+         * @param sTitle the title to display on first line
+         * @param asList the {@link String}[] of snapshots
          * @return the formatted list
          */
         private String getSnapshotList(String sTitle, String[] asList)
@@ -590,7 +597,8 @@ public class CoherencePersistencePanel
     /**
      * A class to react to button press to clear notifications.
      */
-    private class ClearNotificationsListener implements ActionListener
+    private class ClearNotificationsListener
+            implements ActionListener
         {
         // ----- ActionListener methods -------------------------------------
 
@@ -598,7 +606,7 @@ public class CoherencePersistencePanel
         public void actionPerformed(ActionEvent event)
             {
             if (JOptionPane.showConfirmDialog(null, getLocalizedText("LBL_clear_confirmation"),
-                    getLocalizedText("LBL_confirmation"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+                                              getLocalizedText("LBL_confirmation"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
                 {
                 mapNotificationsData.clear();
                 f_mapNotifications.clear();
@@ -611,7 +619,8 @@ public class CoherencePersistencePanel
     /**
      * A class to react to the checkbox being changed.
      */
-    private class CheckBoxListener implements ItemListener
+    private class CheckBoxListener
+            implements ItemListener
         {
         // ----- ItemListener methods ---------------------------------------
 
@@ -629,22 +638,22 @@ public class CoherencePersistencePanel
                     }
                 }
             else
-               {
+                {
                 // de-selected so remove all JMX NotificationListeners
                 f_mapJMXListeners.forEach((k, v) ->
-                    {
-                    try
-                        {
-                        if (m_requestSender instanceof JMXRequestSender)
-                            {
-                            ((JMXRequestSender) m_requestSender).removeNotificationListener(v.getX(), v.getY());
-                            }
-                        }
-                    catch (Exception e)
-                        {
-                        throw new RuntimeException("Unable to remove notification listener on " + v.getX());
-                        }
-                    });
+                                          {
+                                          try
+                                              {
+                                              if (m_requestSender instanceof JMXRequestSender)
+                                                  {
+                                                  ((JMXRequestSender) m_requestSender).removeNotificationListener(v.getX(), v.getY());
+                                                  }
+                                              }
+                                          catch (Exception e)
+                                              {
+                                              throw new RuntimeException("Unable to remove notification listener on " + v.getX());
+                                              }
+                                          });
                 f_mapJMXListeners.clear();
                 }
             }
@@ -654,7 +663,8 @@ public class CoherencePersistencePanel
          */
         public void addListeners()
             {
-            if (m_persistenceData != null) {
+            if (m_persistenceData != null)
+                {
                 for (Entry<Object, Data> entry : m_persistenceData)
                     {
                     String sServiceName = (String) entry.getKey();
@@ -665,8 +675,8 @@ public class CoherencePersistencePanel
                             {
                             String sQuery = getFullyQualifiedName(m_requestSender, PersistenceData.getMBeanName(sServiceName));
 
-                            ObjectName           oBeanName = new ObjectName(sQuery);
-                            NotificationListener listener  = new PersistenceNotificationListener(sServiceName);
+                            ObjectName oBeanName = new ObjectName(sQuery);
+                            NotificationListener listener = new PersistenceNotificationListener(sServiceName);
                             ((JMXRequestSender) m_requestSender).addNotificationListener(oBeanName, listener, null, null);
 
                             f_mapJMXListeners.put(sServiceName, new Pair<ObjectName, NotificationListener>(oBeanName, listener));
@@ -687,7 +697,7 @@ public class CoherencePersistencePanel
      * A class to react to JMX notifications.
      */
     private class PersistenceNotificationListener
-                implements NotificationListener
+            implements NotificationListener
         {
 
         // ----- constructors -----------------------------------------------
@@ -695,7 +705,7 @@ public class CoherencePersistencePanel
         /**
          * Construct a new NotificationListener for the given service.
          *
-         * @param sServiceName  service name to use
+         * @param sServiceName service name to use
          */
         public PersistenceNotificationListener(String sServiceName)
             {
@@ -711,7 +721,7 @@ public class CoherencePersistencePanel
 
             // determine if its a begin or end notification
             String sType = notification.getType();
-            String sKey  = f_sServiceName + "-" + sType;
+            String sKey = f_sServiceName + "-" + sType;
 
             // ignore the recover.begin and recover.end notifications as this can be
             // confusing for the user
@@ -723,13 +733,15 @@ public class CoherencePersistencePanel
             else if (sType.indexOf(END) > 0)
                 {
                 // try and find the begin notification
-                sKey          = f_sServiceName + "-" + sType.replaceAll(END, BEGIN);
+                sKey = f_sServiceName + "-" + sType.replaceAll(END, BEGIN);
                 Long ldtStart = f_mapNotifications.get(sKey);
 
                 if (ldtStart != null)
                     {
-                    String sBaseType = sType.replaceAll(END,"");
-                    String sMessage = notification.getMessage() + (sUserData == null || sUserData.isEmpty() ? "" : sUserData);
+                    String sBaseType = sType.replaceAll(END, "");
+                    String sMessage = notification.getMessage() + (sUserData == null || sUserData.isEmpty()
+                                                                   ? ""
+                                                                   : sUserData);
                     f_mapNotifications.remove(sKey);
 
                     // Add the data to the notifications data map
@@ -770,7 +782,7 @@ public class CoherencePersistencePanel
          * Service name on which notification is added.
          */
         private final String f_sServiceName;
-    }
+        }
 
     // ----- constants ------------------------------------------------------
 
@@ -849,7 +861,8 @@ public class CoherencePersistencePanel
     private List<Map.Entry<Object, Data>> m_persistenceData;
 
     /**
-     * The persistence notification data retrieved from the {@link VisualVMModel}.
+     * The persistence notification data retrieved from the {@link
+     * VisualVMModel}.
      */
     private List<Map.Entry<Object, Data>> m_persistenceNotificationData;
 
@@ -904,7 +917,8 @@ public class CoherencePersistencePanel
     private final Map<String, Pair<ObjectName, NotificationListener>> f_mapJMXListeners = new HashMap<>();
 
     /**
-     * A map of notifications keyed by service name and notification type.begin.
+     * A map of notifications keyed by service name and notification
+     * type.begin.
      */
     private final Map<String, Long> f_mapNotifications = new ConcurrentHashMap<>();
 
@@ -912,7 +926,7 @@ public class CoherencePersistencePanel
      * A Map containing notifications data.
      */
     private SortedMap<Object, Data> mapNotificationsData = new TreeMap<>(
-            (o1, o2)->((Long) o2).compareTo((Long) o1));
+            (o1, o2) -> ((Long) o2).compareTo((Long) o1));
 
     /**
      * Sequence for notifications.
@@ -920,12 +934,12 @@ public class CoherencePersistencePanel
     private AtomicLong nSequence = new AtomicLong(0L);
 
     /**
-     * Indicates if the list of snapshots should be shown instead of the user entering
-     * the snapshot name. By default this is true, but can be changed by setting the following:
+     * Indicates if the list of snapshots should be shown instead of the user
+     * entering the snapshot name. By default this is true, but can be changed
+     * by setting the following:
      * <pre>-J-Dcoherence.plugin.visualvm.persistence.list=false</pre>
      */
-    private final boolean f_fShowSnapshotList =
-            "true".equals(System.getProperty(PROP_PERSISTENCE_LIST_ENABLED, "true"));
+    private final boolean f_fShowSnapshotList = GlobalPreferences.sharedInstance().isPersistenceListEnabled();
 
     /**
      * Indicated to add notifications on startup.

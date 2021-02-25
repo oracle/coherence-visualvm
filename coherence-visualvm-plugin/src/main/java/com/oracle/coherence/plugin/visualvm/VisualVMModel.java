@@ -78,13 +78,11 @@ import java.util.TreeMap;
 
 import java.util.Map.Entry;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.management.MBeanServerConnection;
 
-import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
 /**
  * A class that is used to store and update Coherence cluster
@@ -112,17 +110,10 @@ public class VisualVMModel
      */
     private void init()
         {
-        m_nRefreshTime = DEFAULT_REFRESH_TIME;
+        m_nRefreshTime = getRefreshTime();
+        m_fLogJMXQueryTimes = isLogQueryTimes();
 
-        String sRefreshTime      = System.getProperty(PROP_REFRESH_TIME);
         String sReporterDisabled = System.getProperty(PROP_REPORTER_DISABLED);
-        m_fLogJMXQueryTimes = Boolean.getBoolean(PROP_LOG_QUERY_TIMES);
-
-        if (sRefreshTime != null)
-            {
-            m_nRefreshTime = Long.parseLong(sRefreshTime) * 1000L;
-            }
-
         // if this option is set we are specifically disabling the reporter even if Coherence
         // version >= 12.1.3
         if ("true".equalsIgnoreCase(sReporterDisabled))
@@ -190,6 +181,26 @@ public class VisualVMModel
         }
 
     /**
+     * Returns the current refresh time in millis.
+     * 
+     * @return the current refresh time in millis
+     */
+    private long getRefreshTime()
+        {
+        return GlobalPreferences.sharedInstance().getRefreshTime() * 1000L;
+        }
+
+    /**
+     * Indicates if we should log query times.
+     *
+     * @return if we should log query times
+     */
+    private boolean isLogQueryTimes()
+        {
+        return GlobalPreferences.sharedInstance().isLogQueryTimes();
+        }
+
+    /**
      * Refresh the statistics from the given {@link MBeanServerConnection}
      * connection. This method will only refresh data if at least the REFRESH_TIME
      * has passed since last refresh.
@@ -201,6 +212,8 @@ public class VisualVMModel
         if (System.currentTimeMillis() - m_ldtLastUpdate >= m_nRefreshTime)
             {
             long ldtStart = System.currentTimeMillis();
+            // refresh every iteration so we can enable and disable on the fly
+            m_fLogJMXQueryTimes = isLogQueryTimes();
 
             // its important that the CACHE data is refreshed first and
             // as such we are relying on the order of types in the enum.
@@ -242,6 +255,7 @@ public class VisualVMModel
                LOGGER.info("Time to query all statistics was " + ldtTotalDuration + " ms");
                }
 
+            m_nRefreshTime  = getRefreshTime();
             m_ldtLastUpdate = System.currentTimeMillis();
             }
         }
@@ -783,6 +797,7 @@ public class VisualVMModel
     public void setReporterAvailable(Boolean value)
         {
         m_fReporterAvailable = value;
+        GlobalPreferences.sharedInstance().setReporterDisabled(value);
         }
 
     /**
@@ -1472,14 +1487,14 @@ public class VisualVMModel
         };
 
     /**
-     * Default refresh time of 30 seconds.
-     */
-    private static final long DEFAULT_REFRESH_TIME = 30 * 1000L;
-
-    /**
      * The logger object to use.
      */
     private static final Logger LOGGER = Logger.getLogger(VisualVMModel.class.getName());
+
+    /**
+     * Property to display cluster snapshot.
+     */
+    public static final String PROP_CLUSTER_SNAPSHOT = "coherence.plugin.visualvm.cluster.snapshot.enabled";
 
     /**
      * Property to set the time in seconds between refreshing data from the cluster.
@@ -1495,11 +1510,6 @@ public class VisualVMModel
      * Property to disable use of the Coherence Reporter.
      */
     public static final String PROP_REPORTER_DISABLED = "coherence.plugin.visualvm.reporter.disabled";
-
-    /**
-     * Property to turn off JTable sorting - on by default
-     */
-    public static final String PROP_SORTING_ENABLED = "coherence.plugin.visualvm.sorting.enabled";
 
     /**
      * Property to enable experimental heat map for caches.

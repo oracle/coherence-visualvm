@@ -25,6 +25,7 @@
 
 package com.oracle.coherence.plugin.visualvm.panel;
 
+
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
@@ -61,12 +62,13 @@ import javax.swing.border.TitledBorder;
 
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
+
 /**
- * An implementation of an {@link AbstractCoherencePanel} to
- * view summarized member data.
+ * An implementation of an {@link AbstractCoherencePanel} to view summarized
+ * member data.
  *
  * @author tam  2013.11.14
- * @since  12.1.3
+ * @since 12.1.3
  */
 public class CoherenceMemberPanel
         extends AbstractCoherencePanel
@@ -87,7 +89,7 @@ public class CoherenceMemberPanel
         pneSplit.setOpaque(false);
 
         // Create the header panel
-        JPanel     pnlHeader = new JPanel();
+        JPanel pnlHeader = new JPanel();
 
         GridLayout layHeader = new GridLayout(5, 5);
 
@@ -111,7 +113,7 @@ public class CoherenceMemberPanel
         f_txtVersion = getTextField(10, JTextField.LEFT);
         pnlHeader.add(getLocalizedLabel("LBL_version", f_txtVersion));
         pnlHeader.add(f_txtVersion);
-        
+
         pnlHeader.add(getFiller());
 
         f_txtEdition = getTextField(5, JTextField.LEFT);
@@ -144,7 +146,7 @@ public class CoherenceMemberPanel
         f_txtDepartureCount = getTextField(5);
         pnlHeader.add(getLocalizedLabel("LBL_member_departure_count", f_txtDepartureCount));
         pnlHeader.add(f_txtDepartureCount);
-        
+
         pnlHeader.add(getFiller());
 
         f_txtTotalMemoryAvail = getTextField(6);
@@ -152,7 +154,7 @@ public class CoherenceMemberPanel
         pnlHeader.add(f_txtTotalMemoryAvail);
 
         pnlHeader.setBorder(new CompoundBorder(new TitledBorder(getLocalizedText("LBL_overview")),
-            new EmptyBorder(10, 10, 10, 10)));
+                                               new EmptyBorder(10, 10, 10, 10)));
 
         // create the table
         f_tmodel = new MemberTableModel(VisualVMModel.DataType.MEMBER.getMetadata());
@@ -177,18 +179,18 @@ public class CoherenceMemberPanel
         // reportNodeDetails only available in 12.2.1 and above
         if (model.getClusterVersionAsInt() >= 122100)
             {
-            f_table.setMenuOptions(new MenuOption[] { menuDetail, new ReportNodeStateMenuOption(model, m_requestSender, f_table) });
+            f_table.setMenuOptions(new MenuOption[] {menuDetail, new ReportNodeStateMenuOption(model, m_requestSender, f_table)});
             }
         else
             {
-            f_table.setMenuOptions(new MenuOption[] { menuDetail });
+            f_table.setMenuOptions(new MenuOption[] {menuDetail});
             }
 
         // Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JScrollPane(f_table);
         configureScrollPane(scrollPane, f_table);
 
-        JPanel      topPanel   = new JPanel(new BorderLayout());
+        JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
 
         topPanel.add(pnlHeader, BorderLayout.PAGE_START);
@@ -215,53 +217,20 @@ public class CoherenceMemberPanel
     @Override
     public void updateGUI()
         {
-        final  String MEM_FORMAT = "%,d";
-        int    cTotalMemory      = 0;
-        int    cTotalMemoryUsed  = 0;
-        int    cStorageCount     = 0;
-        String sEdition          = "";
-
-        Map<String, AtomicInteger> mapEditionCount = new TreeMap<>();
+        int cTotalMemory = 0;
+        int cTotalMemoryUsed = 0;
+        int cStorageCount = 0;
+        String sEdition = "";
 
         if (m_memberData != null)
             {
+            Object[] aoStorageDetails = getStorageDetails(m_memberData);
+            
+            cTotalMemory = (int) aoStorageDetails[0];
+            cTotalMemoryUsed = (int) aoStorageDetails[1];
+            cStorageCount = (int) aoStorageDetails[2];
+            sEdition = (String) aoStorageDetails[4];
             f_txtTotalMembers.setText(String.format("%5d", m_memberData.size()));
-
-            for (Entry<Object, Data> entry : m_memberData)
-                {
-                // only include memory if node is storage enabled
-                if (isNodeStorageEnabled((Integer)  entry.getValue().getColumn(MemberData.NODE_ID)))
-                    {
-                    cStorageCount++;
-                    cTotalMemory     += (Integer) entry.getValue().getColumn(MemberData.MAX_MEMORY);
-                    cTotalMemoryUsed += (Integer) entry.getValue().getColumn(MemberData.USED_MEMORY);
-                    }
-
-                String sThisEdition = (String) entry.getValue().getColumn(MemberData.PRODUCT_EDITION);
-                mapEditionCount.computeIfAbsent(sThisEdition, k-> new AtomicInteger(0)).incrementAndGet();
-                }
-
-            // check most common case
-            if (mapEditionCount.size() == 1)
-                {
-                sEdition = mapEditionCount.keySet().iterator().next();
-                }
-            else
-                {
-                // we have one or more editions (unlikely) so get the most popular one
-                int nMax = -1;
-                sEdition = "";
-                for (Entry<String, AtomicInteger> entry : mapEditionCount.entrySet())
-                    {
-                    int count = entry.getValue().get();
-                    if (count > nMax)
-                        {
-                        nMax     = count;
-                        sEdition = entry.getKey();
-                        }
-                    }
-                }
-
             f_txtTotalMemory.setText(String.format(MEM_FORMAT, cTotalMemory));
             f_txtTotalMemoryUsed.setText(String.format(MEM_FORMAT, cTotalMemoryUsed));
             f_txtTotalMemoryAvail.setText(String.format(MEM_FORMAT, cTotalMemory - cTotalMemoryUsed));
@@ -287,7 +256,7 @@ public class CoherenceMemberPanel
 
         f_txtEdition.setText(sEdition);
         f_txtTotalStorageMembers.setText(String.format("%5d", cStorageCount));
-        
+
         fireTableDataChangedWithSelection(f_table, f_tmodel);
 
         // update the memory graph
@@ -309,11 +278,11 @@ public class CoherenceMemberPanel
         // go through and set storage enabled column
         for (Entry<Object, Data> entry : f_model.getData(VisualVMModel.DataType.MEMBER))
             {
-            Data data   = entry.getValue();
-            int  nodeId = (Integer) entry.getKey();
+            Data data = entry.getValue();
+            int nodeId = (Integer) entry.getKey();
             if (!isNodeStorageEnabled(nodeId))
                 {
-                data.setColumn(MemberData.STORAGE_ENABLED,"false");
+                data.setColumn(MemberData.STORAGE_ENABLED, "false");
                 }
 
             tempList.add(entry);
@@ -332,10 +301,11 @@ public class CoherenceMemberPanel
     // ----- inner classes ReportNodeDetailsMenuOption ----------------------
 
     /**
-     * A class to call the reportNodeState operation on the selected
-     * ClusterNode MBean and display the details.
+     * A class to call the reportNodeState operation on the selected ClusterNode
+     * MBean and display the details.
      */
-    private class ReportNodeStateMenuOption extends AbstractMenuOption
+    private class ReportNodeStateMenuOption
+            extends AbstractMenuOption
         {
 
         // ----- constructors -----------------------------------------------
@@ -344,7 +314,7 @@ public class CoherenceMemberPanel
          * {@inheritDoc}
          */
         public ReportNodeStateMenuOption(VisualVMModel model, RequestSender requestSender,
-                                  ExportableJTable jtable)
+                                         ExportableJTable jtable)
             {
             super(model, requestSender, jtable);
             }
@@ -360,7 +330,7 @@ public class CoherenceMemberPanel
         @Override
         public void actionPerformed(ActionEvent e)
             {
-            int     nRow    = getSelectedRow();
+            int nRow = getSelectedRow();
             Integer nNodeId = null;
 
             if (nRow == -1)
@@ -375,11 +345,11 @@ public class CoherenceMemberPanel
 
                     String sResult = m_requestSender.getNodeState(nNodeId);
 
-                    showMessageDialog(getLocalizedText("LBL_state_for_node") + " " +  nNodeId,sResult, JOptionPane.INFORMATION_MESSAGE);
+                    showMessageDialog(getLocalizedText("LBL_state_for_node") + " " + nNodeId, sResult, JOptionPane.INFORMATION_MESSAGE);
                     }
                 catch (Exception ee)
                     {
-                    showMessageDialog("Error running reportNodeState for Node "+ nNodeId, ee.getMessage(), JOptionPane.ERROR_MESSAGE);
+                    showMessageDialog("Error running reportNodeState for Node " + nNodeId, ee.getMessage(), JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -400,7 +370,7 @@ public class CoherenceMemberPanel
      * Total number of storage-enabled members.
      */
     private final JTextField f_txtTotalStorageMembers;
-    
+
     /**
      * The total amount of memory allocated in the cluster by all
      * storage-enabled members.
@@ -408,12 +378,14 @@ public class CoherenceMemberPanel
     private final JTextField f_txtTotalMemory;
 
     /**
-     * The total amount of memory available in the cluster by all storage-enabled members.
+     * The total amount of memory available in the cluster by all
+     * storage-enabled members.
      */
     private final JTextField f_txtTotalMemoryAvail;
 
     /**
-     * The total amount of memory used in the cluster by all storage-enabled members.
+     * The total amount of memory used in the cluster by all storage-enabled
+     * members.
      */
     private final JTextField f_txtTotalMemoryUsed;
 

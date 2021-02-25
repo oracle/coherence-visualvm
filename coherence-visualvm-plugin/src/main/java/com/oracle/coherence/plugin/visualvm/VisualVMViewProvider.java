@@ -34,8 +34,6 @@ import org.graalvm.visualvm.core.ui.DataSourceViewsManager;
 import org.graalvm.visualvm.tools.jmx.JmxModel;
 import org.graalvm.visualvm.tools.jmx.JmxModelFactory;
 
-import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_DISABLE_MBEAN_CHECK;
-
 /**
  * Class to provide the view for Coherence JVisualVM plugin.
  *
@@ -65,7 +63,7 @@ public class VisualVMViewProvider
 
         if (jmx != null && jmx.getConnectionState() == JmxModel.ConnectionState.CONNECTED)
             {
-            if ("true".equals(System.getProperty(PROP_DISABLE_MBEAN_CHECK)))
+            if (GlobalPreferences.sharedInstance().isMBeanCheckDisabled())
                 {
                 return true;
                 }

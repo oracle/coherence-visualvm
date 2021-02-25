@@ -25,14 +25,13 @@
 
 package com.oracle.coherence.plugin.visualvm.helper;
 
+import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 
 import org.graalvm.visualvm.charts.ChartFactory;
 import org.graalvm.visualvm.charts.SimpleXYChartDescriptor;
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
-
-import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_ZOOM_ENABLED;
 
 /**
  * Various helper methods for creating graphs based on JVisualVM graphs.
@@ -1097,7 +1096,7 @@ public class GraphHelper
     private static SimpleXYChartSupport createChart(SimpleXYChartDescriptor sxycd)
         {
         SimpleXYChartSupport chartSupport = ChartFactory.createSimpleXYChart(sxycd);
-        chartSupport.setZoomingEnabled(ZOOM_ENABLED);
+        chartSupport.setZoomingEnabled(GlobalPreferences.sharedInstance().isZoomEnabled());
 
         return chartSupport;
         }
@@ -1128,15 +1127,8 @@ public class GraphHelper
      * The number of values to hold for an individual graph. The default value of
      * 50000 represents approximately 12 hours of data (but may vary). Setting this
      * to a higher value will ultimately consume more memory for each graph.  <br>
-     * To change the value use: -J-Dcoherence.jvisualvm.values.limit=200000 on
+     * To change the value use: -J-Dcoherence.plugin.visualvm.values.limit=200000 on
      * jvisualvm command line.
      */
-    public static final int VALUES_LIMIT = Integer.getInteger("coherence.jvisualvm.values.limit", 50000);
-
-    /**
-     * If set to true, then additional zoom function is available for all graphs.
-     * This functionality is only introduced in 12.2.1.1 of the plugin which uses 1.3.8 of
-     * VisualVM libraries.
-     */
-    private static final boolean ZOOM_ENABLED = "true".equals(System.getProperty(PROP_ZOOM_ENABLED));
+    public static final int VALUES_LIMIT = Integer.getInteger("coherence.plugin.visualvm.values.limit", 50000);
     }

@@ -27,7 +27,6 @@
 -->
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
 <filesystem>
-
     <folder name="Toolbars">
         <folder name="DataSource">
             <file name="com-oracle-coherence-plugin-visualvm-AddCoherenceClusterAction-alwaysEnabled.shadow">
@@ -47,22 +46,18 @@
 
     <folder name="VisualVM">
         <folder name="ExplorerPopupSelection">
-
             <file name="com-oracle-coherence-plugin-visualvm-AddCoherenceClusterAction-selectionAware.instance">
                 <attr name="instanceCreate" methodvalue="com.oracle.coherence.plugin.visualvm.impl.AddCoherenceClusterAction.selectionAware"/>
                 <attr name="position" intvalue="0"/>
                 <attr name="default" boolvalue="true"/>
             </file>
-
         </folder>
 
         <folder name="ExplorerPopupNoSelection">
-
             <file name="com-oracle-coherence-plugin-visualvm-AddCoherenceCoherenceAction-alwaysEnabled.shadow">
                 <attr name="originalFile" stringvalue="Actions/Other/com-oracle-coherence-plugin-visualvm-AddCoherenceClusterAction-alwaysEnabled.instance"/>
                 <attr name="position" intvalue="300"/>
             </file>
-
         </folder>
     </folder>
 </filesystem>

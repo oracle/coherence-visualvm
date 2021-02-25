@@ -25,6 +25,7 @@
 
 package com.oracle.coherence.plugin.visualvm.panel.util;
 
+import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.Localization;
 
 import java.awt.Color;
@@ -50,8 +51,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_SORTING_ENABLED;
-
 /**
  * An implementation of a {@link JTable} that allows exporting table data as CSV
  * as well as addition of additional menu options for right click.
@@ -74,10 +73,8 @@ public class ExportableJTable
         {
         super(model);
 
-        if  (fUseJTableSorting)
-            {
-            setAutoCreateRowSorter(true);
-            }
+        setAutoCreateRowSorter(true);
+
 
         // ensure users can only ever select one row at a time
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -431,11 +428,6 @@ public class ExportableJTable
      * The logger object to use.
      */
     private static final Logger LOGGER = Logger.getLogger(ExportableJTable.class.getName());
-
-    /**
-     * Provide ability to turn off JTable sorting via hidden option - on by default.
-     */
-    private static final boolean fUseJTableSorting = "true".equals(System.getProperty(PROP_SORTING_ENABLED, "true"));
 
     /**
      * Initialize so that we only get one instance.

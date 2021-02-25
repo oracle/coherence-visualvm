@@ -28,6 +28,8 @@ package com.oracle.coherence.plugin.visualvm.tablemodel.model;
 import java.util.Map;
 
 import java.util.Map.Entry;
+import java.util.Objects;
+
 
 /**
  * The representation of a two value {@link Tuple}.
@@ -160,54 +162,25 @@ public class Pair<X, Y>
         return String.format("%s / %s", x == null ? "null" : x.toString(), y == null ? "null" : y.toString());
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object o)
         {
-        if (this == obj)
+        if (this == o)
             {
             return true;
             }
-
-        if (obj == null)
+        if (o == null || getClass() != o.getClass())
             {
             return false;
             }
+        Pair<?, ?> pair = (Pair<?, ?>) o;
+        return Objects.equals(x, pair.x) && Objects.equals(y, pair.y);
+        }
 
-        if (getClass() != obj.getClass())
-            {
-            return false;
-            }
-
-        Pair other = (Pair) obj;
-
-        if (x == null)
-            {
-            if (other.x != null)
-                {
-                return false;
-                }
-            }
-        else if (!x.equals(other.x))
-            {
-            return false;
-            }
-
-        if (y == null)
-            {
-            if (other.y != null)
-                {
-                return false;
-                }
-            }
-        else if (!y.equals(other.y))
-            {
-            return false;
-            }
-
-        return true;
+    @Override
+    public int hashCode()
+        {
+        return Objects.hash(x, y);
         }
 
     // ----- constants ------------------------------------------------------

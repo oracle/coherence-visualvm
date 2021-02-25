@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.MissingNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.panel.CoherencePersistencePanel;
 
 import java.io.IOException;
@@ -60,8 +61,6 @@ import javax.management.AttributeList;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
-import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_REST_DEBUG;
-import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_REST_TIMEOUT;
 
 /**
  * The {@link RequestSender} based on Http(RESTful).
@@ -1037,8 +1036,10 @@ public class HttpRequestSender
         long start = System.currentTimeMillis();
         URL url = urlBuilder.getUrl();
         java.net.HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setConnectTimeout(REQUEST_TIMEOUT);
-        connection.setReadTimeout(REQUEST_TIMEOUT);
+        int nRestTimeout = GlobalPreferences.sharedInstance().getRestTimeout();
+        connection.setConnectTimeout(nRestTimeout);
+        connection.setReadTimeout(nRestTimeout);
+        boolean isRequestDebugEnabled = GlobalPreferences.sharedInstance().isRestDebugEnabled();
 
         int nResponseCode = connection.getResponseCode();
         if (nResponseCode != 200)
@@ -1048,7 +1049,7 @@ public class HttpRequestSender
             }
 
         InputStream inputStream = connection.getInputStream();
-        if (REQUEST_DEBUG)
+        if (isRequestDebugEnabled)
             {
             LOGGER.info((System.currentTimeMillis() - start) + "ms to open connection to "
                         + urlBuilder.getUrl().toString() + " ");
@@ -1429,18 +1430,6 @@ public class HttpRequestSender
 
         private Map<String, String> m_mapQueryParams = new HashMap<>();
         }
-
-    // ----- constants ------------------------------------------------------
-
-    /**
-     * Timeout for HTTP requests in ms.
-     */
-    private static final int REQUEST_TIMEOUT = Integer.parseInt(System.getProperty(PROP_REST_TIMEOUT, "30000"));
-
-    /**
-     * Enable debug for HTTP requests.
-     */
-    private static final boolean REQUEST_DEBUG = Boolean.parseBoolean(System.getProperty(PROP_REST_DEBUG, "false"));
 
     // ----- data members ---------------------------------------------------
 
