@@ -108,8 +108,8 @@ jobs:
         CLONE_DIR=coherence-$COH_BRANCH
         POM_FILE=/tmp/${CLONE_DIR}/prj/coherence-bom/pom.xml
         if [ ! -r $POM_FILE ] ; then
-	   POM_FILE=/tmp/${CLONE_DIR}/prj/pom.xml
-	fi
+           POM_FILE=/tmp/${CLONE_DIR}/prj/pom.xml
+        fi
         COH_VERSION=`cat {POM_FILE} | grep '<revision>' | sed -e 's,^.*<revision>,,' -e 's,</revision>.*$,,'`
 
         echo "Running verify against $COH_VERSION"
