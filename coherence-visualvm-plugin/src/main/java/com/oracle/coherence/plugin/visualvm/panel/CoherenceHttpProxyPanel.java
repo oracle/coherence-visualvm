@@ -305,8 +305,7 @@ public class CoherenceHttpProxyPanel
             f_tmodel.setDataList(m_httpProxyData);
             }
 
-        m_httpProxyMemberData = f_model.getData(
-                VisualVMModel.DataType.HTTP_PROXY_DETAIL);
+        m_httpProxyMemberData = f_model.getData(VisualVMModel.DataType.HTTP_PROXY_DETAIL);
 
         synchronized (this)
             {

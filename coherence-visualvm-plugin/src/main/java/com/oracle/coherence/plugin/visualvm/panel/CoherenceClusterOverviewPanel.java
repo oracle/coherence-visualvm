@@ -222,7 +222,6 @@ public class CoherenceClusterOverviewPanel
                 f_txtRefreshDate.setText(new Date(f_model.getLastUpdate()).toString());
                 f_txtVersion.setText(entry.getValue().getColumn(ClusterData.VERSION).toString().replaceFirst(" .*$", ""));
                 f_txtClusterSize.setText(String.format("%d", entry.getValue().getColumn(ClusterData.CLUSTER_SIZE)));
-
                 }
             }
 
@@ -230,20 +229,7 @@ public class CoherenceClusterOverviewPanel
         if (m_serviceData != null)
             {
             // start at best value of SITE-SAFE and get a "cluster statusHA" by working backwards
-            int bestStatusHA = STATUSHA_VALUES.length;
-
-            for (Entry<Object, Data> entry : m_serviceData)
-                {
-                if (!"n/a".equals(entry.getValue().getColumn(ServiceData.STATUS_HA)))
-                    {
-                    int statusHAIndex = getStatusHAIndex(entry.getValue().getColumn(ServiceData.STATUS_HA).toString());
-
-                    if (statusHAIndex < bestStatusHA)
-                        {
-                        bestStatusHA = statusHAIndex;
-                        }
-                    }
-                }
+            int bestStatusHA = getClusterStatusHA(m_serviceData);
 
             if (bestStatusHA < STATUSHA_VALUES.length)
                 {
@@ -314,37 +300,8 @@ public class CoherenceClusterOverviewPanel
         m_serviceData = f_model.getData(VisualVMModel.DataType.SERVICE);
         m_machineData = f_model.getData(VisualVMModel.DataType.MACHINE);
         }
-
-    // ----- helpers --------------------------------------------------------
-
-    /**
-     * Returns the status HA index from 0-4. 0 being ENDANGERED and 4 being SITE-SAFE.
-     *
-     * @param sStatusHA  the textual version of statusHA
-     *
-     * @return  the index that the textual version matches
-     */
-    private int getStatusHAIndex(String sStatusHA)
-        {
-        for (int i = 0; i < STATUSHA_VALUES.length; i++)
-            {
-            if (STATUSHA_VALUES[i].equals(sStatusHA))
-                {
-                return i;
-                }
-            }
-
-        return -1;
-
-        }
         
     // ----- constants ------------------------------------------------------
-
-    /**
-     * Text value of statusHA.
-     */
-    private static final String[] STATUSHA_VALUES = new String[] {"ENDANGERED", "NODE-SAFE", "MACHINE-SAFE",
-        "RACK-SAFE", "SITE-SAFE"};
 
     private static final long serialVersionUID = 2602085070795849149L;
 

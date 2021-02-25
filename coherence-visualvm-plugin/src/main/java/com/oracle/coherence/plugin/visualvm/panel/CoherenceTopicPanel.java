@@ -233,6 +233,7 @@ public class CoherenceTopicPanel
      * The {@link TopicTableModel} to display topic data.
      */
     protected final TopicTableModel f_tmodel;
+    
     /**
      * The topic data retrieved from the {@link VisualVMModel}.
      */

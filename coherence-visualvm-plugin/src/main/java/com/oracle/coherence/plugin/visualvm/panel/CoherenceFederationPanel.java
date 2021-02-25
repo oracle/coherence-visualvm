@@ -488,60 +488,6 @@ public class CoherenceFederationPanel
     // ----- helpers --------------------------------------------------------
 
     /**
-     * Merge the destination and origin data into a list. For each federation service,
-     * only those participants which at least have one origin or one destination will
-     * show in this list.
-     *
-     * @return a merged list of entries which contain names, status and some aggregation stats
-     *         of service / participant pairs
-     */
-    private List<Entry<Object, Data>> getMergedFederationData()
-        {
-        // get data of destinations and origins
-        List<Entry<Object, Data>> fedDstData = f_model.getData(VisualVMModel.DataType.FEDERATION_DESTINATION);
-        List<Entry<Object, Data>> fedOriginData = f_model.getData(VisualVMModel.DataType.FEDERATION_ORIGIN);
-
-        if (fedDstData == null)
-            {
-            return fedOriginData;
-            }
-        else if (fedOriginData == null)
-            {
-            return fedDstData;
-            }
-        else
-            {
-            // remove duplicate entries
-            for (Entry<Object, Data> entryOrig : fedOriginData)
-                {
-                Pair key = (Pair) entryOrig.getKey();
-                boolean fFound = false;
-
-                // merge destination data and origin data into one entry (in destination data list)
-                for (Entry<Object, Data> entryDst : fedDstData)
-                    {
-                    if (entryDst.getKey().equals(key))
-                        {
-                        Data dstData = entryDst.getValue();
-                        dstData.setColumn(FederationData.Column.TOTAL_BYTES_RECEIVED.ordinal(),
-                            entryOrig.getValue().getColumn(FederationData.Column.TOTAL_BYTES_RECEIVED.ordinal()));
-                        dstData.setColumn(FederationData.Column.TOTAL_MSGS_RECEIVED.ordinal(),
-                            entryOrig.getValue().getColumn(FederationData.Column.TOTAL_MSGS_RECEIVED.ordinal()));
-                        fFound = true;
-                        break;
-                        }
-                    }
-                if (!fFound)
-                    {
-                    // add to dst list
-                    fedDstData.add(entryOrig);
-                    }
-                }
-            return fedDstData;
-            }
-        }
-
-    /**
      * Set the text content for several textfields.
      *
      * @param sMaxBandwidth  the maxbandwidth
@@ -1269,7 +1215,7 @@ Integer cResult = (Integer) requestSender.invoke(new ObjectName(sObjName),
     private FederationOutboundTableModel m_tmodelOutbound;
 
     /**
-     * The merged fedetation data from the destination data and origin data.
+     * The merged federation data from the destination data and origin data.
      */
     private List<Entry<Object, Data>> m_federationData;
 

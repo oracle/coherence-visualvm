@@ -323,11 +323,6 @@ public class CoherenceJCachePanel
     protected final JCacheConfigurationTableModel f_tmodel;
 
     /**
-     * The JCache caches summary.
-     */
-    private List<Map.Entry<Object, Data>> m_summaryData;
-
-    /**
      * The JCache configuration data.
      */
     private List<Map.Entry<Object, Data>> m_configData;

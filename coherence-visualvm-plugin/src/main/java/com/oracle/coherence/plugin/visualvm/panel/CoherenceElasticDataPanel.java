@@ -168,7 +168,7 @@ public class CoherenceElasticDataPanel
                 cTotalRamUsed        += (Long) entry.getValue().getColumn(RamJournalData.TOTAL_DATA_SIZE);
                 cCommittedRam        += (Long) entry.getValue().getColumn(RamJournalData.TOTAL_COMMITTED_BYTES);
                 cRamCompaction       += getNullEntry(entry.getValue().getColumn(RamJournalData.COMPACTION_COUNT));
-                cRamExhaustive += getNullEntry(entry.getValue().getColumn(RamJournalData.EXHAUSTIVE_COMPACTION_COUNT));
+                cRamExhaustive       += getNullEntry(entry.getValue().getColumn(RamJournalData.EXHAUSTIVE_COMPACTION_COUNT));
                 }
             }
 
@@ -181,8 +181,7 @@ public class CoherenceElasticDataPanel
                 cTotalFlashUsed        += (Long) entry.getValue().getColumn(FlashJournalData.TOTAL_DATA_SIZE);
                 cCommittedFlash        += (Long) entry.getValue().getColumn(FlashJournalData.TOTAL_COMMITTED_BYTES);
                 cFlashCompaction       += getNullEntry(entry.getValue().getColumn(FlashJournalData.COMPACTION_COUNT));
-                cFlashExhaustive +=
-                    getNullEntry(entry.getValue().getColumn(FlashJournalData.EXHAUSTIVE_COMPACTION_COUNT));
+                cFlashExhaustive       += getNullEntry(entry.getValue().getColumn(FlashJournalData.EXHAUSTIVE_COMPACTION_COUNT));
                 }
             }
 
@@ -259,20 +258,6 @@ public class CoherenceElasticDataPanel
         barProgress.setToolTipText(Localization.getLocalText("LBL_click_for_detail"));
 
         return barProgress;
-        }
-
-    /**
-     * Returns an integer value of zero if the object is null, otherwise the value
-     * as an int is returned. This is used because sometimes null values are returned
-     * as columns when the version of Coherence doesn't support it.
-     *
-     * @param oValue the value check may be null or valid Integer
-     *
-     * @return a value of zero if null otherwise the value as an int
-     */
-    private int getNullEntry(Object oValue)
-        {
-        return (oValue == null ? Integer.valueOf(0) : (Integer) oValue);
         }
 
     // ----- inner classes --------------------------------------------------
