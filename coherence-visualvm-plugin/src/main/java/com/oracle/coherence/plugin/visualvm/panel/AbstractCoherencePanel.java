@@ -752,12 +752,12 @@ public abstract class AbstractCoherencePanel
     /**
      * Format a memory value.
      *
-     * @param sValue in MB
+     * @param oValue value
      * @return a formatted value
      */
-    protected String getMemoryFormat(String sValue)
+    protected String getMemoryFormat(Object oValue)
         {
-        return String.format(MEM_FORMAT, Long.parseLong(sValue));
+        return oValue instanceof String ? String.format(MEM_FORMAT, Long.parseLong(oValue.toString())) : "";
         }
 
     /**
@@ -785,12 +785,13 @@ public abstract class AbstractCoherencePanel
     /**
      * Format a latency value.
      *
-     * @param sValue latency value
+     * @param oValue latency value
      * @return a formatted value
      */
-    protected String getLatencyValue(String sValue)
+    protected String getLatencyValue(Object oValue)
         {
-        return String.format("%7.3f%%", Float.parseFloat(sValue));
+        return oValue instanceof Float || oValue instanceof String || oValue instanceof Long
+               ? String.format("%7.3f%%", Float.parseFloat(oValue.toString())) : "";
         }
 
     // ----- constants ------------------------------------------------------

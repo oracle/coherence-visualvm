@@ -44,6 +44,7 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceData;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -151,8 +152,7 @@ public class CoherenceClusterSnapshotPanel
             {
             // in the case of error just log the message and don't throw the exception otherwise the
             // whole plugin will not display
-            LOGGER.warning("Failed to render cluster snapshot " + e.getMessage());
-            e.printStackTrace();
+            LOGGER.warning("Failed to render cluster snapshot " + e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
             }
         }
 
@@ -303,12 +303,12 @@ public class CoherenceClusterSnapshotPanel
                     .append(td(entry.getValue().getColumn(ServiceData.SERVICE_NAME).toString()))
                     .append(td(entry.getValue().getColumn(ServiceData.STATUS_HA).toString()))
                     .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.MEMBERS).toString())))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.STORAGE_MEMBERS).toString())))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.PARTITION_COUNT).toString())))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.PARTITIONS_ENDANGERED).toString())))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.PARTITIONS_VULNERABLE).toString())))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.PARTITIONS_UNBALANCED).toString())))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.PARTITIONS_PENDING).toString())))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.STORAGE_MEMBERS))))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.PARTITION_COUNT))))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.PARTITIONS_ENDANGERED))))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.PARTITIONS_VULNERABLE))))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.PARTITIONS_UNBALANCED))))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.PARTITIONS_PENDING))))
                     .append("</tr>");
             }
 
@@ -345,10 +345,10 @@ public class CoherenceClusterSnapshotPanel
             {
             sb.append("<tr>")
                     .append(td(entry.getValue().getColumn(CacheData.CACHE_NAME).toString()))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(CacheData.SIZE).toString())))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(CacheData.MEMORY_USAGE_BYTES).toString())))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(CacheData.MEMORY_USAGE_MB).toString())))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(CacheData.AVG_OBJECT_SIZE).toString())))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(CacheData.SIZE))))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(CacheData.MEMORY_USAGE_BYTES))))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(CacheData.MEMORY_USAGE_MB))))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(CacheData.AVG_OBJECT_SIZE))))
                     .append(td(entry.getValue().getColumn(CacheData.UNIT_CALCULATOR).toString()))
                     .append("</tr>");
             }
@@ -460,10 +460,10 @@ public class CoherenceClusterSnapshotPanel
                     .append(td(entry.getValue().getColumn(HttpProxyData.SERVICE_NAME).toString()))
                     .append(td(entry.getValue().getColumn(HttpProxyData.HTTP_SERVER_TYPE).toString()))
                     .append(td(getMemoryFormat(entry.getValue().getColumn(HttpProxyData.MEMBER_COUNT).toString())))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(HttpProxyData.TOTAL_REQUEST_COUNT).toString())))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(HttpProxyData.TOTAL_ERROR_COUNT).toString())))
-                    .append(td(getLatencyValue(entry.getValue().getColumn(HttpProxyData.AVERAGE_REQ_PER_SECOND).toString())))
-                    .append(td(getLatencyValue(entry.getValue().getColumn(HttpProxyData.AVERAGE_REQ_TIME).toString())))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(HttpProxyData.TOTAL_REQUEST_COUNT))))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(HttpProxyData.TOTAL_ERROR_COUNT))))
+                    .append(td(getLatencyValue(entry.getValue().getColumn(HttpProxyData.AVERAGE_REQ_PER_SECOND))))
+                    .append(td(getLatencyValue(entry.getValue().getColumn(HttpProxyData.AVERAGE_REQ_TIME))))
                     .append("</tr>");
             }
 
