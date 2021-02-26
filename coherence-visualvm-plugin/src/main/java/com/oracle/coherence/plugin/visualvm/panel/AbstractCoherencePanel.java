@@ -757,7 +757,7 @@ public abstract class AbstractCoherencePanel
      */
     protected String getMemoryFormat(Object oValue)
         {
-        return oValue instanceof String ? String.format(MEM_FORMAT, Long.parseLong(oValue.toString())) : "";
+        return oValue instanceof String || oValue instanceof Number ? String.format(MEM_FORMAT, Long.parseLong(oValue.toString())) : "";
         }
 
     /**
@@ -790,7 +790,7 @@ public abstract class AbstractCoherencePanel
      */
     protected String getLatencyValue(Object oValue)
         {
-        return oValue instanceof Float || oValue instanceof String || oValue instanceof Long
+        return oValue instanceof Float || oValue instanceof String || oValue instanceof Number
                ? String.format("%7.3f%%", Float.parseFloat(oValue.toString())) : "";
         }
 
