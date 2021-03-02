@@ -681,7 +681,7 @@ public class HttpRequestSender
 
     /**
      * Get the cache data for all services. Note this method uses the
-     * enhancement 32530689 which also returns the service name. Note this
+     * enhancement 32530689 which also returns the service name.  This
      * enhancement will not work with WebLogic MT which is deprecated.
      *
      * @return the storage manager data for all the cache members of the cache
