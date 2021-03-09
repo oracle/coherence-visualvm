@@ -266,8 +266,7 @@ public class GraphHelper
         SimpleXYChartDescriptor sxycd = null;
         sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
 
-        sxycd.setChartTitle(Localization.getLocalText("GRPH_hotcache_values",
-                new String[]{sSelectedMember}));
+        sxycd.setChartTitle(Localization.getLocalText("GRPH_hotcache_values", sSelectedMember));
 
         sxycd.addLineFillItems(getLocalText("GRPH_average"), getLocalText("GRPH_maximum"), getLocalText("GRPH_minimum"));
         return createChart(sxycd);
@@ -285,8 +284,7 @@ public class GraphHelper
         SimpleXYChartDescriptor sxycd = null;
         sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
 
-        sxycd.setChartTitle(Localization.getLocalText("GRPH_hotcache_millis",
-                new String[]{sSelectedMember}));
+        sxycd.setChartTitle(Localization.getLocalText("GRPH_hotcache_millis", sSelectedMember));
 
         sxycd.addLineFillItems(getLocalText("GRPH_average"), getLocalText("GRPH_maximum"), getLocalText("GRPH_minimum"));
         return createChart(sxycd);
@@ -303,8 +301,7 @@ public class GraphHelper
         {
         SimpleXYChartDescriptor sxycd = null;
         sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
-        sxycd.setChartTitle(Localization.getLocalText("GRPH_hotcache_nanos",
-                new String[]{sSelectedMember}));
+        sxycd.setChartTitle(Localization.getLocalText("GRPH_hotcache_nanos", sSelectedMember));
 
         sxycd.addLineFillItems(getLocalText("GRPH_average"), getLocalText("GRPH_maximum"), getLocalText("GRPH_minimum"));
         return createChart(sxycd);
@@ -333,13 +330,10 @@ public class GraphHelper
      */
     public static SimpleXYChartSupport createThreadUtilizationGraph(String sServiceName)
         {
-        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.percent(true,
-                VALUES_LIMIT);
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.percent(true, VALUES_LIMIT);
 
         sxycd.addLineFillItems(getLocalText("GRPH_thread_util"));
-        sxycd.setChartTitle(
-                Localization.getLocalText("GRPH_thread_util_percent",
-                        new String[]{sServiceName}));
+        sxycd.setChartTitle(Localization.getLocalText("GRPH_thread_util_percent", sServiceName));
 
         return createChart(sxycd);
         }
@@ -367,10 +361,8 @@ public class GraphHelper
         SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(1,
                 0.0001, true, VALUES_LIMIT);
 
-        sxycd.setChartTitle(Localization.getLocalText("GRPH_task_average",
-                new String[]{sServiceName}));
-        sxycd.addLineFillItems(getLocalText("GRPH_current_maximum"),
-                getLocalText("GRPH_current_average"));
+        sxycd.setChartTitle(Localization.getLocalText("GRPH_task_average", sServiceName));
+        sxycd.addLineFillItems(getLocalText("GRPH_current_maximum"), getLocalText("GRPH_current_average"));
 
         return createChart(sxycd);
         }
@@ -399,7 +391,7 @@ public class GraphHelper
         {
         SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(1, 0.0001, true, VALUES_LIMIT);
 
-        sxycd.setChartTitle(Localization.getLocalText("GRPH_request_average", new String[] {sServiceName}));
+        sxycd.setChartTitle(Localization.getLocalText("GRPH_request_average", sServiceName));
         sxycd.addLineFillItems(getLocalText("GRPH_current_maximum"), getLocalText("GRPH_current_average"));
 
         return createChart(sxycd);
@@ -429,8 +421,7 @@ public class GraphHelper
         {
         SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, 0.01, true, VALUES_LIMIT);
 
-        sxycd.setChartTitle(Localization.getLocalText("GRPH_task_backlog",
-                new String[]{sServiceName}));
+        sxycd.setChartTitle(Localization.getLocalText("GRPH_task_backlog", sServiceName));
         sxycd.addLineFillItems(getLocalText("GRPH_current_maximum"), getLocalText("GRPH_current_average"));
 
         return createChart(sxycd);
@@ -669,8 +660,7 @@ public class GraphHelper
      */
     public static SimpleXYChartSupport createRamJournalMemoryGraph()
         {
-        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.bytes(0, true,
-                VALUES_LIMIT);
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.bytes(0, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(getLocalText("GRPH_ramjournal_memory_details"));
         sxycd.addLineFillItems(getLocalText("GRPH_total_ramjournal_memory"),
@@ -729,8 +719,7 @@ public class GraphHelper
      */
     public static SimpleXYChartSupport createRamJournalCompactionGraph()
         {
-        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true,
-                VALUES_LIMIT);
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(getLocalText("GRPH_ramjournal_compactions"));
         sxycd.addLineFillItems(getLocalText("GRPH_compactions"),
@@ -762,8 +751,7 @@ public class GraphHelper
         SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(getLocalText("GRPH_flashjournal_compactions"));
-        sxycd.addLineFillItems(getLocalText("GRPH_compactions"),
-                getLocalText("GRPH_exhaustive_compactions"));
+        sxycd.addLineFillItems(getLocalText("GRPH_compactions"), getLocalText("GRPH_exhaustive_compactions"));
 
         return createChart(sxycd);
         }
@@ -792,8 +780,7 @@ public class GraphHelper
         {
         SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
 
-        sxycd.setChartTitle(Localization.getLocalText("GRPH_service_partitions",
-                new String[]{sServiceName}));
+        sxycd.setChartTitle(Localization.getLocalText("GRPH_service_partitions", sServiceName));
         sxycd.addLineItems(getLocalText("LBL_pending"),
                 getLocalText("LBL_unbalanced"),
                 getLocalText("LBL_vulnerable"),
@@ -834,8 +821,7 @@ public class GraphHelper
                 0.0001, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(
-                Localization.getLocalText("GRPH_average_operation_rates",
-                        new String[]{sSelectedCache}));
+                Localization.getLocalText("GRPH_average_operation_rates", sSelectedCache));
         sxycd.addLineItems(getLocalText("GRPH_average_put_time"),
                 getLocalText("GRPH_average_get_time"),
                 getLocalText("GRPH_average_remove_time"));
@@ -868,13 +854,10 @@ public class GraphHelper
      */
     public static SimpleXYChartSupport createJCacheHitPercentageGraph(String sCacheName)
         {
-        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.percent(true,
-                VALUES_LIMIT);
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.percent(true, VALUES_LIMIT);
 
         sxycd.addLineFillItems(getLocalText("LBL_hit_percentage"));
-        sxycd.setChartTitle(
-                Localization.getLocalText("GRPH_cache_hit_percentage",
-                        new String[]{sCacheName}));
+        sxycd.setChartTitle(Localization.getLocalText("GRPH_cache_hit_percentage", sCacheName));
 
         return createChart(sxycd);
         }
@@ -903,10 +886,8 @@ public class GraphHelper
                 0.0001, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(
-                Localization.getLocalText("GRPH_average_request_time",
-                        new String[]{sServiceName}));
-        sxycd.addLineFillItems(getLocalText("GRPH_current_maximum"),
-                getLocalText("GRPH_current_average"));
+                Localization.getLocalText("GRPH_average_request_time", sServiceName));
+        sxycd.addLineFillItems(getLocalText("GRPH_current_maximum"), getLocalText("GRPH_current_average"));
 
         return createChart(sxycd);
         }
@@ -935,7 +916,7 @@ public class GraphHelper
         {
         SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(1, 0.0001, true, VALUES_LIMIT);
 
-        sxycd.setChartTitle(Localization.getLocalText("GRPH_average_request_per_second", new String[] {sServiceName}));
+        sxycd.setChartTitle(Localization.getLocalText("GRPH_average_request_per_second", sServiceName));
         sxycd.addLineFillItems(getLocalText("GRPH_current_maximum"), getLocalText("GRPH_current_average"));
 
         return createChart(sxycd);
@@ -965,8 +946,7 @@ public class GraphHelper
         {
         SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
 
-        sxycd.setChartTitle(Localization.getLocalText("GRPH_requests_over_time",
-                                                      new String[]{sServiceName}));
+        sxycd.setChartTitle(Localization.getLocalText("GRPH_requests_over_time", sServiceName));
         sxycd.addLineItems(getLocalText("LBL_total_request_count"),
                            getLocalText("LBL_total_error_count"));
 
@@ -997,8 +977,7 @@ public class GraphHelper
         {
         SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
 
-        sxycd.setChartTitle(Localization.getLocalText("GRPH_response_over_time",
-                new String[]{sServiceName}));
+        sxycd.setChartTitle(Localization.getLocalText("GRPH_response_over_time", sServiceName));
         sxycd.addLineItems(getLocalText("LBL_status1xx"),
                            getLocalText("LBL_status2xx"),
                            getLocalText("LBL_status3xx"),
@@ -1065,8 +1044,7 @@ public class GraphHelper
      * @param cBytesSent  number of bytes sent for time period
      * @param cBytesRec   number of bytes received for time period
      */
-    public static void addValuesToProxyServerStatsGraph(SimpleXYChartSupport graph, long cBytesSent,
-                                                    long cBytesRec)
+    public static void addValuesToProxyServerStatsGraph(SimpleXYChartSupport graph, long cBytesSent, long cBytesRec)
         {
         graph.addValues(System.currentTimeMillis(), new long[] { cBytesSent, cBytesRec });
         }
@@ -1076,10 +1054,9 @@ public class GraphHelper
      *
      * @param graph       {@link SimpleXYChartSupport} to add values to
      * @param cBytesSent  number of publisher sends for time period
-     * @param cBytesRec   number of subsciber receives for time period
+     * @param cBytesRec   number of subscriber receives for time period
      */
-    public static void addValuesToTopicsRateGraph(SimpleXYChartSupport graph, long cBytesSent,
-                                                    long cBytesRec)
+    public static void addValuesToTopicsRateGraph(SimpleXYChartSupport graph, long cBytesSent, long cBytesRec)
         {
         graph.addValues(System.currentTimeMillis(), new long[] { cBytesSent, cBytesRec });
         }

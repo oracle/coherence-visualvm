@@ -1279,10 +1279,9 @@ public class HttpRequestSender
             // return a null json node if there is no response
             return MissingNode.getInstance();
             }
-        ObjectMapper mapper    = new ObjectMapper();
-        JsonNode     rootNode  = mapper.readTree(stream);
+        ObjectMapper mapper = new ObjectMapper();
 
-        return rootNode;
+        return mapper.readTree(stream);
         }
 
     /**
@@ -1349,12 +1348,7 @@ public class HttpRequestSender
             {
             InputStream stream = sendGetRequest(getBasePath());
             // if input stream is null, the URL is invalid
-            if (stream == null)
-                {
-                return false;
-                }
-
-            return true;
+            return stream != null;
             }
         catch (Exception e)
             {

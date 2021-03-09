@@ -25,7 +25,6 @@
 
 package com.oracle.coherence.plugin.visualvm.panel.util;
 
-import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.Localization;
 
 import java.awt.Color;
@@ -40,8 +39,14 @@ import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.*;
-
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -74,7 +79,6 @@ public class ExportableJTable
         super(model);
 
         setAutoCreateRowSorter(true);
-
 
         // ensure users can only ever select one row at a time
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -241,8 +245,7 @@ public class ExportableJTable
             }
         catch (IOException ioe)
             {
-            LOGGER.log(Level.WARNING, Localization.getLocalText("LBL_unable_to_save", new String[] {file.toString(),
-                ioe.getMessage()}));
+            LOGGER.log(Level.WARNING, Localization.getLocalText("LBL_unable_to_save", file.toString(), ioe.getMessage()));
             }
         finally
             {
