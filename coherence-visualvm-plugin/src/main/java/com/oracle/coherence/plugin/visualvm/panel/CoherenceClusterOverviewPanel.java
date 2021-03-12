@@ -25,11 +25,12 @@
 
 package com.oracle.coherence.plugin.visualvm.panel;
 
+import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
+import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.MemberData;
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceData;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ClusterData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.MachineData;
@@ -37,27 +38,19 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.MachineData;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
@@ -111,6 +104,16 @@ public class CoherenceClusterOverviewPanel
         pnlHeader.add(getLocalizedLabel("LBL_cluster_statusha", f_txtClusterStatusHA));
         pnlHeader.add(f_txtClusterStatusHA);
 
+        if (GlobalPreferences.sharedInstance().isAdminFunctionEnabled())
+            {
+            m_btnHeapDump = new JButton(getLocalizedText("BTN_admin"));
+            m_btnHeapDump.setMnemonic(KeyEvent.VK_R);
+            m_btnHeapDump.setToolTipText(getLocalizedText("TTIP_admin"));
+            pnlHeader.add(m_btnHeapDump);
+
+            m_btnHeapDump.addActionListener(e -> generateHeapDump());
+            }
+
         JPanel pnlData = new JPanel();
 
         pnlData.setLayout(new GridLayout(2, 2));
@@ -150,6 +153,21 @@ public class CoherenceClusterOverviewPanel
 
         add(pnlHeader, BorderLayout.PAGE_START);
         add(pnlData, BorderLayout.CENTER);
+        }
+
+    private void generateHeapDump()
+        {
+        try
+            {
+            m_requestSender.dumpClusterHeap("");
+            JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_heap_dump_completed"));
+            }
+        catch (Exception e)
+            {
+            String sMessage = Localization.getLocalText("LBL_heap_dump_failed", e.toString());
+            JOptionPane.showMessageDialog(null, sMessage);
+            LOGGER.warning(sMessage);
+            }
         }
 
     // ----- AbstractCoherencePanel methods ---------------------------------
@@ -377,4 +395,9 @@ public class CoherenceClusterOverviewPanel
      * The machine statistics data retrieved from the {@link VisualVMModel}.
      */
     private List<Entry<Object, Data>> m_machineData;
+
+    /**
+     * A button to generate a heap dump on all nodes.
+     */
+    private JButton m_btnHeapDump = null;
     }

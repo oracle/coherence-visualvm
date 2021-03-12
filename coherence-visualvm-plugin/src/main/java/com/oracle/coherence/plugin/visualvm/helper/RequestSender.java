@@ -339,6 +339,16 @@ public interface RequestSender
             throws Exception;
 
     /**
+     * Issue a dump cluster heap request.
+     *
+     * @param sRole the role to dump for or null for all roles
+     *
+     * @throws Exception if any errors
+     */
+    void dumpClusterHeap(String sRole)
+        throws Exception;
+
+    /**
      * Get the list of snapshots of a service.
      *
      * @param sService          the name of the service

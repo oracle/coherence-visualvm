@@ -216,6 +216,7 @@ public abstract class AbstractCoherencePanel
         return textField;
         }
 
+
     /**
      * Fire a tableDataChanged but save and re-apply any selection.
      *
@@ -779,7 +780,7 @@ public abstract class AbstractCoherencePanel
      */
     protected String getPublisherValue(String sValue)
         {
-        return String.format("%1.3f%%", Float.parseFloat(sValue));
+        return String.format("%1.3f", Float.parseFloat(sValue));
         }
 
     /**
@@ -791,7 +792,7 @@ public abstract class AbstractCoherencePanel
     protected String getLatencyValue(Object oValue)
         {
         return oValue instanceof Float || oValue instanceof String || oValue instanceof Number
-               ? String.format("%7.3f%%", Float.parseFloat(oValue.toString())) : "";
+               ? String.format("%7.3f", Float.parseFloat(oValue.toString())) : "";
         }
 
     // ----- constants ------------------------------------------------------

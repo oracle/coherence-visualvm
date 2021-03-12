@@ -190,11 +190,11 @@ public class CoherenceClusterSnapshotPanel
         sb.append(tableStart());
         for (Map.Entry<Object, Data> entry : m_clusterData)
             {
-            sb.append(tableRow(getLabel("LBL_cluster_name"), entry.getValue().getColumn(ClusterData.CLUSTER_NAME).toString()));
-            sb.append(tableRow(getLabel("LBL_refresh_date"), new Date(f_model.getLastUpdate()).toString()));
-            sb.append(tableRow(getLabel("LBL_version"), entry.getValue().getColumn(ClusterData.VERSION).toString()));
-            sb.append(tableRow(getLabel("LBL_license_mode"), entry.getValue().getColumn(ClusterData.LICENSE_MODE).toString()));
-            sb.append(tableRow(getLabel("LBL_members"),
+            sb.append(tableRow(getLabel("LBL_cluster_name"), entry.getValue().getColumn(ClusterData.CLUSTER_NAME).toString()))
+              .append(tableRow(getLabel("LBL_refresh_date"), new Date(f_model.getLastUpdate()).toString()))
+              .append(tableRow(getLabel("LBL_version"), entry.getValue().getColumn(ClusterData.VERSION).toString()))
+              .append(tableRow(getLabel("LBL_license_mode"), entry.getValue().getColumn(ClusterData.LICENSE_MODE).toString()))
+              .append(tableRow(getLabel("LBL_members"),
                                String.format("%d", (Integer) entry.getValue().getColumn(ClusterData.CLUSTER_SIZE))));
             }
 
@@ -586,41 +586,87 @@ public class CoherenceClusterSnapshotPanel
         return sb.append("</tr>").toString();
         }
 
+    /**
+     * Returns text for a label.
+     * @param sKey the key for Bundle
+     * @return text for a label
+     */
     private String getLabel(String sKey)
         {
         return Localization.getLocalText(sKey);
         }
 
+    /**
+     * Created a HTML title.
+     *
+     * @param sTitle title
+     * @return a HTML title
+     */
     private String title(String sTitle)
         {
         return "<h2>" + sTitle + "</h2>";
         }
 
+    /**
+     * Creates a HTML table row.
+     *
+     * @param sLabel label
+     * @param sValue the tex
+     * @return a HTML table row
+     */
     private String tableRow(String sLabel, String sValue)
         {
         return "<tr>" + td(label(sLabel)) + td(sValue) + "</tr>";
         }
 
+    /**
+     * Creates a label.
+     *
+     * @param sLabel label
+     * @return a label
+     */
     private String label(String sLabel)
         {
         return "<b>" + sLabel + ":" + "</b";
         }
 
+    /**
+     * Creates a HTML TD.
+     *
+     * @param sValue value for the TD text
+     * @return a HTML TD
+     */
     private String td(String sValue)
         {
         return "<td>" + sValue + "</td>";
         }
 
+    /**
+     * Creates a HTML TH.
+     *
+     * @param sValue value for the TH text
+     * @return a HTML TH
+     */
     private String th(String sValue)
         {
         return "<th>" + sValue + "</th>";
         }
 
+    /**
+     * Creates a HTML table start.
+     *
+     * @return a HTML table start
+     */
     private String tableStart()
         {
         return "<table>";
         }
 
+    /**
+     * Creates a HTML table end.
+     *
+     * @return a HTML table end
+     */
     private String tableEnd()
         {
         return "</table>";
@@ -674,7 +720,6 @@ public class CoherenceClusterSnapshotPanel
      * The logger object to use.
      */
     private static final Logger LOGGER = Logger.getLogger(CoherenceClusterSnapshotPanel.class.getName());
-
 
     // ----- data members ---------------------------------------------------
 

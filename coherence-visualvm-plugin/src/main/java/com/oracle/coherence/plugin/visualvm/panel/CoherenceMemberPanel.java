@@ -26,6 +26,7 @@
 package com.oracle.coherence.plugin.visualvm.panel;
 
 
+import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
@@ -43,23 +44,20 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
+import java.util.logging.Logger;
+import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import javax.swing.event.ChangeListener;
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
 
@@ -179,7 +177,10 @@ public class CoherenceMemberPanel
         // reportNodeDetails only available in 12.2.1 and above
         if (model.getClusterVersionAsInt() >= 122100)
             {
-            f_table.setMenuOptions(new MenuOption[] {menuDetail, new ReportNodeStateMenuOption(model, m_requestSender, f_table)});
+            f_table.setMenuOptions(new MenuOption[] {
+                    menuDetail,
+                    new ReportNodeStateMenuOption(model, m_requestSender, f_table),
+                    new ReportNodeStateMultiMenuOption(model, m_requestSender, f_table)});
             }
         else
             {
@@ -343,9 +344,108 @@ public class CoherenceMemberPanel
                     {
                     nNodeId = (Integer) getJTable().getModel().getValueAt(nRow, 0);
 
-                    String sResult = m_requestSender.getNodeState(nNodeId);
+                    if (this instanceof ReportNodeStateMultiMenuOption)
+                        {
+                        // ask the user for the number of thread dumps and the time between
+                        JPanel   panel        = new JPanel();
+                        JSpinner spinnerCount = new JSpinner();
+                        JSpinner spinnerDelay = new JSpinner();
 
-                    showMessageDialog(getLocalizedText("LBL_state_for_node") + " " + nNodeId, sResult, JOptionPane.INFORMATION_MESSAGE);
+                        JTextField txtMessage = getTextField(15, JTextField.LEFT);
+                        txtMessage.setEditable(false);
+                        txtMessage.setEnabled(false);
+
+                        ChangeListener changeListener = event ->
+                            {
+                            int nCount = (Integer) spinnerCount.getValue();
+                            int nDelay = (Integer) spinnerDelay.getValue();
+                            txtMessage.setText(Localization.getLocalText("LBL_wait", Integer.toString((nCount - 1) * nDelay)));
+                            };
+
+                        spinnerCount.setModel(new SpinnerNumberModel(5, 2, 100, 1));
+                        spinnerCount.addChangeListener(changeListener);
+
+                        JLabel lblCount = getLocalizedLabel("LBL_number_thread_dumps");
+                        lblCount.setLabelFor(spinnerCount);
+
+                        panel.add(lblCount);
+                        panel.add(spinnerCount);
+
+                        panel.add(Box.createHorizontalStrut(15));
+
+                        JLabel lblDelay = getLocalizedLabel("LBL_time_between");
+                        spinnerDelay.setModel(new SpinnerNumberModel(10, 5, 100, 5));
+                        lblDelay.setLabelFor(spinnerDelay);
+                        spinnerDelay.addChangeListener(changeListener);
+
+                        // trigger the change
+                        changeListener.stateChanged(null);
+
+                        panel.add(lblDelay);
+                        panel.add(spinnerDelay);
+
+                        panel.add(Box.createHorizontalStrut(15));
+                        panel.add(txtMessage);
+
+                        final int nNode = nNodeId;
+
+                        int result = JOptionPane.showConfirmDialog(null, panel,
+                                                                   getLocalizedText("LBL_multi"), JOptionPane.OK_CANCEL_OPTION);
+                        if (result == JOptionPane.OK_OPTION)
+                            {
+                            int nCount = (Integer) spinnerCount.getValue();
+                            int nDelay = (Integer) spinnerDelay.getValue();
+
+                            String sMessage = "Generating " + nCount + " thread dumps " + nDelay + " seconds apart\n";
+                            LOGGER.info(sMessage);
+
+                            JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_thread_dump_confirmation",
+                                                                                          String.valueOf(((nCount - 1) * nDelay))));
+
+                            StringBuilder sb = new StringBuilder(sMessage).append("\n").append(generateHeader(nNode));
+
+                            Timer timer = new Timer(nDelay * 1000, null);
+
+                            timer.addActionListener(new ActionListener()
+                                {
+                                public void actionPerformed(ActionEvent e)
+                                    {
+                                    m_nCounter++;
+                                    String sNodeState = null;
+                                    try
+                                        {
+                                        sNodeState = m_requestSender.getNodeState(nNode);
+                                        }
+                                    catch (Exception exception)
+                                        {
+                                        sb.append(exception.getMessage());
+                                        timer.stop();
+                                        }
+                                    sb.append("*** START THREAD DUMP ").append(m_nCounter).append(" - ")
+                                        .append(new Date(System.currentTimeMillis()))
+                                        .append("\n")
+                                        .append(sNodeState)
+                                        .append("\n*** END THREAD DUMP ").append(m_nCounter).append("\n");
+
+                                    if (m_nCounter == nCount)
+                                        {
+                                        timer.stop();
+                                        showMessageDialog(getLocalizedText("LBL_state_for_node") + " " + nNode, sb.toString(), JOptionPane.INFORMATION_MESSAGE);
+                                        }
+                                    }
+
+                                private int m_nCounter = 0;
+                                });
+
+                            timer.setRepeats(true);
+                            timer.start();
+                            }
+                        }
+                    else
+                        {
+                        showMessageDialog(getLocalizedText("LBL_state_for_node") + " " + nNodeId,
+                                          m_requestSender.getNodeState(nNodeId), JOptionPane.INFORMATION_MESSAGE);
+                        }
                     }
                 catch (Exception ee)
                     {
@@ -355,9 +455,99 @@ public class CoherenceMemberPanel
             }
         }
 
+    /**
+     * Generate a header for the thread dumps.
+     * @param nNode node id
+     * @return a header
+     */
+    private String generateHeader(int nNode)
+        {
+        StringBuilder sb = new StringBuilder("Cluster Details\n");
+
+        // get the cluster details
+        for (Map.Entry<Object, Data> entry : f_model.getData(VisualVMModel.DataType.CLUSTER))
+            {
+            sb.append(Localization.getLocalText("LBL_cluster_name")).append(": ")
+               .append(entry.getValue().getColumn(ClusterData.CLUSTER_NAME).toString()).append("\n")
+               .append(Localization.getLocalText("LBL_version")).append(": ")
+               .append(entry.getValue().getColumn(ClusterData.VERSION).toString()).append("\n")
+               .append(Localization.getLocalText("LBL_license_mode")).append(": ")
+               .append(entry.getValue().getColumn(ClusterData.LICENSE_MODE).toString()).append("\n")
+               .append(Localization.getLocalText("LBL_members")).append(": ")
+               .append(String.format("%d", (Integer) entry.getValue().getColumn(ClusterData.CLUSTER_SIZE)));
+            }
+
+        sb.append("\n\nMember Details\n");
+
+        String[] asColumns = VisualVMModel.DataType.MEMBER.getMetadata();
+        for (Entry<Object, Data> entry : f_model.getData(VisualVMModel.DataType.MEMBER))
+            {
+            if ((Integer) entry.getValue().getColumn(MemberData.NODE_ID) == nNode)
+                {
+                // this is the node
+                sb.append(asColumns[MemberData.NODE_ID]).append(": ")
+                    .append(entry.getValue().getColumn(MemberData.NODE_ID).toString()).append("\n")
+                    .append(asColumns[MemberData.ADDRESS]).append(": ")
+                    .append(entry.getValue().getColumn(MemberData.ADDRESS).toString()).append("\n")
+                    .append(asColumns[MemberData.PORT]).append(": ")
+                    .append(entry.getValue().getColumn(MemberData.PORT).toString()).append("\n")
+                    .append(asColumns[MemberData.ROLE_NAME]).append(": ")
+                    .append(entry.getValue().getColumn(MemberData.ROLE_NAME).toString()).append("\n")
+                    .append(asColumns[MemberData.PUBLISHER_SUCCESS]).append(": ")
+                    .append(getPublisherValue(entry.getValue().getColumn(MemberData.PUBLISHER_SUCCESS).toString())).append("\n")
+                    .append(asColumns[MemberData.RECEIVER_SUCCESS]).append(": ")
+                    .append(getPublisherValue(entry.getValue().getColumn(MemberData.RECEIVER_SUCCESS).toString())).append("\n")
+                    .append(asColumns[MemberData.SENDQ_SIZE]).append(": ")
+                    .append(getMemoryFormat(entry.getValue().getColumn(MemberData.SENDQ_SIZE).toString())).append("\n")
+                    .append(asColumns[MemberData.MAX_MEMORY]).append(": ")
+                    .append(getMemoryFormat(entry.getValue().getColumn(MemberData.MAX_MEMORY).toString())).append("\n")
+                    .append(asColumns[MemberData.USED_MEMORY]).append(": ")
+                    .append(getMemoryFormat(entry.getValue().getColumn(MemberData.USED_MEMORY).toString())).append("\n")
+                    .append(asColumns[MemberData.FREE_MEMORY]).append(": ")
+                    .append(getMemoryFormat(entry.getValue().getColumn(MemberData.FREE_MEMORY).toString())).append("\n")
+                    .append(asColumns[MemberData.STORAGE_ENABLED]).append(": ")
+                    .append(entry.getValue().getColumn(MemberData.STORAGE_ENABLED).toString()).append("\n\n");
+                }
+            }
+
+        return sb.toString();
+        }
+
+     /**
+     * A class to call the reportNodeState operation on the selected ClusterNode
+     * MBean and display the details.
+     */
+    private class ReportNodeStateMultiMenuOption
+            extends ReportNodeStateMenuOption
+        {
+
+        // ----- constructors -----------------------------------------------
+
+        /**
+         * {@inheritDoc}
+         */
+        public ReportNodeStateMultiMenuOption(VisualVMModel model, RequestSender requestSender,
+                                         ExportableJTable jtable)
+            {
+            super(model, requestSender, jtable);
+            }
+
+        @Override
+        public String getMenuItem()
+            {
+            return getLocalizedText("LBL_report_node_state_multi");
+            }
+        }
+
     // ----- constants ------------------------------------------------------
 
     private static final long serialVersionUID = -7612569043492412546L;
+
+    /**
+     * The logger object to use.
+     */
+    private static final Logger LOGGER = Logger.getLogger(CoherenceMemberPanel.class.getName());
+
 
     // ----- data members ---------------------------------------------------
 

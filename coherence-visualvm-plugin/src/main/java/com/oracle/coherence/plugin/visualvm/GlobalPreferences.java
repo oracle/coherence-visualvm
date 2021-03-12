@@ -346,6 +346,26 @@ public class GlobalPreferences
         }
 
     /**
+     * Indicates if admin functions are enabled.
+     *
+     * @return if admin functions are enabled
+     */
+    public boolean isAdminFunctionEnabled()
+        {
+        return getBooleanProperty(ENABLE_ADMIN_FUNCTIONS, ENABLE_ADMIN_FUNCTIONS_DEFAULT);
+        }
+
+    /**
+     * Sets if admin functions are enabled.
+     *
+     * @param fValue if admin functions are enabled
+     */
+    public void setAdminFunctionsEnabled(boolean fValue)
+        {
+        setBooleanProperty(ENABLE_ADMIN_FUNCTIONS, fValue);
+        }
+
+    /**
      * Indicates if MBean Check is disabled.
      *
      * @return true if MBean Check is disabled
@@ -552,6 +572,16 @@ public class GlobalPreferences
      * Default for REST debug.
      */
     private static final String REST_DEBUG_DEFAULT = "false";
+
+    /**
+     * Preference key for Admin functions.
+     */
+    private static final String ENABLE_ADMIN_FUNCTIONS = "adminFunctions";
+
+    /**
+     * Default for enable admin functions.
+     */
+    private static final String ENABLE_ADMIN_FUNCTIONS_DEFAULT = "false";
 
     /**
      * Preference key for disable MBean check.

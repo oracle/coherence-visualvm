@@ -25,6 +25,7 @@
 
 package com.oracle.coherence.plugin.visualvm.helper;
 
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,9 +39,11 @@ import com.oracle.coherence.plugin.visualvm.panel.CoherencePersistencePanel;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -66,7 +69,6 @@ import javax.management.ObjectName;
  * The {@link RequestSender} based on Http(RESTful).
  *
  * @author sr 11.10.2017
- *
  * @since Coherence 12.2.1.4.0
  */
 public class HttpRequestSender
@@ -77,7 +79,7 @@ public class HttpRequestSender
     /**
      * Create an HttpRequestSender object.
      *
-     * @param sUrl  the URL of the management server
+     * @param sUrl the URL of the management server
      */
     public HttpRequestSender(String sUrl)
         {
@@ -93,7 +95,7 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath();
-        JsonNode   rootNode   = getResponseJson(sendGetRequest(modifyTarget(objName, urlBuilder)));
+        JsonNode rootNode = getResponseJson(sendGetRequest(modifyTarget(objName, urlBuilder)));
 
         // in case of back cache, we have to get the first item
         if (objName.getKeyProperty("type").equals("Cache"))
@@ -119,7 +121,7 @@ public class HttpRequestSender
     public String getAttribute(ObjectName objectName, String attribute)
             throws Exception
         {
-        String     restName   = getRestName(attribute);
+        String restName = getRestName(attribute);
         URLBuilder urlBuilder = getBasePath();
 
         modifyTarget(objectName, urlBuilder).addQueryParameter("fields", restName);
@@ -196,15 +198,15 @@ public class HttpRequestSender
         urlBuilder.addPathSegment("caches").addPathSegment("members")
                 .addQueryParameter("fields", "name,service,domainPartition");
 
-        JsonNode        rootNode       = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode        nodeCacheItems = rootNode.get("items");
+        JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
+        JsonNode nodeCacheItems = rootNode.get("items");
         Set<ObjectName> setObjectNames = new HashSet<>();
 
         if (nodeCacheItems != null && nodeCacheItems.isArray())
             {
             for (int i = 0; i < nodeCacheItems.size(); i++)
                 {
-                JsonNode                  cacheMember  = nodeCacheItems.get(i);
+                JsonNode cacheMember = nodeCacheItems.get(i);
                 Hashtable<String, String> mapKeysProps = new Hashtable<>();
 
                 mapKeysProps.put("name", cacheMember.get("name").asText());
@@ -226,23 +228,25 @@ public class HttpRequestSender
     public Set<ObjectName> getAllJournalMembers(String sJournalType)
             throws Exception
         {
-        String sJournalUrlType = sJournalType.equals("FlashJournalRM") ? "flash" : "ram";
+        String sJournalUrlType = sJournalType.equals("FlashJournalRM")
+                                 ? "flash"
+                                 : "ram";
 
         URLBuilder urlBuilder = getBasePath();
         urlBuilder.addPathSegment("journal")
                 .addPathSegment(sJournalUrlType).addPathSegment("members")
                 .addQueryParameter("fields", "nodeId,type,name");
 
-        JsonNode        rootNode               = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode        nodeJournalMemberItems = rootNode.get("items");
-        Set<ObjectName> setObjectNames         = new HashSet<>();
+        JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
+        JsonNode nodeJournalMemberItems = rootNode.get("items");
+        Set<ObjectName> setObjectNames = new HashSet<>();
 
         if (nodeJournalMemberItems != null && nodeJournalMemberItems.isArray())
             {
             for (int i = 0; i < nodeJournalMemberItems.size(); i++)
                 {
-                JsonNode                  nodeJournalMember = nodeJournalMemberItems.get(i);
-                Hashtable<String, String> mapKeysProps      = new Hashtable<>();
+                JsonNode nodeJournalMember = nodeJournalMemberItems.get(i);
+                Hashtable<String, String> mapKeysProps = new Hashtable<>();
 
                 mapKeysProps.put("name", nodeJournalMember.get("name").asText());
                 mapKeysProps.put("type", nodeJournalMember.get("type").asText());
@@ -268,13 +272,14 @@ public class HttpRequestSender
             }
 
         urlBuilder.addQueryParameter("fields", "service,name,type,tier,nodeId")
-                .addQueryParameter("links","");
+                .addQueryParameter("links", "");
 
         return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
         }
 
     @Override
-    public Set<ObjectName> getCacheStorageMembers(String sServiceName, String sCacheName, String sDomainPartition) throws Exception
+    public Set<ObjectName> getCacheStorageMembers(String sServiceName, String sCacheName, String sDomainPartition)
+            throws Exception
         {
         // from the perspective of REST, storage and cache MBeans are merged
         return getCacheMembers(sServiceName, sCacheName, sDomainPartition);
@@ -306,7 +311,7 @@ public class HttpRequestSender
                 .addPathSegment("members").addPathSegment(sMember);
 
         urlBuilder.addQueryParameter("fields", "name,type,nodeId")
-                .addQueryParameter("links","");
+                .addQueryParameter("links", "");
 
         return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
         }
@@ -318,9 +323,9 @@ public class HttpRequestSender
         URLBuilder urlBuilder = getBasePath().addPathSegment("services")
                 .addPathSegment("proxy").addPathSegment("members").addQueryParameter("fields", "name,type,nodeId");
 
-        JsonNode        rootNode        = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode        nodeWebAppItems = (JsonNode) rootNode.get("items");
-        Set<ObjectName> setObjectNames  = new HashSet<>();
+        JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
+        JsonNode nodeWebAppItems = (JsonNode) rootNode.get("items");
+        Set<ObjectName> setObjectNames = new HashSet<>();
 
         if (nodeWebAppItems != null && nodeWebAppItems.isArray())
             {
@@ -347,7 +352,7 @@ public class HttpRequestSender
                 .addPathSegment(sAppId).addPathSegment("members");
 
         urlBuilder.addQueryParameter("fields", "name,type,nodeId")
-                .addQueryParameter("links","");
+                .addQueryParameter("links", "");
 
         return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
         }
@@ -358,7 +363,7 @@ public class HttpRequestSender
         {
         return Collections.singleton(new ObjectName(
                 "Coherence:type=Platform,Domain=java.lang,subType=OperatingSystem,nodeId="
-                        + nodeId + ",*"));
+                + nodeId + ",*"));
         }
 
     @Override
@@ -367,7 +372,7 @@ public class HttpRequestSender
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("members");
         urlBuilder.addQueryParameter("fields", "type,nodeId")
-                .addQueryParameter("links","");
+                .addQueryParameter("links", "");
 
         return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
         }
@@ -378,19 +383,19 @@ public class HttpRequestSender
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("services")
                 .addPathSegment("members").addQueryParameter("fields", "name,type,domainPartition,nodeId," +
-                                     "storageEnabled,persistenceActiveSpaceUsed,persistenceLatencyMax,persistenceLatencyAverage")
+                                                                       "storageEnabled,persistenceActiveSpaceUsed,persistenceLatencyMax,persistenceLatencyAverage")
                 .addQueryParameter("links", "");
 
-        JsonNode        rootNode                = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode        nodeServiceMembersItems = (JsonNode) rootNode.get("items");
-        Set<ObjectName> setObjectNames          = new HashSet<>();
+        JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
+        JsonNode nodeServiceMembersItems = (JsonNode) rootNode.get("items");
+        Set<ObjectName> setObjectNames = new HashSet<>();
 
         if (nodeServiceMembersItems != null && nodeServiceMembersItems.isArray())
             {
             for (int i = 0; i < nodeServiceMembersItems.size(); i++)
                 {
-                JsonNode                  serviceMember = nodeServiceMembersItems.get(i);
-                Hashtable<String, String> mapKeysProps  = new Hashtable<>();
+                JsonNode serviceMember = nodeServiceMembersItems.get(i);
+                Hashtable<String, String> mapKeysProps = new Hashtable<>();
 
                 serviceMember.fields().forEachRemaining(e -> mapKeysProps.put(e.getKey(), e.getValue().asText()));
 
@@ -428,7 +433,9 @@ public class HttpRequestSender
             throws Exception
         {
         return Collections.singleton(new ObjectName("Coherence:type=Service,name=" + sService +
-                (sDomainPartition != null ? ",domainPartition=" + sDomainPartition : "")));
+                                                    (sDomainPartition != null
+                                                     ? ",domainPartition=" + sDomainPartition
+                                                     : "")));
         }
 
     @Override
@@ -453,7 +460,7 @@ public class HttpRequestSender
         URLBuilder urlBuilder = getBasePath().addPathSegment("services")
                 .addPathSegment(encodeServiceName(sService)).addPathSegment("partition")
                 .addQueryParameter("fields", "averagePartitionSizeKB,maxPartitionSizeKB,averageStorageSizeKB," +
-                        "maxStorageSizeKB,maxLoadNodeId");
+                                             "maxStorageSizeKB,maxLoadNodeId");
         if (sDomainPartition != null)
             {
             urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
@@ -514,6 +521,20 @@ public class HttpRequestSender
         return rootNode.get("state").asText();
         }
 
+    /**
+     * Issue a dump cluster heap request.
+     *
+     * @param sRole the role to dump for or null for all roles
+     * @throws Exception if any errors
+     */
+    public void dumpClusterHeap(String sRole) throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment("dumpClusterHeap");
+
+        JsonNode rootNode = getResponseJson(sendPostRequest(urlBuilder, sRole));
+        LOGGER.info(rootNode.toString());
+        }
+
     @Override
     public String[] getSnapshots(String sService, String sDomainPartition)
             throws Exception
@@ -531,7 +552,7 @@ public class HttpRequestSender
         List<String> listSnapshots = new ArrayList<>();
         if (nodeSnapshots != null && nodeSnapshots.isArray())
             {
-            for (int i = 0; i < nodeSnapshots.size() ; i++)
+            for (int i = 0; i < nodeSnapshots.size(); i++)
                 {
                 listSnapshots.add(nodeSnapshots.get(i).asText());
                 }
@@ -556,7 +577,7 @@ public class HttpRequestSender
         List<String> listSnapshots = new ArrayList<>();
         if (nodeSnapshots != null && nodeSnapshots.isArray())
             {
-            for (int i = 0; i < nodeSnapshots.size() ; i++)
+            for (int i = 0; i < nodeSnapshots.size(); i++)
                 {
                 listSnapshots.add(nodeSnapshots.get(i).asText());
                 }
@@ -567,9 +588,9 @@ public class HttpRequestSender
 
     @Override
     public void executePersistenceOperation(String sService,
-                                              String sDomainPartition,
-                                              String sOperationName,
-                                              String sSnapshotName)
+                                            String sDomainPartition,
+                                            String sOperationName,
+                                            String sSnapshotName)
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("services")
@@ -611,15 +632,15 @@ public class HttpRequestSender
     /**
      * Get the members of a service.
      *
-     * @param sServiceName      the name of the service
-     * @param sDomainPartition  the domain partition to which the service belongs
-     *
+     * @param sServiceName     the name of the service
+     * @param sDomainPartition the domain partition to which the service
+     *                         belongs
      * @return the members of a service
-     *
      * @throws Exception in case of errors
      */
     @Override
-    public Set<ObjectName> getMembersOfService(String sServiceName, String sDomainPartition) throws Exception
+    public Set<ObjectName> getMembersOfService(String sServiceName, String sDomainPartition)
+            throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("services")
                 .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("members");
@@ -629,11 +650,11 @@ public class HttpRequestSender
             }
 
         urlBuilder.addQueryParameter("fields", "name,type,nodeId,domainPartition")
-                .addQueryParameter("links","");
+                .addQueryParameter("links", "");
 
-        JsonNode        rootNode           = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode        nodeServiceMembers = (JsonNode) rootNode.get("items");
-        Set<ObjectName> setObjectNames     = new HashSet<>();
+        JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
+        JsonNode nodeServiceMembers = (JsonNode) rootNode.get("items");
+        Set<ObjectName> setObjectNames = new HashSet<>();
 
         if (nodeServiceMembers != null && nodeServiceMembers.isArray())
             {
@@ -655,11 +676,10 @@ public class HttpRequestSender
     /**
      * Get the cache data for the given service
      *
-     * @param sServiceName      the service to which the cache belongs to
-     * @param sDomainPartition  the domain partition to which the service belongs
-     *
+     * @param sServiceName     the service to which the cache belongs to
+     * @param sDomainPartition the domain partition to which the service
+     *                         belongs
      * @return the storage manager data for all the cache members of the cache
-     *
      * @throws Exception in case of errors
      */
     public JsonNode getListOfServiceCaches(String sServiceName, String sDomainPartition)
@@ -669,7 +689,7 @@ public class HttpRequestSender
                 .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("caches")
                 .addQueryParameter("links", "")
                 .addQueryParameter("fields", "nodeId,name,unitFactor,size,unitsBytes,units,memoryUnits,"
-                                   + "averageMissMillis");
+                                             + "averageMissMillis");
 
         if (sDomainPartition != null)
             {
@@ -685,7 +705,6 @@ public class HttpRequestSender
      * enhancement will not work with WebLogic MT which is deprecated.
      *
      * @return the storage manager data for all the cache members of the cache
-     *
      * @throws Exception in case of errors
      */
     public JsonNode getListOfCaches()
@@ -694,7 +713,7 @@ public class HttpRequestSender
         URLBuilder urlBuilder = getBasePath().addPathSegment("caches")
                 .addQueryParameter("links", "")
                 .addQueryParameter("fields", "nodeId,name,unitFactor,size,unitsBytes,units,memoryUnits,"
-                                   + "averageMissMillis,service");
+                                             + "averageMissMillis,service");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -702,11 +721,10 @@ public class HttpRequestSender
     /**
      * Get the storage data for the given service
      *
-     * @param sServiceName      the service to which the cache belongs to
-     * @param sDomainPartition  the domain partition to which the service belongs
-     *
+     * @param sServiceName     the service to which the cache belongs to
+     * @param sDomainPartition the domain partition to which the service
+     *                         belongs
      * @return the storage manager data for all the cache members of the cache
-     *
      * @throws Exception in case of errors
      */
     public JsonNode getListOfStorageMembers(String sServiceName, String sDomainPartition)
@@ -727,28 +745,28 @@ public class HttpRequestSender
 
     /**
      * Get a list of all storage members.
+     *
      * @return a list of all storage members
-     * @throws Exception  in case of errors
+     * @throws Exception in case of errors
      */
     public JsonNode getAllStorageMembers() throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-            .addPathSegment("members")
-            .addQueryParameter("links", "")
-            .addQueryParameter("fields", "type,name,domainPartition,nodeId,persistenceMode," +
-                               "storageEnabled,persistenceActiveSpaceUsed,persistenceLatencyMax,persistenceLatencyAverage");
+                .addPathSegment("members")
+                .addQueryParameter("links", "")
+                .addQueryParameter("fields", "type,name,domainPartition,nodeId,persistenceMode," +
+                                             "storageEnabled,persistenceActiveSpaceUsed,persistenceLatencyMax,persistenceLatencyAverage");
         return getResponseJson(sendGetRequest(urlBuilder));
         }
 
     /**
      * Get the data for all the StorageManager members of the provided cache.
      *
-     * @param sServiceName      the service to which the cache belongs to
-     * @param sCacheName        the name of the cache
-     * @param sDomainPartition  the domain partition to which the service belongs
-     *
+     * @param sServiceName     the service to which the cache belongs to
+     * @param sCacheName       the name of the cache
+     * @param sDomainPartition the domain partition to which the service
+     *                         belongs
      * @return the storage manager data for all the cache members of the cache
-     *
      * @throws Exception in case of errors
      */
     public JsonNode getDataForStorageManagerMembers(String sServiceName, String sDomainPartition, String sCacheName)
@@ -757,8 +775,8 @@ public class HttpRequestSender
         URLBuilder urlBuilder = getBasePath().addPathSegment("services")
                 .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("caches").addPathSegment(sCacheName)
                 .addPathSegment("members").addQueryParameter("fields", "nodeId," +
-                        "locksGranted,locksPending,listenerRegistrations,maxQueryDurationMillis,maxQueryDescription," +
-                        "nonOptimizedQueryAverageMillis,optimizedQueryAverageMillis,indexTotalUnits");
+                                                                       "locksGranted,locksPending,listenerRegistrations,maxQueryDurationMillis,maxQueryDescription," +
+                                                                       "nonOptimizedQueryAverageMillis,optimizedQueryAverageMillis,indexTotalUnits");
 
         if (sDomainPartition != null)
             {
@@ -772,12 +790,11 @@ public class HttpRequestSender
     /**
      * Get the data for cache members of a cache.
      *
-     * @param sServiceName      the service to which the cache belongs to
-     * @param sCacheName        the name of the cache
-     * @param sDomainPartition  the domain partition to which the service belongs
-     *
+     * @param sServiceName     the service to which the cache belongs to
+     * @param sCacheName       the name of the cache
+     * @param sDomainPartition the domain partition to which the service
+     *                         belongs
      * @return the cache members data
-     *
      * @throws Exception in case of errors
      */
     public JsonNode getDataForCacheMembers(String sServiceName, String sCacheName, String sDomainPartition)
@@ -792,8 +809,8 @@ public class HttpRequestSender
             }
 
         urlBuilder.addQueryParameter("fields", "name,type,size,service,nodeId," +
-                "domainPartition,tier,units,unitFactor,totalGets,totalPuts,cacheHits,cacheMisses,hitProbability")
-                .addQueryParameter("links","");
+                                               "domainPartition,tier,units,unitFactor,totalGets,totalPuts,cacheHits,cacheMisses,hitProbability")
+                .addQueryParameter("links", "");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -802,7 +819,6 @@ public class HttpRequestSender
      * Get the data for all the cluster members,
      *
      * @return the data for all the cluster members
-     *
      * @throws Exception in case of errors
      */
     public JsonNode getListOfClusterMembers() throws Exception
@@ -810,47 +826,47 @@ public class HttpRequestSender
         URLBuilder urlBuilder = getBasePath().addPathSegment("members");
 
         urlBuilder = urlBuilder.addQueryParameter("fields", "nodeId," +
-                "publisherSuccessRate,receiverSuccessRate," +
-                "sendQueueSize,memoryMaxMB,memoryAvailableMB,unicastAddress,roleName,unicastPort," +
-                "machineName,rackName,siteName,productEdition")
-                .addQueryParameter("links","");
+                                                            "publisherSuccessRate,receiverSuccessRate," +
+                                                            "sendQueueSize,memoryMaxMB,memoryAvailableMB,unicastAddress,roleName,unicastPort," +
+                                                            "machineName,rackName,siteName,productEdition")
+                .addQueryParameter("links", "");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
 
     /**
      * Get the data for all services.
+     *
      * @return he data for all services
      * @throws Exception in case of errors
      */
     public JsonNode getListOfServices() throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                     .addPathSegment("members")
-                     .addQueryParameter("fields", "name,type,domainPartition,nodeId," +
-                                                  "statusHA,memberCount,partitionsAll,partitionsEndangered," +
-                                                  "partitionsVulnerable,partitionsUnbalanced,requestPendingCount," +
-                                                  "storageEnabledCount,type")
-                     .addQueryParameter("links", "");
+                .addPathSegment("members")
+                .addQueryParameter("fields", "name,type,domainPartition,nodeId," +
+                                             "statusHA,memberCount,partitionsAll,partitionsEndangered," +
+                                             "partitionsVulnerable,partitionsUnbalanced,requestPendingCount," +
+                                             "storageEnabledCount,type")
+                .addQueryParameter("links", "");
         return getResponseJson(sendGetRequest(urlBuilder));
-    }
+        }
 
     /**
      * Get the data for all the proxy members in the cluster.
      *
      * @return the data for all the cluster members
-     *
      * @throws Exception in case of errors
      */
     public JsonNode getDataForProxyMembers() throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("services")
                 .addPathSegment("proxy").addPathSegment("members").addQueryParameter("fields", "hostIP,name,nodeId," +
-                        "connectionCount,outgoingMessageBacklog,totalBytesReceived,totalBytesSent," +
-                        "totalMessagesReceived,totalMessagesSent,protocol," +
-                        "domainPartition,httpServerType,totalRequestCount," +
-                        "totalErrorCount,requestsPerSecond,averageRequestTime," +
-                        "responseCount1xx,responseCount2xx,responseCount3xx,responseCount4xx,responseCount5xx");
+                                                                                               "connectionCount,outgoingMessageBacklog,totalBytesReceived,totalBytesSent," +
+                                                                                               "totalMessagesReceived,totalMessagesSent,protocol," +
+                                                                                               "domainPartition,httpServerType,totalRequestCount," +
+                                                                                               "totalErrorCount,requestsPerSecond,averageRequestTime," +
+                                                                                               "responseCount1xx,responseCount2xx,responseCount3xx,responseCount4xx,responseCount5xx");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -859,14 +875,13 @@ public class HttpRequestSender
      * Get the data for all the service members in the cluster.
      *
      * @return the data for all service members
-     *
      * @throws Exception in case of errors
      */
     public JsonNode getDataForServiceMembers() throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("services")
                 .addPathSegment("members").addQueryParameter("fields", "name,type,domainPartition,nodeId,taskBacklog," +
-                        "threadCount,threadIdleCount,requestAverageDuration,taskAverageDuration");
+                                                                       "threadCount,threadIdleCount,requestAverageDuration,taskAverageDuration");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -874,11 +889,9 @@ public class HttpRequestSender
     /**
      * Get the incoming data(OriginMBean) data for a participant.
      *
-     * @param sServiceName      the name of the service
-     * @param sParticipantName  the name of the participant
-     *
+     * @param sServiceName     the name of the service
+     * @param sParticipantName the name of the participant
      * @return the incoming data(OriginMBean) of the participant
-     *
      * @throws Exception in case of errors
      */
     public JsonNode getIncomingDataForParticipant(String sServiceName, String sParticipantName)
@@ -895,11 +908,9 @@ public class HttpRequestSender
     /**
      * Get the outgoing data(DestinationMBean) data for a participant.
      *
-     * @param sServiceName      the name of the service
-     * @param sParticipantName  the name of the participant
-     *
+     * @param sServiceName     the name of the service
+     * @param sParticipantName the name of the participant
      * @return the outgoing data(DestinationMBean) of the participant
-     *
      * @throws Exception in case of errors
      */
     public JsonNode getOutgoingDataForParticipant(String sServiceName, String sParticipantName)
@@ -916,18 +927,17 @@ public class HttpRequestSender
     /**
      * Get the data for all the elastic data members of a particular type.
      *
-     * @param sElasticDataType  the data type of elastic members(ram/flash)
-     *
+     * @param sElasticDataType the data type of elastic members(ram/flash)
      * @return the data for all the elastic data members in the cluster
-     *
      * @throws Exception in case of errors
      */
-    public JsonNode getDataForElasticDataMembers(String sElasticDataType) throws Exception
+    public JsonNode getDataForElasticDataMembers(String sElasticDataType)
+            throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("journal")
                 .addPathSegment(sElasticDataType).addPathSegment("members")
                 .addQueryParameter("fields", "nodeId,fileCount,maxJournalFilesNumber,maxFileSize,totalDataSize," +
-                        "compactionCount,exhaustiveCompactionCount,currentCollectorLoadFactor");
+                                             "compactionCount,exhaustiveCompactionCount,currentCollectorLoadFactor");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -935,14 +945,14 @@ public class HttpRequestSender
     /**
      * Get the aggregated data for all the proxy servers of a service.
      *
-     * @param sServiceName      the name of the service
-     * @param sDomainPartition  the domain partition to which the service belongs
-     *
+     * @param sServiceName     the name of the service
+     * @param sDomainPartition the domain partition to which the service
+     *                         belongs
      * @return the aggregated data across all proxy members of a service
-     *
      * @throws Exception in case of errors
      */
-    public JsonNode getAggregatedProxyData(String sServiceName, String sDomainPartition) throws Exception
+    public JsonNode getAggregatedProxyData(String sServiceName, String sDomainPartition)
+            throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("services")
                 .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("proxy");
@@ -952,8 +962,8 @@ public class HttpRequestSender
             }
 
         urlBuilder = urlBuilder.addQueryParameter("fields", "name,type,httpServerType,totalRequestCount," +
-                "totalErrorCount,requestsPerSecond,averageRequestTime,protocol")
-                .addQueryParameter("links","");
+                                                            "totalErrorCount,requestsPerSecond,averageRequestTime,protocol")
+                .addQueryParameter("links", "");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -961,14 +971,14 @@ public class HttpRequestSender
     /**
      * Get the aggregated data for a service.
      *
-     * @param sServiceName      the name of the service
-     * @param sDomainPartition  the domain partition to which the service belongs
-     *
+     * @param sServiceName     the name of the service
+     * @param sDomainPartition the domain partition to which the service
+     *                         belongs
      * @return the aggregated data of a service
-     *
      * @throws Exception in case of errors
      */
-    public JsonNode getAggregatedServiceData(String sServiceName, String sDomainPartition) throws Exception
+    public JsonNode getAggregatedServiceData(String sServiceName, String sDomainPartition)
+            throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("services")
                 .addPathSegment(encodeServiceName(sServiceName));
@@ -978,20 +988,20 @@ public class HttpRequestSender
             }
 
         urlBuilder = urlBuilder.addQueryParameter("fields", "name,domainPartition,statusHA,partitionsAll," +
-                "partitionsEndangered,partitionsVulnerable,partitionsUnbalanced,requestPendingCount,storageEnabled," +
-                "memberCount").addQueryParameter("links","");
+                                                            "partitionsEndangered,partitionsVulnerable,partitionsUnbalanced,requestPendingCount,storageEnabled," +
+                                                            "memberCount").addQueryParameter("links", "");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
 
     /**
-     * Get the aggregated data for all the incoming(OriginMBean) members of a federated service.
+     * Get the aggregated data for all the incoming(OriginMBean) members of a
+     * federated service.
      *
-     * @param sServiceName      the name of the service
-     * @param sDomainPartition  the domain partition to which the service belongs
-     *
+     * @param sServiceName     the name of the service
+     * @param sDomainPartition the domain partition to which the service
+     *                         belongs
      * @return the aggregated data of incoming members
-     *
      * @throws Exception in case of errors
      */
     public JsonNode getAggregatedIncomingData(String sServiceName, String sDomainPartition)
@@ -1007,19 +1017,19 @@ public class HttpRequestSender
             }
 
         urlBuilder = urlBuilder.addQueryParameter("fields", "status,bytesReceivedSecs,msgsReceivedSecs")
-                .addQueryParameter("links","");
+                .addQueryParameter("links", "");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
 
     /**
-     * Get the aggregated data for all the outgoing(DestinationMBean) members of a federated service.
+     * Get the aggregated data for all the outgoing(DestinationMBean) members of
+     * a federated service.
      *
-     * @param sServiceName      the name of the service
-     * @param sDomainPartition  the domain partition to which the service belongs
-     *
+     * @param sServiceName     the name of the service
+     * @param sDomainPartition the domain partition to which the service
+     *                         belongs
      * @return the aggregated data of outgoing members
-     *
      * @throws Exception in case of errors
      */
     public JsonNode getAggregatedOutgoingData(String sServiceName, String sDomainPartition)
@@ -1037,7 +1047,7 @@ public class HttpRequestSender
             }
 
         urlBuilder = urlBuilder.addQueryParameter("fields", "status,bytesSentSecs,msgsSentSecs")
-                .addQueryParameter("links","");
+                .addQueryParameter("links", "");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -1046,10 +1056,9 @@ public class HttpRequestSender
      * Send a GET HTTP request and return the response, if valid.
      *
      * @param urlBuilder the URL builder of the URL
-     *
      * @return the response of the GET request
-     *
-     * @throws IOException thrown in case of exceptions while connecting to the REST server
+     * @throws IOException thrown in case of exceptions while connecting to the
+     *                     REST server
      */
     private InputStream sendGetRequest(URLBuilder urlBuilder) throws Exception
         {
@@ -1082,28 +1091,69 @@ public class HttpRequestSender
      * Send a POST HTTP request and return the response, if valid.
      *
      * @param urlBuilder the URL builder of the URL
-     *
      * @return the response of the POST request
-     *
-     * @throws IOException thrown in case of exceptions while connecting to the REST server
+     * @throws IOException thrown in case of exceptions while connecting to the
+     *                     REST server
      */
     private InputStream sendPostRequest(URLBuilder urlBuilder) throws Exception
         {
+        return sendPostRequest(urlBuilder, null);
+        }
+
+    /**
+     * Send a POST HTTP request and return the response, if valid.
+     *
+     * @param urlBuilder the URL builder of the URL
+     * @param sRole      role to add to body
+     * @return the response of the POST request
+     * @throws IOException thrown in case of exceptions while connecting to the
+     *                     REST server
+     */
+    private InputStream sendPostRequest(URLBuilder urlBuilder, String sRole)
+            throws Exception
+        {
         URL url = urlBuilder.getUrl();
+        
         java.net.HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
         connection.setRequestMethod("POST");
+        int nRestTimeout = GlobalPreferences.sharedInstance().getRestTimeout();
+        connection.setConnectTimeout(nRestTimeout);
+        connection.setReadTimeout(nRestTimeout);
+
         if (f_fisWebLogic)
             {
             connection.setRequestProperty(REQUESTED_BY, "JVisualVM");
+            }
+        // if we have a role parameter to send
+        if (sRole != null)
+            {
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setDoOutput(true);
+            String sInput = "{\"role\": \"" + sRole + "\"}";
+            try (OutputStream os = connection.getOutputStream())
+                {
+                byte[] abData = sInput.getBytes(StandardCharsets.UTF_8);
+                os.write(abData, 0, abData.length);
+                }
             }
 
         int nResponseCode = connection.getResponseCode();
 
         if (nResponseCode != 200)
             {
-            JsonNode errorJson = getResponseJson(connection.getErrorStream());
-            String   sCause    = errorJson != null ? errorJson.toString() : connection.getResponseMessage();
-            throw new RuntimeException("Invalid Response Http Code: "+ nResponseCode + ", \nCause: " + sCause);
+            if (nResponseCode != 404)
+                {
+                JsonNode errorJson = getResponseJson(connection.getErrorStream());
+                String sCause = errorJson != null
+                                ? errorJson.toString()
+                                : connection.getResponseMessage();
+                throw new RuntimeException("Invalid Response Http Code: " + nResponseCode + ", \nCause: " + sCause);
+                }
+            else
+                {
+                throw new RuntimeException("Not Found " + url.toString());
+                }
             }
 
         return connection.getInputStream();
@@ -1113,12 +1163,12 @@ public class HttpRequestSender
      * Send a DELETE HTTP request and return the response, if valid.
      *
      * @param urlBuilder the URL builder of the URL
-     *
      * @return the response of the DELETE request
-     *
-     * @throws IOException thrown in case of exceptions while connecting to the REST server
+     * @throws IOException thrown in case of exceptions while connecting to the
+     *                     REST server
      */
-    private InputStream sendDeleteRequest(URLBuilder urlBuilder) throws Exception
+    private InputStream sendDeleteRequest(URLBuilder urlBuilder)
+            throws Exception
         {
         URL url = urlBuilder.getUrl();
         java.net.HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -1132,7 +1182,7 @@ public class HttpRequestSender
 
         if (nResponseCode != 200)
             {
-            throw new RuntimeException("Invalid Response Responsecode: "+ nResponseCode);
+            throw new RuntimeException("Invalid Response Response code: " + nResponseCode);
             }
 
         return connection.getInputStream();
@@ -1141,7 +1191,7 @@ public class HttpRequestSender
     /**
      * Convert a name into a REST standards compatible name.
      *
-     * @param name  the service name to be normalized
+     * @param name the service name to be normalized
      * @return the REST compatible name
      */
     private String getRestName(String name)
@@ -1178,13 +1228,12 @@ public class HttpRequestSender
 
 
     /**
-     * Modify the URL based on the MBean ObjectName, so that the details of the MBean can be retrieved using the URL.
-     * For example in order to get the attributes of a cache MBean, the URL will be
-     * /services/{service-name}/caches/{cache-name}/members/{nodeID}
+     * Modify the URL based on the MBean ObjectName, so that the details of the
+     * MBean can be retrieved using the URL. For example in order to get the
+     * attributes of a cache MBean, the URL will be /services/{service-name}/caches/{cache-name}/members/{nodeID}
      *
-     * @param objectName  the ObjectName of the MBean
-     * @param urlBuilder  the builder for the URL
-     *
+     * @param objectName the ObjectName of the MBean
+     * @param urlBuilder the builder for the URL
      * @return the modified URL
      */
     private URLBuilder modifyTarget(ObjectName objectName, URLBuilder urlBuilder)
@@ -1196,7 +1245,7 @@ public class HttpRequestSender
                         .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"));
             case "Journal":
                 String sJournalUrlType = objectName.getKeyProperty("name").equals("FlashJournalRM")
-                        ? "flash" : "ram";
+                                         ? "flash" : "ram";
                 return urlBuilder.addPathSegment("journal").addPathSegment(sJournalUrlType).addPathSegment("members")
                         .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"));
             case "Cache":
@@ -1253,9 +1302,8 @@ public class HttpRequestSender
     /**
      * Get a key property from the ObjectName.
      *
-     * @param objectName  the ObjectName of the MBean
-     * @param sKey        the key of the property
-     *
+     * @param objectName the ObjectName of the MBean
+     * @param sKey       the key of the property
      * @return the value of the property in the MBean
      */
     protected String getKeyPropertyFromObjName(ObjectName objectName, String sKey)
@@ -1266,11 +1314,10 @@ public class HttpRequestSender
     /**
      * Red the HTTP response as a JSON body.
      *
-     * @param stream  the response stream
-     *
+     * @param stream the response stream
      * @return the JSON response
-     *
-     * @throws IOException thrown in case of exceptions while connecting to the REST server
+     * @throws IOException thrown in case of exceptions while connecting to the
+     *                     REST server
      */
     protected JsonNode getResponseJson(InputStream stream) throws IOException
         {
@@ -1298,7 +1345,9 @@ public class HttpRequestSender
         // modify it
         if (sUrl.contains("management/coherence"))
             {
-            return f_fisWebLogic && m_sClusterName != null ? bldrURl.addPathSegment(m_sClusterName) : bldrURl;
+            return f_fisWebLogic && m_sClusterName != null
+                   ? bldrURl.addPathSegment(m_sClusterName)
+                   : bldrURl;
             }
 
         // else append the Coherence specific parts to the URL
@@ -1309,24 +1358,24 @@ public class HttpRequestSender
     /**
      * Get the list of MBean ObjectNames from the provided response.
      *
-     * @param streamInput  the input stream from the response
-     *
+     * @param streamInput the input stream from the response
      * @return the list of ObjectName
-     *
-     * @throws IOException thrown in case of connectivity errors to REST server
-     * @throws MalformedObjectNameException the exception thrown if the ObjectName is malformed
+     * @throws IOException                  thrown in case of connectivity
+     *                                      errors to REST server
+     * @throws MalformedObjectNameException the exception thrown if the
+     *                                      ObjectName is malformed
      */
     protected Set<ObjectName> getSetObjectNamesFromResponse(InputStream streamInput)
             throws IOException, MalformedObjectNameException
         {
         Set<ObjectName> setObjectNames = new HashSet<>();
-        JsonNode        rootNode       = getResponseJson(streamInput);
-        JsonNode        nodeItems      = rootNode.get("items");
+        JsonNode rootNode = getResponseJson(streamInput);
+        JsonNode nodeItems = rootNode.get("items");
         if (nodeItems != null && nodeItems.isArray())
             {
             for (int i = 0; i < nodeItems.size(); i++)
                 {
-                JsonNode                  nodeItem     = nodeItems.get(i);
+                JsonNode nodeItem = nodeItems.get(i);
                 Hashtable<String, String> mapKeysProps = new Hashtable<>();
 
                 nodeItem.fields().forEachRemaining(e -> mapKeysProps.put(e.getKey(), e.getValue().asText()));
@@ -1361,7 +1410,6 @@ public class HttpRequestSender
      * Returns the root node for a WebLogic server connection.
      *
      * @param rootNode the current root node
-     *
      * @return the new root node
      */
     private JsonNode getRootNodeForWebLogicServer(JsonNode rootNode)
@@ -1399,7 +1447,6 @@ public class HttpRequestSender
      * Encode a service name by stripping any double quotes.
      *
      * @param sServiceName service name to encode
-     *
      * @return encoded service name
      */
     private String encodeServiceName(String sServiceName)

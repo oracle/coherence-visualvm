@@ -441,11 +441,9 @@ public class CoherencePersistencePanel
                             if (asSnapshotList == null || asSnapshotList.length == 0)
                                 {
                                 JOptionPane.showMessageDialog(null,
-                                                              Localization.getLocalText("LBL_no_snapshots",
-                                                                                        new String[] {
-                                                                                                fGetArchived
-                                                                                                ? "archived "
-                                                                                                : ""}));
+                                                              Localization.getLocalText("LBL_no_snapshots", fGetArchived
+                                                                                        ? "archived "
+                                                                                        : ""));
                                 return;
                                 }
 
@@ -455,11 +453,9 @@ public class CoherencePersistencePanel
 
                             sSnapshotName = (String) JOptionPane.showInputDialog(
                                     null, "Snapshpot",
-                                    Localization.getLocalText("LBL_enter_snapshot",
-                                                              new String[] {
-                                                                      fGetArchived
-                                                                      ? "archived "
-                                                                      : ""}),
+                                    Localization.getLocalText("LBL_enter_snapshot", fGetArchived
+                                                              ? "archived "
+                                                              : ""),
                                     JOptionPane.QUESTION_MESSAGE,
                                     null, // default icon
                                     asSnapshotList,
@@ -472,11 +468,9 @@ public class CoherencePersistencePanel
                         if (f_fConfirm)
                             {
                             String sQuestion = FORCE_RECOVERY.equals(f_sOperation)
-                                               ?
-                                               Localization.getLocalText("LBL_confirm_recovery")
-                                               :
-                                               Localization.getLocalText("LBL_confirm_snapshot",
-                                                                         new String[] {f_sOperation, sSnapshotName});
+                                               ? Localization.getLocalText("LBL_confirm_recovery")
+                                               : Localization.getLocalText("LBL_confirm_snapshot",
+                                                                           f_sOperation, sSnapshotName);
 
                             if (JOptionPane.showConfirmDialog(null, sQuestion,
                                                               Localization.getLocalText("LBL_confirm_operation"),
@@ -515,7 +509,7 @@ public class CoherencePersistencePanel
                                 else
                                     {
                                     String[] asArchivedSnapshots = m_requestSender.getArchivedSnapshots(sService, sDomainPartition);
-                                    sResult = getSnapshotList(Localization.getLocalText("LBL_archived_snapshots", new String[] {sServiceName}),
+                                    sResult = getSnapshotList(Localization.getLocalText("LBL_archived_snapshots", sServiceName),
                                                               asArchivedSnapshots);
                                     }
                                 }
@@ -527,12 +521,12 @@ public class CoherencePersistencePanel
                                                                 ?
                                                                 "LBL_operation_ok"
                                                                 : "LBL_operation_submitted",
-                                                                new String[] {f_sOperation, sSnapshotName, sServiceName});
+                                                                f_sOperation, sSnapshotName, sServiceName);
                             }
                         if (RECOVER_SNAPSHOT.equals(f_sOperation))
                             {
                             sResult = sResult + "\n\n" + Localization.getLocalText("LBL_recover_note",
-                                                                                   new String[] {sServiceName});
+                                                                                   sServiceName);
                             }
 
                         showMessageDialog(Localization.getLocalText("LBL_result"), sResult,
@@ -543,8 +537,8 @@ public class CoherencePersistencePanel
                 catch (Exception ee)
                     {
                     showMessageDialog(Localization.getLocalText("ERR_error_invoking",
-                                                                new String[] {f_sOperation + " " + sQuery}), ee.getMessage() +
-                                                                                                             "\n" + ee.getCause(), JOptionPane.ERROR_MESSAGE);
+                                                                f_sOperation + " " + sQuery), ee.getMessage() +
+                                                                                              "\n" + ee.getCause(), JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }

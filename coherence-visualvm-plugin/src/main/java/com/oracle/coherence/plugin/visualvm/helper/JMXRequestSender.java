@@ -314,6 +314,29 @@ public class JMXRequestSender
         return (String) invoke(new ObjectName(sFQN), "reportNodeState", new Object[0], new String[0]);
         }
 
+    /**
+     * Issue a dump cluster heap request.
+     *
+     * @param sRole the role to dump for or null for all roles
+     * @throws Exception if any errors
+     */
+    public void dumpClusterHeap(String sRole) throws Exception
+        {
+        // look up the full name of the MBean in case we are in container
+        Set<ObjectName> setResult = getCompleteObjectName(
+                new ObjectName("Coherence:type=Cluster,*"));
+
+        String sFQN = null;
+
+        for (Object oResult : setResult)
+            {
+            sFQN = oResult.toString();
+            break;
+            }
+        invoke(new ObjectName(sFQN), "dumpClusterHeap", new Object[]{sRole},
+                    new String[] {String.class.getName()});
+        }
+
     @Override
     public String[] getSnapshots(String sService, String sDomainPartition)
             throws Exception

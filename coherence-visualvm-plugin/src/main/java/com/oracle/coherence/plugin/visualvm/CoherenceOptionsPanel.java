@@ -93,6 +93,7 @@ public class CoherenceOptionsPanel
         m_enableZoom.setSelected(preferences.isZoomEnabled());
         m_enablePersistenceList.setSelected(preferences.isPersistenceListEnabled());
         m_enableClusterSnapshot.setSelected(preferences.isClusterSnapshotEnabled());
+        m_adminFunctionsEnabled.setSelected(preferences.isAdminFunctionEnabled());
         }
 
     /**
@@ -110,6 +111,7 @@ public class CoherenceOptionsPanel
         preferences.setZoomEnabled(m_enableZoom.isSelected());
         preferences.setPersistenceListEnabled(m_enablePersistenceList.isSelected());
         preferences.setClusterSnapshotEnabled(m_enableClusterSnapshot.isSelected());
+        preferences.setAdminFunctionsEnabled(m_adminFunctionsEnabled.isSelected());
         }
 
     /**
@@ -228,10 +230,13 @@ public class CoherenceOptionsPanel
         m_enableClusterSnapshot = new JCheckBox();
         addCheckBox(11, "LBL_enable_cluster_snapshot", m_enableClusterSnapshot);
 
+        m_adminFunctionsEnabled = new JCheckBox();
+        addCheckBox(12, "LBL_enable_admin_functions", m_adminFunctionsEnabled);
+
         JLabel appsLabel = new JLabel();
         Mnemonics.setLocalizedText(appsLabel, Localization.getLocalText("LBL_reconnect")); // NOI18N
         c = new GridBagConstraints();
-        c.gridy = 12;
+        c.gridy = 13;
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -310,6 +315,7 @@ public class CoherenceOptionsPanel
         m_enableHeatMap.getModel().addChangeListener(changeListener);
         m_enablePersistenceList.getModel().addChangeListener(changeListener);
         m_enableClusterSnapshot.getModel().addChangeListener(changeListener);
+        m_adminFunctionsEnabled.getModel().addChangeListener(changeListener);
         }
 
     //----- data members ----------------------------------------------------
@@ -363,4 +369,9 @@ public class CoherenceOptionsPanel
      * Enable cluster snapshot checkbox.
      */
     private JCheckBox m_enableClusterSnapshot;
+
+    /**
+     * Enable admin functions.
+     */
+    private JCheckBox m_adminFunctionsEnabled;
     }
