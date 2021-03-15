@@ -132,12 +132,12 @@ public class VisualVMView
             if (rootClusterMembers == null)
                 {
                 LOGGER.warning(sMessage);
-                DialogDisplayer.getDefault().notify(
-                        new NotifyDescriptor.Message(sMessage));
+                DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(sMessage));
                 }
             }
         catch (Exception e)
             {
+            sMessage = sMessage + "\nError: " + e.getMessage();
             LOGGER.warning(sMessage);
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(sMessage));
             throw new RuntimeException(sMessage, e);
