@@ -114,7 +114,7 @@ class CoherenceClusterConfigurator extends JPanel
         if (!sender.isValidUrl() || !sUrl.contains("/management/coherence"))
             {
             DialogDisplayer.getDefault().notify(
-                    new NotifyDescriptor.Message(Localization.getLocalText("ERR_Invalid_URL", new String[] { sUrl } )));
+                    new NotifyDescriptor.Message(Localization.getLocalText("ERR_Invalid_URL", sUrl)));
             return false;
             }
 

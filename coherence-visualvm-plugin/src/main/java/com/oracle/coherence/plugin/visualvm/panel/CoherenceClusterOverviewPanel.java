@@ -107,7 +107,7 @@ public class CoherenceClusterOverviewPanel
         if (GlobalPreferences.sharedInstance().isAdminFunctionEnabled())
             {
             m_btnHeapDump = new JButton(getLocalizedText("BTN_admin"));
-            m_btnHeapDump.setMnemonic(KeyEvent.VK_R);
+            m_btnHeapDump.setMnemonic(KeyEvent.VK_H);
             m_btnHeapDump.setToolTipText(getLocalizedText("TTIP_admin"));
             pnlHeader.add(m_btnHeapDump);
 
@@ -155,12 +155,20 @@ public class CoherenceClusterOverviewPanel
         add(pnlData, BorderLayout.CENTER);
         }
 
+    /**
+     * Issue a command for all members to generate a heap dump.
+     */
     private void generateHeapDump()
         {
         try
             {
-            m_requestSender.dumpClusterHeap("");
-            JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_heap_dump_completed"));
+            if (JOptionPane.showConfirmDialog(null, Localization.getLocalText("LBL_heap_dump_question"),
+                                              Localization.getLocalText("LBL_heap_dump_confirm"),
+                                              JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+                {
+                m_requestSender.dumpClusterHeap("");
+                JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_heap_dump_completed"));
+                }
             }
         catch (Exception e)
             {
