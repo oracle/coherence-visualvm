@@ -420,7 +420,7 @@ public class CoherencePersistencePanel
                         if (CREATE_SNAPSHOT.equals(f_sOperation) || !f_fShowSnapshotList)
                             {
                             sSnapshotName = JOptionPane.showInputDialog(
-                                    Localization.getLocalText("LBL_enter_snapshot", new String[] {""}));
+                                    Localization.getLocalText("LBL_enter_snapshot", ""));
                             }
                         else
                             {
@@ -490,7 +490,7 @@ public class CoherencePersistencePanel
                             if (GET_SNAPSHOTS.equals(f_sOperation))
                                 {
                                 String[] asSnapshots = (String[]) m_requestSender.getSnapshots(sService, sDomainPartition);
-                                sResult = getSnapshotList(Localization.getLocalText("LBL_snapshots", new String[] {sServiceName}),
+                                sResult = getSnapshotList(Localization.getLocalText("LBL_snapshots", sServiceName),
                                                           asSnapshots);
                                 }
                             else if (GET_OPERATION_STATUS.equals(f_sOperation))

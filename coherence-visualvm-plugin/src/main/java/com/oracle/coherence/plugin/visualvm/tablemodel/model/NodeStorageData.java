@@ -23,15 +23,17 @@
  * questions.
  */
 
-
 package com.oracle.coherence.plugin.visualvm.tablemodel.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
+import com.oracle.coherence.plugin.visualvm.helper.JMXRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 
 import javax.management.AttributeList;
 import javax.management.ObjectName;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -45,6 +47,13 @@ import java.util.logging.Logger;
 
 import static com.oracle.coherence.plugin.visualvm.helper.JMXUtils.getAttributeValueAsString;
 
+
+/**
+ * A class to hold basic member data.
+ *
+ * @author tam  2020.02.13
+ * @since  14.1.1.0
+ */
 public class NodeStorageData
         extends AbstractData
     {
@@ -62,7 +71,10 @@ public class NodeStorageData
     @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
-        return new ArrayList<Map.Entry<Object, Data>>(getJMXDataMap(requestSender, model).entrySet());
+        // use either JMX or HTTP depending upon the RequestSender
+        return new ArrayList<>(requestSender instanceof JMXRequestSender
+                ? getJMXDataMap(requestSender, model).entrySet()
+                : getAggregatedDataFromHttpQuerying(model, (HttpRequestSender) requestSender).entrySet());
         }
 
     @Override
@@ -79,22 +91,96 @@ public class NodeStorageData
 
     @Override
     public SortedMap<Object, Data> getAggregatedDataFromHttpQuerying(VisualVMModel model, HttpRequestSender requestSender)
-            throws Exception
         {
-        return getJMXDataMap(requestSender, model);
+        try
+            {
+            JsonNode nodeStorage = requestSender.getNodeStorage();
+            Map<Integer, Integer> mapNodes = new HashMap<>();
+
+            JsonNode nodeDetails = nodeStorage.get("items");
+
+            if (nodeDetails != null && nodeDetails.isArray())
+                {
+                for (int i = 0; i < nodeDetails.size(); i++)
+                    {
+                    JsonNode details = nodeDetails.get(i);
+                    int nNodeId = details.get("nodeId").asInt();
+                    int nOwnedPartitions = details.get("ownedPartitionsPrimary").asInt();
+                    checkNode(mapNodes, nNodeId, nOwnedPartitions);
+                    }
+                }
+
+            return populateMap(mapNodes);
+            }
+
+        catch (Exception e)
+            {
+            LOGGER.log(Level.WARNING, "Error getting node storage statistics", e);
+
+            return null;
+            }
+        }
+
+    /**
+     * Check if a node is storage enabled or not byt checking if the owned
+     * partitions > 0 on at least one for the services.
+     *
+     * @param mapNodes      {@link Map} of nodes
+     * @param nNodeId       current node id
+     * @param nOwnedPrimary current owned primary partitions
+     */
+    private void checkNode(Map<Integer, Integer> mapNodes, int nNodeId, int nOwnedPrimary)
+        {
+        if (mapNodes.containsKey(nNodeId))
+            {
+            // the map contains the nodeId so get the value for owned primary partitions
+            int ownedPrimaryPartitions = mapNodes.get(nNodeId);
+
+            if (ownedPrimaryPartitions <= 0 && nOwnedPrimary > 0)
+                {
+                // currently the node we are working with has no-storage enabled partitions
+                // and the the current service and node does, so lets update it
+                mapNodes.put(nNodeId, nOwnedPrimary);
+                }
+            // else fallthrough as we leave any node with > 0 with that value
+            }
+        else
+            {
+            // no entry exists so add it
+            mapNodes.put(nNodeId, nOwnedPrimary);
+            }
+        }
+
+    /**
+     * Populate the return {@link Map} with the updated node storage details.
+     *
+     * @param mapNodes interim node {@link Map}
+     * @return the storage nodes
+     */
+    private SortedMap<Object, Data> populateMap(Map<Integer, Integer> mapNodes)
+        {
+        SortedMap<Object, Data> mapData = new TreeMap<>();
+        // populate the real return map
+        mapNodes.forEach((k, v) ->
+            {
+            NodeStorageData data = new NodeStorageData();
+            data.setColumn(NODE_ID, k);
+            data.setColumn(STORAGE_ENABLED, v > 0);
+            mapData.put(data.getColumn(NODE_ID), data);
+            }
+        );
+        return mapData;
         }
 
     /**
      * Returns the JMX Map data.
      *
-     * @param requestSender  the request sender to use
-     * @param model          the {@link VisualVMModel} to use
-     * @return  the processed data
+     * @param requestSender the request sender to use
+     * @param model         the {@link VisualVMModel} to use
+     * @return the processed data
      */
     protected SortedMap<Object, Data> getJMXDataMap(RequestSender requestSender, VisualVMModel model)
         {
-        SortedMap<Object, Data> mapData = new TreeMap<>();
-
         try
             {
             Set<ObjectName> clusterSet = requestSender.getAllServiceMembers();
@@ -109,41 +195,14 @@ public class NodeStorageData
                 AttributeList listAttr     = requestSender.getAttributes(objectName, new String[] { ATTR_OWNED_PRIMARY });
                 Integer       ownedPrimary = Integer.parseInt(getAttributeValueAsString(listAttr, ATTR_OWNED_PRIMARY));
 
-                if (mapNodes.containsKey(nodeId))
-                    {
-                    // the map contains the nodeId so get the value for owned primary partitions
-                    int ownedPrimaryPartitions = mapNodes.get(nodeId);
-
-                    if (ownedPrimaryPartitions <= 0 && ownedPrimary > 0)
-                        {
-                        // currently the node we are working with has no-storage enabled partitions
-                        // and the the current service and node does, so lets update it
-                        mapNodes.put(nodeId, ownedPrimary);
-                        }
-                    // else fallthrough as we leave any node with > 0 with that value
-                    }
-                else
-                    {
-                    // no entry exists so add it
-                    mapNodes.put(nodeId, ownedPrimary);
-                    }
+                checkNode(mapNodes, nodeId, ownedPrimary);
                 }
-
-            // populate the real return map
-            mapNodes.forEach((k,v) ->
-                {
-                NodeStorageData data = new NodeStorageData();
-                data.setColumn(NODE_ID, k);
-                data.setColumn(STORAGE_ENABLED, v.intValue() > 0);
-                mapData.put(data.getColumn(NODE_ID), data);
-                }
-            );
             
-            return mapData;
+            return populateMap(mapNodes);
             }
         catch (Exception e)
             {
-            LOGGER.log(Level.WARNING, "Error getting cluster statistics", e);
+            LOGGER.log(Level.WARNING, "Error getting node storage statistics", e);
 
             return null;
             }

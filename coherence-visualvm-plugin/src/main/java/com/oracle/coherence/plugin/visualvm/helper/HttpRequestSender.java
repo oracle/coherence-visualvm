@@ -409,7 +409,6 @@ public class HttpRequestSender
         return setObjectNames;
         }
 
-
     @Override
     public Set<ObjectName> getAllProxyServerMembers()
             throws Exception
@@ -715,6 +714,22 @@ public class HttpRequestSender
                 .addQueryParameter("fields", "nodeId,name,unitFactor,size,unitsBytes,units,memoryUnits,"
                                              + "averageMissMillis,service");
 
+        return getResponseJson(sendGetRequest(urlBuilder));
+        }
+
+    /**
+     * Return the node storage in a single REST call.
+     * @return the node storage data
+     *
+     * @throws Exception in case of errors
+     */
+    public JsonNode getNodeStorage()
+            throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
+                .addPathSegment("members")
+                .addQueryParameter("links", "")
+                .addQueryParameter("fields", "nodeId,ownedPartitionsPrimary");
         return getResponseJson(sendGetRequest(urlBuilder));
         }
 
