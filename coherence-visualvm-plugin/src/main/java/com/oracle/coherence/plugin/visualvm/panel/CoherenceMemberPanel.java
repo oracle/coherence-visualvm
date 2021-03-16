@@ -59,6 +59,9 @@ import javax.swing.border.TitledBorder;
 
 import javax.swing.event.ChangeListener;
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
+import org.openide.awt.StatusDisplayer;
+
+import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
 
 
 /**
@@ -333,6 +336,7 @@ public class CoherenceMemberPanel
             {
             int nRow = getSelectedRow();
             Integer nNodeId = null;
+            final StatusDisplayer.Message[] status = new StatusDisplayer.Message[1];
 
             if (nRow == -1)
                 {
@@ -359,7 +363,7 @@ public class CoherenceMemberPanel
                             {
                             int nCount = (Integer) spinnerCount.getValue();
                             int nDelay = (Integer) spinnerDelay.getValue();
-                            txtMessage.setText(Localization.getLocalText("LBL_wait", Integer.toString((nCount - 1) * nDelay)));
+                            txtMessage.setText(getLocalText("LBL_wait", Integer.toString((nCount - 1) * nDelay)));
                             };
 
                         spinnerCount.setModel(new SpinnerNumberModel(5, 2, 100, 1));
@@ -398,9 +402,9 @@ public class CoherenceMemberPanel
 
                             String sMessage = "Generating " + nCount + " thread dumps " + nDelay + " seconds apart\n";
                             LOGGER.info(sMessage);
+                            status[0] = StatusDisplayer.getDefault().setStatusText(sMessage,5);
 
-                            JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_thread_dump_confirmation",
-                                                                                          String.valueOf(((nCount - 1) * nDelay))));
+                            JOptionPane.showMessageDialog(null, getLocalText("LBL_thread_dump_confirmation"));
 
                             StringBuilder sb = new StringBuilder(sMessage).append("\n").append(generateHeader(nNode));
 
@@ -411,6 +415,10 @@ public class CoherenceMemberPanel
                                 public void actionPerformed(ActionEvent e)
                                     {
                                     m_nCounter++;
+                                    status[0] = StatusDisplayer.getDefault().setStatusText(getLocalText("LBL_thread_dump_progress",
+                                            Integer.toString(m_nCounter), Integer.toString(nCount),
+                                            String.format("%3.1f", (m_nCounter * 1f / nCount) * 100.0f )), 5);
+
                                     String sNodeState = null;
                                     try
                                         {
@@ -430,6 +438,8 @@ public class CoherenceMemberPanel
                                     if (m_nCounter == nCount)
                                         {
                                         timer.stop();
+                                        status[0] = StatusDisplayer.getDefault().setStatusText(getLocalText("LBL_thread_dump_completed"),5);
+                                        status[0].clear(5000);
                                         showMessageDialog(getLocalizedText("LBL_state_for_node") + " " + nNode, sb.toString(), JOptionPane.INFORMATION_MESSAGE);
                                         }
                                     }
@@ -467,14 +477,14 @@ public class CoherenceMemberPanel
         // get the cluster details
         for (Map.Entry<Object, Data> entry : f_model.getData(VisualVMModel.DataType.CLUSTER))
             {
-            sb.append(Localization.getLocalText("LBL_cluster_name")).append(": ")
-               .append(entry.getValue().getColumn(ClusterData.CLUSTER_NAME).toString()).append("\n")
-               .append(Localization.getLocalText("LBL_version")).append(": ")
-               .append(entry.getValue().getColumn(ClusterData.VERSION).toString()).append("\n")
-               .append(Localization.getLocalText("LBL_license_mode")).append(": ")
-               .append(entry.getValue().getColumn(ClusterData.LICENSE_MODE).toString()).append("\n")
-               .append(Localization.getLocalText("LBL_members")).append(": ")
-               .append(String.format("%d", (Integer) entry.getValue().getColumn(ClusterData.CLUSTER_SIZE)));
+            sb.append(getLocalText("LBL_cluster_name")).append(": ")
+              .append(entry.getValue().getColumn(ClusterData.CLUSTER_NAME).toString()).append("\n")
+              .append(getLocalText("LBL_version")).append(": ")
+              .append(entry.getValue().getColumn(ClusterData.VERSION).toString()).append("\n")
+              .append(getLocalText("LBL_license_mode")).append(": ")
+              .append(entry.getValue().getColumn(ClusterData.LICENSE_MODE).toString()).append("\n")
+              .append(getLocalText("LBL_members")).append(": ")
+              .append(String.format("%d", (Integer) entry.getValue().getColumn(ClusterData.CLUSTER_SIZE)));
             }
 
         sb.append("\n\nMember Details\n");

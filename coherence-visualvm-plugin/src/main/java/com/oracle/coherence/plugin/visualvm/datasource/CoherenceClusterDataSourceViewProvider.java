@@ -25,11 +25,21 @@
 
 package com.oracle.coherence.plugin.visualvm.datasource;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMView;
 
+import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
+import javax.swing.SwingUtilities;
 import org.graalvm.visualvm.core.ui.DataSourceView;
 import org.graalvm.visualvm.core.ui.DataSourceViewProvider;
 import org.graalvm.visualvm.core.ui.DataSourceViewsManager;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.awt.StatusDisplayer;
+
+import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
 
 /**
  * The {@link DataSourceViewProvider} for {@link CoherenceClusterDataSource}.
@@ -46,6 +56,36 @@ public class CoherenceClusterDataSourceViewProvider
     @Override
     protected boolean supportsViewFor(CoherenceClusterDataSource coherenceClusterDataSource)
         {
+        String sUrl = coherenceClusterDataSource.getUrl();
+        HttpRequestSender requestSender = new HttpRequestSender(sUrl);
+        final StatusDisplayer.Message[] status = new StatusDisplayer.Message[1];
+
+        String sText = getLocalText("LBL_testing_connection", sUrl);
+        SwingUtilities.invokeLater(()->status[0] = StatusDisplayer.getDefault().setStatusText(sText, 2400));
+
+        // BUG 29213475 - Check for a valid HttpRequestSender URL before we start the refresh
+        String sMessage = Localization.getLocalText("ERR_Invalid_URL", sUrl);
+        try
+            {
+            JsonNode rootClusterMembers = requestSender.getListOfClusterMembers();
+            if (rootClusterMembers == null)
+                {
+                DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(sMessage));
+                }
+            }
+        catch (Exception e)
+            {
+            sMessage = sMessage + "\nError: " + e.getMessage();
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(sMessage));
+            return false;
+            }
+        finally
+            {
+            if (status[0] != null )
+                {
+                status[0].clear(1000);
+                }
+            }
         return true;
         }
 

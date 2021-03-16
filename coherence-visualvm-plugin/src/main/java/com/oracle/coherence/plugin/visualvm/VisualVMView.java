@@ -140,7 +140,6 @@ public class VisualVMView
             sMessage = sMessage + "\nError: " + e.getMessage();
             LOGGER.warning(sMessage);
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(sMessage));
-            throw new RuntimeException(sMessage, e);
             }
         }
 
