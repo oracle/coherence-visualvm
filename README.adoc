@@ -78,14 +78,26 @@ Read on if you want to build the Plugin manually.
 
 == Connecting to a Coherence Cluster
 
+=== 1. Connecting Directly to a Process
+
 Once the Plugin is installed, you can double-click on a Coherence process in the left pane, usually
 `com.tangosol.net.DefaultCacheServer`, after which a `Coherence` tab will be displayed.
 
-You can also connect via Coherence Management over REST by right-clicking on the
-`Coherence Clusters` tree item and choose `Add Coherence Cluster`. See the https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/using-jmx-manage-oracle-coherence.html#GUID-9A5B5F14-26A6-49CF-8C0C-3533A5DFB9C6[Coherence Documentation]
-for more information on connecting via REST.
+=== 2. Connecting via Management over REST
 
-== Connecting to Coherence in WebLogic Server
+You can also connect via Coherence Management over REST by right-clicking on the `Coherence Clusters` tree item and choose `Add Coherence Cluster`.
+
+Provide a name for the cluster and use the following URL based upon what type of cluster you are connecting to:
+
+1. Standalone Coherence - `http://<host>:<management-port>/management/coherence/cluster`
+
+2. WebLogic Server -  `http://<admin-host>:<admin-port>/management/coherence/<version>/clusters` - You can use `latest` as the version.
+
+
+NOTE: To enable Management over REST for a stand-alone cluster, please see the
+https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/rest-reference/quick-start.html[Coherence Documentation].
+
+=== 3. Connecting to Coherence in WebLogic Server via Admin Server
 
 If you have Coherence running within WebLogic Server using the `Managed Coherence Servers` functionality you can either
 connect via REST as described above or if you want to connect to the `domain runtime MBean server`, use the instructions below.
@@ -131,41 +143,35 @@ You may remove it from the above `--cp` statement if you like.
 
 7. Right-Click on the connection and select `Open`. The Coherence tab will be displayed.
 
+== Changing the Plugin Behaviour via the Preferences Tab
 
-== Changing the Plugin Behaviour via System Properties
+In version 1.0.1 or above of the VisualVM Plugin, you can change the behaviour of the plugin
+by using the Preferences pane. To open the preferences, choose `VisualVM` -> `Preferences` and select the `Coherence` tab.
 
-There are a number of properties that change the behaviour of the Plugin. To pass these properties
-to VisvualVM you have to use the `-J` option. For example to change the refresh time from the default
-of 30 seconds, you can do the following:
+You will see the preferences as shown below:
 
-[source,shell]
-----
-$ visualvm -J-Dcoherence.plugin.visualvm.refreshtime=10
-----
+image::assets/coherence-visualvm-preferences.png[Coherence CE]
 
-The following table outlines all the available properties and their use.
+There are tool tips for each of the preferences, but a summary is shown below.
 
-.Table Coherence VisualVM Properties
+.Table Coherence VisualVM Preferences
 !===
-|Property | Default | Usage
-| coherence.plugin.visualvm.refreshtime| 30 |  Time (in seconds) between refreshing data from the cluster. Do not set too low as this could adversely affect performance in large clusters
-| coherence.plugin.visualvm.log.query.times| false | Enables logging of query times when retrieving data
-| coherence.plugin.visualvm.sorting.enabled | true | Enables JTable sorting
-| coherence.plugin.visualvm.heatmap.enabled | false | Enables experimental heat map in Caches tab
-| coherence.plugin.visualvm.persistence.list | true | Enables dropdown list of snapshots when performing snapshot operations
-| coherence.plugin.visualvm.zoom.enabled | false | Enables additional zoom function for all graphs
-| coherence.plugin.visualvm.rest.request.timeout | 30000 | The request timeout (in ms) when using REST to connect to a cluster
-| coherence.plugin.visualvm.rest.request.debug | false | Enables HTTP request debugging using REST to connect to a cluster
-| coherence.plugin.visualvm.disable.mbean.check | false | Disables the MBean check when connecting to WebLogic Server
+|Preference | Default | Usage
+| Data Refresh Time| 30 |  Time (in seconds) between refreshing data from the cluster. Do not set too low as this could adversely affect performance in large clusters.
+| Log Query Times| false | Enables logging of query times to the VisualVM logfile when retrieving data.
+| Disable MBean Check | false | Disables the MBean check when connecting to WebLogic Server. This allows the plugin to startup without checking for Cluster MBean.
+| REST Request Timeout | 30000 | The request timeout (in ms) when using REST to connect to a cluster.
+| Enable REST Debug | false | Enables HTTP request debugging when using REST to connect to a cluster.
+| Enable Persistence List | true | Enables dropdown list of snapshots rather than having to enter the snapshot when performing snapshot operations.
+| Enable Zoom on Graphs | false | Enables additional zoom function for all graphs.
+| Enable Cluster Snapshot tab | false | Enables experimental Cluster Snapshot tab. This tab is useful for seeing all the relevant cluster information on one pae in a text format.
+| Enable Cluster Heap Dump | false | Enables the cluster heap dump button on the Cluster Overview tab.
 !===
-
-NOTE: If you have used older versions of the Coherence VisualVM plugin available with Coherence, you should
-ensure you are using the new property names above.
 
 == Building the Plugin
 
 If you wish to build the Plugin from scratch you need to build the VisualVM dependencies first.
-To build the plugin is a two step process:
+To build the plugin is a two-step process:
 
 1. Generate the VisualVM dependencies
 2. Build the Coherence VisualVM Plugin
@@ -197,7 +203,7 @@ NOTE: A Script `install-artifacts.sh` is available in the `bin` directory to run
 
 1. Ensure you have JDK8 in you PATH.
 
-1. Checkout the VisualVM repository
+2. Checkout the VisualVM repository
 +
 [source,shell]
 ----
@@ -206,7 +212,7 @@ $ git clone https://github.com/oracle/visualvm.git
 Cloning into 'visualvm'...
 ----
 
-1. Checkout the `release204` branch
+3. Checkout the `release204` branch
 +
 [source,shell]
 ----
@@ -217,7 +223,7 @@ $ git checkout release204
 Switched to a new branch 'release204'
 ----
 
-1. Unzip the NetBeans Platform 11.3
+4. Unzip the NetBeans Platform 11.3
 +
 [source,shell]
 ----
@@ -226,14 +232,14 @@ $ cd visualvm
 $ unzip nb113_platform_19062020.zip
 ----
 
-1. Build the Plugins
+5. Build the Plugins
 +
 [source,shell]
 ----
 $ ant build-zip
 ----
 
-1. Unzip the artefacts
+6. Unzip the artefacts
 +
 [source,shell]
 ----
@@ -244,14 +250,14 @@ $ unzip visualvm.zip
 $ cd ..
 ----
 
-1. Generate the NBM's
+7. Generate the NBM's
 +
 [source,shell]
 ----
 $ ant nbms
 ----
 
-1. Install into the local repository
+8. Install into the local repository
 +
 [source,shell]
 ----
@@ -268,7 +274,7 @@ push the artefacts to a remote Maven repository.
 
 1. Ensure you have JDK11 or above in your PATH.
 
-1. Build the Plugin
+2. Build the Plugin
 +
 From the `coherence-visualvm` directory:
 +
@@ -279,7 +285,7 @@ $ mvn clean install -DskipTests
 +
 If you wish to run the Community Edition tests then leave out the `-DskipTests`.
 
-1. Install the Plugin
+3. Install the Plugin
 +
 The plugin will be available in the location `coherence-visualvm-plugin/target/coherence-visualvm-plugin-{version}`
 
