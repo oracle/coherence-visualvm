@@ -44,6 +44,8 @@ import org.graalvm.visualvm.core.ui.components.Spacer;
 
 import org.openide.awt.Mnemonics;
 
+import static com.oracle.coherence.plugin.visualvm.Localization.*;
+
 
 /**
  * A controller for Coherence options.
@@ -89,7 +91,6 @@ public class CoherenceOptionsPanel
         m_disableMBeanCheck.setSelected(preferences.isMBeanCheckDisabled());
         m_restRequestTimout.setValue(preferences.getRestTimeout());
         m_enableRestDebug.setSelected(preferences.isRestDebugEnabled());
-        m_enableHeatMap.setSelected(preferences.isHeatMapEnabled());
         m_enableZoom.setSelected(preferences.isZoomEnabled());
         m_enablePersistenceList.setSelected(preferences.isPersistenceListEnabled());
         m_enableClusterSnapshot.setSelected(preferences.isClusterSnapshotEnabled());
@@ -107,7 +108,6 @@ public class CoherenceOptionsPanel
         preferences.setDisableMbeanCheck(m_disableMBeanCheck.isSelected());
         preferences.setRestDebugEnabled(m_enableRestDebug.isSelected());
         preferences.setRestTimeout((Integer) m_restRequestTimout.getValue());
-        preferences.setHeatMapEnabled(m_enableHeatMap.isSelected());
         preferences.setZoomEnabled(m_enableZoom.isSelected());
         preferences.setPersistenceListEnabled(m_enablePersistenceList.isSelected());
         preferences.setClusterSnapshotEnabled(m_enableClusterSnapshot.isSelected());
@@ -145,7 +145,7 @@ public class CoherenceOptionsPanel
 
         // ---- Refresh Time Label ----
         JLabel plottersLabel = new JLabel();
-        Mnemonics.setLocalizedText(plottersLabel, Localization.getLocalText("LBL_refresh_time"));
+        Mnemonics.setLocalizedText(plottersLabel, getLocalText("LBL_refresh_time"));
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 1;
@@ -155,6 +155,7 @@ public class CoherenceOptionsPanel
 
         // refresh time
         m_refreshTime = new JSpinner();
+        m_refreshTime.setToolTipText(getLocalText("TTIP_refresh_time"));
         plottersLabel.setLabelFor(m_refreshTime);
         m_refreshTime.setModel(new SpinnerNumberModel(30, 5, 99999, 1));
         c = new GridBagConstraints();
@@ -166,7 +167,7 @@ public class CoherenceOptionsPanel
 
         // plottersUnits
         JLabel plottersUnits = new JLabel();
-        Mnemonics.setLocalizedText(plottersUnits, Localization.getLocalText("LBL_seconds")); // NOI18N
+        Mnemonics.setLocalizedText(plottersUnits, getLocalText("LBL_seconds")); // NOI18N
         c = new GridBagConstraints();
         c.gridx = 2;
         c.gridy = 1;
@@ -175,9 +176,11 @@ public class CoherenceOptionsPanel
         add(plottersUnits, c);
 
         m_logQueryTimes = new JCheckBox();
+        m_logQueryTimes.setToolTipText(getLocalText("TTIP_log_query_times"));
         addCheckBox(2, "LBL_log_query_times", m_logQueryTimes);
 
         m_disableMBeanCheck = new JCheckBox();
+        m_disableMBeanCheck.setToolTipText(getLocalText("TTIP_disable_mbean_check"));
         addCheckBox(3, "LBL_disable_mbean_check", m_disableMBeanCheck);
 
         // ---- REST ----
@@ -185,7 +188,7 @@ public class CoherenceOptionsPanel
 
         // ---- REST Request Timeout ----
         JLabel lblRest = new JLabel();
-        Mnemonics.setLocalizedText(lblRest, Localization.getLocalText("LBL_rest_request_timeout"));
+        Mnemonics.setLocalizedText(lblRest, getLocalText("LBL_rest_request_timeout"));
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 5;
@@ -194,6 +197,7 @@ public class CoherenceOptionsPanel
         add(lblRest, c);
 
         m_restRequestTimout = new JSpinner();
+        m_restRequestTimout.setToolTipText(getLocalText("TTIP_rest_request_timeout"));
         lblRest.setLabelFor(m_restRequestTimout);
         m_restRequestTimout.setModel(new SpinnerNumberModel(30000, 1000, 99999999, 1000));
         c = new GridBagConstraints();
@@ -204,7 +208,7 @@ public class CoherenceOptionsPanel
         add(m_restRequestTimout, c);
 
         JLabel requestUnits = new JLabel();
-        Mnemonics.setLocalizedText(requestUnits, Localization.getLocalText("LBL_millis")); // NOI18N
+        Mnemonics.setLocalizedText(requestUnits, getLocalText("LBL_millis")); // NOI18N
         c = new GridBagConstraints();
         c.gridx = 2;
         c.gridy = 5;
@@ -213,30 +217,32 @@ public class CoherenceOptionsPanel
         add(requestUnits, c);
 
         m_enableRestDebug = new JCheckBox();
+        m_enableRestDebug.setToolTipText(getLocalText("TTIP_rest_debug"));
         addCheckBox(6, "LBL_enable_rest_debug", m_enableRestDebug);
 
         // ---- Other / Experimental ----
         addHeader(7, "LBL_other");
 
-        m_enableHeatMap = new JCheckBox();
-        addCheckBox(8, "LBL_enable_heatmap", m_enableHeatMap);
-
         m_enablePersistenceList = new JCheckBox();
-        addCheckBox(9, "LBL_enable_persistence_list", m_enablePersistenceList);
+        m_enablePersistenceList.setToolTipText(getLocalText("TTIP_persistence_list"));
+        addCheckBox(8, "LBL_enable_persistence_list", m_enablePersistenceList);
 
         m_enableZoom = new JCheckBox();
-        addCheckBox(10, "LBL_enable_zoom", m_enableZoom);
+        m_enableZoom.setToolTipText(getLocalText("TTIP_zoom_enabled"));
+        addCheckBox(9, "LBL_enable_zoom", m_enableZoom);
 
         m_enableClusterSnapshot = new JCheckBox();
-        addCheckBox(11, "LBL_enable_cluster_snapshot", m_enableClusterSnapshot);
+        m_enableClusterSnapshot.setToolTipText(getLocalText("TTIP_enable_cluster_snapshot"));
+        addCheckBox(10, "LBL_enable_cluster_snapshot", m_enableClusterSnapshot);
 
         m_adminFunctionsEnabled = new JCheckBox();
-        addCheckBox(12, "LBL_enable_admin_functions", m_adminFunctionsEnabled);
+        m_adminFunctionsEnabled.setToolTipText(getLocalText("TTIP_enable_cluster_head_dump"));
+        addCheckBox(11, "LBL_enable_admin_functions", m_adminFunctionsEnabled);
 
         JLabel appsLabel = new JLabel();
-        Mnemonics.setLocalizedText(appsLabel, Localization.getLocalText("LBL_reconnect")); // NOI18N
+        Mnemonics.setLocalizedText(appsLabel, getLocalText("LBL_reconnect")); // NOI18N
         c = new GridBagConstraints();
-        c.gridy = 13;
+        c.gridy = 12;
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -246,7 +252,7 @@ public class CoherenceOptionsPanel
         // filler
         c = new GridBagConstraints();
         c.gridx = 0;
-        c.gridy = 13;
+        c.gridy = 12;
         c.weightx = 1;
         c.weighty = 1;
         c.anchor = GridBagConstraints.NORTHWEST;
@@ -265,7 +271,7 @@ public class CoherenceOptionsPanel
     private void addCheckBox(int y, String sLabel, JCheckBox checkBox)
         {
         JLabel label = new JLabel();
-        Mnemonics.setLocalizedText(label, Localization.getLocalText(sLabel));
+        Mnemonics.setLocalizedText(label, getLocalText(sLabel));
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = y;
@@ -291,7 +297,7 @@ public class CoherenceOptionsPanel
      */
     private void addHeader(int y, String sLabel)
         {
-        SectionSeparator sectionSeparator = UISupport.createSectionSeparator(Localization.getLocalText(sLabel));
+        SectionSeparator sectionSeparator = UISupport.createSectionSeparator(getLocalText(sLabel));
         GridBagConstraints c = new GridBagConstraints();
         c.gridy = y;
         c.gridwidth = GridBagConstraints.REMAINDER;
@@ -312,7 +318,6 @@ public class CoherenceOptionsPanel
         m_enableRestDebug.getModel().addChangeListener(changeListener);
         m_restRequestTimout.getModel().addChangeListener(changeListener);
         m_enableZoom.getModel().addChangeListener(changeListener);
-        m_enableHeatMap.getModel().addChangeListener(changeListener);
         m_enablePersistenceList.getModel().addChangeListener(changeListener);
         m_enableClusterSnapshot.getModel().addChangeListener(changeListener);
         m_adminFunctionsEnabled.getModel().addChangeListener(changeListener);

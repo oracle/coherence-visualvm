@@ -177,6 +177,15 @@ public class ServiceMemberData
             data.setColumn(ServiceMemberData.REQUEST_AVERAGE_DURATION, Float.valueOf(aoColumns[nStart++].toString()));
             data.setColumn(ServiceMemberData.TASK_AVERAGE_DURATION, Float.valueOf(aoColumns[nStart++].toString()));
 
+            if ((Integer) data.getColumn(ServiceMemberData.THREAD_IDLE_COUNT) == -1)
+                {
+                data.setColumn(ServiceMemberData.THREAD_IDLE_COUNT, 0);
+                }
+            if ((Float) data.getColumn(ServiceMemberData.TASK_AVERAGE_DURATION) == -1.0f)
+                {
+                data.setColumn(ServiceMemberData.TASK_AVERAGE_DURATION, 0);
+                }
+
             if ((Integer) data.getColumn(ServiceMemberData.THREAD_COUNT) > 0)
                 {
                 float threadUtil = ((float) ((Integer) data.getColumn(ServiceMemberData.THREAD_COUNT)

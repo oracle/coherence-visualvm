@@ -97,15 +97,8 @@ public class GlobalPreferences
             isReporterDisabled();
             }
 
-        sValue = System.getProperty(PROP_HEATMAP_ENABLED);
-        if (sValue != null)
-            {
-            setHeatMapEnabled(Boolean.parseBoolean(sValue));
-            }
-        else
-            {
-            isHeatMapEnabled();
-            }
+        // always set heat map enabled
+        setHeatMapEnabled(true);
 
         sValue = System.getProperty(PROP_ZOOM_ENABLED);
         if (sValue != null)

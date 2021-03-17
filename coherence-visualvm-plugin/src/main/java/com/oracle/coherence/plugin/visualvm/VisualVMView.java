@@ -333,8 +333,10 @@ public class VisualVMView
 
         m_dvc.selectDetailsView(clusterOverview);
 
-        // create a timer that will refresh the TAB's as required
-        m_timer = new Timer(GlobalPreferences.sharedInstance().getMonitoredDataPoll() * 1000, new ActionListener()
+        // create a timer that will refresh the TAB's as required every 3 seconds
+        // the reason for 3 seconds is so that with the min cluster data refresh time of
+        // 5 seconds, the updates will be smoother
+        m_timer = new Timer(3000, new ActionListener()
             {
             public void actionPerformed(ActionEvent e)
                 {
