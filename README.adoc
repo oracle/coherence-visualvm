@@ -41,16 +41,27 @@ NOTE: This version of the Plugin requires VisualVM release 2.0.4 or later which 
 
 image::assets/coherence-visualvm.png[Coherence VisualVM Plugin,800,479]
 
+== Table of Contents
+
+1. <<versions, Supported Coherence Versions>>
+2. <<install, Installing the Plugin from VisualVM>>
+3. <<connect, Connecting to a Coherence Cluster>>
+4. <<prefs, Changing the Plugin Behaviour via the Preferences Tab>>
+5. <<build, Building the Plugin>>
+
+
+[#versions]
 == Supported Coherence Versions
 
 The Plugin will connect to and display data for the following Coherence versions:
 
-**Community Editions**: 14.1.1.0.x, 20.06.x and 20.12
+**Community Editions**: 14.1.1.0.x, 20.06.x and 20.12.x
 
 **Commercial Editions**: 12.2.1.5.x,  12.2.1.4.x, 12.1.3.x, 12.1.2.x and 3.7.1.x
 
 NOTE: If you wish to connect to Coherence version 12.2.1.4.x via REST you should have Coherence version 12.2.1.4.7 or greater.
 
+[#install]
 == Installing the Plugin from VisualVM
 
 The Coherence VisualVM Plugin is available from the list of plugins in VisualVM versions 2.0.4 and above.
@@ -64,6 +75,8 @@ To install the Plugin carry out the following:
 
 image::assets/coherence-visualvm-install.png[Coherence VisualVM Plugin Install,800,479]
 
+NOTE: If you already have an older version of the plugin installed, click on `Check For Newest` and follow the prompts.
+
 For more information about using the Coherence VisualVM plugin see the official https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/using-jmx-manage-oracle-coherence.html[Coherence Documentation].
 
 Other useful resources:
@@ -74,14 +87,12 @@ Other useful resources:
 * https://github.com/oracle/coherence/tree/master/examples[Various Coherence Examples]
 * https://github.com/oracle/coherence-operator[The Coherence Operator - Run your clusters in Kubernetes]
 
-Read on if you want to build the Plugin manually.
-
+[#connect]
 == Connecting to a Coherence Cluster
 
 === 1. Connecting Directly to a Process
 
-Once the Plugin is installed, you can double-click on a Coherence process in the left pane, usually
-`com.tangosol.net.DefaultCacheServer`, after which a `Coherence` tab will be displayed.
+Once the Plugin is installed, you can double-click on a Coherence process in the left pane, usually `com.tangosol.net.DefaultCacheServer`, after which a `Coherence` tab will be displayed.
 
 === 2. Connecting via Management over REST
 
@@ -93,11 +104,10 @@ Provide a name for the cluster and use the following URL based upon what type of
 
 2. WebLogic Server -  `http://<admin-host>:<admin-port>/management/coherence/<version>/clusters` - You can use `latest` as the version.
 
-
 NOTE: To enable Management over REST for a stand-alone cluster, please see the
 https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/rest-reference/quick-start.html[Coherence Documentation].
 
-=== 3. Connecting to Coherence in WebLogic Server via Admin Server
+=== 3. Connecting to Coherence in WebLogic Server via the Admin Server
 
 If you have Coherence running within WebLogic Server using the `Managed Coherence Servers` functionality you can either
 connect via REST as described above or if you want to connect to the `domain runtime MBean server`, use the instructions below.
@@ -143,6 +153,7 @@ You may remove it from the above `--cp` statement if you like.
 
 7. Right-Click on the connection and select `Open`. The Coherence tab will be displayed.
 
+[#prefs]
 == Changing the Plugin Behaviour via the Preferences Tab
 
 In version 1.0.1 or above of the VisualVM Plugin, you can change the behaviour of the plugin
@@ -168,6 +179,7 @@ There are tool tips for each of the preferences, but a summary is shown below.
 | Enable Cluster Heap Dump | false | Enables the cluster heap dump button on the Cluster Overview tab.
 !===
 
+[#build]
 == Building the Plugin
 
 If you wish to build the Plugin from scratch you need to build the VisualVM dependencies first.
