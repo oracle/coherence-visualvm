@@ -47,7 +47,8 @@ image::assets/coherence-visualvm.png[Coherence VisualVM Plugin,800,479]
 2. <<install, Installing the Plugin from VisualVM>>
 3. <<connect, Connecting to a Coherence Cluster>>
 4. <<prefs, Changing the Plugin Behaviour via the Preferences Tab>>
-5. <<build, Building the Plugin>>
+5. <<capabilities, Monitoring Capabilities>>
+6. <<build, Building the Plugin>>
 
 
 [#versions]
@@ -178,6 +179,30 @@ There are tool tips for each of the preferences, but a summary is shown below.
 | Enable Cluster Snapshot tab | false | Enables experimental Cluster Snapshot tab. This tab is useful for seeing all the relevant cluster information on one pae in a text format.
 | Enable Cluster Heap Dump | false | Enables the cluster heap dump button on the Cluster Overview tab.
 !===
+
+[#capabilities]
+== Monitoring Capabilities
+
+For all Coherence clusters, the following tabs are displayed:
+
+* **Cluster Overview** - Displays high-level information about the Coherence cluster including cluster name, version, member count and 'Cluster StatusHA'. Summary graphs show total cluster memory available and used, packet publisher and receiver success rates and load averages for machines running Coherence.
+* **Machines** - Displays a list of the physical machines that make up the Coherence cluster as well as information about the load averages and available memory on these machines.
+* **Members** - Displays the full list of Coherence members/nodes including individual publisher/ receiver success rates, memory and send queue sizes.
+* **Services** - Displays information about the running services including partition counts and statusHA values.
+If you select a service, on the next data refresh you will see detailed thread information for each node of the service as well as
+graphs of that information
+* **Caches** - Displays information about any caches including size, and memory usage information. To get the correct information to be displayed for memory usage, you must be using the binary unit-calculator. If you select a cache, on the next data refresh you will see detailed information about each node hosting that service and cache.
+
+Depending upon the edition and functionality you are using, the following optional tabs may be displayed:
+
+* **Proxy Servers**  - If your cluster is running proxy servers, this tab displays information about the proxy servers and the number of connections across each proxy server and total connections.
+* **HTTP Servers**  - If your cluster is running proxy servers with HTTP acceptors, this tab displays information about the HTTP servers, the number of connections across each server, total connections and graphs of response codes, errors and requests over time for a selected service.
+* **Coherence*Web** - If your cluster is configured for Coherence*Web, this tab displays information about the number applications deployed, the number of HTTP sessions being stored as well as other information regarding session reaping.
+* **Federation** - If your cluster is configured with Federated Caching, this tab displays information about each federated service. If you select a service, on the next data refresh you will see detailed outbound/inbound federation traffic information for each node of the service as well as graphs of that information.
+* **Persistence** - If your cluster is configured with Persistence, this tab displays information about each service configured with Persistence.  Graphs showing active space used and any additional latencies incurred are also showed.
+* **Elastic Data** - If your cluster is configured with Elastic Data, this tab displays graphs and information about RAM Journal and Flash Journal usage.  You can click on each of the usage bars to show detailed node information
+* **JCache** - If your cluster is being used to store JCache caches, this tab displays JCache "Management" and "Statistics" MBean information regarding the configured caches.
+* **HotCache** - If your cluster contains HotCache node(s), then this tab lists the running HotCache instances. If you select an instance, on the next data refresh the console will display statistics and graphs for the operations performed. You may click on tabs and cache-ops to see further fine-grained information.
 
 [#build]
 == Building the Plugin
