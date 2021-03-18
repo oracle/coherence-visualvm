@@ -303,6 +303,11 @@ public class ServiceData
                     {
                     // is another type such as proxy/http
                     data.setColumn(ServiceData.STORAGE_MEMBERS, 0);
+                    data.setColumn(ServiceData.PARTITIONS_ENDANGERED, 0);
+                    data.setColumn(ServiceData.PARTITIONS_VULNERABLE, 0);
+                    data.setColumn(ServiceData.PARTITIONS_UNBALANCED, 0);
+                    data.setColumn(ServiceData.PARTITIONS_PENDING, 0);
+                    data.setColumn(ServiceData.PARTITION_COUNT, 0);
                     }
 
                  // check if the service is federation

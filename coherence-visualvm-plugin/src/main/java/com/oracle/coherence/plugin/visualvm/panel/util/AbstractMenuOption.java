@@ -29,18 +29,35 @@ import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 
+import java.awt.BorderLayout;
 import java.awt.Dialog;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.Dimension;
 
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.logging.Level;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumnModel;
+
+import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
 
 /**
  * Abstract implementation of a {@link MenuOption} providing default functionality.
@@ -89,10 +106,13 @@ public abstract class AbstractMenuOption
      * @param nDialogType  the type of dialog, e.g. JOptionPane.INFORMATION_MESSAGE
      * @param nLength      the length of the dialog window
      * @param nWidth       the width of the dialog window
+     * @param fCopySave    true if copy and save buttons should be displayed
      */
-    protected void showMessageDialog(String sTitle, String sMessage, int nDialogType, int nLength, int nWidth)
+    protected void showMessageDialog(String sTitle, String sMessage, int nDialogType, int nLength, int nWidth, boolean fCopySave)
         {
         JTextArea         txtArea    = new JTextArea(sMessage);
+        final JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
         final JScrollPane pneMessage = new JScrollPane(txtArea);
 
         txtArea.setEditable(false);
@@ -101,8 +121,111 @@ public abstract class AbstractMenuOption
         pneMessage.setPreferredSize(new Dimension(nLength, nWidth));
 
         setResizable(pneMessage);
+        panel.add(pneMessage, BorderLayout.CENTER);
 
-        JOptionPane.showMessageDialog(null, pneMessage, sTitle, nDialogType);
+        if (fCopySave)
+             {
+             JButton btnCopy = new JButton();
+             JButton btnSaveAs = new JButton();
+             btnCopy.setText(getLocalText("LBL_copy_to_clipboard"));
+             btnSaveAs.setText(getLocalText("LBL_save_data_as"));
+             
+             btnCopy.addActionListener((a) ->
+                 {
+                 Toolkit.getDefaultToolkit()
+                        .getSystemClipboard()
+                        .setContents(new StringSelection(sMessage), null);
+                 JOptionPane.showMessageDialog(panel, getLocalText("LBL_copied"), getLocalText("LBL_result"), JOptionPane.INFORMATION_MESSAGE);
+                 });
+
+             btnSaveAs.addActionListener((a) ->
+                 {
+                 JFileChooser fileChooser = new ExportableJTable.CheckExistsFileChooser();
+                 fileChooser.setFileFilter(new FileNameExtensionFilter("*.*", "txt", "log"));
+
+                 int result = fileChooser.showSaveDialog(btnSaveAs);
+
+                 if (result == JFileChooser.APPROVE_OPTION)
+                     {
+                     File selectedFile = fileChooser.getSelectedFile();
+                     if (saveContentsToFile(selectedFile, sMessage))
+                         {
+                         JOptionPane.showMessageDialog(panel,
+                                 getLocalText("LBL_data_saved",selectedFile.getAbsolutePath()),
+                                 getLocalText("LBL_result"), JOptionPane.INFORMATION_MESSAGE);
+                         }
+                     }
+                 });
+
+             JPanel flowLayout = new JPanel();
+             flowLayout.add(getFiller());
+             flowLayout.add(btnCopy);
+             flowLayout.add(getFiller());
+             flowLayout.add(btnSaveAs);
+             flowLayout.add(getFiller());
+             panel.add(flowLayout, BorderLayout.SOUTH);
+             }
+
+        JOptionPane.showMessageDialog(null, panel, sTitle, nDialogType);
+        }
+
+    /**
+     * Returns a filler {@link JLabel}.
+     *
+     * @return a filler {@link JLabel}
+     */
+    private JLabel getFiller()
+        {
+        JLabel label = new JLabel();
+        label.setText("     ");
+        return label;
+        }
+
+    /**
+     * Save contents to a file.
+     *
+     * @param file  the {@link File} to save to
+     *
+     * @return true if the file was saved
+     */
+    private boolean saveContentsToFile(File file, String sContents)
+        {
+        PrintStream fileWriter = null;
+
+        try
+            {
+            fileWriter = new PrintStream(new FileOutputStream(file));
+            fileWriter.write(sContents.getBytes());
+            }
+        catch (IOException ioe)
+            {
+            JOptionPane.showMessageDialog(null, getLocalText("LBL_unable_to_save", file.getAbsolutePath(), ioe.getMessage()),
+                    getLocalText("LBL_result"), JOptionPane.ERROR_MESSAGE);
+            return false;
+            }
+        finally
+            {
+            if (fileWriter != null)
+                {
+                fileWriter.close();
+                }
+            }
+        return true;
+        }
+
+
+    /**
+     * Show a message dialog with a scrollable text area for the message.
+     *
+     * @param sTitle       the title of the dialog box
+     * @param sMessage     the message to display
+     * @param nDialogType  the type of dialog, e.g. JOptionPane.INFORMATION_MESSAGE
+     * @param nLength      the length of the dialog window
+     * @param nWidth       the width of the dialog window
+     */
+    protected void showMessageDialog(String sTitle, String sMessage, int nDialogType, int nLength, int nWidth)
+        {
+        showMessageDialog(sTitle, sMessage, nDialogType, nLength, nWidth,false);
         }
 
     // ----- helpers --------------------------------------------------------
@@ -215,5 +338,5 @@ public abstract class AbstractMenuOption
     /**
      * The menu label for the right click option.
      */
-    protected String m_sMenuLabel = Localization.getLocalText("LBL_show_details");
+    protected String m_sMenuLabel = getLocalText("LBL_show_details");
     }

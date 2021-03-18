@@ -84,8 +84,6 @@ import javax.swing.ListSelectionModel;
 
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
-import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_PERSISTENCE_LIST_ENABLED;
-
 
 /**
  * An implementation of an {@link AbstractCoherencePanel} to view summarized

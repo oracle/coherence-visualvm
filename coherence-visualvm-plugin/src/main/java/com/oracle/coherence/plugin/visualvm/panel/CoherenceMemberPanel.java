@@ -410,41 +410,34 @@ public class CoherenceMemberPanel
 
                             Timer timer = new Timer(nDelay * 1000, null);
 
+                            // generate the first thread dump and then run the timer for subsequent thread dumps
+                            generateThreadDump(sb, 1, nCount, nNode, status);
+
                             timer.addActionListener(new ActionListener()
                                 {
                                 public void actionPerformed(ActionEvent e)
                                     {
                                     m_nCounter++;
-                                    status[0] = StatusDisplayer.getDefault().setStatusText(getLocalText("LBL_thread_dump_progress",
-                                            Integer.toString(m_nCounter), Integer.toString(nCount),
-                                            String.format("%3.1f", (m_nCounter * 1f / nCount) * 100.0f )), 5);
-
-                                    String sNodeState = null;
                                     try
                                         {
-                                        sNodeState = m_requestSender.getNodeState(nNode);
+                                        generateThreadDump(sb, m_nCounter, nCount, nNode, status);
                                         }
                                     catch (Exception exception)
                                         {
                                         sb.append(exception.getMessage());
                                         timer.stop();
                                         }
-                                    sb.append("*** START THREAD DUMP ").append(m_nCounter).append(" - ")
-                                        .append(new Date(System.currentTimeMillis()))
-                                        .append("\n")
-                                        .append(sNodeState)
-                                        .append("\n*** END THREAD DUMP ").append(m_nCounter).append("\n");
 
                                     if (m_nCounter == nCount)
                                         {
                                         timer.stop();
                                         status[0] = StatusDisplayer.getDefault().setStatusText(getLocalText("LBL_thread_dump_completed"),5);
                                         status[0].clear(5000);
-                                        showMessageDialog(getLocalizedText("LBL_state_for_node") + " " + nNode, sb.toString(), JOptionPane.INFORMATION_MESSAGE);
+                                        showThreadDumpResult(nNode, sb.toString());
                                         }
                                     }
 
-                                private int m_nCounter = 0;
+                                private int m_nCounter = 1;
                                 });
 
                             timer.setRepeats(true);
@@ -453,8 +446,7 @@ public class CoherenceMemberPanel
                         }
                     else
                         {
-                        showMessageDialog(getLocalizedText("LBL_state_for_node") + " " + nNodeId,
-                                          m_requestSender.getNodeState(nNodeId), JOptionPane.INFORMATION_MESSAGE);
+                        showThreadDumpResult(nNodeId, generateHeader(nNodeId) + " " + m_requestSender.getNodeState(nNodeId));
                         }
                     }
                 catch (Exception ee)
@@ -463,6 +455,45 @@ public class CoherenceMemberPanel
                     }
                 }
             }
+
+            // ------ helpers -----------------------------------------------
+
+            /**
+             * Display the thread dump result.
+             *
+             * @param nNode       node id
+             * @param sThreadDump the result
+             */
+            private void showThreadDumpResult(int nNode, String sThreadDump)
+                {
+                showMessageDialog(getLocalizedText("LBL_state_for_node") + " " + nNode,
+                        sThreadDump, JOptionPane.INFORMATION_MESSAGE, 500, 400, true);
+                }
+        }
+
+    /**
+     * Generate a thread dump and save the output in the {@link StringBuilder}.
+     *
+     * @param sb       {@link StringBuilder} to save output in
+     * @param nCounter current counter of thread dumps
+     * @param nMax     max number of thread dumps
+     * @param status   {@link StatusDisplayer.Message} to display messages
+     *
+     * @throws Exception if any errors
+     */
+    private void generateThreadDump(StringBuilder sb, int nCounter, int nMax, int nNode, StatusDisplayer.Message[] status)
+            throws Exception
+        {
+        String sNodeState = m_requestSender.getNodeState(nNode);
+        status[0] = StatusDisplayer.getDefault().setStatusText(getLocalText("LBL_thread_dump_progress",
+                                            Integer.toString(nCounter), Integer.toString(nMax),
+                                            String.format("%3.1f", (nCounter * 1f / nMax) * 100.0f )), 5);
+
+        sb.append("*** START THREAD DUMP ").append(nCounter).append(" - ")
+                .append(new Date(System.currentTimeMillis()))
+                .append("\n")
+                .append(sNodeState)
+                .append("\n*** END THREAD DUMP ").append(nCounter).append("\n");
         }
 
     /**

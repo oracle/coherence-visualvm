@@ -583,8 +583,7 @@ public class CoherenceCachePanel
                 }
             else
                 {
-                JOptionPane.showMessageDialog(null,
-                        getLocalizedText("LBL_no_caches"));
+                JOptionPane.showMessageDialog(null, getLocalizedText("LBL_no_data"));
                 }
             }
 
@@ -595,7 +594,7 @@ public class CoherenceCachePanel
         public synchronized void updateData()
             {
             // build a linked list with a Pair<X,Y> where X = cache name (which is Pair<String, String>) and
-            // Y is the count of size of memory
+            // Y is the count of size or memory
             f_listValues.clear();
             m_cTotal = 0L;
 
@@ -665,7 +664,7 @@ public class CoherenceCachePanel
                 {
                 super();
                 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                int nWidth           = (int) (screenSize.getWidth()  * 0.75);
+                int nWidth           = (int) (screenSize.getWidth()  * 0.5);
                 int nHeight          = (int) (screenSize.getHeight() * 0.5);
                 AbstractMenuOption.setResizable(this);
 
