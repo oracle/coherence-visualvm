@@ -46,7 +46,7 @@ image::assets/coherence-visualvm.png[Coherence VisualVM Plugin,800,479]
 1. <<versions, Supported Coherence Versions>>
 2. <<install, Installing the Plugin from VisualVM>>
 3. <<connect, Connecting to a Coherence Cluster>>
-4. <<prefs, Changing the Plugin Behaviour via the Preferences Tab>>
+4. <<prefs, Changing the Plugin Behaviour via the Options Tab>>
 5. <<capabilities, Monitoring Capabilities>>
 6. <<build, Building the Plugin>>
 
@@ -158,10 +158,10 @@ NOTE: If you wish to secure access to the REST endpoints or via JMX, please refe
 or relevant JMX security documentation.
 
 [#prefs]
-== Changing the Plugin Behaviour via the Preferences Tab
+== Changing the Plugin Behaviour via the Options Tab
 
 In version 1.0.1 or above of the VisualVM Plugin, you can change the behaviour of the plugin
-by using the Preferences pane. To open the preferences choose the following depending upon your platform:
+by using the Options pane. To open the options choose the following depending upon your platform:
 
 1. Mac/Linux - `VisualVM` -> `Preferences` and select the `Coherence` tab.
 
