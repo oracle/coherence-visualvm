@@ -161,7 +161,11 @@ or relevant JMX security documentation.
 == Changing the Plugin Behaviour via the Preferences Tab
 
 In version 1.0.1 or above of the VisualVM Plugin, you can change the behaviour of the plugin
-by using the Preferences pane. To open the preferences, choose `VisualVM` -> `Preferences` and select the `Coherence` tab.
+by using the Preferences pane. To open the preferences choose the following depending upon your platform:
+
+1. Mac/Linux - `VisualVM` -> `Preferences` and select the `Coherence` tab.
+
+2. Windows - `Tools` -> `Options` and select the `Coherence` tab.
 
 You will see the preferences as shown below:
 
