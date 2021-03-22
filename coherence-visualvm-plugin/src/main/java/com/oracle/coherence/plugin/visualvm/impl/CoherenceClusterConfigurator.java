@@ -98,6 +98,14 @@ class CoherenceClusterConfigurator extends JPanel
         return hc;
         }
 
+    /**
+     * Checks to see if the URL is valid.
+     *
+     * @param sClusterName cluster name
+     * @param sUrl         uRL
+     *
+     * @return true if the URL is valid
+     */
     private static boolean isValid(String sClusterName, String sUrl)
         {
         if (sClusterName == null || sClusterName.equals(""))

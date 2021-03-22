@@ -146,7 +146,7 @@ public abstract class AbstractData
 
         JMXRequestSender jmxRequestSender = (JMXRequestSender) requestSender;
         // carry out any parameter substitution or pre-processing of reporter XML
-        sReportXML = preProcessReporterXML(model, new StringBuffer(sReportXML).toString());
+        sReportXML = preProcessReporterXML(model, sReportXML);
 
 
         if (m_sReporterLocation == null)
@@ -173,8 +173,8 @@ public abstract class AbstractData
                 }
             catch (Exception e)
                 {
-                String sError =
-                        Localization.getLocalText("ERR_error_running_report", new String[]{sReportXML, this.getClass().getCanonicalName(), e.getMessage()});
+                String sError = Localization.getLocalText("ERR_error_running_report",
+                        sReportXML, this.getClass().getCanonicalName(), e.getMessage());
 
                 LOGGER.log(Level.WARNING, sError);
                 e.printStackTrace();
@@ -183,7 +183,7 @@ public abstract class AbstractData
 
                 // this exception is thrown so we can catch above and re-run the report
                 // using the standard way
-                throw new RuntimeException("Error running report");
+                throw new RuntimeException("Error running report", e);
                 }
             }
         return mapCollectedData;

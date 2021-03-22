@@ -406,8 +406,8 @@ public class VisualVMModel
                     {
                     // we received an error running the report, so mark as
                     // a fall back so it will be immediately run
-                    LOGGER.warning(Localization.getLocalText("ERR_Failed_to_run_report", new String[] { clazz.toString(), e.toString() }));
-                    e.printStackTrace();
+                    LOGGER.warning(Localization.getLocalText("ERR_Failed_to_run_report", clazz.toString(), e.toString()));
+                    e.printStackTrace(); 
                     fFallBack = true;
                     }
                 }

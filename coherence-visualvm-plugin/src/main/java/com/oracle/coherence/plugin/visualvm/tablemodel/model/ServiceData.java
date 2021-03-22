@@ -231,7 +231,7 @@ public class ServiceData
     @Override
     protected void preProcessReporterData(VisualVMModel model)
         {
-        setDistributedCaches = new HashSet<String>();
+        setDistributedCaches = new HashSet<>();
         }
 
     /**
