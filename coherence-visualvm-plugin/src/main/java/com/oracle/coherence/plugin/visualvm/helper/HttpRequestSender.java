@@ -1469,25 +1469,57 @@ public class HttpRequestSender
         return sServiceName.replaceAll("\"", "");
         }
 
+    /**
+     * Internal class to build a URL.
+     */
     public static class URLBuilder
         {
+        // ----- constructors ----------------------------------------------
+
+        /**
+         * Construct a {@link URLBuilder}.
+         *
+         * @param sBasePath base path
+         */
         public URLBuilder(String sBasePath)
             {
             m_bldrUrl.append(sBasePath);
             }
 
+        /**
+         * Add a path segment.
+         *
+         * @param sPath path to add
+         *
+         * @return a {@link URLBuilder}
+         */
         public URLBuilder addPathSegment(String sPath)
             {
             m_bldrUrl.append("/").append(sPath);
             return this;
             }
 
+        /**
+         * Add a query parameter.
+         *
+         * @param sKey  key
+         * @param sValue value
+         *
+         * @return a {@link URLBuilder}
+         */
         public URLBuilder addQueryParameter(String sKey, String sValue)
             {
             m_mapQueryParams.put(sKey, sValue);
             return this;
             }
 
+        /**
+         * Returns the {@link URL}.
+         *
+         * @return {@link URL}
+         *
+         * @throws Exception if any errors
+         */
         public URL getUrl() throws Exception
             {
             StringBuilder completeUrl = new StringBuilder(m_bldrUrl);
@@ -1502,9 +1534,15 @@ public class HttpRequestSender
             return new URL(completeUrl.toString());
             }
 
+        /**
+         * {@link StringBuilder} to build the url.
+         */
         private final StringBuilder m_bldrUrl = new StringBuilder();
 
-        private Map<String, String> m_mapQueryParams = new HashMap<>();
+        /**
+         * {@link Map} of query parameters.
+         */
+        private final Map<String, String> m_mapQueryParams = new HashMap<>();
         }
 
     // ----- data members ---------------------------------------------------

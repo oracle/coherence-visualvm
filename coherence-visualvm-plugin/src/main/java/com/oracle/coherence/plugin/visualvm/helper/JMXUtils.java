@@ -33,7 +33,6 @@ import javax.management.AttributeList;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
-import javax.management.openmbean.CompositeData;
 
 /**
  * Utility class for querying JMX.

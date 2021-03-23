@@ -51,8 +51,7 @@ public class GraphHelper
      */
     public static SimpleXYChartSupport createClusterMemoryGraph()
         {
-        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.bytes(0, true,
-                VALUES_LIMIT);
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.bytes(0, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(getLocalText("GRPH_cluster_memory_details"));
         sxycd.addLineFillItems(getLocalText("GRPH_total_cluster_memory"), getLocalText("GRPH_used_cluster_memory"));
