@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-  Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+  Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
   This code is free software; you can redistribute it and/or modify it
@@ -27,5 +27,6 @@
 -->
 <nbm>
    <manifest>target/manifest.mf</manifest>
+   <licenseName>50AC5EAA</licenseName>
    <licenseFile>license.txt</licenseFile>
 </nbm>
