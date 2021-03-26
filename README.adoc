@@ -41,16 +41,28 @@ NOTE: This version of the Plugin requires VisualVM release 2.0.4 or later which 
 
 image::assets/coherence-visualvm.png[Coherence VisualVM Plugin,800,479]
 
+== Table of Contents
+
+1. <<versions, Supported Coherence Versions>>
+2. <<install, Installing the Plugin from VisualVM>>
+3. <<connect, Connecting to a Coherence Cluster>>
+4. <<prefs, Changing the Plugin Behaviour via the Options Tab>>
+5. <<capabilities, Monitoring Capabilities>>
+6. <<build, Building the Plugin>>
+
+
+[#versions]
 == Supported Coherence Versions
 
 The Plugin will connect to and display data for the following Coherence versions:
 
-**Community Editions**: 14.1.1.0.x, 20.06.x and 20.12
+**Community Editions**: 14.1.1.0.x, 20.06.x and 20.12.x
 
 **Commercial Editions**: 12.2.1.5.x,  12.2.1.4.x, 12.1.3.x, 12.1.2.x and 3.7.1.x
 
 NOTE: If you wish to connect to Coherence version 12.2.1.4.x via REST you should have Coherence version 12.2.1.4.7 or greater.
 
+[#install]
 == Installing the Plugin from VisualVM
 
 The Coherence VisualVM Plugin is available from the list of plugins in VisualVM versions 2.0.4 and above.
@@ -64,6 +76,8 @@ To install the Plugin carry out the following:
 
 image::assets/coherence-visualvm-install.png[Coherence VisualVM Plugin Install,800,479]
 
+NOTE: If you already have an older version of the plugin installed, click on `Check For Newest` and follow the prompts.
+
 For more information about using the Coherence VisualVM plugin see the official https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/using-jmx-manage-oracle-coherence.html[Coherence Documentation].
 
 Other useful resources:
@@ -74,18 +88,27 @@ Other useful resources:
 * https://github.com/oracle/coherence/tree/master/examples[Various Coherence Examples]
 * https://github.com/oracle/coherence-operator[The Coherence Operator - Run your clusters in Kubernetes]
 
-Read on if you want to build the Plugin manually.
-
+[#connect]
 == Connecting to a Coherence Cluster
 
-Once the Plugin is installed, you can double-click on a Coherence process in the left pane, usually
-`com.tangosol.net.DefaultCacheServer`, after which a `Coherence` tab will be displayed.
+=== 1. Connecting Directly to a Process
 
-You can also connect via Coherence Management over REST by right-clicking on the
-`Coherence Clusters` tree item and choose `Add Coherence Cluster`. See the https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/using-jmx-manage-oracle-coherence.html#GUID-9A5B5F14-26A6-49CF-8C0C-3533A5DFB9C6[Coherence Documentation]
-for more information on connecting via REST.
+Once the Plugin is installed, you can double-click on a Coherence process in the left pane, usually `com.tangosol.net.DefaultCacheServer`, after which a `Coherence` tab will be displayed.
 
-== Connecting to Coherence in WebLogic Server
+=== 2. Connecting via Management over REST
+
+You can also connect via Coherence Management over REST by right-clicking on the `Coherence Clusters` tree item and choose `Add Coherence Cluster`.
+
+Provide a name for the cluster and use the following URL based upon what type of cluster you are connecting to:
+
+1. Standalone Coherence - `http://<host>:<management-port>/management/coherence/cluster`
+
+2. WebLogic Server -  `http://<admin-host>:<admin-port>/management/coherence/<version>/clusters` - You can use `latest` as the version.
+
+NOTE: To enable Management over REST for a stand-alone cluster, please see the
+https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/rest-reference/quick-start.html[Coherence Documentation].
+
+=== 3. Connecting to Coherence in WebLogic Server via the Admin Server
 
 If you have Coherence running within WebLogic Server using the `Managed Coherence Servers` functionality you can either
 connect via REST as described above or if you want to connect to the `domain runtime MBean server`, use the instructions below.
@@ -131,41 +154,68 @@ You may remove it from the above `--cp` statement if you like.
 
 7. Right-Click on the connection and select `Open`. The Coherence tab will be displayed.
 
+NOTE: If you wish to secure access to the REST endpoints or via JMX, please refer to either the https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/index.html[Coherence Documentation]
+or relevant JMX security documentation.
 
-== Changing the Plugin Behaviour via System Properties
+[#prefs]
+== Changing the Plugin Behaviour via the Options Tab
 
-There are a number of properties that change the behaviour of the Plugin. To pass these properties
-to VisvualVM you have to use the `-J` option. For example to change the refresh time from the default
-of 30 seconds, you can do the following:
+In version 1.0.1 or above of the VisualVM Plugin, you can change the behaviour of the plugin
+by using the Options pane. To open the options choose the following depending upon your platform:
 
-[source,shell]
-----
-$ visualvm -J-Dcoherence.plugin.visualvm.refreshtime=10
-----
+1. Mac/Linux - `VisualVM` -> `Preferences` and select the `Coherence` tab.
 
-The following table outlines all the available properties and their use.
+2. Windows - `Tools` -> `Options` and select the `Coherence` tab.
 
-.Table Coherence VisualVM Properties
+You will see the preferences as shown below:
+
+image::assets/coherence-visualvm-preferences.png[Coherence CE]
+
+There are tool tips for each of the preferences, but a summary is shown below.
+
+.Table Coherence VisualVM Preferences
 !===
-|Property | Default | Usage
-| coherence.plugin.visualvm.refreshtime| 30 |  Time (in seconds) between refreshing data from the cluster. Do not set too low as this could adversely affect performance in large clusters
-| coherence.plugin.visualvm.log.query.times| false | Enables logging of query times when retrieving data
-| coherence.plugin.visualvm.sorting.enabled | true | Enables JTable sorting
-| coherence.plugin.visualvm.heatmap.enabled | false | Enables experimental heat map in Caches tab
-| coherence.plugin.visualvm.persistence.list | true | Enables dropdown list of snapshots when performing snapshot operations
-| coherence.plugin.visualvm.zoom.enabled | false | Enables additional zoom function for all graphs
-| coherence.plugin.visualvm.rest.request.timeout | 30000 | The request timeout (in ms) when using REST to connect to a cluster
-| coherence.plugin.visualvm.rest.request.debug | false | Enables HTTP request debugging using REST to connect to a cluster
-| coherence.plugin.visualvm.disable.mbean.check | false | Disables the MBean check when connecting to WebLogic Server
+|Preference | Default | Usage
+| Data Refresh Time| 30 |  Time (in seconds) between refreshing data from the cluster. Do not set too low as this could adversely affect performance in large clusters.
+| Log Query Times| false | Enables logging of query times to the VisualVM logfile when retrieving data.
+| Disable MBean Check | false | Disables the MBean check when connecting to WebLogic Server. This allows the plugin to startup without checking for Cluster MBean.
+| REST Request Timeout | 30000 | The request timeout (in ms) when using REST to connect to a cluster.
+| Enable REST Debug | false | Enables HTTP request debugging when using REST to connect to a cluster.
+| Enable Persistence List | true | Enables dropdown list of snapshots rather than having to enter the snapshot when performing snapshot operations.
+| Enable Zoom on Graphs | false | Enables additional zoom function for all graphs.
+| Enable Cluster Snapshot tab | false | Enables experimental Cluster Snapshot tab. This tab is useful for seeing all the relevant cluster information on one pae in a text format.
+| Enable Cluster Heap Dump | false | Enables the cluster heap dump button on the Cluster Overview tab.
 !===
 
-NOTE: If you have used older versions of the Coherence VisualVM plugin available with Coherence, you should
-ensure you are using the new property names above.
+[#capabilities]
+== Monitoring Capabilities
 
+For all Coherence clusters, the following tabs are displayed:
+
+* **Cluster Overview** - Displays high-level information about the Coherence cluster including cluster name, version, member count and 'Cluster StatusHA'. Summary graphs show total cluster memory available and used, packet publisher and receiver success rates and load averages for machines running Coherence.
+* **Machines** - Displays a list of the physical machines that make up the Coherence cluster as well as information about the load averages and available memory on these machines.
+* **Members** - Displays the full list of Coherence members/nodes including individual publisher/ receiver success rates, memory and send queue sizes.
+* **Services** - Displays information about the running services including partition counts and statusHA values.
+If you select a service, on the next data refresh you will see detailed thread information for each node of the service as well as
+graphs of that information
+* **Caches** - Displays information about any caches including size, and memory usage information. To get the correct information to be displayed for memory usage, you must be using the binary unit-calculator. If you select a cache, on the next data refresh you will see detailed information about each node hosting that service and cache.
+
+Depending upon the edition and functionality you are using, the following optional tabs may be displayed:
+
+* **Proxy Servers**  - If your cluster is running proxy servers, this tab displays information about the proxy servers and the number of connections across each proxy server and total connections.
+* **HTTP Servers**  - If your cluster is running proxy servers with HTTP acceptors, this tab displays information about the HTTP servers, the number of connections across each server, total connections and graphs of response codes, errors and requests over time for a selected service.
+* **Coherence*Web** - If your cluster is configured for Coherence*Web, this tab displays information about the number applications deployed, the number of HTTP sessions being stored as well as other information regarding session reaping.
+* **Federation** - If your cluster is configured with Federated Caching, this tab displays information about each federated service. If you select a service, on the next data refresh you will see detailed outbound/inbound federation traffic information for each node of the service as well as graphs of that information.
+* **Persistence** - If your cluster is configured with Persistence, this tab displays information about each service configured with Persistence.  Graphs showing active space used and any additional latencies incurred are also showed.
+* **Elastic Data** - If your cluster is configured with Elastic Data, this tab displays graphs and information about RAM Journal and Flash Journal usage.  You can click on each of the usage bars to show detailed node information
+* **JCache** - If your cluster is being used to store JCache caches, this tab displays JCache "Management" and "Statistics" MBean information regarding the configured caches.
+* **HotCache** - If your cluster contains HotCache node(s), then this tab lists the running HotCache instances. If you select an instance, on the next data refresh the console will display statistics and graphs for the operations performed. You may click on tabs and cache-ops to see further fine-grained information.
+
+[#build]
 == Building the Plugin
 
 If you wish to build the Plugin from scratch you need to build the VisualVM dependencies first.
-To build the plugin is a two step process:
+To build the plugin is a two-step process:
 
 1. Generate the VisualVM dependencies
 2. Build the Coherence VisualVM Plugin
@@ -197,7 +247,7 @@ NOTE: A Script `install-artifacts.sh` is available in the `bin` directory to run
 
 1. Ensure you have JDK8 in you PATH.
 
-1. Checkout the VisualVM repository
+2. Checkout the VisualVM repository
 +
 [source,shell]
 ----
@@ -206,7 +256,7 @@ $ git clone https://github.com/oracle/visualvm.git
 Cloning into 'visualvm'...
 ----
 
-1. Checkout the `release204` branch
+3. Checkout the `release204` branch
 +
 [source,shell]
 ----
@@ -217,7 +267,7 @@ $ git checkout release204
 Switched to a new branch 'release204'
 ----
 
-1. Unzip the NetBeans Platform 11.3
+4. Unzip the NetBeans Platform 11.3
 +
 [source,shell]
 ----
@@ -226,14 +276,14 @@ $ cd visualvm
 $ unzip nb113_platform_19062020.zip
 ----
 
-1. Build the Plugins
+5. Build the Plugins
 +
 [source,shell]
 ----
 $ ant build-zip
 ----
 
-1. Unzip the artefacts
+6. Unzip the artefacts
 +
 [source,shell]
 ----
@@ -244,14 +294,14 @@ $ unzip visualvm.zip
 $ cd ..
 ----
 
-1. Generate the NBM's
+7. Generate the NBM's
 +
 [source,shell]
 ----
 $ ant nbms
 ----
 
-1. Install into the local repository
+8. Install into the local repository
 +
 [source,shell]
 ----
@@ -268,7 +318,7 @@ push the artefacts to a remote Maven repository.
 
 1. Ensure you have JDK11 or above in your PATH.
 
-1. Build the Plugin
+2. Build the Plugin
 +
 From the `coherence-visualvm` directory:
 +
@@ -279,7 +329,7 @@ $ mvn clean install -DskipTests
 +
 If you wish to run the Community Edition tests then leave out the `-DskipTests`.
 
-1. Install the Plugin
+3. Install the Plugin
 +
 The plugin will be available in the location `coherence-visualvm-plugin/target/coherence-visualvm-plugin-{version}`
 
