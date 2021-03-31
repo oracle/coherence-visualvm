@@ -307,11 +307,14 @@ public class CoherenceCachePanel
                 {
                 List<Entry<Object, Data>> tempList = new ArrayList<>();
 
-                // zero out the values for memory and update the list
-                for (Entry<Object, Data> entry : m_cacheDetailData)
+                if (m_cacheDetailData != null)
                     {
-                    entry.getValue().setColumn(CacheDetailData.MEMORY_BYTES, Integer.valueOf(0));
-                    tempList.add(entry);
+                    // zero out the values for memory and update the list
+                    for (Entry<Object, Data> entry : m_cacheDetailData)
+                        {
+                        entry.getValue().setColumn(CacheDetailData.MEMORY_BYTES, Integer.valueOf(0));
+                        tempList.add(entry);
+                        }
                     }
 
                 m_cacheDetailData = tempList;

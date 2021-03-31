@@ -99,11 +99,13 @@ public class CacheStorageManagerData
                     AttributeList listAttr = requestSender.getAttributes(objName,
                         new String[]{ ATTR_LOCKS_GRANTED, ATTR_LOCKS_PENDING, ATTR_LISTENER_REG });
 
+                    String sLocksGranted = getAttributeValueAsString(listAttr, ATTR_LOCKS_GRANTED);
                     data.setColumn(CacheStorageManagerData.NODE_ID, Integer.valueOf(sNodeId));
                     data.setColumn(CacheStorageManagerData.LOCKS_GRANTED,
                             Integer.parseInt(getAttributeValueAsString(listAttr, ATTR_LOCKS_GRANTED)));
+                    // locks pending may be returns as null over REST
                     data.setColumn(CacheStorageManagerData.LOCKS_PENDING,
-                            Integer.parseInt(getAttributeValueAsString(listAttr, ATTR_LOCKS_PENDING)));
+                            Integer.parseInt(sLocksGranted == null ? "0" : sLocksGranted));
                     data.setColumn(CacheStorageManagerData.LISTENER_REGISTRATIONS,
                             Long.parseLong(getAttributeValueAsString(listAttr, ATTR_LISTENER_REG)));
                     try {
