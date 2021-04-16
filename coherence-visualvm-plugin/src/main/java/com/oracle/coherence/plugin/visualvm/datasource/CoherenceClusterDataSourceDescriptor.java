@@ -50,7 +50,7 @@ public class CoherenceClusterDataSourceDescriptor
     public CoherenceClusterDataSourceDescriptor(CoherenceClusterDataSource dataSource)
         {
         super(dataSource, dataSource.getName(),
-                Localization.getLocalText("TXT_Coherence_Data_Source"),
+                Localization.getLocalText("TXT_Coherence_Data_Source_Description",  dataSource.getUrl()),
                 VisualVMView.NODE_ICON,
                 POSITION_AT_THE_END,
                 EXPAND_NEVER);
