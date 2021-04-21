@@ -26,6 +26,8 @@
 package com.oracle.coherence.plugin.visualvm.panel;
 
 import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
+import com.oracle.coherence.plugin.visualvm.Localization;
+import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.panel.util.MenuOption;
@@ -59,14 +61,18 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
+import javax.management.Attribute;
 import javax.management.MBeanServerConnection;
+import javax.management.ObjectName;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -189,6 +195,8 @@ public class CoherenceCachePanel
                                        new RenderHelper.ToolTipRenderer());
         RenderHelper.setColumnRenderer(f_tableStorage, CacheStorageManagerData.INDEX_TOTAL_UNITS,
                                        new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableStorage, CacheStorageManagerData.INDEX_BUILD_DURATION,
+                                       new RenderHelper.IntegerRenderer());
 
         table.setIntercellSpacing(new Dimension(6, 3));
         table.setRowHeight(table.getRowHeight() + 4);
@@ -214,7 +222,10 @@ public class CoherenceCachePanel
 
         f_tableStorage.setIntercellSpacing(new Dimension(6, 3));
         f_tableStorage.setRowHeight(table.getRowHeight() + 4);
-        f_tableStorage.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableStorage, SELECTED_STORAGE)});
+        f_tableStorage.setMenuOptions(new MenuOption[] {
+                new ShowDetailMenuOption(model, f_tableStorage, SELECTED_STORAGE),
+                new ShowIndexInfoMenuOption(model, m_requestSender, f_tableStorage)
+        });
 
         // Create the scroll pane and add the table to it.
         JScrollPane scrollPane        = new JScrollPane(table);
@@ -514,11 +525,158 @@ public class CoherenceCachePanel
         }
 
     /**
+     * Right-click option to show index information.
+     */
+    protected class ShowIndexInfoMenuOption
+        extends AbstractMenuOption
+        {
+
+        // ----- constructors -----------------------------------------------
+
+       /**
+         * Create a new menu option for displaying heat map.
+         *
+         * @param model          the {@link VisualVMModel} to get collected data from
+         * @param requestSender  the {@link MBeanServerConnection} to perform additional queries
+         * @param jtable         the {@link ExportableJTable} that this applies to
+         */
+       public ShowIndexInfoMenuOption(VisualVMModel model, RequestSender requestSender,
+                                      ExportableJTable jtable)
+           {
+           super(model, requestSender, jtable);
+           f_sMenuItem = getLocalizedText("LBL_index_info");
+           }
+
+       // ----- AbstractMenuOption methods ---------------------------------
+
+       @Override
+       public String getMenuItem()
+           {
+           return f_sMenuItem;
+           }
+
+       @Override
+       public void actionPerformed(ActionEvent e)
+           {
+           int nRow = getSelectedRow();
+           Set<Integer> setNodes = new HashSet<>();
+           boolean fIndexBuildAvailable = false;
+           Pair<String, String> selectedCache = f_model.getSelectedCache();
+
+           try
+               {
+               StringBuilder sb = new StringBuilder("Index details for: " + selectedCache)
+                       .append('\n').append('\n');
+
+               long  cMillisTotal     = 0;
+               long  cCount           = 0;
+               float cMillisAverage   = 0.0f;
+               long  cIndexTotalUnits = 0L;
+               long  cMaxUnits        = 0L;
+               long  cMaxMillis       = 0L;
+
+               for (Map.Entry<Object, Data> entry : m_cacheStorageData)
+                   {
+                   cCount++;
+                   Object oValue     = entry.getValue().getColumn(CacheStorageManagerData.INDEX_BUILD_DURATION);
+                   long   cUnits     = (Long) entry.getValue().getColumn(CacheStorageManagerData.INDEX_TOTAL_UNITS);
+                   long   cMillis    = oValue == null ? 0L : (Long) oValue;
+                   fIndexBuildAvailable = oValue != null;
+                   
+                   cIndexTotalUnits += cUnits;
+                   cMillisTotal     += cMillis;
+
+                   if (cUnits > cMaxUnits)
+                       {
+                       cMaxUnits = cUnits;
+                       }
+
+                   if (cMillis > cMaxMillis)
+                       {
+                       cMaxMillis = cMillis;
+                       }
+
+                   setNodes.add((Integer) entry.getValue().getColumn(CacheStorageManagerData.NODE_ID));
+                   }
+
+               if (cCount != 0)
+                   {
+                   cMillisAverage = cMillisTotal * 1.0f / cCount;
+                   sb.append(getLocalizedText("LBL_index_units_mb"))
+                     .append(": ")
+                     .append(getMemoryFormat(cIndexTotalUnits / GraphHelper.MB))
+                     .append('\n');
+
+                   if (fIndexBuildAvailable)
+                       {
+                       sb.append(getLocalizedText("LBL_average_index_build_duration"))
+                          .append(": ")
+                          .append(String.format("%,f", cMillisAverage))
+                          .append('\n')
+                          .append(getLocalizedText("LBL_max_index_build_duration"))
+                          .append(": ")
+                          .append(String.format("%,d", cMaxMillis))
+                          .append("\n");
+                        }
+                   
+                   // retrieve the first index info which will be the same on all nodes
+                   for (int nNode : setNodes)
+                       {
+                       String sQuery = "Coherence:type=StorageManager,service=" +
+                                       getServiceName(selectedCache.getX()) + ",cache=" + selectedCache.getY() +
+                                       ",nodeId=" + nNode + getDomainPartitionKey(selectedCache.getX()) + ",*";
+
+                       Set<ObjectName> setObjects = m_requestSender.getCompleteObjectName(new ObjectName(sQuery));
+
+                       for (Iterator<ObjectName> iter = setObjects.iterator(); iter.hasNext(); )
+                           {
+                           ObjectName objName = iter.next();
+
+                           List<Attribute> lstAttr = m_requestSender.getAllAttributes(objName);
+
+                           for (Attribute attr : lstAttr)
+                              {
+                              if ("IndexInfo".equals(attr.getName()))
+                                  {
+                                  sb.append("\nNode: ")
+                                    .append(nNode)
+                                    .append(" IndexInfo\n")
+                                    .append(String.join("\n", (String[]) attr.getValue()));
+                                  break;
+                                  }
+                              }
+                           }
+                       }
+                   }
+
+               showMessageDialog(Localization.getLocalText("LBL_index_info"),
+                                                                sb.toString(), JOptionPane.INFORMATION_MESSAGE);
+               }
+           catch (Exception ee)
+               {
+               showMessageDialog(Localization.getLocalText("LBL_error"),
+                                ee.getMessage(), JOptionPane.ERROR_MESSAGE);
+               }
+
+           }
+
+       // ----- data members ------------------------------------------------
+
+        /**
+         * Menu option description.
+         */
+        private final String f_sMenuItem;
+
+
+       }
+
+    /**
      * An experimental menu option to display a heat map for the cache sizes or
      * primary storage used. To enable, set the following system property<br>
      *  coherence.jvisualvm.heatmap.enabled=true
      */
-    protected class ShowHeatMapMenuOption extends AbstractMenuOption
+    protected class ShowHeatMapMenuOption
+            extends AbstractMenuOption
         {
         // ----- constructors -----------------------------------------------
 
@@ -610,7 +768,7 @@ public class CoherenceCachePanel
                     }
                 else
                     {
-                    cValue = (Long) entry.getValue().getColumn(CacheData.MEMORY_USAGE_BYTES);
+                    cValue = (long) ((Integer) entry.getValue().getColumn(CacheData.MEMORY_USAGE_BYTES));
                     }
 
                 m_cTotal += cValue;

@@ -423,35 +423,6 @@ public abstract class AbstractCoherencePanel
         // ----- helpers --------------------------------------------------------
 
         /**
-         * Return the domainPartition key or empty string if the service doesn't
-         * contain one.
-         *
-         * @param sSelectedServiceName service name to interrogate
-         * @return the domain partition key or empty string
-         */
-        protected String getDomainPartitionKey(String sSelectedServiceName)
-            {
-            String[] asServiceDetails = AbstractData.getDomainAndService(sSelectedServiceName);
-            String sDomainPartition = asServiceDetails[0];
-
-            return (sDomainPartition != null
-                    ? ",domainPartition=" + sDomainPartition
-                    : "");
-            }
-
-        /**
-         * Return the service part of a the selected service.
-         *
-         * @param sSelectedServiceName service name to interrogate
-         * @return the service name to return
-         */
-        protected String getServiceName(String sSelectedServiceName)
-            {
-            String[] asParts = AbstractData.getDomainAndService(sSelectedServiceName);
-            return asParts[1];
-            }
-
-        /**
          * Populate all of the attributes for the given query.
          *
          * @param sQuery the query to run
@@ -607,6 +578,36 @@ public abstract class AbstractCoherencePanel
 
         return -1;
         }
+
+    /**
+     * Return the domainPartition key or empty string if the service doesn't
+     * contain one.
+     *
+     * @param sSelectedServiceName service name to interrogate
+     * @return the domain partition key or empty string
+     */
+    protected static String getDomainPartitionKey(String sSelectedServiceName)
+        {
+        String[] asServiceDetails = AbstractData.getDomainAndService(sSelectedServiceName);
+        String sDomainPartition = asServiceDetails[0];
+
+        return (sDomainPartition != null
+                ? ",domainPartition=" + sDomainPartition
+                : "");
+        }
+
+    /**
+     * Return the service part of a the selected service.
+     *
+     * @param sSelectedServiceName service name to interrogate
+     * @return the service name to return
+     */
+    protected static String getServiceName(String sSelectedServiceName)
+        {
+        String[] asParts = AbstractData.getDomainAndService(sSelectedServiceName);
+        return asParts[1];
+            }
+
 
     /**
      * Return the storage details.

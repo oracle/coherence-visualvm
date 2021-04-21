@@ -63,7 +63,7 @@ public class CacheStorageManagerData
      */
     public CacheStorageManagerData()
         {
-        super(INDEX_TOTAL_UNITS + 1);
+        super(INDEX_BUILD_DURATION + 1);
         }
 
     // ----- DataRetriever methods ------------------------------------------
@@ -119,6 +119,8 @@ public class CacheStorageManagerData
                                 Long.parseLong(requestSender.getAttribute(objName, "OptimizedQueryAverageMillis")));
                         data.setColumn(CacheStorageManagerData.INDEX_TOTAL_UNITS,
                                 Long.parseLong(requestSender.getAttribute(objName, "IndexTotalUnits")));
+                        data.setColumn(CacheStorageManagerData.INDEX_BUILD_DURATION,
+                                Long.parseLong(requestSender.getAttribute(objName, "IndexBuildDurationMillis")));
                         }
                     catch (Exception eIgnore)
                        {
@@ -210,6 +212,8 @@ public class CacheStorageManagerData
             {
             data.setColumn(CacheStorageManagerData.INDEX_TOTAL_UNITS,
                        Long.valueOf(getNumberValue(aoColumns[10].toString())));
+            data.setColumn(CacheStorageManagerData.INDEX_BUILD_DURATION,
+                       Long.valueOf(getNumberValue(aoColumns[11].toString())));
             }
         catch (Exception e)
             {
@@ -273,8 +277,16 @@ public class CacheStorageManagerData
                 data.setColumn(CacheStorageManagerData.MAX_QUERY_DESCRIPTION, nodeCacheStorage.get("maxQueryDescription").asText());
                 data.setColumn(CacheStorageManagerData.NON_OPTIMIZED_QUERY_AVG, nodeCacheStorage.get("nonOptimizedQueryAverageMillis").asLong());
                 data.setColumn(CacheStorageManagerData.OPTIMIZED_QUERY_AVG, nodeCacheStorage.get("optimizedQueryAverageMillis").asLong());
-                data.setColumn(CacheStorageManagerData.INDEX_TOTAL_UNITS,nodeCacheStorage.get("indexTotalUnits").asLong());
 
+                try
+                    {
+                    data.setColumn(CacheStorageManagerData.INDEX_TOTAL_UNITS,nodeCacheStorage.get("indexTotalUnits").asLong());
+                    data.setColumn(CacheStorageManagerData.INDEX_TOTAL_UNITS,nodeCacheStorage.get("indexBuildDurationMillis").asLong());
+                    }
+                catch (Exception ignore)
+                    {
+                    // ignore as attributes not available in all versions
+                    }
 
                 mapData.put(data.getColumn(0), data);
                 }
@@ -330,6 +342,11 @@ public class CacheStorageManagerData
      * Array index for index total units avg.
      */
     public static final int INDEX_TOTAL_UNITS = 8;
+    
+    /**
+     * Array index for index build duration millis.
+     */
+    public static final int INDEX_BUILD_DURATION = 9;
 
     /**
      * The logger object to use.

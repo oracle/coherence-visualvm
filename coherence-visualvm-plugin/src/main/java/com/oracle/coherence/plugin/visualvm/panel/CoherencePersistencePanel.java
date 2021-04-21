@@ -633,19 +633,19 @@ public class CoherencePersistencePanel
                 {
                 // de-selected so remove all JMX NotificationListeners
                 f_mapJMXListeners.forEach((k, v) ->
-                                          {
-                                          try
-                                              {
-                                              if (m_requestSender instanceof JMXRequestSender)
-                                                  {
-                                                  ((JMXRequestSender) m_requestSender).removeNotificationListener(v.getX(), v.getY());
-                                                  }
-                                              }
-                                          catch (Exception e)
-                                              {
-                                              throw new RuntimeException("Unable to remove notification listener on " + v.getX());
-                                              }
-                                          });
+                    {
+                    try
+                        {
+                         if (m_requestSender instanceof JMXRequestSender)
+                            {
+                            ((JMXRequestSender) m_requestSender).removeNotificationListener(v.getX(), v.getY());
+                            }
+                        }
+                    catch (Exception e)
+                        {
+                        throw new RuntimeException("Unable to remove notification listener on " + v.getX());
+                        }
+                    });
                 f_mapJMXListeners.clear();
                 }
             }
@@ -672,13 +672,11 @@ public class CoherencePersistencePanel
                             ((JMXRequestSender) m_requestSender).addNotificationListener(oBeanName, listener, null, null);
 
                             f_mapJMXListeners.put(sServiceName, new Pair<ObjectName, NotificationListener>(oBeanName, listener));
-
                             }
                         }
                     catch (Exception e)
                         {
-                        throw new RuntimeException("Unable to get FQN for " + sServiceName +
-                                                   " " + e.getMessage());
+                        throw new RuntimeException("Unable to get FQN for " + sServiceName + " " + e.getMessage());
                         }
                     }
                 }

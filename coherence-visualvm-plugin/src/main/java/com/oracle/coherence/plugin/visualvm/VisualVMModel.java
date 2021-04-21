@@ -1324,7 +1324,7 @@ public class VisualVMModel
         Localization.getLocalText("LBL_locks_pending"), Localization.getLocalText("LBL_listener_reg"),
         Localization.getLocalText("LBL_max_query_millis"), Localization.getLocalText("LBL_max_query_desc"),
         Localization.getLocalText("LBL_non_opt_avge"), Localization.getLocalText("LBL_opt_avge"),
-        Localization.getLocalText("LBL_index_units")
+        Localization.getLocalText("LBL_index_units"), Localization.getLocalText("LBL_index_build_duration")
         };
 
     /**

@@ -89,6 +89,10 @@
             <column id="IndexTotalUnits">
                 <name>IndexTotalUnits</name>
             </column>
+
+            <column id="IndexBuildDurationMillis">
+                <name>IndexBuildDurationMillis</name>
+            </column>
         </row>
     </report>
 </report-config>
