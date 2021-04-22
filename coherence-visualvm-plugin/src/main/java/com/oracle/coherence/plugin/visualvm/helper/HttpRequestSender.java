@@ -97,8 +97,9 @@ public class HttpRequestSender
         URLBuilder urlBuilder = getBasePath();
         JsonNode rootNode = getResponseJson(sendGetRequest(modifyTarget(objName, urlBuilder)));
 
-        // in case of back cache, we have to get the first item
-        if (objName.getKeyProperty("type").equals("Cache"))
+        // in case of back cache or storage manager we have to get the first item
+        if (objName.getKeyProperty("type").equals("Cache") ||
+            objName.getKeyProperty("type").equals("StorageManager"))
             {
             ArrayNode itemsNode = (ArrayNode) rootNode.get("items");
             if (itemsNode != null)
@@ -111,7 +112,21 @@ public class HttpRequestSender
         if (rootNode instanceof ObjectNode)
             {
             ObjectNode objectNode = (ObjectNode) rootNode;
-            objectNode.fields().forEachRemaining(e -> attributes.add(new Attribute(e.getKey(), e.getValue().asText())));
+            objectNode.fields().forEachRemaining(e ->
+                {
+                JsonNode value = e.getValue();
+                String sValue = value.asText();
+
+                // handle an array value
+                if (value instanceof ArrayNode)
+                    {
+                    StringBuilder sb = new StringBuilder();
+                    value.forEach(s -> sb.append(s).append('\n'));
+                    sValue = sb.toString();
+                    }
+
+                attributes.add(new Attribute(e.getKey(), sValue));
+               });
             }
 
         return attributes;
@@ -1257,7 +1272,8 @@ public class HttpRequestSender
             {
             case "Node":
                 return urlBuilder.addPathSegment("members")
-                        .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"));
+                        .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
+                        .addQueryParameter("links", "");
             case "Journal":
                 String sJournalUrlType = objectName.getKeyProperty("name").equals("FlashJournalRM")
                                          ? "flash" : "ram";
@@ -1280,12 +1296,12 @@ public class HttpRequestSender
                 return urlBuilder.addPathSegment("services")
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "service")))
                         .addPathSegment("caches").addPathSegment(objectName.getKeyProperty("cache"))
-                        .addPathSegment("members").addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
-                        .addPathSegment("storage");
+                        .addPathSegment("members").addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"));
             case "Service":
                 return urlBuilder.addPathSegment("services")
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))
-                        .addPathSegment("members").addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"));
+                        .addPathSegment("members").addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
+                        .addQueryParameter("links", "");
             case "ConnectionManager":
                 return urlBuilder.addPathSegment("services")
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))

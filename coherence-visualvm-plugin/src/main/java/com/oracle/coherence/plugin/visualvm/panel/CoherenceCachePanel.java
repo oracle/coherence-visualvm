@@ -28,6 +28,7 @@ package com.oracle.coherence.plugin.visualvm.panel;
 import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
+import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.panel.util.MenuOption;
@@ -636,12 +637,16 @@ public class CoherenceCachePanel
 
                            for (Attribute attr : lstAttr)
                               {
-                              if ("IndexInfo".equals(attr.getName()))
+                              if ("IndexInfo".equalsIgnoreCase(attr.getName()))
                                   {
+                                  // HttpRequestSender responds with a String and JMX with a String[]
+                                  String sValue = m_requestSender instanceof HttpRequestSender
+                                                  ? (String) attr.getValue()
+                                                  : String.join("\n", (String[]) attr.getValue());
                                   sb.append("\nNode: ")
                                     .append(nNode)
                                     .append(" IndexInfo\n")
-                                    .append(String.join("\n", (String[]) attr.getValue()));
+                                    .append(sValue);
                                   break;
                                   }
                               }

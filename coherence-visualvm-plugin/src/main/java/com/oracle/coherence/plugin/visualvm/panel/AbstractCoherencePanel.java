@@ -437,7 +437,7 @@ public abstract class AbstractCoherencePanel
 
             for (Iterator<ObjectName> iter = setObjects.iterator(); iter.hasNext(); )
                 {
-                ObjectName objName = (ObjectName) iter.next();
+                ObjectName objName = iter.next();
                 m_tmodel.insertRow(row++, new Object[] {"JMX Key", objName.toString()});
 
                 List<Attribute> lstAttr = m_requestSender.getAllAttributes(objName);

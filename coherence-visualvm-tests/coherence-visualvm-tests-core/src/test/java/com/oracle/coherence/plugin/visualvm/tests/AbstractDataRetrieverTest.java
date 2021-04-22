@@ -54,6 +54,8 @@ import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
+import javax.management.Attribute;
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 import org.junit.AfterClass;
@@ -61,8 +63,11 @@ import org.junit.Test;
 import org.junit.Assert;
 
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_REPORTER_DISABLED;
@@ -70,6 +75,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.greaterThan;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -123,6 +130,7 @@ public abstract class AbstractDataRetrieverTest
             testMachineData();
             testMemberData();
             testCacheData();
+            testGetAllAttributes();
             testServiceData();
             if (isCommercial())
                 {
@@ -164,6 +172,23 @@ public abstract class AbstractDataRetrieverTest
             validateColumn(ClusterData.CLUSTER_SIZE, entry, 2);
             validateColumn(ClusterData.VERSION, entry, CacheFactory.VERSION);
             validateColumn(ClusterData.DEPARTURE_COUNT, entry, 0L);
+            }
+        }
+
+    /**
+     * Test getAllAttributes for both {@link RequestSender}s.
+     */
+    private void testGetAllAttributes() throws Exception {
+        RequestSender requestSender = getRequestSender();
+        String          sQuery     = "Coherence:type=StorageManager,service=" + DIST1_SERVICE + ",cache=" + DIST1_CACHE + ",*";
+        Set<ObjectName> setObjects = requestSender.getCompleteObjectName(new ObjectName(sQuery));
+
+        for (Iterator<ObjectName> iter = setObjects.iterator(); iter.hasNext(); )
+            {
+            ObjectName objName = iter.next();
+            List<Attribute> lstAttr = requestSender.getAllAttributes(objName);
+            assertNotNull(lstAttr);
+            assertTrue(lstAttr.size() > 0);
             }
         }
 
