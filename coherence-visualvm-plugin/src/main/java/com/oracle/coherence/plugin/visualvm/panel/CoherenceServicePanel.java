@@ -474,7 +474,7 @@ public class CoherenceServicePanel
                          for (Object[] aoResults : setResults)
                              {
                              StringBuffer sb = new StringBuffer(
-                                     Localization.getLocalText("LBL_partitions_stats_title", new String[] {sRawService}));
+                                     Localization.getLocalText("LBL_partitions_stats_title", sRawService));
 
                               sb.append("\n\n")
                                 .append(getLocalizedText("LBL_avg_partition_size"))

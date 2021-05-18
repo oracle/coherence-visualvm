@@ -163,11 +163,10 @@ public class CoherenceProxyPanel
     @Override
     public void updateGUI()
         {
-        final String MEM_FORMAT        = "%,d";
-
-        int  cTotalConnections = 0;
-        long nSentCount        = 0L;
-        long nRecCount         = 0L;
+        final String MEM_FORMAT = "%,d";
+        int   cTotalConnections = 0;
+        long  nSentCount        = 0L;
+        long  nRecCount         = 0L;
 
         if (m_proxyData != null)
             {

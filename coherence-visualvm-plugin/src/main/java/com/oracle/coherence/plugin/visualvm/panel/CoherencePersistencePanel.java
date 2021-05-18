@@ -55,6 +55,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -445,6 +446,8 @@ public class CoherencePersistencePanel
                                 return;
                                 }
 
+                            Arrays.sort(asSnapshotList);
+
                             // request the user to choose from an existing list
                             JList<String> listSnapshots = new JList(asSnapshotList);
                             listSnapshots.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -487,7 +490,7 @@ public class CoherencePersistencePanel
                             {
                             if (GET_SNAPSHOTS.equals(f_sOperation))
                                 {
-                                String[] asSnapshots = (String[]) m_requestSender.getSnapshots(sService, sDomainPartition);
+                                String[] asSnapshots = m_requestSender.getSnapshots(sService, sDomainPartition);
                                 sResult = getSnapshotList(Localization.getLocalText("LBL_snapshots", sServiceName),
                                                           asSnapshots);
                                 }
@@ -555,6 +558,7 @@ public class CoherencePersistencePanel
             StringBuilder sb = new StringBuilder(sTitle + "\n");
             if (asList != null)
                 {
+                Arrays.sort(asList);
                 for (int i = 0; i < asList.length; i++)
                     {
                     sb.append((i + 1) + ": " + asList[i] + "\n");
