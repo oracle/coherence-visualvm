@@ -80,6 +80,5 @@ public class CoherenceClusterDataSourceViewProvider
     /**
      * The singleton instance of {@link CoherenceClusterDataSourceViewProvider}.
      */
-    final protected static CoherenceClusterDataSourceViewProvider INSTANCE =
-            new CoherenceClusterDataSourceViewProvider();
+    final protected static CoherenceClusterDataSourceViewProvider INSTANCE = new CoherenceClusterDataSourceViewProvider();
     }

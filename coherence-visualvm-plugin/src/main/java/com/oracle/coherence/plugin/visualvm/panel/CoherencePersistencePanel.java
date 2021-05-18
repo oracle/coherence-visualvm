@@ -551,6 +551,7 @@ public class CoherencePersistencePanel
          *
          * @param sTitle the title to display on first line
          * @param asList the {@link String}[] of snapshots
+         *
          * @return the formatted list
          */
         private String getSnapshotList(String sTitle, String[] asList)

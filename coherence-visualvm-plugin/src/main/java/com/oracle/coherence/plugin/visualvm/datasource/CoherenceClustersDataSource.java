@@ -96,6 +96,7 @@ public class CoherenceClustersDataSource
         {
         DataSource.ROOT.getRepository().removeDataSource(sharedInstance());
         }
+
     // ----- data members ---------------------------------------------------
 
     /**

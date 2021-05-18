@@ -380,6 +380,7 @@ public class GlobalPreferences
 
     /**
      * Indicates if the cluster snapshot tab is dispalyed.
+     *
      * @return true if the cluster snapshot tab is displayed
      */
     public boolean isClusterSnapshotEnabled()
@@ -389,6 +390,7 @@ public class GlobalPreferences
 
     /**
      * Set if the cluster snapshot tab is displayed.
+     *
      * @param fValue if the cluster snapshot tab is displayed
      */
     public void setClusterSnapshotEnabled(boolean fValue)
@@ -401,6 +403,7 @@ public class GlobalPreferences
      *
      * @param sProperty property key
      * @param sDefault  default
+     *
      * @return a boolean value
      */
     private boolean getBooleanProperty(String sProperty, String sDefault)
@@ -424,6 +427,7 @@ public class GlobalPreferences
      *
      * @param sProperty property key
      * @param nDefault  default
+     *
      * @return an integer value
      */
     private int getIntegerProperty(String sProperty, int nDefault)
@@ -588,5 +592,8 @@ public class GlobalPreferences
 
     // ----- data members ------------------------------------------------------
 
+    /**
+     * Preferences.
+     */
     private final Preferences f_prefs;
     }

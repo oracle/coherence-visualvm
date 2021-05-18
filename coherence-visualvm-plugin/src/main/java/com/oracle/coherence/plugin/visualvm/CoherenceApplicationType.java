@@ -48,13 +48,14 @@ public class CoherenceApplicationType
 
     public CoherenceApplicationType(Application app, Jvm jvm, String sMainClass)
         {
-        String sDescription = f_mapClasses.get(sMainClass);
-        String[] asParts = sMainClass.split("\\.");
-        this.f_sName = "Coherence " + asParts[asParts.length - 1];
+        String   sDescription = f_mapClasses.get(sMainClass);
+        String[] asParts      = sMainClass.split("\\.");
+
+        this.f_sName       = "Coherence " + asParts[asParts.length - 1];
         this.f_description = sDescription
                              + " (" + sMainClass + ")"
                              + "\nCommand Line:"  + jvm.getJvmArgs();
-        this.iconPath = IMAGE_PATH;
+        this.iconPath      = IMAGE_PATH;
         }
 
     // ----- accessors ------------------------------------------------------

@@ -75,6 +75,5 @@ public class CoherenceClusterDataSourceDescriptorProvider
     /**
      * The static singleton instance of {@link CoherenceClusterDataSourceDescriptorProvider}.
      */
-    final private static CoherenceClusterDataSourceDescriptorProvider INSTANCE =
-            new CoherenceClusterDataSourceDescriptorProvider();
+    final private static CoherenceClusterDataSourceDescriptorProvider INSTANCE = new CoherenceClusterDataSourceDescriptorProvider();
     }

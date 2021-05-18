@@ -217,7 +217,6 @@ public class ExportableJTable
             AbstractTableModel tableModel = (AbstractTableModel) this.getModel();
 
             // Get the column headers
-
             TableColumnModel columnModel = this.getTableHeader().getColumnModel();
             int              columnCount = columnModel.getColumnCount();
 

@@ -837,6 +837,7 @@ public class VisualVMModel
 
     /**
      * Sets the value for is first refresh.
+     *
      * @param fIsFirstRefresh the value for is first refresh
      */
     public void setIsFirstRefresh(boolean fIsFirstRefresh)

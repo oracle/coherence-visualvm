@@ -56,15 +56,6 @@ public class CoherenceClusterDataSourceDescriptor
                 EXPAND_NEVER);
         }
 
-    /**
-     * Returns true if the General properties section should be available for
-     * the DataSource, false otherwise.
-     *
-     * @return true if the General properties section should be available for
-     * the DataSource, false otherwise
-     *
-     * @since VisualVM 1.2
-     */
     @Override
     public boolean providesProperties()
         {

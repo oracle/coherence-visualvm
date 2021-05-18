@@ -33,8 +33,7 @@ import org.openide.util.NbBundle;
  * <br>
  * <ul>
  *   <li>Bundle_[language]_[country].properties o</li>
- *   <li>Bundle_[language].properties<li>
- * </li>
+ *   <li>Bundle_[language].properties</li>
  * </ul>
  * For example:<br>
  * <ul>

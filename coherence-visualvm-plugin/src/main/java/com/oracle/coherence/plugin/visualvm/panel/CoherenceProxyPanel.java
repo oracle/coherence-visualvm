@@ -289,5 +289,4 @@ public class CoherenceProxyPanel
      * Last update time for stats.
      */
     private long m_cLastUpdateTime = -1L;
-
     }
