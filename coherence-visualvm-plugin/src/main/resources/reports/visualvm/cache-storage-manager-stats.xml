@@ -90,8 +90,8 @@
                 <name>IndexTotalUnits</name>
             </column>
 
-            <column id="IndexBuildDurationMillis">
-                <name>IndexBuildDurationMillis</name>
+            <column id="IndexingTotalMillis">
+                <name>IndexingTotalMillis</name>
             </column>
         </row>
     </report>

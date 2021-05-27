@@ -196,7 +196,7 @@ public class CoherenceCachePanel
                                        new RenderHelper.ToolTipRenderer());
         RenderHelper.setColumnRenderer(f_tableStorage, CacheStorageManagerData.INDEX_TOTAL_UNITS,
                                        new RenderHelper.IntegerRenderer());
-        RenderHelper.setColumnRenderer(f_tableStorage, CacheStorageManagerData.INDEX_BUILD_DURATION,
+        RenderHelper.setColumnRenderer(f_tableStorage, CacheStorageManagerData.INDEXING_TOTAL_MILLIS,
                                        new RenderHelper.IntegerRenderer());
 
         table.setIntercellSpacing(new Dimension(6, 3));
@@ -579,7 +579,7 @@ public class CoherenceCachePanel
                for (Map.Entry<Object, Data> entry : m_cacheStorageData)
                    {
                    cCount++;
-                   Object oValue     = entry.getValue().getColumn(CacheStorageManagerData.INDEX_BUILD_DURATION);
+                   Object oValue     = entry.getValue().getColumn(CacheStorageManagerData.INDEXING_TOTAL_MILLIS);
                    long   cUnits     = (Long) entry.getValue().getColumn(CacheStorageManagerData.INDEX_TOTAL_UNITS);
                    long   cMillis    = oValue == null ? 0L : (Long) oValue;
                    fIndexBuildAvailable = oValue != null;
@@ -603,18 +603,22 @@ public class CoherenceCachePanel
                if (cCount != 0)
                    {
                    cMillisAverage = cMillisTotal * 1.0f / cCount;
-                   sb.append(getLocalizedText("LBL_index_units_mb"))
+                   sb.append(getLocalizedText("LBL_index_units_bytes"))
+                     .append(": ")
+                     .append(getMemoryFormat(cIndexTotalUnits))
+                     .append('\n')
+                     .append(getLocalizedText("LBL_index_units_mb"))
                      .append(": ")
                      .append(getMemoryFormat(cIndexTotalUnits / GraphHelper.MB))
                      .append('\n');
 
                    if (fIndexBuildAvailable)
                        {
-                       sb.append(getLocalizedText("LBL_average_index_build_duration"))
+                       sb.append(getLocalizedText("LBL_average_indexing_total_millis"))
                           .append(": ")
-                          .append(String.format("%,f", cMillisAverage))
+                          .append(String.format("%,.3f", cMillisAverage))
                           .append('\n')
-                          .append(getLocalizedText("LBL_max_index_build_duration"))
+                          .append(getLocalizedText("LBL_max_indexing_total_millis"))
                           .append(": ")
                           .append(String.format("%,d", cMaxMillis))
                           .append("\n");

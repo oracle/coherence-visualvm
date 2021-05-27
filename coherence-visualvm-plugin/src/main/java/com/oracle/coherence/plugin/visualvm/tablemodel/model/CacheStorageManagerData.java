@@ -63,7 +63,7 @@ public class CacheStorageManagerData
      */
     public CacheStorageManagerData()
         {
-        super(INDEX_BUILD_DURATION + 1);
+        super(INDEXING_TOTAL_MILLIS + 1);
         }
 
     // ----- DataRetriever methods ------------------------------------------
@@ -119,8 +119,8 @@ public class CacheStorageManagerData
                                 Long.parseLong(requestSender.getAttribute(objName, "OptimizedQueryAverageMillis")));
                         data.setColumn(CacheStorageManagerData.INDEX_TOTAL_UNITS,
                                 Long.parseLong(requestSender.getAttribute(objName, "IndexTotalUnits")));
-                        data.setColumn(CacheStorageManagerData.INDEX_BUILD_DURATION,
-                                Long.parseLong(requestSender.getAttribute(objName, "IndexBuildDurationMillis")));
+                        data.setColumn(CacheStorageManagerData.INDEXING_TOTAL_MILLIS,
+                                Long.parseLong(requestSender.getAttribute(objName, "IndexingTotalMillis")));
                         }
                     catch (Exception eIgnore)
                        {
@@ -212,7 +212,7 @@ public class CacheStorageManagerData
             {
             data.setColumn(CacheStorageManagerData.INDEX_TOTAL_UNITS,
                        Long.valueOf(getNumberValue(aoColumns[10].toString())));
-            data.setColumn(CacheStorageManagerData.INDEX_BUILD_DURATION,
+            data.setColumn(CacheStorageManagerData.INDEXING_TOTAL_MILLIS,
                        Long.valueOf(getNumberValue(aoColumns[11].toString())));
             }
         catch (Exception e)
@@ -281,7 +281,7 @@ public class CacheStorageManagerData
                 try
                     {
                     data.setColumn(CacheStorageManagerData.INDEX_TOTAL_UNITS,nodeCacheStorage.get("indexTotalUnits").asLong());
-                    data.setColumn(CacheStorageManagerData.INDEX_TOTAL_UNITS,nodeCacheStorage.get("indexBuildDurationMillis").asLong());
+                    data.setColumn(CacheStorageManagerData.INDEXING_TOTAL_MILLIS,nodeCacheStorage.get("IndexingTotalMillis").asLong());
                     }
                 catch (Exception ignore)
                     {
@@ -344,9 +344,9 @@ public class CacheStorageManagerData
     public static final int INDEX_TOTAL_UNITS = 8;
     
     /**
-     * Array index for index build duration millis.
+     * Array index for indexing total millis.
      */
-    public static final int INDEX_BUILD_DURATION = 9;
+    public static final int INDEXING_TOTAL_MILLIS = 9;
 
     /**
      * The logger object to use.
