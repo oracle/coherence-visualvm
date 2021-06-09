@@ -34,7 +34,7 @@
   <groupId>com.oracle.coherence.plugin.visualvm</groupId>
   <artifactId>coherence-visualvm-main</artifactId>
   <packaging>pom</packaging>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.1.0-SNAPSHOT</version>
   <name>Coherence VisualVM Plugin Parent</name>
 
   <description>
@@ -79,7 +79,7 @@
     <maven.bundle.plugin.version>4.2.1</maven.bundle.plugin.version>
 
     <maven.failsafe.plugin.version>3.0.0-M5</maven.failsafe.plugin.version>
-    <maven.enforcer.plugin.version>3.0.0-M5</maven.enforcer.plugin.version>
+    <maven.enforcer.plugin.version>3.0.0-M3</maven.enforcer.plugin.version>
     <maven.flatten.plugin.version>1.2.2</maven.flatten.plugin.version>
     <maven.gmaven.plugin.version>1.5</maven.gmaven.plugin.version>
     <maven.install.plugin.version>2.5.1</maven.install.plugin.version>
