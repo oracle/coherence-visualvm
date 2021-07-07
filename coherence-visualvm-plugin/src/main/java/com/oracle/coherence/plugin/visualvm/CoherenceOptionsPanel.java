@@ -467,7 +467,7 @@ public class CoherenceOptionsPanel
                                 Collectors.groupingBy(UnavailabilityMetrics::getAction,
                                         Collectors.summarizingLong(UnavailabilityMetrics::getMillis)));
 
-                    String sLineFormat = "%-" + (nMaxLength + 2) + "s %10d %10d %10d %13.2f %,14d %9.2f%%\n";
+                    String sLineFormat = "%-" + (nMaxLength + 2) + "s %,10d %,10d %,10d %13.2f %,14d %9.2f%%\n";
                     String sHeaderFormat = "%-" + (nMaxLength + 2) + "s %10s %10s %10s %13s %14s %9s\n";
 
                     sb.append("\nSummary by Service. Total unavailable millis: ")
