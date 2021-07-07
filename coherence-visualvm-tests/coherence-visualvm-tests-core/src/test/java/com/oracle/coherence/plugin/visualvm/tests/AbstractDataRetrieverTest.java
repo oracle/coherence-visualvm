@@ -55,15 +55,12 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
 import javax.management.Attribute;
-import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.Assert;
 
-
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +72,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.greaterThan;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;

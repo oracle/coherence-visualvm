@@ -29,9 +29,24 @@ package com.oracle.coherence.plugin.visualvm;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.LongSummaryStatistics;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.oracle.coherence.plugin.visualvm.panel.util.AbstractMenuOption;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -239,10 +254,43 @@ public class CoherenceOptionsPanel
         m_adminFunctionsEnabled.setToolTipText(getLocalText("TTIP_enable_cluster_head_dump"));
         addCheckBox(11, "LBL_enable_admin_functions", m_adminFunctionsEnabled);
 
+        m_btnAnalyzeUnavailableTime = new JButton(Localization.getLocalText("LBL_analyze_log_file"));
+        m_btnAnalyzeUnavailableTime.setMnemonic(KeyEvent.VK_A);
+        m_btnAnalyzeUnavailableTime.setToolTipText(Localization.getLocalText("TTIP_LBL_analyze_log_file"));
+        m_btnAnalyzeUnavailableTime.addActionListener(event ->
+            {
+            final JFileChooser fc = new JFileChooser();
+            int returnVal = fc.showOpenDialog(this);
+            if (returnVal == JFileChooser.APPROVE_OPTION)
+                {
+                File file = fc.getSelectedFile();
+
+                // analyze the file
+                UnavailabilityTimeAnalyzer analyzer = new UnavailabilityTimeAnalyzer(file);
+                AbstractMenuOption.showMessageDialog(Localization.getLocalText("LBL_result"),
+                        analyzer.analyze(),
+                        JOptionPane.INFORMATION_MESSAGE, 500, 400, true);
+                }
+            });
+
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 12;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(3, 15, 3, 0);
+        add(m_btnAnalyzeUnavailableTime, c);
+
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 13;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(3, 15, 3, 0);
+        add(new JLabel(), c);
+
         JLabel appsLabel = new JLabel();
         Mnemonics.setLocalizedText(appsLabel, getLocalText("LBL_reconnect")); // NOI18N
         c = new GridBagConstraints();
-        c.gridy = 12;
+        c.gridy = 14;
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -252,7 +300,7 @@ public class CoherenceOptionsPanel
         // filler
         c = new GridBagConstraints();
         c.gridx = 0;
-        c.gridy = 12;
+        c.gridy = 15;
         c.weightx = 1;
         c.weighty = 1;
         c.anchor = GridBagConstraints.NORTHWEST;
@@ -286,7 +334,6 @@ public class CoherenceOptionsPanel
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(3, 5, 3, 4);
         add(checkBox, c);
-
         }
 
     /**
@@ -321,6 +368,240 @@ public class CoherenceOptionsPanel
         m_enablePersistenceList.getModel().addChangeListener(changeListener);
         m_enableClusterSnapshot.getModel().addChangeListener(changeListener);
         m_adminFunctionsEnabled.getModel().addChangeListener(changeListener);
+        }
+
+    //----- inner classes ---------------------------------------------------
+
+    /**
+     * Class to analyze log files where Partition Events Logging has been enabled
+     * and subsequently partition unavailable time is being logged. This feature is experimental and
+     * may be removed or changed in the future.
+     * The following must be set to enabled this feature in Coherence 21.06 and above.
+     * <pre>
+     *    -Dcoherence.distributed.partition.events=log
+     *    -Dcoherence.log.level=8
+     * </pre>
+     *
+     * See: https://coherence.community/21.06/docs/#/docs/core/07_partition_events_logging.
+     */
+    public static class UnavailabilityTimeAnalyzer
+        {
+        /**
+         * Constructor.
+         * @param fileLogFile log file to analyze
+         */
+        public UnavailabilityTimeAnalyzer(File fileLogFile)
+            {
+            this.fileLogFile = fileLogFile;
+            }
+
+        /**
+         * Analyze the results.
+         *
+         * @return the results
+         */
+        public String analyze()
+            {
+            StringBuilder sb = new StringBuilder("Analysis of log file: ").append(fileLogFile.getAbsolutePath())
+                                      .append("\n")
+                                      .append("Date: ")
+                                      .append(new Date())
+                                      .append('\n');
+
+            try
+                {
+                if (!fileLogFile.canRead())
+                    {
+                    sb.append("Unable to read file.");
+                    }
+                else
+                    {
+                    List<String> listLines = Files.readAllLines(fileLogFile.toPath());
+
+                    Set<UnavailabilityMetrics> setMetrics =
+                        listLines.stream()
+                                 .filter(s -> s.contains(PARTITION_ID) &&
+                                              s.contains(UNAVAILABLE_TIME) &&
+                                              s.contains(OWNER) &&
+                                              s.contains(ACTION))
+                                 .map(s -> s.replaceAll("^.*thread=",""))
+                                 .map(s -> s.replaceAll(", .*" + PARTITION_ID, ""))
+                                 .map(s -> s.replaceAll(", " + OWNER, ""))
+                                 .map(s -> s.replaceAll(", " + ACTION, ""))
+                                 .map(s -> s.replaceAll(", " + UNAVAILABLE_TIME, ""))
+                                 .map(s -> s.split(" "))
+                                 .filter(a -> a.length == 5)
+                                 .map(a -> {
+                                     // determine the service name from the thread as it is not always obvious
+                                     String sServiceName = a[0].replaceAll("Dedicated.*$", "")
+                                            .replaceAll("DistributedCache:", "")
+                                            .replaceAll("FederatedCache:", "");
+
+                                     return new UnavailabilityMetrics(sServiceName, Integer.parseInt(a[2]), Integer.parseInt(a[1]), a[3], Long.parseLong(a[4]));
+                                 })
+                                 .collect(Collectors.toSet());
+
+                    // get the unique list of services
+                    Set<String> setServices = setMetrics.stream()
+                                                     .map(UnavailabilityMetrics::getServiceName)
+                                                     .collect(Collectors.toSet());
+                    if (setServices.size() == 0) {
+                        sb.append("No services found. This may not be a Coherence log file.");
+                        return sb.toString();
+                    }
+
+                    int nMaxLength = Math.max(setServices.stream().mapToInt(String::length).max().getAsInt(), 23);
+                    long nTotalMillis = setMetrics.stream().mapToLong(UnavailabilityMetrics::getMillis).sum();
+
+                    Map<String, Long> mapSumByService = setMetrics.stream().collect(
+                                Collectors.groupingBy(UnavailabilityMetrics::getServiceName,
+                                        Collectors.summingLong(UnavailabilityMetrics::getMillis)));
+
+                    // total unavailability time per service
+                    Map<String, LongSummaryStatistics> mapServiceStats = setMetrics.stream().collect(
+                                Collectors.groupingBy(UnavailabilityMetrics::getServiceName,
+                                        Collectors.summarizingLong(UnavailabilityMetrics::getMillis)));
+
+                    // total unavailability time per action
+                    Map<String, LongSummaryStatistics> mapActionStats = setMetrics.stream().collect(
+                                Collectors.groupingBy(UnavailabilityMetrics::getAction,
+                                        Collectors.summarizingLong(UnavailabilityMetrics::getMillis)));
+
+                    String sLineFormat = "%-" + (nMaxLength + 2) + "s %10d %10d %10d %13.2f %,14d %9.2f%%\n";
+                    String sHeaderFormat = "%-" + (nMaxLength + 2) + "s %10s %10s %10s %13s %14s %9s\n";
+
+                    sb.append("\nSummary by Service. Total unavailable millis: ")
+                      .append(String.format("%,-12d", nTotalMillis))
+                      .append('\n')
+                      .append(String.format(sHeaderFormat, "Service Name", "    Count", "  Min (ms)", "  Max (ms)", " Average (ms)", "    Total (ms)", "   Percent"));
+
+                    mapServiceStats.forEach((k, v) -> sb.append(formatLine(sLineFormat, nTotalMillis, k, v)));
+
+                    sb.append("\nSummary by Action (All Services)\n")
+                      .append(String.format(sHeaderFormat, "Action", "    Count", "  Min (ms)", "  Max (ms)", " Average (ms)", "    Total (ms)", "   Percent"));
+
+                    mapActionStats.forEach((k, v) -> sb.append(formatLine(sLineFormat, nTotalMillis, k, v)));
+
+                    // get times per service
+                    setServices.forEach(s ->
+                        {
+                        long nServiceTotal = mapSumByService.get(s);
+                        sb.append("\nDetails for Service: ").append(s)
+                          .append(". Total unavailable millis: ")
+                          .append(String.format("%,-12d", nServiceTotal))
+                          .append('\n');
+
+                        Map<String, LongSummaryStatistics> mapActionStatsPerService = setMetrics.stream()
+                                .filter(m -> m.getServiceName().equals(s))
+                                .collect(Collectors.groupingBy(UnavailabilityMetrics::getAction,
+                                        Collectors.summarizingLong(UnavailabilityMetrics::getMillis)));
+                        sb.append("Summary by Action\n")
+                          .append(String.format(sHeaderFormat, "Action", "    Count", "  Min (ms)", "  Max (ms)", " Average (ms)", "    Total (ms)", "   Percent"));
+
+                        mapActionStatsPerService.forEach((k, v) -> sb.append(formatLine(sLineFormat, nServiceTotal, k, v)));
+
+                        // top 10 partitions by unavailable time
+                        Map<Integer, LongSummaryStatistics> mapTop10Partitions = setMetrics.stream()
+                                .filter(m -> m.getServiceName().equals(s))
+                                .collect(Collectors.groupingBy(UnavailabilityMetrics::getPartitionId,
+                                         Collectors.summarizingLong(UnavailabilityMetrics::getMillis)));
+
+                        Map<Integer, Long> mapByTotalMillis = mapTop10Partitions.entrySet().stream().collect(
+                                Collectors.toMap(Map.Entry::getKey, e->e.getValue().getSum()));
+                        List<Map.Entry<Integer, Long>> listSorted = new ArrayList<>(mapByTotalMillis.entrySet());
+                        listSorted.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
+
+                        sb.append("\nTop 10 partitions by unavailable time\n");
+                        listSorted.stream()
+                                  .limit(10)
+                                  .forEach((e) -> sb.append(String.format("- Partition: %d, total millis: %-,12d\n", e.getKey(), e.getValue())));
+
+                        });
+                    }
+
+                }
+            catch (Exception e)
+                {
+                sb.append("Unable to process file. This may not be a Coherence log file.").append(e.getMessage());
+                }
+
+            return sb.toString();
+            }
+
+            private String formatLine(String sFormat, long nTotalMillis, String sServiceName, LongSummaryStatistics metrics)
+                {
+                return String.format(sFormat, sServiceName, metrics.getCount(), metrics.getMin(), metrics.getMax(), metrics.getAverage(), metrics.getSum(),
+                                   (metrics.getSum() * 1.0f / nTotalMillis) * 100);
+                }
+
+        // ----- constants -----------------------------------------------
+
+        private static final String PARTITION_ID = "PartitionId:";
+        private static final String OWNER = "Owner:";
+        private static final String ACTION = "Action:";
+        private static final String UNAVAILABLE_TIME = "UnavailableTime:";
+
+        // ----- data members -----------------------------------------------
+
+        /**
+         * Log file to analyze.
+         */
+        private final File fileLogFile;
+        }
+
+    public static class UnavailabilityMetrics
+        {
+        public UnavailabilityMetrics(String sServiceName, int nMember, int nPartitionId, String sAction, long millis)
+            {
+            this.sServiceName = sServiceName;
+            this.nMember = nMember;
+            this.nPartitionId = nPartitionId;
+            this.sAction = sAction;
+            this.millis = millis;
+            }
+
+        public String getServiceName()
+            {
+            return sServiceName;
+            }
+
+        public int getMember()
+            {
+            return nMember;
+            }
+
+        public int getPartitionId()
+            {
+            return nPartitionId;
+            }
+
+        public String getAction()
+            {
+            return sAction;
+            }
+
+        public long getMillis()
+            {
+            return millis;
+            }
+
+        @Override
+        public String toString()
+            {
+            return "UnavailabilityMetrics{" +
+                   "sServiceName='" + sServiceName + '\'' +
+                   ", nMember=" + nMember +
+                   ", nPartitionId=" + nPartitionId +
+                   ", sAction='" + sAction + '\'' +
+                   ", millis=" + millis +
+                   '}';
+            }
+
+        private final String sServiceName;
+        private final int nMember;
+        private final int nPartitionId;
+        private final String sAction;
+        private final long millis;
         }
 
     //----- data members ----------------------------------------------------
@@ -379,4 +660,9 @@ public class CoherenceOptionsPanel
      * Enable admin functions.
      */
     private JCheckBox m_adminFunctionsEnabled;
+
+    /**
+     * A button to analyze unavailable time in a log file.
+     */
+    private JButton m_btnAnalyzeUnavailableTime = null;
     }

@@ -308,8 +308,7 @@ public class ExportableJTable
             {
             if (file.exists())
                 {
-                String sQuestion = Localization.getLocalText("LBL_file_already_exists",
-                                       new String[] {file.getAbsolutePath()});
+                String sQuestion = Localization.getLocalText("LBL_file_already_exists", file.getAbsolutePath());
 
                 if (JOptionPane.showConfirmDialog(null, sQuestion, Localization.getLocalText("LBL_confirm"),
                                                   JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
