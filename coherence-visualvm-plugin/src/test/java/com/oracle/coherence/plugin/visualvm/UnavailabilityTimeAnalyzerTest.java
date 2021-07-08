@@ -49,7 +49,7 @@ public class UnavailabilityTimeAnalyzerTest
         CoherenceOptionsPanel.UnavailabilityTimeAnalyzer analyzer =
                 new CoherenceOptionsPanel.UnavailabilityTimeAnalyzer(fileLogFile);
 
-        String sResults = analyzer.analyze();
+        String sResults = analyzer.analyze(true);
         assertNotNull(sResults);
         }
 
@@ -62,7 +62,7 @@ public class UnavailabilityTimeAnalyzerTest
         CoherenceOptionsPanel.UnavailabilityTimeAnalyzer analyzer =
                 new CoherenceOptionsPanel.UnavailabilityTimeAnalyzer(fileLogFile);
 
-        String sResults = analyzer.analyze();
+        String sResults = analyzer.analyze(true);
         assertTrue(sResults.contains("No services found. This may not be a Coherence log file."));
         }
 

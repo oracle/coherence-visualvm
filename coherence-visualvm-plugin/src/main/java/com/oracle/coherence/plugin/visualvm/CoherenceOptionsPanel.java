@@ -35,10 +35,12 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.LongSummaryStatistics;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import com.oracle.coherence.plugin.visualvm.panel.util.AbstractMenuOption;
@@ -265,10 +267,15 @@ public class CoherenceOptionsPanel
                 {
                 File file = fc.getSelectedFile();
 
+                boolean fVerbose = JOptionPane.showConfirmDialog(null,
+                        Localization.getLocalText("LBL_verbose"),
+                        Localization.getLocalText("LBL_confirm_operation"),
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+
                 // analyze the file
                 UnavailabilityTimeAnalyzer analyzer = new UnavailabilityTimeAnalyzer(file);
                 AbstractMenuOption.showMessageDialog(Localization.getLocalText("LBL_result"),
-                        analyzer.analyze(),
+                        analyzer.analyze(fVerbose),
                         JOptionPane.INFORMATION_MESSAGE, 500, 400, true);
                 }
             });
@@ -392,17 +399,19 @@ public class CoherenceOptionsPanel
          */
         public UnavailabilityTimeAnalyzer(File fileLogFile)
             {
-            this.fileLogFile = fileLogFile;
+            this.f_fileLogFile = fileLogFile;
             }
 
         /**
          * Analyze the results.
          *
+         * @param fVerbose indicates if output should be verbose
+         *
          * @return the results
          */
-        public String analyze()
+        public String analyze(boolean fVerbose)
             {
-            StringBuilder sb = new StringBuilder("Analysis of log file: ").append(fileLogFile.getAbsolutePath())
+            StringBuilder sb = new StringBuilder("Analysis of log file: ").append(f_fileLogFile.getAbsolutePath())
                                       .append("\n")
                                       .append("Date: ")
                                       .append(new Date())
@@ -410,13 +419,15 @@ public class CoherenceOptionsPanel
 
             try
                 {
-                if (!fileLogFile.canRead())
+                if (!f_fileLogFile.canRead())
                     {
                     sb.append("Unable to read file.");
                     }
                 else
                     {
-                    List<String> listLines = Files.readAllLines(fileLogFile.toPath());
+                    List<String> listLines = Files.readAllLines(f_fileLogFile.toPath());
+                    Map<Long, String> mapLines = new HashMap<>();
+                    AtomicLong lineId = new AtomicLong(0);
 
                     Set<UnavailabilityMetrics> setMetrics =
                         listLines.stream()
@@ -424,20 +435,28 @@ public class CoherenceOptionsPanel
                                               s.contains(UNAVAILABLE_TIME) &&
                                               s.contains(OWNER) &&
                                               s.contains(ACTION))
-                                 .map(s -> s.replaceAll("^.*thread=",""))
-                                 .map(s -> s.replaceAll(", .*" + PARTITION_ID, ""))
-                                 .map(s -> s.replaceAll(", " + OWNER, ""))
-                                 .map(s -> s.replaceAll(", " + ACTION, ""))
-                                 .map(s -> s.replaceAll(", " + UNAVAILABLE_TIME, ""))
+                                 .map(s ->
+                                     {
+                                     // save the line for inclusion below
+                                     long nLineId = lineId.incrementAndGet();
+                                     mapLines.put(nLineId, s);
+                                     return  nLineId + " " +
+                                             s.replaceAll("^.*thread=","")
+                                              .replaceAll(", .*" + PARTITION_ID, "")
+                                              .replaceAll(", " + OWNER, "")
+                                              .replaceAll(", " + ACTION, "")
+                                              .replaceAll(", " + UNAVAILABLE_TIME, "");
+                                     })
                                  .map(s -> s.split(" "))
-                                 .filter(a -> a.length == 5)
+                                 .filter(a -> a.length == 6)
                                  .map(a -> {
                                      // determine the service name from the thread as it is not always obvious
-                                     String sServiceName = a[0].replaceAll("Dedicated.*$", "")
+                                     String sServiceName = a[1].replaceAll("Dedicated.*$", "")
                                             .replaceAll("DistributedCache:", "")
                                             .replaceAll("FederatedCache:", "");
 
-                                     return new UnavailabilityMetrics(sServiceName, Integer.parseInt(a[2]), Integer.parseInt(a[1]), a[3], Long.parseLong(a[4]));
+                                     return new UnavailabilityMetrics(sServiceName, Integer.parseInt(a[3]), Integer.parseInt(a[2]), a[4],
+                                             Long.parseLong(a[5]),  Long.parseLong(a[0]));
                                  })
                                  .collect(Collectors.toSet());
 
@@ -449,6 +468,8 @@ public class CoherenceOptionsPanel
                         sb.append("No services found. This may not be a Coherence log file.");
                         return sb.toString();
                     }
+
+                    sb.append(String.format("Total lines in file: %,d, total matching lines processed: %,d\n", listLines.size(), lineId.get()));
 
                     int nMaxLength = Math.max(setServices.stream().mapToInt(String::length).max().getAsInt(), 23);
                     long nTotalMillis = setMetrics.stream().mapToLong(UnavailabilityMetrics::getMillis).sum();
@@ -471,7 +492,7 @@ public class CoherenceOptionsPanel
                     String sHeaderFormat = "%-" + (nMaxLength + 2) + "s %10s %10s %10s %13s %14s %9s\n";
 
                     sb.append("\nSummary by Service. Total unavailable millis: ")
-                      .append(String.format("%,-12d", nTotalMillis))
+                      .append(String.format("%,d", nTotalMillis))
                       .append('\n')
                       .append(String.format(sHeaderFormat, "Service Name", "    Count", "  Min (ms)", "  Max (ms)", " Average (ms)", "    Total (ms)", "   Percent"));
 
@@ -488,7 +509,7 @@ public class CoherenceOptionsPanel
                         long nServiceTotal = mapSumByService.get(s);
                         sb.append("\nDetails for Service: ").append(s)
                           .append(". Total unavailable millis: ")
-                          .append(String.format("%,-12d", nServiceTotal))
+                          .append(String.format("%,d", nServiceTotal))
                           .append('\n');
 
                         Map<String, LongSummaryStatistics> mapActionStatsPerService = setMetrics.stream()
@@ -500,25 +521,49 @@ public class CoherenceOptionsPanel
 
                         mapActionStatsPerService.forEach((k, v) -> sb.append(formatLine(sLineFormat, nServiceTotal, k, v)));
 
-                        // top 10 partitions by unavailable time
-                        Map<Integer, LongSummaryStatistics> mapTop10Partitions = setMetrics.stream()
-                                .filter(m -> m.getServiceName().equals(s))
-                                .collect(Collectors.groupingBy(UnavailabilityMetrics::getPartitionId,
-                                         Collectors.summarizingLong(UnavailabilityMetrics::getMillis)));
+                        if (fVerbose)
+                            {
+                            // top 10 partitions by unavailable time
+                            Map<Integer, LongSummaryStatistics> mapTop10Partitions = setMetrics.stream()
+                                    .filter(m -> m.getServiceName().equals(s))
+                                    .collect(Collectors.groupingBy(UnavailabilityMetrics::getPartitionId,
+                                             Collectors.summarizingLong(UnavailabilityMetrics::getMillis)));
 
-                        Map<Integer, Long> mapByTotalMillis = mapTop10Partitions.entrySet().stream().collect(
-                                Collectors.toMap(Map.Entry::getKey, e->e.getValue().getSum()));
-                        List<Map.Entry<Integer, Long>> listSorted = new ArrayList<>(mapByTotalMillis.entrySet());
-                        listSorted.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
+                            Map<Integer, Long> mapByTotalMillis = mapTop10Partitions.entrySet().stream().collect(
+                                    Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getSum()));
+                            List<Map.Entry<Integer, Long>> listSorted = new ArrayList<>(mapByTotalMillis.entrySet());
+                            listSorted.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
 
-                        sb.append("\nTop 10 partitions by unavailable time\n");
-                        listSorted.stream()
+                            sb.append("\nTop 10 partitions by total unavailable time\n");
+                            listSorted.stream()
                                   .limit(10)
-                                  .forEach((e) -> sb.append(String.format("- Partition: %d, total millis: %-,12d\n", e.getKey(), e.getValue())));
+                                  .forEach((e) ->
+                                      {
+                                      int nPartitionId = e.getKey();
+                                      sb.append(String.format("- Partition: %d, total millis: %,d\n", nPartitionId,
+                                              e.getValue()));
+                                      setMetrics.stream()
+                                                .filter(m->m.getServiceName().equals(s) && m.getPartitionId() == nPartitionId)
+                                                .forEach(m->sb.append(String.format("  %s\n", mapLines.get(m.getLineId()))));
+                                      });
 
+                            sb.append("\nOutput by partition and event for ").append(s).append('\n');
+
+                            // retrieve a unique set of partitions
+                            Set<Integer> setPartitions = setMetrics.stream()
+                                       .map(UnavailabilityMetrics::getPartitionId)
+                                       .collect(Collectors.toSet());
+
+                            setPartitions.forEach(p ->
+                                {
+                                sb.append("- Partition ").append(p).append('\n');
+                                setMetrics.stream()
+                                       .filter(m -> m.getServiceName().equals(s) && m.getPartitionId() == p)
+                                       .forEach(m -> sb.append(String.format("  %s\n", mapLines.get(m.getLineId()))));
+                                });
+                            }
                         });
                     }
-
                 }
             catch (Exception e)
                 {
@@ -528,11 +573,20 @@ public class CoherenceOptionsPanel
             return sb.toString();
             }
 
-            private String formatLine(String sFormat, long nTotalMillis, String sServiceName, LongSummaryStatistics metrics)
-                {
-                return String.format(sFormat, sServiceName, metrics.getCount(), metrics.getMin(), metrics.getMax(), metrics.getAverage(), metrics.getSum(),
-                                   (metrics.getSum() * 1.0f / nTotalMillis) * 100);
-                }
+        /**
+         * Format a line for output.
+         *
+         * @param sFormat        printf format
+         * @param nTotalMillis   total millis unavailable
+         * @param sServiceName   service name
+         * @param metrics        {@link LongSummaryStatistics}
+         * @return formatted line
+         */
+        private String formatLine(String sFormat, long nTotalMillis, String sServiceName, LongSummaryStatistics metrics)
+            {
+            return String.format(sFormat, sServiceName, metrics.getCount(), metrics.getMin(), metrics.getMax(), metrics.getAverage(), metrics.getSum(),
+                               (metrics.getSum() * 1.0f / nTotalMillis) * 100);
+            }
 
         // ----- constants -----------------------------------------------
 
@@ -546,62 +600,69 @@ public class CoherenceOptionsPanel
         /**
          * Log file to analyze.
          */
-        private final File fileLogFile;
+        private final File f_fileLogFile;
         }
 
     public static class UnavailabilityMetrics
         {
-        public UnavailabilityMetrics(String sServiceName, int nMember, int nPartitionId, String sAction, long millis)
+        public UnavailabilityMetrics(String sServiceName, int nMember, int nPartitionId, String sAction, long millis, long nLineId)
             {
-            this.sServiceName = sServiceName;
-            this.nMember = nMember;
-            this.nPartitionId = nPartitionId;
-            this.sAction = sAction;
-            this.millis = millis;
+            this.f_sServiceName = sServiceName;
+            this.f_nMember = nMember;
+            this.f_nPartitionId = nPartitionId;
+            this.f_sAction = sAction;
+            this.f_millis = millis;
+            this.f_nLineId = nLineId;
             }
 
         public String getServiceName()
             {
-            return sServiceName;
+            return f_sServiceName;
             }
 
         public int getMember()
             {
-            return nMember;
+            return f_nMember;
             }
 
         public int getPartitionId()
             {
-            return nPartitionId;
+            return f_nPartitionId;
             }
 
         public String getAction()
             {
-            return sAction;
+            return f_sAction;
             }
 
         public long getMillis()
             {
-            return millis;
+            return f_millis;
             }
 
-        @Override
+        public long getLineId() {
+            return f_nLineId;
+        }
+
+            @Override
         public String toString()
             {
             return "UnavailabilityMetrics{" +
-                   "sServiceName='" + sServiceName + '\'' +
-                   ", nMember=" + nMember +
-                   ", nPartitionId=" + nPartitionId +
-                   ", sAction='" + sAction + '\'' +
-                   ", millis=" + millis +
+                   "sServiceName='" + f_sServiceName + '\'' +
+                   ", nMember=" + f_nMember +
+                   ", nPartitionId=" + f_nPartitionId +
+                   ", sAction='" + f_sAction + '\'' +
+                   ", millis=" + f_millis +
+                   ", lineId=" + f_nLineId +
                    '}';
             }
 
-        private final String sServiceName;
-        private final int nMember;
-        private final int nPartitionId;
-        private final String sAction;
-        private final long millis;
+            private final String f_sServiceName;
+            private final int    f_nMember;
+            private final int    f_nPartitionId;
+            private final String f_sAction;
+            private final long   f_millis;
+            private final long   f_nLineId;
         }
 
     //----- data members ----------------------------------------------------

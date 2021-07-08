@@ -185,7 +185,7 @@ There are tool tips for each of the preferences, but a summary is shown below.
 | Enable Zoom on Graphs | false | Enables additional zoom function for all graphs.
 | Enable Cluster Snapshot tab | false | Enables experimental Cluster Snapshot tab. This tab is useful for seeing all the relevant cluster information on one pae in a text format.
 | Enable Cluster Heap Dump | false | Enables the cluster heap dump button on the Cluster Overview tab.
-| Analyze Unavailable Time in LogFile| | Provides the ability to analyze log files where Partition Events Logging has been enabled for logs generated from Coherence versions 21.06 and above. See https://coherence.community/21.06/docs/#/docs/core/07_partition_events_logging[here] for more details.
+| Analyze Unavailable Time in LogFile| | Provides the ability to analyze log files where Partition Events Logging has been enabled for logs generated from Coherence versions 21.06 and above. See https://coherence.community/21.06/docs/#/docs/core/07_partition_events_logging[here] for more details. Note: You select a Coherence log file to analyze and don't need to be connected to a running cluster.
 !===
 
 [#capabilities]
