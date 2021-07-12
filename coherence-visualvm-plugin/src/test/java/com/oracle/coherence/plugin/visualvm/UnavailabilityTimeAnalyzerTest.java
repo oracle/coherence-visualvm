@@ -50,6 +50,7 @@ public class UnavailabilityTimeAnalyzerTest
                 new CoherenceOptionsPanel.UnavailabilityTimeAnalyzer(fileLogFile);
 
         String sResults = analyzer.analyze(true);
+        System.out.println(sResults);
         assertNotNull(sResults);
         }
 

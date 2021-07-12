@@ -287,13 +287,6 @@ public class CoherenceOptionsPanel
         c.insets = new Insets(3, 15, 3, 0);
         add(m_btnAnalyzeUnavailableTime, c);
 
-        c = new GridBagConstraints();
-        c.gridx = 0;
-        c.gridy = 13;
-        c.anchor = GridBagConstraints.WEST;
-        c.insets = new Insets(3, 15, 3, 0);
-        add(new JLabel(), c);
-
         JLabel appsLabel = new JLabel();
         Mnemonics.setLocalizedText(appsLabel, getLocalText("LBL_reconnect")); // NOI18N
         c = new GridBagConstraints();
@@ -431,7 +424,7 @@ public class CoherenceOptionsPanel
 
                     Set<UnavailabilityMetrics> setMetrics =
                         listLines.stream()
-                                 .filter(s -> s.contains(PARTITION_ID) &&
+                                 .filter(s -> (s.contains(PARTITION_ID) || s.contains(PARTITION_SET)) &&
                                               s.contains(UNAVAILABLE_TIME) &&
                                               s.contains(OWNER) &&
                                               s.contains(ACTION))
@@ -443,6 +436,7 @@ public class CoherenceOptionsPanel
                                      return  nLineId + " " +
                                              s.replaceAll("^.*thread=","")
                                               .replaceAll(", .*" + PARTITION_ID, "")
+                                              .replaceAll(", .*" + PARTITION_SET, " ")
                                               .replaceAll(", " + OWNER, "")
                                               .replaceAll(", " + ACTION, "")
                                               .replaceAll(", " + UNAVAILABLE_TIME, "");
@@ -455,7 +449,12 @@ public class CoherenceOptionsPanel
                                             .replaceAll("DistributedCache:", "")
                                             .replaceAll("FederatedCache:", "");
 
-                                     return new UnavailabilityMetrics(sServiceName, Integer.parseInt(a[3]), Integer.parseInt(a[2]), a[4],
+                                     // check for initial PartitionSet ASSIGN and allocate a partition id of -1 meaning all partitions
+                                     String sPartitionId = a[2];
+                                     if (sPartitionId.startsWith("{")) {
+                                         sPartitionId = "-1";
+                                     }
+                                     return new UnavailabilityMetrics(sServiceName, Integer.parseInt(a[3]), Integer.parseInt(sPartitionId), a[4],
                                              Long.parseLong(a[5]),  Long.parseLong(a[0]));
                                  })
                                  .collect(Collectors.toSet());
@@ -554,9 +553,12 @@ public class CoherenceOptionsPanel
                                        .map(UnavailabilityMetrics::getPartitionId)
                                        .collect(Collectors.toSet());
 
-                            setPartitions.forEach(p ->
+                            setPartitions.stream().filter(p -> p >= 0).forEach(p ->
                                 {
                                 sb.append("- Partition ").append(p).append('\n');
+                                // retrieve the initial partition assign which has been marked with partition of -1
+                                setMetrics.stream().filter(m -> m.getServiceName().equals(s) && m.getPartitionId() == -1)
+                                       .forEach(m -> sb.append(String.format("  %s\n", mapLines.get(m.getLineId()))));
                                 setMetrics.stream()
                                        .filter(m -> m.getServiceName().equals(s) && m.getPartitionId() == p)
                                        .forEach(m -> sb.append(String.format("  %s\n", mapLines.get(m.getLineId()))));
@@ -591,6 +593,7 @@ public class CoherenceOptionsPanel
         // ----- constants -----------------------------------------------
 
         private static final String PARTITION_ID = "PartitionId:";
+        private static final String PARTITION_SET = "PartitionSet";
         private static final String OWNER = "Owner:";
         private static final String ACTION = "Action:";
         private static final String UNAVAILABLE_TIME = "UnavailableTime:";
