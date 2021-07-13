@@ -100,14 +100,17 @@ public class CacheStorageManagerData
                         new String[]{ ATTR_LOCKS_GRANTED, ATTR_LOCKS_PENDING, ATTR_LISTENER_REG });
 
                     String sLocksGranted = getAttributeValueAsString(listAttr, ATTR_LOCKS_GRANTED);
+                    String sLocksPending = getAttributeValueAsString(listAttr, ATTR_LOCKS_PENDING);
+                    String sListenerReg  = getAttributeValueAsString(listAttr, ATTR_LOCKS_PENDING);
+
                     data.setColumn(CacheStorageManagerData.NODE_ID, Integer.valueOf(sNodeId));
                     data.setColumn(CacheStorageManagerData.LOCKS_GRANTED,
-                            Integer.parseInt(getAttributeValueAsString(listAttr, ATTR_LOCKS_GRANTED)));
+                            Integer.parseInt(sLocksGranted == null ? "0" : sLocksGranted));
                     // locks pending may be returns as null over REST
                     data.setColumn(CacheStorageManagerData.LOCKS_PENDING,
-                            Integer.parseInt(sLocksGranted == null ? "0" : sLocksGranted));
+                            Integer.parseInt(sLocksPending == null ? "0" : sLocksPending));
                     data.setColumn(CacheStorageManagerData.LISTENER_REGISTRATIONS,
-                            Long.parseLong(getAttributeValueAsString(listAttr, ATTR_LISTENER_REG)));
+                            Long.parseLong(sListenerReg == null ? "0" : sListenerReg));
                     try {
                         data.setColumn(CacheStorageManagerData.MAX_QUERY_DURATION,
                                    Long.parseLong(requestSender.getAttribute(objName, "MaxQueryDurationMillis")));
@@ -258,14 +261,26 @@ public class CacheStorageManagerData
             for (int i = 0; i < nodeCacheItems.size(); i++)
                 {
                 JsonNode nodeCacheStorage = nodeCacheItems.get(i);
-                Data     data             = new CacheStorageManagerData();
+                // Workaround Bug 33107052
+                if (nodeCacheStorage.size() < 2)
+                    {
+                    continue;
+                    }
+                Data data = new CacheStorageManagerData();
 
-               JsonNode locksGranted = nodeCacheStorage.get("locksGranted");
+                JsonNode locksGranted = nodeCacheStorage.get("locksGranted");
                 if (locksGranted == null)
                     {
                     // Connecting to version without Bug 32134281 fix so force less efficient way
                     List<Map.Entry<Object, Data>> jmxData = getJMXData(requestSender, model);
-                    jmxData.forEach(e -> mapData.put(e.getKey(), e.getValue()));
+                    if (jmxData == null || jmxData.size() == 0)
+                        {
+                        return null;
+                        }
+                    else
+                        {
+                        jmxData.forEach(e -> mapData.put(e.getKey(), e.getValue()));
+                        }
                     return mapData;
                     }
 
@@ -281,7 +296,7 @@ public class CacheStorageManagerData
                 try
                     {
                     data.setColumn(CacheStorageManagerData.INDEX_TOTAL_UNITS,nodeCacheStorage.get("indexTotalUnits").asLong());
-                    data.setColumn(CacheStorageManagerData.INDEXING_TOTAL_MILLIS,nodeCacheStorage.get("IndexingTotalMillis").asLong());
+                    data.setColumn(CacheStorageManagerData.INDEXING_TOTAL_MILLIS,nodeCacheStorage.get("indexingTotalMillis").asLong());
                     }
                 catch (Exception ignore)
                     {
