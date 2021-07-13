@@ -804,9 +804,10 @@ public class HttpRequestSender
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("services")
                 .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("caches").addPathSegment(sCacheName)
-                .addPathSegment("members").addQueryParameter("fields", "nodeId," +
-                                                                       "locksGranted,locksPending,listenerRegistrations,maxQueryDurationMillis,maxQueryDescription," +
-                                                                       "nonOptimizedQueryAverageMillis,optimizedQueryAverageMillis,indexTotalUnits");
+                .addPathSegment("members").addQueryParameter("fields",
+                                                                   "nodeId,locksGranted,locksPending,listenerRegistrations,maxQueryDurationMillis,maxQueryDescription," +
+                                                                   "nonOptimizedQueryAverageMillis,optimizedQueryAverageMillis,indexTotalUnits,indexingTotalMillis")
+                .addQueryParameter("links", "");
 
         if (sDomainPartition != null)
             {

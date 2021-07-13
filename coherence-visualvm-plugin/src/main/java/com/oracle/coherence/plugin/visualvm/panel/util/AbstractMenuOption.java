@@ -31,6 +31,7 @@ import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 
 import java.awt.BorderLayout;
 import java.awt.Dialog;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.Dimension;
@@ -93,7 +94,7 @@ public abstract class AbstractMenuOption
      * @param sMessage     the message to display
      * @param nDialogType  the type of dialog, e.g. JOptionPane.INFORMATION_MESSAGE
      */
-    protected void showMessageDialog(String sTitle, String sMessage, int nDialogType)
+    protected static void showMessageDialog(String sTitle, String sMessage, int nDialogType)
         {
         showMessageDialog(sTitle, sMessage, nDialogType, 500, 400);
         }
@@ -108,7 +109,7 @@ public abstract class AbstractMenuOption
      * @param nWidth       the width of the dialog window
      * @param fCopySave    true if copy and save buttons should be displayed
      */
-    protected void showMessageDialog(String sTitle, String sMessage, int nDialogType, int nLength, int nWidth, boolean fCopySave)
+    public static void showMessageDialog(String sTitle, String sMessage, int nDialogType, int nLength, int nWidth, boolean fCopySave)
         {
         JTextArea         txtArea    = new JTextArea(sMessage);
         final JPanel panel = new JPanel();
@@ -118,6 +119,7 @@ public abstract class AbstractMenuOption
         txtArea.setEditable(false);
         txtArea.setLineWrap(false);
         txtArea.setWrapStyleWord(true);
+        txtArea.setFont(new Font("monospaced", Font.PLAIN, 12));
         pneMessage.setPreferredSize(new Dimension(nLength, nWidth));
 
         setResizable(pneMessage);
@@ -174,7 +176,7 @@ public abstract class AbstractMenuOption
      *
      * @return a filler {@link JLabel}
      */
-    private JLabel getFiller()
+    private static JLabel getFiller()
         {
         JLabel label = new JLabel();
         label.setText("     ");
@@ -188,7 +190,7 @@ public abstract class AbstractMenuOption
      *
      * @return true if the file was saved
      */
-    private boolean saveContentsToFile(File file, String sContents)
+    private static boolean saveContentsToFile(File file, String sContents)
         {
         PrintStream fileWriter = null;
 
@@ -223,7 +225,7 @@ public abstract class AbstractMenuOption
      * @param nLength      the length of the dialog window
      * @param nWidth       the width of the dialog window
      */
-    protected void showMessageDialog(String sTitle, String sMessage, int nDialogType, int nLength, int nWidth)
+    protected static void showMessageDialog(String sTitle, String sMessage, int nDialogType, int nLength, int nWidth)
         {
         showMessageDialog(sTitle, sMessage, nDialogType, nLength, nWidth,false);
         }
