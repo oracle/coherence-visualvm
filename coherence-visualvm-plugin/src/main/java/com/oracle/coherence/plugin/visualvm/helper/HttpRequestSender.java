@@ -868,7 +868,7 @@ public class HttpRequestSender
     /**
      * Get the data for all services.
      *
-     * @return he data for all services
+     * @return the data for all services
      * @throws Exception in case of errors
      */
     public JsonNode getListOfServices() throws Exception
