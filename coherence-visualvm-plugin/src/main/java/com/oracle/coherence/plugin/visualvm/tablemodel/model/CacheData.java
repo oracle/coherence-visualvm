@@ -188,7 +188,7 @@ public class CacheData
                 data = (CacheData) mapData.get(key);
 
                 // for FIXED unit calculator make the memory bytes and MB and avg object size null
-                if (data.getColumn(CacheData.UNIT_CALCULATOR).equals("FIXED"))
+                if ("FIXED".equals(data.getColumn(CacheData.UNIT_CALCULATOR)))
                     {
                     data.setColumn(CacheData.AVG_OBJECT_SIZE, 0);
                     data.setColumn(CacheData.MEMORY_USAGE_BYTES, 0);
