@@ -73,6 +73,7 @@ public class CoherenceHttpSessionPanel
 
         // create a split pane for resizing
         JSplitPane pneSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        pneSplit.setOpaque(false);
 
         // Create the header panel
         JPanel pnlHeader = new JPanel();
@@ -114,9 +115,10 @@ public class CoherenceHttpSessionPanel
         JScrollPane scrollPane = new JScrollPane(f_table);
         configureScrollPane(scrollPane, f_table);
 
-        JPanel      pnlTop     = new JPanel();
+        JPanel pnlTop = new JPanel();
 
         pnlTop.setLayout(new BorderLayout());
+        pnlTop.setOpaque(false);
 
         pnlTop.add(pnlHeader, BorderLayout.PAGE_START);
         pnlTop.add(scrollPane, BorderLayout.CENTER);
