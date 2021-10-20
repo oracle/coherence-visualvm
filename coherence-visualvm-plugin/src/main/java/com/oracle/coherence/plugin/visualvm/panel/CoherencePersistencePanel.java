@@ -550,7 +550,7 @@ public class CoherencePersistencePanel
         // ----- helpers ----------------------------------------------------
 
         /**
-         * Sanitize or clean a snapshot name by removing anything other than alpha, numbers, '-', '_' and '.'
+         * Sanitize or clean a snapshot name by removing anything other than alpha, numbers, '-' and '_'.
          *
          * @param sSnapshotName the snapshot name
          * @return sanitized snapshot
@@ -565,7 +565,7 @@ public class CoherencePersistencePanel
             for (int i = 0; i < sSnapshotName.length() ; i++)
                 {
                 char c = sSnapshotName.charAt(i);
-                if (Character.isAlphabetic(c) || Character.isDigit(c) || c == '_' || c == '-' || c == '.')
+                if (Character.isAlphabetic(c) || Character.isDigit(c) || c == '_' || c == '-')
                     {
                     sb.append(c);
                     }
