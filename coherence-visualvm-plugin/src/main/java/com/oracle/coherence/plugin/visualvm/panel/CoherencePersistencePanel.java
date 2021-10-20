@@ -466,6 +466,9 @@ public class CoherencePersistencePanel
 
                     if ((sSnapshotName != null && !"".equals(sSnapshotName)) || !f_fPrompt)
                         {
+                        // sanitze the snapshot name
+                        sSnapshotName = sanitizeSnapshot(sSnapshotName);
+
                         if (f_fConfirm)
                             {
                             String sQuestion = FORCE_RECOVERY.equals(f_sOperation)
@@ -545,6 +548,35 @@ public class CoherencePersistencePanel
             }
 
         // ----- helpers ----------------------------------------------------
+
+        /**
+         * Sanitize or clean a snapshot name by removing anything other than alpha, numbers, '-', '_' and '.'
+         *
+         * @param sSnapshotName the snapshot name
+         * @return sanitized snapshot
+         */
+        private String sanitizeSnapshot(String sSnapshotName)
+            {
+            if (sSnapshotName == null)
+                {
+                return null;
+                }
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < sSnapshotName.length() ; i++)
+                {
+                char c = sSnapshotName.charAt(i);
+                if (Character.isAlphabetic(c) || Character.isDigit(c) || c == '_' || c == '-' || c == '.')
+                    {
+                    sb.append(c);
+                    }
+                else
+                    {
+                    // invalid character, replace with '-'
+                    sb.append('-');
+                    }
+                }
+            return sb.toString();
+            }
 
         /**
          * Return a formatted list of snapshots.
