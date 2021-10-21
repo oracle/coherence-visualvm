@@ -502,7 +502,7 @@ public class CoherencePersistencePanel
                                 String sStatus = m_requestSender.getAttribute(new ObjectName(getFullyQualifiedName(
                                         m_requestSender, PersistenceData.getMBeanName(sServiceName)))
                                         , "OperationStatus");
-                                sResult = Localization.getLocalText("LBL_current_status_result", new String[] {sServiceName, sStatus});
+                                sResult = Localization.getLocalText("LBL_current_status_result", sServiceName, sStatus);
                                 }
                             else
                                 {
