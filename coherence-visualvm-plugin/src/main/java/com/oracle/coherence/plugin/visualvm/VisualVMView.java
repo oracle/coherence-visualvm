@@ -33,6 +33,7 @@ import com.oracle.coherence.plugin.visualvm.helper.JMXRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.panel.AbstractCoherencePanel;
 import com.oracle.coherence.plugin.visualvm.panel.CoherenceClusterSnapshotPanel;
+import com.oracle.coherence.plugin.visualvm.panel.CoherenceExecutorPanel;
 import com.oracle.coherence.plugin.visualvm.panel.CoherenceTopicPanel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.panel.CoherenceHttpProxyPanel;
@@ -186,6 +187,7 @@ public class VisualVMView
         final CoherenceElasticDataPanel pnlElasticData = new CoherenceElasticDataPanel(model);
         final CoherenceJCachePanel pnlJCache = new CoherenceJCachePanel(model);
         final CoherenceHttpProxyPanel pnlHttpProxy = new CoherenceHttpProxyPanel(model);
+        final CoherenceExecutorPanel pnlExecutor = new CoherenceExecutorPanel(model);
 
         String sClusterVersion = model.getClusterVersion();
         String sClusterName = null;
@@ -305,6 +307,13 @@ public class VisualVMView
             m_dvc.addDetailsView(new DataViewComponent.DetailsView(Localization.getLocalText("LBL_JCache"),
                                                                    null, 10, pnlJCache, null), DataViewComponent.TOP_RIGHT);
             f_setPanels.add(pnlJCache);
+            }
+
+        if (model.isExecutorConfigured())
+            {
+            m_dvc.addDetailsView(new DataViewComponent.DetailsView(Localization.getLocalText("LBL_executors"),
+                                                                   null, 10, pnlExecutor, null), DataViewComponent.TOP_RIGHT);
+            f_setPanels.add(pnlExecutor);
             }
 
         // update the request sender

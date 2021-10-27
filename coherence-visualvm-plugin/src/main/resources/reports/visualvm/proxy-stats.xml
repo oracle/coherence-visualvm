@@ -34,20 +34,20 @@
     This report is for use by the Coherence JVisualVM plugin only.
     -->
 	<report>
-		<file-name>{date}-http-proxy-stats.txt</file-name>
+		<file-name>{date}-proxy-stats.txt</file-name>
 		<delim>{tab}</delim>
 
-        <!-- Only include services where Protocol == 'tcp'
-             This attribute was introduced with 12.2.1.1 -->
-        <filters>
-             <filter id="equals">
-                <type>equals</type>
-                <params>
-                    <column-ref>Protocol</column-ref>
-                    <column-ref>ConstTCP</column-ref>
-                </params>
-            </filter>
-        </filters>
+		<!-- Only include services where Protocol == 'tcp'
+				 This attribute was introduced with 12.2.1.1 -->
+		<filters>
+			 <filter id="equals">
+				<type>equals</type>
+				<params>
+					<column-ref>Protocol</column-ref>
+					<column-ref>ConstTCP</column-ref>
+				</params>
+			</filter>
+		</filters>
 
 		<query>
 			<pattern>Coherence:type=ConnectionManager,*</pattern>

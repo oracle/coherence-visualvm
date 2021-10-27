@@ -33,6 +33,7 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheStorageManager
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ClusterData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.DataRetriever;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.ExecutorData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationDestinationData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationDestinationDetailsData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationOriginData;
@@ -159,6 +160,7 @@ public class VisualVMModel
         f_mapDataRetrievers.put(HotCacheData.class,new HotCacheData());
         f_mapDataRetrievers.put(HotCachePerCacheData.class, new HotCachePerCacheData());
         f_mapDataRetrievers.put(NodeStorageData.class, new NodeStorageData());
+        f_mapDataRetrievers.put(ExecutorData.class, new ExecutorData());
 
         // Loop through each data retriever and initialize the map of
         // report XML. Doing it this way we load it only once
@@ -991,6 +993,17 @@ public class VisualVMModel
         }
 
     /**
+     * Returns if Executor is configured.
+     *
+     * @return true if Executor is configured.
+     */
+    public boolean isExecutorConfigured()
+        {
+        return (m_mapCollectedData.get(DataType.EXECUTOR) != null
+                && m_mapCollectedData.get(DataType.EXECUTOR).size() != 0);
+        }
+
+    /**
      * Returns if JCache is configured.
      *
      * @return true if JCache is configured.
@@ -1207,7 +1220,8 @@ public class VisualVMModel
         HTTP_PROXY(HttpProxyData.class, HTTP_PROXY_LABELS),
         HTTP_PROXY_DETAIL(HttpProxyMemberData.class, HTTP_PROXY_DETAIL_LABELS),
         HOTCACHE(HotCacheData.class, HOTCACHE_LABELS),
-        HOTCACHE_PERCACHE(HotCachePerCacheData.class, HOTCACHE_PERCACHE_LABELS);
+        HOTCACHE_PERCACHE(HotCachePerCacheData.class, HOTCACHE_PERCACHE_LABELS),
+        EXECUTOR(ExecutorData.class, EXECUTOR_LABELS);
 
         private DataType(Class clz, String[] asMeta)
             {
@@ -1381,6 +1395,18 @@ public class VisualVMModel
         Localization.getLocalText("LBL_CacheOperation"), Localization.getLocalText("LBL_Count"),
         Localization.getLocalText("LBL_max"), Localization.getLocalText("LBL_mean"),
         Localization.getLocalText("LBL_min")
+        };
+
+    /**
+     * Labels for executor table.
+     */
+    private static final String[] EXECUTOR_LABELS = new String[]
+        {
+        Localization.getLocalText("LBL_executor"), Localization.getLocalText("LBL_node_id"),
+        Localization.getLocalText("LBL_state"),
+        Localization.getLocalText("LBL_tasks_in_progress"), Localization.getLocalText("LBL_tasks_completed"),
+        Localization.getLocalText("LBL_tasks_rejected"), Localization.getLocalText("LBL_max_memory"),
+        Localization.getLocalText("LBL_used_memory"), Localization.getLocalText("LBL_free_memory")
         };
 
     /**

@@ -176,6 +176,37 @@ public class GraphHelper
         }
 
     /**
+     * Create a graph representing the currently executing tasks.
+     *
+     * @return a {@link SimpleXYChartSupport} representing the graph
+     */
+    public static SimpleXYChartSupport createInProgressExecutorTasksGraph()
+        {
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
+
+        sxycd.setChartTitle(getLocalText("GRPH_tasks_in_progress"));
+        sxycd.addLineFillItems(getLocalText("GRPH_task_count"));
+
+        return createChart(sxycd);
+        }
+
+    /**
+     * Create a graph representing the completed tasks.
+     *
+     * @return a {@link SimpleXYChartSupport} representing the graph
+     */
+    public static SimpleXYChartSupport createCompletedTasksGraph()
+        {
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
+
+        sxycd.setChartTitle(getLocalText("GRPH_completed_tasks"));
+        sxycd.addLineItems(getLocalText("GRPH_completed_tasks_count"));
+        sxycd.addLineItems(getLocalText("GRPH_rejected_tasks_count"));
+
+        return createChart(sxycd);
+        }
+
+    /**
      * Create a graph representing the total unconsumed topic messages.
      *
      * @return a {@link SimpleXYChartSupport} representing the graph
@@ -188,6 +219,29 @@ public class GraphHelper
         sxycd.addLineItems(getLocalText("GRPH_message_count"));
 
         return createChart(sxycd);
+        }
+
+    /**
+     * Add values to the currently executing tasks graph.
+     *
+     * @param graph             {@link SimpleXYChartSupport} to add values to
+     * @param cInProgressTasks total proxy server connections
+     */
+    public static void addValuesToInProgressExecutorTasksGraph(SimpleXYChartSupport graph, long cInProgressTasks)
+        {
+        graph.addValues(System.currentTimeMillis(), new long[] {cInProgressTasks});
+        }
+
+    /**
+     * Add values to the completed tasks.
+     *
+     * @param graph           {@link SimpleXYChartSupport} to add values to
+     * @param cCompletedTasks number of completed tasks
+     * @param cRejectedTasks  number of rejected tasks
+     */
+    public static void addValuesToCompletedTasksGraph(SimpleXYChartSupport graph, long cCompletedTasks, long cRejectedTasks)
+        {
+        graph.addValues(System.currentTimeMillis(), new long[] {cCompletedTasks, cRejectedTasks});
         }
 
     /**

@@ -220,7 +220,7 @@ public abstract class AbstractVisualVMTest
         }
 
     /**
-     * Destory a member and ignore any errors.
+     * Destroy a member and ignore any errors.
      *
      * @param member the {@link CoherenceClusterMember} to destroy
      */

@@ -777,7 +777,7 @@ public class CoherenceCachePanel
                     }
                 else
                     {
-                    cValue = (long) ((Integer) entry.getValue().getColumn(CacheData.MEMORY_USAGE_BYTES));
+                    cValue = Long.parseLong(entry.getValue().getColumn(CacheData.MEMORY_USAGE_BYTES).toString());
                     }
 
                 m_cTotal += cValue;

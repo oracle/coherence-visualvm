@@ -98,9 +98,8 @@ public class ProxyData
 
                 // only include the NameService if the model tells us we should  and
                 // if its not the NameService, include anyway
-                if ((("NameService".equals(sServiceName) && model.isIncludeNameService())
-                      || !"NameService".equals(sServiceName)) &&
-                       PROTOCOL_TCP.equals(sProtocol))
+                if ((!"NameService".equals(sServiceName) || model.isIncludeNameService()) &&
+                    PROTOCOL_TCP.equals(sProtocol))
                     {
                     data = new ProxyData();
 
