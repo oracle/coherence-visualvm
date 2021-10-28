@@ -32,6 +32,7 @@ import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ClusterData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.ExecutorData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.HttpProxyData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.MachineData;
@@ -136,8 +137,13 @@ public class CoherenceClusterSnapshotPanel
             if (f_model.isElasticDataConfigured())
                 {
                 sb.append(elasticDataOverview("RAM"))
-                        .append(elasticDataOverview("FLASH"))
-                        .append("<hr>");
+                  .append(elasticDataOverview("FLASH"))
+                  .append("<hr>");
+                }
+            if (f_model.isExecutorConfigured())
+                {
+                sb.append(executorOverview())
+                  .append("<hr>");
                 }
 
             String sCurrent = sb.append("</body></html>").toString();
@@ -471,6 +477,37 @@ public class CoherenceClusterSnapshotPanel
         }
 
     /**
+     * Returns an Executor overview.
+     *
+     * @return an Executor overview
+     */
+    private String executorOverview()
+        {
+        StringBuilder sb = new StringBuilder(title(getLabel("LBL_executors")));
+
+        sb.append(tableStart());
+
+        sb.append(columnHeaders(VisualVMModel.DataType.EXECUTOR));
+
+        for (Map.Entry<Object, Data> entry : m_executorData)
+            {
+            sb.append("<tr>")
+                    .append(td(entry.getValue().getColumn(ExecutorData.NAME).toString()))
+                    .append(td(entry.getValue().getColumn(ExecutorData.NODE_ID).toString()))
+                    .append(td(entry.getValue().getColumn(ExecutorData.STATE).toString()))
+                    .append(td(entry.getValue().getColumn(ExecutorData.TASKS_IN_PROGRESS).toString()))
+                    .append(td(entry.getValue().getColumn(ExecutorData.TASKS_COMPLETED).toString()))
+                    .append(td(entry.getValue().getColumn(ExecutorData.TASKS_REJECTED).toString()))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(ExecutorData.HEAP_MAX).toString())))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(ExecutorData.HEAP_USED).toString())))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(ExecutorData.HEAP_FREE).toString())))
+                    .append("</tr>");
+            }
+
+        return sb.append(tableEnd()).toString();
+        }
+
+    /**
      * Returns a federation overview.
      *
      * @return a federation overview
@@ -710,6 +747,7 @@ public class CoherenceClusterSnapshotPanel
         m_statsData = f_model.getData(VisualVMModel.DataType.JCACHE_STATS);
         m_persistenceData = f_model.getData(VisualVMModel.DataType.PERSISTENCE);
         m_topicData = f_model.getData(VisualVMModel.DataType.TOPICS_DETAIL);
+        m_executorData = f_model.getData(VisualVMModel.DataType.EXECUTOR);
         }
 
     // ----- constants ------------------------------------------------------
@@ -819,6 +857,11 @@ public class CoherenceClusterSnapshotPanel
      * VisualVMModel}.
      */
     private List<Map.Entry<Object, Data>> m_httpProxyMemberData;
+
+    /**
+     * The executor statistics data retrieved from the {@link VisualVMModel}.
+     */
+    private List<Map.Entry<Object, Data>> m_executorData;
 
     /**
      * The machine statistics data retrieved from the {@link VisualVMModel}.
