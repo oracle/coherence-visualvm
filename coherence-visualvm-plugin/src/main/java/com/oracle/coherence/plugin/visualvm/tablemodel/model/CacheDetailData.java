@@ -237,21 +237,28 @@ public class CacheDetailData
             return null;
             }
 
-        // see if we have domainPartition key
-        String sServiceName     = null;
-        String sDomainPartition = null;
+        return getAggregatedDataFromHttpQueryingInternal(requestSender, selectedCache);
+        }
 
-        if (selectedCache != null)
-            {
-            String[] asServiceDetails = getDomainAndService(selectedCache.getX());
-            sServiceName              = asServiceDetails[1];
-            sDomainPartition          = asServiceDetails[0];
-            }
-
+    /**
+     * Internal implemented on getAggregatedDataFromHttpQuerying
+     *
+     * @param requestSender  the request sender to use
+     * @param selectedCache  the selected cache
+     *
+     * @return the result using REST api
+     *
+     * @throws Exception in case of error
+     */
+    public SortedMap<Object, Data> getAggregatedDataFromHttpQueryingInternal(
+            HttpRequestSender requestSender, Pair<String,String> selectedCache) throws Exception
+        {
+        String[] asServiceDetails       = getDomainAndService(selectedCache.getX());
+        String sServiceName             = asServiceDetails[1];
+        String sDomainPartition         = asServiceDetails[0];
         SortedMap<Object, Data> mapData = new TreeMap<Object, Data>();
 
-        JsonNode rootNode = requestSender.getDataForCacheMembers(sServiceName, selectedCache.getY(), sDomainPartition);
-
+        JsonNode rootNode         = requestSender.getDataForCacheMembers(sServiceName, selectedCache.getY(), sDomainPartition);
         JsonNode nodeCacheMembers = rootNode.get("items");
 
         if (nodeCacheMembers != null && nodeCacheMembers.isArray())
