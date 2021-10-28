@@ -114,79 +114,48 @@ public class TopicData
     public SortedMap<Object, Data> getAggregatedDataFromHttpQuerying(VisualVMModel model, HttpRequestSender requestSender)
             throws Exception
         {
-        // minimize the number of round-trips by querying each of the services and getting the cache details
-        // this will be one per service
-//        List<Map.Entry<Object, Data>> serviceData = model.getData(VisualVMModel.DataType.SERVICE);
-//        if (serviceData != null && serviceData.size() > 0)
-//            {
-//            final SortedMap<Object, Data> mapData = new TreeMap<>();
-//
-//            for (Map.Entry<Object, Data> service : serviceData)
-//                {
-//                String   sService            = (String) service.getKey();
-//                String[] asServiceDetails    = getDomainAndService(sService);
-//                String   sDomainPartition    = asServiceDetails[0];
-//                String   sServiceName        = asServiceDetails[1];
-//
-//                JsonNode listOfServiceCaches = requestSender.getListOfServiceCaches(sServiceName, sDomainPartition);
-//                JsonNode itemsNode           = listOfServiceCaches.get("items");
-//                boolean  fisDistributed      = model.getDistributedCaches().contains(sServiceName);
-//
-//                if (itemsNode != null && itemsNode.isArray())
-//                    {
-//                    for (int i = 0; i < ((ArrayNode) itemsNode).size(); i++)
-//                        {
-//                        Data     data         = new TopicData();
-//                        JsonNode cacheDetails = itemsNode.get(i);
-//                        String   sCacheName   = cacheDetails.get("name").asText();
-//
-//                        Pair<String, String> key = new Pair<>(sServiceName, sCacheName);
-//
-//                        JsonNode nodeSize = cacheDetails.get("size");
-//                        if (nodeSize == null)
-//                            {
-//                            // Connecting to version without Bug 32134281 fix so force less efficient way
-//                            return null;
-//                            }
-//                        int nCacheSize = nodeSize.asInt();
-//
-//                        String sUnitCalculator = getChildValue("true", "memoryUnits", cacheDetails) != null
-//                                ? "BINARY" : "FIXED";
-//                        int nMembers = Integer.parseInt(getChildValue("count", "averageMissMillis", cacheDetails));
-//
-//                        data.setColumn(CACHE_NAME, key);
-//
-//                        // if is replicated so the actual size has been aggregated so we must divide by the member count
-//                        data.setColumn(SIZE, fisDistributed ? nCacheSize : nCacheSize / nMembers);
-//
-//                        data.setColumn(UNIT_CALCULATOR, sUnitCalculator);
-//                        long cMemoryUsageBytes = Long.parseLong(getFirstMemberOfArray(cacheDetails, "unitFactor"))
-//                                            * cacheDetails.get("units").asLong();
-//                        data.setColumn(MEMORY_USAGE_BYTES, cMemoryUsageBytes);
-//                        data.setColumn(MEMORY_USAGE_MB, (int) (cMemoryUsageBytes / 1024 / 1024));
-//
-//                        if (data.getColumn(TopicData.UNIT_CALCULATOR).equals("FIXED"))
-//                            {
-//                            data.setColumn(TopicData.AVG_OBJECT_SIZE, 0);
-//                            data.setColumn(TopicData.MEMORY_USAGE_BYTES, 0);
-//                            data.setColumn(TopicData.MEMORY_USAGE_MB, 0);
-//                            }
-//                        else
-//                            {
-//                            if (nCacheSize != 0)
-//                                {
-//                                data.setColumn(TopicData.AVG_OBJECT_SIZE, (int) (cMemoryUsageBytes / nCacheSize));
-//                                }
-//                            }
-//
-//                        mapData.put(key, data);
-//                        }
-//                    }
-//                }
-//                return mapData;
-//            }
+        final SortedMap<Object, Data> mapData    = new TreeMap<>();
+        CacheDetailData               detailData = new CacheDetailData();
 
-        return null;
+        // When using HTTP we just rely on the already collected cache data from the model
+        // except we also need total puts/gets across all caches
+        List<Map.Entry<Object, Data>> cacheData = model.getData(VisualVMModel.DataType.CACHE);
+        for (Map.Entry<Object, Data> entry : cacheData)
+            {
+            long cPublisherSends     = 0L;
+            long cSubscriberReceives = 0L;
+
+            Pair<String, String> cache = (Pair<String, String>) entry.getKey();
+
+            if (cache.getY().contains("$topic$"))
+                {
+                // found a topic cache
+                Data data = new TopicData();
+                Pair<String, String> key = new Pair<>(cache.getX(), cache.getY().replaceAll("\\$topic\\$", ""));
+                data.setColumn(TopicData.TOPIC_NAME, key);
+                data.setColumn(TopicData.AVG_OBJECT_SIZE, 0);
+                data.setColumn(TopicData.SIZE, entry.getValue().getColumn(CacheData.SIZE));
+                data.setColumn(TopicData.MEMORY_USAGE_BYTES, entry.getValue().getColumn(CacheData.MEMORY_USAGE_BYTES));
+                data.setColumn(TopicData.MEMORY_USAGE_MB, entry.getValue().getColumn(CacheData.MEMORY_USAGE_MB));
+                Object avgObjectSize = entry.getValue().getColumn(CacheData.AVG_OBJECT_SIZE);
+                data.setColumn(TopicData.AVG_OBJECT_SIZE, avgObjectSize == null ? 0 : getNumberValue(avgObjectSize.toString()));
+
+                // get the cache detail data
+                SortedMap<Object, Data> cacheDetails = detailData.getAggregatedDataFromHttpQueryingInternal(requestSender, cache);
+
+                for (Data detail : cacheDetails.values())
+                    {
+                    cPublisherSends += (Long) detail.getColumn(CacheDetailData.TOTAL_PUTS);
+                    cSubscriberReceives += (Long) detail.getColumn(CacheDetailData.TOTAL_GETS);
+                    }
+
+                data.setColumn(TopicData.PUBLISHER_SENDS, cPublisherSends);
+                data.setColumn(TopicData.SUBSCRIBER_RECEIVES, cSubscriberReceives);
+                mapData.put(cache, data);
+                }
+            }
+
+        return mapData;
         }
 
     /**

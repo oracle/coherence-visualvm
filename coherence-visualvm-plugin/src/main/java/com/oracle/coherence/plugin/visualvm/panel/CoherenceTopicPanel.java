@@ -116,20 +116,6 @@ public class CoherenceTopicPanel
 
         pnlTop.add(pnlHeader, BorderLayout.PAGE_START);
         pnlTop.add(pneScroll, BorderLayout.CENTER);
-
-        // TODO: Fix when uncomsumed messages verified
-//        JSplitPane pneSplitPlotter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-//        pneSplitPlotter.setResizeWeight(0.5);
-//        pneSplitPlotter.setOpaque(false);
-//
-//        // create a chart for the count of proxy server connections
-//        f_unconsumedGraph = GraphHelper.createTotalUnconsumedMessagesGraph();
-//        f_topicsRatesGraph = GraphHelper.createTopicsRateGraph();
-//
-//        pneSplitPlotter.add(f_unconsumedGraph.getChart());
-//        pneSplitPlotter.add(f_topicsRatesGraph.getChart());
-//
-//        pneSplit.add(pneSplitPlotter);
         
         f_unconsumedGraph = GraphHelper.createTotalUnconsumedMessagesGraph();
         f_topicsRatesGraph = GraphHelper.createTopicsRateGraph();
