@@ -112,6 +112,7 @@ public class CoherenceOptionsPanel
         m_enablePersistenceList.setSelected(preferences.isPersistenceListEnabled());
         m_enableClusterSnapshot.setSelected(preferences.isClusterSnapshotEnabled());
         m_adminFunctionsEnabled.setSelected(preferences.isAdminFunctionEnabled());
+        m_disableSSLCertValidation.setSelected(preferences.isSSLCertValidationDisabled());
         }
 
     /**
@@ -129,6 +130,7 @@ public class CoherenceOptionsPanel
         preferences.setPersistenceListEnabled(m_enablePersistenceList.isSelected());
         preferences.setClusterSnapshotEnabled(m_enableClusterSnapshot.isSelected());
         preferences.setAdminFunctionsEnabled(m_adminFunctionsEnabled.isSelected());
+        preferences.setSSLCertValidationDisabled(m_disableSSLCertValidation.isSelected());
         }
 
     /**
@@ -237,24 +239,28 @@ public class CoherenceOptionsPanel
         m_enableRestDebug.setToolTipText(getLocalText("TTIP_rest_debug"));
         addCheckBox(6, "LBL_enable_rest_debug", m_enableRestDebug);
 
+        m_disableSSLCertValidation = new JCheckBox();
+        m_disableSSLCertValidation.setToolTipText(getLocalText("TTIP_ssl_disable"));
+        addCheckBox(7, "LBL_disable_cert_validation", m_disableSSLCertValidation);
+
         // ---- Other / Experimental ----
-        addHeader(7, "LBL_other");
+        addHeader(8, "LBL_other");
 
         m_enablePersistenceList = new JCheckBox();
         m_enablePersistenceList.setToolTipText(getLocalText("TTIP_persistence_list"));
-        addCheckBox(8, "LBL_enable_persistence_list", m_enablePersistenceList);
+        addCheckBox(9, "LBL_enable_persistence_list", m_enablePersistenceList);
 
         m_enableZoom = new JCheckBox();
         m_enableZoom.setToolTipText(getLocalText("TTIP_zoom_enabled"));
-        addCheckBox(9, "LBL_enable_zoom", m_enableZoom);
+        addCheckBox(10, "LBL_enable_zoom", m_enableZoom);
 
         m_enableClusterSnapshot = new JCheckBox();
         m_enableClusterSnapshot.setToolTipText(getLocalText("TTIP_enable_cluster_snapshot"));
-        addCheckBox(10, "LBL_enable_cluster_snapshot", m_enableClusterSnapshot);
+        addCheckBox(11, "LBL_enable_cluster_snapshot", m_enableClusterSnapshot);
 
         m_adminFunctionsEnabled = new JCheckBox();
         m_adminFunctionsEnabled.setToolTipText(getLocalText("TTIP_enable_cluster_head_dump"));
-        addCheckBox(11, "LBL_enable_admin_functions", m_adminFunctionsEnabled);
+        addCheckBox(12, "LBL_enable_admin_functions", m_adminFunctionsEnabled);
 
         m_btnAnalyzeUnavailableTime = new JButton(Localization.getLocalText("LBL_analyze_log_file"));
         m_btnAnalyzeUnavailableTime.setMnemonic(KeyEvent.VK_A);
@@ -282,7 +288,7 @@ public class CoherenceOptionsPanel
 
         c = new GridBagConstraints();
         c.gridx = 0;
-        c.gridy = 12;
+        c.gridy = 13;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(3, 15, 3, 0);
         add(m_btnAnalyzeUnavailableTime, c);
@@ -290,7 +296,7 @@ public class CoherenceOptionsPanel
         JLabel appsLabel = new JLabel();
         Mnemonics.setLocalizedText(appsLabel, getLocalText("LBL_reconnect")); // NOI18N
         c = new GridBagConstraints();
-        c.gridy = 14;
+        c.gridy = 15;
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -300,7 +306,7 @@ public class CoherenceOptionsPanel
         // filler
         c = new GridBagConstraints();
         c.gridx = 0;
-        c.gridy = 15;
+        c.gridy = 16;
         c.weightx = 1;
         c.weighty = 1;
         c.anchor = GridBagConstraints.NORTHWEST;
@@ -368,6 +374,7 @@ public class CoherenceOptionsPanel
         m_enablePersistenceList.getModel().addChangeListener(changeListener);
         m_enableClusterSnapshot.getModel().addChangeListener(changeListener);
         m_adminFunctionsEnabled.getModel().addChangeListener(changeListener);
+        m_disableSSLCertValidation.getModel().addChangeListener(changeListener);
         }
 
     //----- inner classes ---------------------------------------------------
@@ -701,9 +708,9 @@ public class CoherenceOptionsPanel
     private JCheckBox m_enableRestDebug;
 
     /**
-     * Enable HeatMap checkbox.
+     * Disable SSL Cert Validation.
      */
-    private JCheckBox m_enableHeatMap;
+    private JCheckBox m_disableSSLCertValidation;
 
     /**
      * Enable Zoom checkbox.

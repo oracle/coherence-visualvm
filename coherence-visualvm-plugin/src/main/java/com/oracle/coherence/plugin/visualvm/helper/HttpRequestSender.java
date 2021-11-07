@@ -43,7 +43,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -59,10 +63,17 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.Pair;
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 
 /**
@@ -83,9 +94,28 @@ public class HttpRequestSender
      */
     public HttpRequestSender(String sUrl)
         {
+        if (sUrl == null)
+            {
+            throw new IllegalArgumentException("URL must not be null");
+            }
+
         f_sUrl = sUrl;
         // Managed Coherence Servers URL http://<admin-host>:<admin-port>/management/coherence/<version>/clusters
-        f_fisWebLogic = f_sUrl != null && f_sUrl.contains("/management/coherence/") && f_sUrl.contains("clusters");
+        f_fisWebLogic = f_sUrl.contains("/management/coherence/") && f_sUrl.contains("clusters");
+        f_isSSl       = f_sUrl.startsWith("https");
+
+        if (f_isSSl)
+            {
+            try
+                {
+                initSSL();
+                }
+            catch (Exception e)
+                {
+                LOGGER.warning("Unable to initialize SSL: " + e);
+                e.printStackTrace();
+                }
+            }
         }
 
     // ------ RequestSender interface ---------------------------------------
@@ -1096,9 +1126,7 @@ public class HttpRequestSender
         long start = System.currentTimeMillis();
         URL url = urlBuilder.getUrl();
         java.net.HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        int nRestTimeout = GlobalPreferences.sharedInstance().getRestTimeout();
-        connection.setConnectTimeout(nRestTimeout);
-        connection.setReadTimeout(nRestTimeout);
+        setHttpRequestTimeout(connection);
         boolean isRequestDebugEnabled = GlobalPreferences.sharedInstance().isRestDebugEnabled();
 
         int nResponseCode = connection.getResponseCode();
@@ -1143,19 +1171,20 @@ public class HttpRequestSender
     private InputStream sendPostRequest(URLBuilder urlBuilder, String sRole)
             throws Exception
         {
-        URL url = urlBuilder.getUrl();
-        
+        URL  url   = urlBuilder.getUrl();
+        long start = System.currentTimeMillis();
+
+        boolean isRequestDebugEnabled = GlobalPreferences.sharedInstance().isRestDebugEnabled();
         java.net.HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setRequestMethod("POST");
-        int nRestTimeout = GlobalPreferences.sharedInstance().getRestTimeout();
-        connection.setConnectTimeout(nRestTimeout);
-        connection.setReadTimeout(nRestTimeout);
+        setHttpRequestTimeout(connection);
 
         if (f_fisWebLogic)
             {
             connection.setRequestProperty(REQUESTED_BY, "JVisualVM");
             }
+
         // if we have a role parameter to send
         if (sRole != null)
             {
@@ -1167,6 +1196,12 @@ public class HttpRequestSender
                 byte[] abData = sInput.getBytes(StandardCharsets.UTF_8);
                 os.write(abData, 0, abData.length);
                 }
+            }
+
+        if (isRequestDebugEnabled)
+            {
+            LOGGER.info((System.currentTimeMillis() - start) + "ms to open POST to "
+                        + urlBuilder.getUrl().toString() + " ");
             }
 
         int nResponseCode = connection.getResponseCode();
@@ -1201,15 +1236,24 @@ public class HttpRequestSender
     private InputStream sendDeleteRequest(URLBuilder urlBuilder)
             throws Exception
         {
+        long start = System.currentTimeMillis();
+        boolean isRequestDebugEnabled = GlobalPreferences.sharedInstance().isRestDebugEnabled();
         URL url = urlBuilder.getUrl();
         java.net.HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("DELETE");
+        setHttpRequestTimeout(connection);
+
         if (f_fisWebLogic)
             {
             connection.setRequestProperty(REQUESTED_BY, "JVisualVM");
             }
 
         int nResponseCode = connection.getResponseCode();
+        if (isRequestDebugEnabled)
+            {
+            LOGGER.info((System.currentTimeMillis() - start) + "ms to open DELETE to "
+                        + urlBuilder.getUrl().toString() + " ");
+            }
 
         if (nResponseCode != 200)
             {
@@ -1217,6 +1261,18 @@ public class HttpRequestSender
             }
 
         return connection.getInputStream();
+        }
+
+    /**
+     * Sets the http request timeout for a {@link URLConnection}.
+     *
+     * @param urlConnection {@link URLConnection} to set timeout for
+     */
+    private void setHttpRequestTimeout(URLConnection urlConnection)
+        {
+        int nRestTimeout = GlobalPreferences.sharedInstance().getRestTimeout();
+        urlConnection.setConnectTimeout(nRestTimeout);
+        urlConnection.setReadTimeout(nRestTimeout);
         }
 
     /**
@@ -1256,7 +1312,6 @@ public class HttpRequestSender
         // starts with an acronym - leave it alone
         return name;
         }
-
 
     /**
      * Modify the URL based on the MBean ObjectName, so that the details of the
@@ -1562,6 +1617,30 @@ public class HttpRequestSender
         private final Map<String, String> m_mapQueryParams = new HashMap<>();
         }
 
+    /**
+     * Initialize SSL.
+     * @throws Exception if an SSL related exceptions.
+     */
+    private void initSSL()
+            throws Exception {
+
+        m_sslContext = SSLContext.getInstance("TLS");
+
+        // disable SSL verification if option set
+        if (GlobalPreferences.sharedInstance().isSSLCertValidationDisabled())
+            {
+            LOGGER.warning("SSL Certification validation has been explicitly disabled");
+            m_sslContext.init(null, TRUST_ALL_CERTS, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultHostnameVerifier(TRUST_ALL_HOSTS);
+            }
+        else
+            {
+            m_sslContext.init(null, null, new java.security.SecureRandom());
+            }
+
+        HttpsURLConnection.setDefaultSSLSocketFactory(m_sslContext.getSocketFactory());
+    }
+
     // ----- data members ---------------------------------------------------
 
     /**
@@ -1573,6 +1652,11 @@ public class HttpRequestSender
      * Indicates if this REST endpoint is for WebLogic Server.
      */
     private final boolean f_fisWebLogic;
+
+    /**
+     * Indicates if SSL is being used for the connection.
+     */
+    private final boolean f_isSSl;
 
     /**
      * The discovered cluster name.
@@ -1588,4 +1672,48 @@ public class HttpRequestSender
      * Header required for POST and DELETE to WebLogic Server.
      */
     private static final String REQUESTED_BY = "X-Requested-By";
+
+    /**
+     * A trust manager that will trust all certificates. Only used when the preference to ignore SSL certs is chosen.
+     * Should be used with care.
+     */
+    private static final TrustManager[] TRUST_ALL_CERTS =
+        {
+        new X509TrustManager()
+            {
+            @Override
+            public java.security.cert.X509Certificate[] getAcceptedIssuers()
+                {
+                return null;
+                }
+
+            @Override
+            public void checkClientTrusted(X509Certificate[] certs, String authType)
+                {
+                }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] certs, String authType)
+                {
+                }
+            }
+        };
+
+    /**
+     * A {@link HostnameVerifier} to trust all hosts. Only used when the preference to ignore SSL certs is chosen.
+     *      * Should be used with care.
+     */
+    private static final HostnameVerifier TRUST_ALL_HOSTS = new HostnameVerifier()
+        {
+        @Override
+        public boolean verify(String hostname, SSLSession session)
+            {
+            return true;
+            }
+        };
+
+    /**
+     * SSL Context.
+     */
+    private SSLContext m_sslContext;
     }
