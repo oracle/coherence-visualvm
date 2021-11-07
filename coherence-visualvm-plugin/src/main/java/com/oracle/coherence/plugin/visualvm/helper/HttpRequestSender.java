@@ -25,10 +25,8 @@
 
 package com.oracle.coherence.plugin.visualvm.helper;
 
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.MissingNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -38,15 +36,11 @@ import com.oracle.coherence.plugin.visualvm.panel.CoherencePersistencePanel;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,13 +51,10 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import java.util.function.Function;
-
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.Pair;
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.MalformedObjectNameException;
@@ -1264,7 +1255,7 @@ public class HttpRequestSender
         }
 
     /**
-     * Sets the http request timeout for a {@link URLConnection}.
+     * Sets the Http request timeout for a {@link URLConnection}.
      *
      * @param urlConnection {@link URLConnection} to set timeout for
      */
@@ -1701,7 +1692,7 @@ public class HttpRequestSender
 
     /**
      * A {@link HostnameVerifier} to trust all hosts. Only used when the preference to ignore SSL certs is chosen.
-     *      * Should be used with care.
+     * Should be used with care.
      */
     private static final HostnameVerifier TRUST_ALL_HOSTS = new HostnameVerifier()
         {
