@@ -181,6 +181,7 @@ There are tool tips for each of the preferences, but a summary is shown below.
 | Disable MBean Check | false | Disables the MBean check when connecting to WebLogic Server. This allows the plugin to startup without checking for Cluster MBean.
 | REST Request Timeout | 30000 | The request timeout (in ms) when using REST to connect to a cluster.
 | Enable REST Debug | false | Enables HTTP request debugging when using REST to connect to a cluster.
+| Disable SSL Certificate Validation| false | If selected, will disable SSL certificate validation. Note: You should only use this option when you are sure of the identify of the target server.
 | Enable Persistence List | true | Enables dropdown list of snapshots rather than having to enter the snapshot when performing snapshot operations.
 | Enable Zoom on Graphs | false | Enables additional zoom function for all graphs.
 | Enable Cluster Snapshot tab | false | Enables experimental Cluster Snapshot tab. This tab is useful for seeing all the relevant cluster information on one pae in a text format.

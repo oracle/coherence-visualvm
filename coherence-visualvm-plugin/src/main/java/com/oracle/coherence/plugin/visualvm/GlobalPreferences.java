@@ -329,6 +329,16 @@ public class GlobalPreferences
         }
 
     /**
+     * Indicates if SSL Cert validation is disabled.
+     *
+     * @return true ff SSL Cert validation is disabled
+     */
+    public boolean isSSLCertValidationDisabled()
+        {
+        return getBooleanProperty(SSL_CERT_DISABLED, SSL_CERT_DISABLED_DEFAULT);
+        }
+
+    /**
      * Sets if REST debug is enabled.
      *
      * @param fValue if REST debug is enabled
@@ -336,6 +346,16 @@ public class GlobalPreferences
     public void setRestDebugEnabled(boolean fValue)
         {
         setBooleanProperty(REST_DEBUG, fValue);
+        }
+
+    /**
+     * Sets if SSL Cert validation is disabled.
+     *
+     * @param fValue if SSL Cert validation is disabled
+     */
+    public void setSSLCertValidationDisabled(boolean fValue)
+        {
+        setBooleanProperty(SSL_CERT_DISABLED, fValue);
         }
 
     /**
@@ -569,6 +589,16 @@ public class GlobalPreferences
      * Default for REST debug.
      */
     private static final String REST_DEBUG_DEFAULT = "false";
+
+    /**
+     * Preference key for Disable SSL Cert Validation.
+     */
+    private static final String SSL_CERT_DISABLED = "restSSLCertDisabled";
+
+    /**
+     * Default for for Disable SSL Cert Validation.
+     */
+    private static final String SSL_CERT_DISABLED_DEFAULT = "false";
 
     /**
      * Preference key for Admin functions.
