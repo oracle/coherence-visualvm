@@ -175,7 +175,6 @@ public class CoherenceMachinePanel
             {
             f_txtTotalClusterCores.setText(String.format(MEM_FORMAT, 0));
             f_txtTotalMachines.setText(String.format(MEM_FORMAT, 0));
-
             }
 
         fireTableDataChangedWithSelection(f_table, f_tmodel);
