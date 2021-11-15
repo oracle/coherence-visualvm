@@ -76,28 +76,6 @@
       <column id="State">
         <name>State</name>
       </column>
-
-      <column id="HeapMax">
-        <type>attribute</type>
-        <name>HeapMemoryUsage/max</name>
-        <header>Heap Max</header>
-        <query>
-          <pattern>
-            Coherence:type=Platform,Domain=java.lang,subType=Memory,nodeId={NodeId},*
-          </pattern>
-        </query>
-      </column>
-
-      <column id="HeapUsed">
-        <type>attribute</type>
-        <name>HeapMemoryUsage/used</name>
-        <header>Heap Used</header>
-        <query>
-          <pattern>
-            Coherence:type=Platform,Domain=java.lang,subType=Memory,nodeId={NodeId},*
-          </pattern>
-        </query>
-      </column>
     </row>
   </report>
 </report-config>

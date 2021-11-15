@@ -905,6 +905,19 @@ public class HttpRequestSender
         }
 
     /**
+     * Get the data for all executors.
+     *
+     * @return the data for all executors
+     * @throws Exception in case of errors
+     */
+    public JsonNode getExecutors() throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment("executors")
+                     .addQueryParameter("links", "");
+        return getResponseJson(sendGetRequest(urlBuilder));
+        }
+
+    /**
      * Get the data for all the proxy members in the cluster.
      *
      * @return the data for all the cluster members

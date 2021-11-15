@@ -85,6 +85,10 @@ public class CoherenceExecutorPanel
         f_txtTotalRunningTasks = getTextField(5, JTextField.RIGHT);
         pnlHeader.add(getLocalizedLabel("LBL_total_running_tasks", f_txtTotalRunningTasks));
         pnlHeader.add(f_txtTotalRunningTasks);
+
+        f_txtTotalCompltedTasks = getTextField(5, JTextField.RIGHT);
+        pnlHeader.add(getLocalizedLabel("LBL_total_completed_tasks", f_txtTotalCompltedTasks));
+        pnlHeader.add(f_txtTotalCompltedTasks);
         
         // create the table
         f_tmodel = new ExecutorTableModel(VisualVMModel.DataType.EXECUTOR.getMetadata());
@@ -160,11 +164,13 @@ public class CoherenceExecutorPanel
                 }
 
             f_txtTotalRunningTasks.setText(String.format(MEM_FORMAT, cTotalRunningTasks));
+            f_txtTotalCompltedTasks.setText(String.format(MEM_FORMAT, nCompletedCount));
             }
         else
             {
             f_txtTotalExecutors.setText(String.format(MEM_FORMAT, 0));
             f_txtTotalRunningTasks.setText(String.format(MEM_FORMAT, 0));
+            f_txtTotalCompltedTasks.setText(String.format(MEM_FORMAT, 0));
             }
 
         fireTableDataChangedWithSelection(f_table, f_tmodel);
@@ -221,6 +227,11 @@ public class CoherenceExecutorPanel
      * The total number of running tasks.
      */
     private final JTextField f_txtTotalRunningTasks;
+
+    /**
+     * The total number of completed tasks.
+     */
+    private final JTextField f_txtTotalCompltedTasks;
 
     /**
      * The graph of running tasks.
