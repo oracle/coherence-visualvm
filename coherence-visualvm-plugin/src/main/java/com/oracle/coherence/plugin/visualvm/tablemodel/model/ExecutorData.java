@@ -28,10 +28,12 @@ package com.oracle.coherence.plugin.visualvm.tablemodel.model;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
-import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 
@@ -80,19 +82,16 @@ public class ExecutorData
         {
         Data data = new ExecutorData();
 
+        int nNodeId = Integer.parseInt(getNumberValue(aoColumns[2].toString()));
         data.setColumn(ExecutorData.NAME, aoColumns[1].toString());
-        data.setColumn(ExecutorData.NODE_ID, Integer.valueOf(getNumberValue(aoColumns[2].toString())));
+        data.setColumn(ExecutorData.NODE_ID, nNodeId);
         data.setColumn(ExecutorData.TASKS_COMPLETED, Long.valueOf(getNumberValue(aoColumns[3].toString())));
         data.setColumn(ExecutorData.TASKS_REJECTED, Long.valueOf(getNumberValue(aoColumns[4].toString())));
         data.setColumn(ExecutorData.TASKS_IN_PROGRESS, Long.valueOf(getNumberValue(aoColumns[5].toString())));
         data.setColumn(ExecutorData.STATE, aoColumns[6].toString());
 
-        long nHeapMax  = Long.parseLong(getNumberValue(aoColumns[7].toString())) / GraphHelper.MB;
-        long nHeapUsed = Long.parseLong(getNumberValue(aoColumns[8].toString())) / GraphHelper.MB;
-        
-        data.setColumn(ExecutorData.HEAP_MAX, nHeapMax);
-        data.setColumn(ExecutorData.HEAP_USED, nHeapUsed);
-        data.setColumn(ExecutorData.HEAP_FREE, nHeapMax - nHeapUsed);
+        // retrieve the member to populate the memory attributes
+        setMemberMemory(data, model, nNodeId);
 
         return data;
         }
@@ -102,54 +101,74 @@ public class ExecutorData
                                                                      HttpRequestSender requestSender)
             throws Exception
         {
-//        JsonNode                rootNode             = requestSender.getDataForProxyMembers();
-//        SortedMap<Object, Data> mapData              = new TreeMap<Object, Data>();
-//        JsonNode                nodeProxyMemberItems = rootNode.get("items");
-//        if (nodeProxyMemberItems != null && nodeProxyMemberItems.isArray())
-//            {
-//            for (int k = 0; k < ((ArrayNode) nodeProxyMemberItems).size(); k++)
-//                {
-//                JsonNode proxyNode = (JsonNode) nodeProxyMemberItems.get(k);
-//
-//                String sServiceName = proxyNode.get("name").asText();
-//                String sProtocol    = proxyNode.get("protocol").asText();
-//                if (("NameService".equals(sServiceName) && model.isIncludeNameService())
-//                        || !"NameService".equals(sServiceName) &&
-//                        PROTOCOL_TCP.equals(sProtocol))
-//                    {
-//                    ExecutorData data = new ExecutorData();
-//
-//                    data.setColumn(ExecutorData.HOST_PORT, proxyNode.get("hostIP").asText());
-//                    data.setColumn(ExecutorData.SERVICE_NAME, sServiceName);
-//                    data.setColumn(ExecutorData.NODE_ID,
-//                            Integer.valueOf(proxyNode.get("nodeId").asText()));
-//                    data.setColumn(ExecutorData.CONNECTION_COUNT,
-//                            Integer.valueOf(proxyNode.get("connectionCount").asText()));
-//                    data.setColumn(ExecutorData.OUTGOING_MSG_BACKLOG,
-//                            Long.valueOf(proxyNode.get("outgoingMessageBacklog").asText()));
-//                    data.setColumn(ExecutorData.TOTAL_BYTES_RECEIVED,
-//                            Long.valueOf(proxyNode.get("totalBytesReceived").asText()));
-//                    data.setColumn(ExecutorData.TOTAL_BYTES_SENT,
-//                            Long.valueOf(proxyNode.get("totalBytesSent").asText()));
-//                    data.setColumn(ExecutorData.TOTAL_MSG_RECEIVED,
-//                            Long.valueOf(proxyNode.get("totalMessagesReceived").asText()));
-//                    data.setColumn(ExecutorData.TOTAL_MSG_SENT,
-//                            Long.valueOf(proxyNode.get("totalMessagesSent").asText()));
-//
-//                    JsonNode sDomainPartition = proxyNode.get("domainPartition");
-//                    if (sDomainPartition != null)
-//                        {
-//                        // domain partition is present
-//                        data.setColumn(ExecutorData.SERVICE_NAME, sDomainPartition + SERVICE_SEP +
-//                                                                  sServiceName);
-//                        }
-//
-//                    mapData.put(data.getColumn(0), data);
-//                    }
-//                }
-//            }
-//        return mapData;
-            return null;
+        JsonNode rootNode = requestSender.getExecutors();
+        SortedMap<Object, Data> mapData              = new TreeMap<>();
+        JsonNode                nodeProxyExecutorsItems = rootNode.get("items");
+        if (nodeProxyExecutorsItems != null && nodeProxyExecutorsItems.isArray())
+            {
+            for (int k = 0; k < (nodeProxyExecutorsItems).size(); k++)
+                {
+                JsonNode executor = nodeProxyExecutorsItems.get(k);
+
+                ExecutorData data = new ExecutorData();
+                data.setColumn(NODE_ID, executor.get("nodeId").asInt());
+                data.setColumn(NAME, executor.get("name").asText());
+                data.setColumn(STATE, executor.get("state").asText());
+                data.setColumn(TASKS_IN_PROGRESS, executor.get("tasksInProgressCount").asLong());
+                data.setColumn(TASKS_COMPLETED, executor.get("tasksCompletedCount").asLong());
+                data.setColumn(TASKS_REJECTED, executor.get("tasksRejectedCount").asLong());
+
+                // retrieve the member to populate the memory attributes
+                setMemberMemory(data, model, executor.get("memberId").asInt());
+
+                mapData.put(data.getColumn(0), data);
+                }
+            }
+
+            return mapData;
+        }
+
+    /**
+     * Sets the member memory given the node Id
+     * @param data   {@link Data}to set for
+     * @param model    the {@link VisualVMModel} to ask for data from
+     * @param nNodeId  the node id to look for
+     */
+    private void setMemberMemory(Data data, VisualVMModel model, int nNodeId)
+        {
+        MemberData member = getMember(model, nNodeId);
+        if (member == null)
+            {
+            LOGGER.warning("Unable to find member for node id " + nNodeId);
+            }
+        else
+            {
+            int nHeapMax = Integer.parseInt(member.getColumn(MemberData.MAX_MEMORY).toString());
+            int nHeapUsed = Integer.parseInt(member.getColumn(MemberData.USED_MEMORY).toString());
+            data.setColumn(ExecutorData.HEAP_MAX, nHeapMax);
+            data.setColumn(ExecutorData.HEAP_USED, nHeapUsed);
+            data.setColumn(ExecutorData.HEAP_FREE, nHeapMax - nHeapUsed);
+            }
+        }
+
+    /**
+     * Returns the {@link MemberData} for the node id.
+     *
+     * @param model    the {@link VisualVMModel} to ask for data from
+     * @param nNodeId  the node id to look for
+     * @return the {@link MemberData} or null if not found
+     */
+    private MemberData getMember(VisualVMModel model, int nNodeId)
+        {
+        List<Map.Entry<Object, Data>> memberData = model.getData(VisualVMModel.DataType.MEMBER);
+        for (Map.Entry<Object, Data> entry : memberData)
+            {
+            if (((Integer) entry.getValue().getColumn(MemberData.NODE_ID)) == nNodeId)
+                {
+                return (MemberData) entry.getValue();
+                }
+            }
+        return null;
         }
 
     // ----- constants ------------------------------------------------------
