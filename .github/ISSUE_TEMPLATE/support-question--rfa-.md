@@ -2,7 +2,7 @@
 name: Support Question (RFA)
 about: Support questions and requests for advice
 title: ''
-labels: RFA
+labels: ''
 assignees: ''
 
 ---
