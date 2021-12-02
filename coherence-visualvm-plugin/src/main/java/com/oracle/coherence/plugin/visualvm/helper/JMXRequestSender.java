@@ -190,6 +190,14 @@ public class JMXRequestSender
         }
 
     @Override
+    public Set<ObjectName> getAllExecutorMembers()
+            throws Exception
+        {
+        return f_connection.queryNames(new ObjectName("Coherence:type=Executor,*"), null);
+        }
+
+
+    @Override
     public Set<ObjectName> getAllServiceMembers()
             throws Exception
         {

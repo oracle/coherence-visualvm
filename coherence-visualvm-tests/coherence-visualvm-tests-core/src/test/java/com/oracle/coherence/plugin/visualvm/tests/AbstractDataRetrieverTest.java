@@ -176,7 +176,7 @@ public abstract class AbstractDataRetrieverTest
      */
     private void testGetAllAttributes() throws Exception {
         RequestSender requestSender = getRequestSender();
-        String          sQuery     = "Coherence:type=StorageManager,service=" + DIST1_SERVICE + ",cache=" + DIST1_CACHE + ",*";
+        String          sQuery     = "Coherence:type=StorageManager,service=" + DIST1_SERVICE + ",cache=" + DIST1_CACHE + ",nodeId=1,*";
         Set<ObjectName> setObjects = requestSender.getCompleteObjectName(new ObjectName(sQuery));
 
         for (Iterator<ObjectName> iter = setObjects.iterator(); iter.hasNext(); )
