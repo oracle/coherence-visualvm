@@ -71,8 +71,6 @@ public class ExecutorData
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
         SortedMap<Object, Data> mapData = new TreeMap<>();
-        Data                    data;
-        Map<String, Integer> mapExecutorCount = new HashMap<>();
 
         try
             {
@@ -93,28 +91,12 @@ public class ExecutorData
                   new String[] { ATTR_MEMBER_ID, ATTR_TASKS_COMPLETED, ATTR_TASKS_REJECTED,
                                  ATTR_TASKS_IN_PROGRESS, ATTR_DESCRIPTION });
 
-                data = new ExecutorData();
-                data.setColumn(NAME, sName);
-                data.setColumn(EXECUTOR_COUNT, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_MEMBER_ID)));
-                data.setColumn(TASKS_IN_PROGRESS, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_TASKS_IN_PROGRESS)));
-                data.setColumn(TASKS_COMPLETED, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_TASKS_COMPLETED)));
-                data.setColumn(TASKS_REJECTED, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_TASKS_REJECTED)));
-                data.setColumn(DESCRIPTION, getAttributeValueAsString(listAttr, ATTR_DESCRIPTION));
-                mapData.put(sName, data);
+                addToExecutorData(mapData, sName, getAttributeValueAsString(listAttr, ATTR_DESCRIPTION),
+                        Long.parseLong(getAttributeValueAsString(listAttr, ATTR_TASKS_IN_PROGRESS)),
+                        Long.parseLong(getAttributeValueAsString(listAttr, ATTR_TASKS_COMPLETED)),
+                        Long.parseLong(getAttributeValueAsString(listAttr, ATTR_TASKS_REJECTED)));
 
-                if (!mapExecutorCount.containsKey(sName))
-                    {
-                    mapExecutorCount.put(sName, 1);
-                    }
-                else
-                    {
-                    mapExecutorCount.put(sName, mapExecutorCount.get(sName) + 1);
-                    }
                 }
-
-            // process the final data to update the executor count with the proper count
-            mapData.forEach((k,v) -> v.setColumn(EXECUTOR_COUNT, mapExecutorCount.get(k)));
-
             return new ArrayList<>(mapData.entrySet());
             }
         catch (Exception e)
@@ -146,40 +128,59 @@ public class ExecutorData
         JsonNode rootNode = requestSender.getExecutors();
         SortedMap<Object, Data> mapData                 = new TreeMap<>();
         JsonNode                nodeProxyExecutorsItems = rootNode.get("items");
-        Map<String, Integer>    mapExecutorCount        = new HashMap<>();
 
         if (nodeProxyExecutorsItems != null && nodeProxyExecutorsItems.isArray())
             {
             for (int k = 0; k < (nodeProxyExecutorsItems).size(); k++)
                 {
                 JsonNode     executor = nodeProxyExecutorsItems.get(k);
-                ExecutorData data     = new ExecutorData();
                 String       sName    = executor.get("name").asText();
-                
-                data.setColumn(NAME, sName);
-                data.setColumn(TASKS_IN_PROGRESS, executor.get("tasksInProgressCount").asLong());
-                data.setColumn(TASKS_COMPLETED, executor.get("tasksCompletedCount").asLong());
-                data.setColumn(TASKS_REJECTED, executor.get("tasksRejectedCount").asLong());
-                data.setColumn(DESCRIPTION, executor.get("description").asText());
 
-                mapData.put(sName, data);
-
-                if (!mapExecutorCount.containsKey(sName))
-                    {
-                    mapExecutorCount.put(sName, 1);
-                    }
-                else
-                    {
-                    mapExecutorCount.put(sName, mapExecutorCount.get(sName) + 1);
-                    }
+                addToExecutorData(mapData, sName, executor.get("description").asText(),
+                        executor.get("tasksInProgressCount").asLong(),
+                        executor.get("tasksCompletedCount").asLong(),
+                        executor.get("tasksRejectedCount").asLong());
                 }
             }
-
-            // process the final data to update the executor count with the proper count
-            mapData.forEach((k,v) -> v.setColumn(EXECUTOR_COUNT, mapExecutorCount.get(k)));
-
             return mapData;
         }
+        
+    /**
+     * Add executor data.
+     *
+     * @param mapData          {@link SortedMap} to add to
+     * @param sName            name of the executor
+     * @param sDescription     description
+     * @param cTasksInProgress tasks in progress
+     * @param cTasksCompleted  tasks completed
+     * @param cTasksRejected   tasks rejected
+     */
+    private void addToExecutorData(SortedMap<Object, Data> mapData,
+                                   String sName,
+                                   String sDescription,
+                                   long cTasksInProgress,
+                                   long cTasksCompleted,
+                                   long cTasksRejected)
+       {
+       Data data = mapData.get(sName);
+       if (data == null)
+           {
+           data = new ExecutorData();
+           data.setColumn(NAME, sName);
+           data.setColumn(DESCRIPTION, sDescription);
+           data.setColumn(EXECUTOR_COUNT, 0L);
+           data.setColumn(TASKS_IN_PROGRESS, 0L);
+           data.setColumn(TASKS_COMPLETED, 0L);
+           data.setColumn(TASKS_REJECTED, 0L);
+           }
+
+       data.setColumn(EXECUTOR_COUNT, (Long) data.getColumn(EXECUTOR_COUNT) + 1);
+       data.setColumn(TASKS_IN_PROGRESS, (Long) data.getColumn(TASKS_IN_PROGRESS) + cTasksInProgress);
+       data.setColumn(TASKS_COMPLETED, (Long) data.getColumn(TASKS_COMPLETED) + cTasksCompleted);
+       data.setColumn(TASKS_REJECTED, (Long) data.getColumn(TASKS_REJECTED) + cTasksRejected);
+
+       mapData.put(sName, data);
+       }
 
     // ----- constants ------------------------------------------------------
 
@@ -220,6 +221,9 @@ public class ExecutorData
      */
     private static final Logger LOGGER = Logger.getLogger(ExecutorData.class.getName());
 
+    /**
+     * Various attributes.
+     */
     private static final String ATTR_MEMBER_ID = "MemberId";
     private static final String ATTR_TASKS_COMPLETED = "TasksCompletedCount";
     private static final String ATTR_TASKS_REJECTED = "TasksRejectedCount";
