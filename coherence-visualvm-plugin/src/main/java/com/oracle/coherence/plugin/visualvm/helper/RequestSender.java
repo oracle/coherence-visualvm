@@ -209,6 +209,16 @@ public interface RequestSender
             throws Exception;
 
     /**
+     * Get all the Executor members.
+     *
+     * @return the list of executor members
+     *
+     * @throws Exception in case of errors
+     */
+    Set<ObjectName> getAllExecutorMembers()
+            throws Exception;
+
+    /**
      * Get the list of ServiceMBeans in the cluster.
      *
      * @return list of service MBeans

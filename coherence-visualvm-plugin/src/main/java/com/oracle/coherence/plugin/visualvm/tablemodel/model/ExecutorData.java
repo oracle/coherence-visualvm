@@ -25,10 +25,15 @@
 
 package com.oracle.coherence.plugin.visualvm.tablemodel.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -36,6 +41,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
+import javax.management.AttributeList;
+import javax.management.ObjectName;
+
+import static com.oracle.coherence.plugin.visualvm.helper.JMXUtils.getAttributeValueAsString;
 
 /**
  * A class to hold basic Executor data.
@@ -53,47 +62,80 @@ public class ExecutorData
      */
     public ExecutorData()
         {
-        super(HEAP_FREE + 1);
+        super(DESCRIPTION + 1);
         }
 
     // ----- DataRetriever methods ------------------------------------------
 
-    /**
-    * {@inheritDoc}
-    */
+    @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
-        // never used as report will provide data
+        SortedMap<Object, Data> mapData = new TreeMap<>();
+        Data                    data;
+        Map<String, Integer> mapExecutorCount = new HashMap<>();
+
+        try
+            {
+            // force to use more efficient http
+            if (requestSender instanceof HttpRequestSender)
+                {
+                return new ArrayList<>(getAggregatedDataFromHttpQuerying(model, (HttpRequestSender) requestSender).entrySet());
+                }
+
+            Set<ObjectName> setNodeNames = requestSender.getAllExecutorMembers();
+
+            for (Iterator<ObjectName> iter = setNodeNames.iterator(); iter.hasNext(); )
+                {
+                ObjectName nodeNameObjName = iter.next();
+
+                String        sName    = nodeNameObjName.getKeyProperty("name");
+                AttributeList listAttr = requestSender.getAttributes(nodeNameObjName,
+                  new String[] { ATTR_MEMBER_ID, ATTR_TASKS_COMPLETED, ATTR_TASKS_REJECTED,
+                                 ATTR_TASKS_IN_PROGRESS, ATTR_DESCRIPTION });
+
+                data = new ExecutorData();
+                data.setColumn(NAME, sName);
+                data.setColumn(EXECUTOR_COUNT, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_MEMBER_ID)));
+                data.setColumn(TASKS_IN_PROGRESS, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_TASKS_IN_PROGRESS)));
+                data.setColumn(TASKS_COMPLETED, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_TASKS_COMPLETED)));
+                data.setColumn(TASKS_REJECTED, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_TASKS_REJECTED)));
+                data.setColumn(DESCRIPTION, getAttributeValueAsString(listAttr, ATTR_DESCRIPTION));
+                mapData.put(sName, data);
+
+                if (!mapExecutorCount.containsKey(sName))
+                    {
+                    mapExecutorCount.put(sName, 1);
+                    }
+                else
+                    {
+                    mapExecutorCount.put(sName, mapExecutorCount.get(sName) + 1);
+                    }
+                }
+
+            // process the final data to update the executor count with the proper count
+            mapData.forEach((k,v) -> v.setColumn(EXECUTOR_COUNT, mapExecutorCount.get(k)));
+
+            return new ArrayList<>(mapData.entrySet());
+            }
+        catch (Exception e)
+            {
+            LOGGER.log(Level.WARNING, "Error getting member statistics", e);
+
+            return null;
+            }
+        }
+
+    @Override
+    public String getReporterReport()
+        {
+        // force to use JMX
         return null;
         }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String getReporterReport()
-        {
-        return REPORT_EXECUTOR;
-        }
-
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
-        Data data = new ExecutorData();
-
-        int nNodeId = Integer.parseInt(getNumberValue(aoColumns[2].toString()));
-        data.setColumn(ExecutorData.NAME, aoColumns[1].toString());
-        data.setColumn(ExecutorData.NODE_ID, nNodeId);
-        data.setColumn(ExecutorData.TASKS_COMPLETED, Long.valueOf(getNumberValue(aoColumns[3].toString())));
-        data.setColumn(ExecutorData.TASKS_REJECTED, Long.valueOf(getNumberValue(aoColumns[4].toString())));
-        data.setColumn(ExecutorData.TASKS_IN_PROGRESS, Long.valueOf(getNumberValue(aoColumns[5].toString())));
-        data.setColumn(ExecutorData.STATE, aoColumns[6].toString());
-
-        // retrieve the member to populate the memory attributes
-        setMemberMemory(data, model, nNodeId);
-
-        return data;
+        return null;
         }
 
     @Override
@@ -102,73 +144,41 @@ public class ExecutorData
             throws Exception
         {
         JsonNode rootNode = requestSender.getExecutors();
-        SortedMap<Object, Data> mapData              = new TreeMap<>();
+        SortedMap<Object, Data> mapData                 = new TreeMap<>();
         JsonNode                nodeProxyExecutorsItems = rootNode.get("items");
+        Map<String, Integer>    mapExecutorCount        = new HashMap<>();
+
         if (nodeProxyExecutorsItems != null && nodeProxyExecutorsItems.isArray())
             {
             for (int k = 0; k < (nodeProxyExecutorsItems).size(); k++)
                 {
-                JsonNode executor = nodeProxyExecutorsItems.get(k);
-
-                ExecutorData data = new ExecutorData();
-                data.setColumn(NODE_ID, executor.get("nodeId").asInt());
-                data.setColumn(NAME, executor.get("name").asText());
-                data.setColumn(STATE, executor.get("state").asText());
+                JsonNode     executor = nodeProxyExecutorsItems.get(k);
+                ExecutorData data     = new ExecutorData();
+                String       sName    = executor.get("name").asText();
+                
+                data.setColumn(NAME, sName);
                 data.setColumn(TASKS_IN_PROGRESS, executor.get("tasksInProgressCount").asLong());
                 data.setColumn(TASKS_COMPLETED, executor.get("tasksCompletedCount").asLong());
                 data.setColumn(TASKS_REJECTED, executor.get("tasksRejectedCount").asLong());
+                data.setColumn(DESCRIPTION, executor.get("description").asText());
 
-                // retrieve the member to populate the memory attributes
-                setMemberMemory(data, model, executor.get("memberId").asInt());
+                mapData.put(sName, data);
 
-                mapData.put(data.getColumn(0), data);
+                if (!mapExecutorCount.containsKey(sName))
+                    {
+                    mapExecutorCount.put(sName, 1);
+                    }
+                else
+                    {
+                    mapExecutorCount.put(sName, mapExecutorCount.get(sName) + 1);
+                    }
                 }
             }
+
+            // process the final data to update the executor count with the proper count
+            mapData.forEach((k,v) -> v.setColumn(EXECUTOR_COUNT, mapExecutorCount.get(k)));
 
             return mapData;
-        }
-
-    /**
-     * Sets the member memory given the node Id
-     * @param data   {@link Data}to set for
-     * @param model    the {@link VisualVMModel} to ask for data from
-     * @param nNodeId  the node id to look for
-     */
-    private void setMemberMemory(Data data, VisualVMModel model, int nNodeId)
-        {
-        MemberData member = getMember(model, nNodeId);
-        if (member == null)
-            {
-            LOGGER.warning("Unable to find member for node id " + nNodeId);
-            }
-        else
-            {
-            int nHeapMax = Integer.parseInt(member.getColumn(MemberData.MAX_MEMORY).toString());
-            int nHeapUsed = Integer.parseInt(member.getColumn(MemberData.USED_MEMORY).toString());
-            data.setColumn(ExecutorData.HEAP_MAX, nHeapMax);
-            data.setColumn(ExecutorData.HEAP_USED, nHeapUsed);
-            data.setColumn(ExecutorData.HEAP_FREE, nHeapMax - nHeapUsed);
-            }
-        }
-
-    /**
-     * Returns the {@link MemberData} for the node id.
-     *
-     * @param model    the {@link VisualVMModel} to ask for data from
-     * @param nNodeId  the node id to look for
-     * @return the {@link MemberData} or null if not found
-     */
-    private MemberData getMember(VisualVMModel model, int nNodeId)
-        {
-        List<Map.Entry<Object, Data>> memberData = model.getData(VisualVMModel.DataType.MEMBER);
-        for (Map.Entry<Object, Data> entry : memberData)
-            {
-            if (((Integer) entry.getValue().getColumn(MemberData.NODE_ID)) == nNodeId)
-                {
-                return (MemberData) entry.getValue();
-                }
-            }
-        return null;
         }
 
     // ----- constants ------------------------------------------------------
@@ -181,52 +191,38 @@ public class ExecutorData
     public static final int NAME = 0;
 
     /**
-     * Array index for Node id.
+     * Array index for executor count.
      */
-    public static final int NODE_ID = 1;
-
-    /**
-     * Array index for state
-     */
-    public static final int STATE = 2;
+    public static final int EXECUTOR_COUNT = 1;
 
     /**
      * Array index for tasks in progress.
      */
-    public static final int TASKS_IN_PROGRESS = 3;
+    public static final int TASKS_IN_PROGRESS = 2;
 
     /**
      * Array index for tasks completed.
      */
-    public static final int TASKS_COMPLETED = 4;
+    public static final int TASKS_COMPLETED = 3;
 
     /**
      * Array index for tasks rejected.
      */
-    public static final int TASKS_REJECTED = 5;
+    public static final int TASKS_REJECTED = 4;
 
     /**
-     * Array index for heap max.
+     * Array index for description.
      */
-    public static final int HEAP_MAX = 6;
-
-    /**
-     * Array index for heap used
-     */
-    public static final int HEAP_USED = 7;
-
-    /**
-     * Array index for free used
-     */
-    public static final int HEAP_FREE = 8;
+    public static final int DESCRIPTION = 5;
 
     /**
      * The logger object to use.
      */
     private static final Logger LOGGER = Logger.getLogger(ExecutorData.class.getName());
 
-    /**
-     * Report for proxy server data.
-     */
-    public static final String REPORT_EXECUTOR = "reports/visualvm/executor-stats.xml";
+    private static final String ATTR_MEMBER_ID = "MemberId";
+    private static final String ATTR_TASKS_COMPLETED = "TasksCompletedCount";
+    private static final String ATTR_TASKS_REJECTED = "TasksRejectedCount";
+    private static final String ATTR_TASKS_IN_PROGRESS = "TasksInProgressCount";
+    private static final String ATTR_DESCRIPTION = "Description";
     }

@@ -1402,11 +1402,9 @@ public class VisualVMModel
      */
     private static final String[] EXECUTOR_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_executor"), Localization.getLocalText("LBL_node_id"),
-        Localization.getLocalText("LBL_state"),
+        Localization.getLocalText("LBL_executor"),         Localization.getLocalText("LBL_executor_count"),
         Localization.getLocalText("LBL_tasks_in_progress"), Localization.getLocalText("LBL_tasks_completed"),
-        Localization.getLocalText("LBL_tasks_rejected"), Localization.getLocalText("LBL_max_memory"),
-        Localization.getLocalText("LBL_used_memory"), Localization.getLocalText("LBL_free_memory")
+        Localization.getLocalText("LBL_tasks_rejected"), Localization.getLocalText("LBL_exec_description")
         };
 
     /**

@@ -493,14 +493,11 @@ public class CoherenceClusterSnapshotPanel
             {
             sb.append("<tr>")
                     .append(td(entry.getValue().getColumn(ExecutorData.NAME).toString()))
-                    .append(td(entry.getValue().getColumn(ExecutorData.NODE_ID).toString()))
-                    .append(td(entry.getValue().getColumn(ExecutorData.STATE).toString()))
+                    .append(td(entry.getValue().getColumn(ExecutorData.EXECUTOR_COUNT).toString()))
                     .append(td(entry.getValue().getColumn(ExecutorData.TASKS_IN_PROGRESS).toString()))
                     .append(td(entry.getValue().getColumn(ExecutorData.TASKS_COMPLETED).toString()))
                     .append(td(entry.getValue().getColumn(ExecutorData.TASKS_REJECTED).toString()))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(ExecutorData.HEAP_MAX).toString())))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(ExecutorData.HEAP_USED).toString())))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(ExecutorData.HEAP_FREE).toString())))
+                    .append(td(entry.getValue().getColumn(ExecutorData.DESCRIPTION).toString()))
                     .append("</tr>");
             }
 

@@ -414,6 +414,15 @@ public class HttpRequestSender
         }
 
     @Override
+    public Set<ObjectName> getAllExecutorMembers() throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment("executors").addPathSegment("members");
+        urlBuilder.addQueryParameter("links", "").addQueryParameter("fields", "name");
+
+        return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
+        }
+
+    @Override
     public Set<ObjectName> getAllServiceMembers()
             throws Exception
         {
@@ -912,7 +921,7 @@ public class HttpRequestSender
      */
     public JsonNode getExecutors() throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("executors")
+        URLBuilder urlBuilder = getBasePath().addPathSegment("executors").addPathSegment("members")
                      .addQueryParameter("links", "");
         return getResponseJson(sendGetRequest(urlBuilder));
         }

@@ -98,13 +98,10 @@ public class CoherenceExecutorPanel
         f_table.setPreferredScrollableViewportSize(new Dimension(500, 150));
 
         // define renderers for the columns
-        RenderHelper.setColumnRenderer(f_table, ExecutorData.NODE_ID, new RenderHelper.IntegerRenderer());
+
         RenderHelper.setColumnRenderer(f_table, ExecutorData.TASKS_COMPLETED, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, ExecutorData.TASKS_REJECTED, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, ExecutorData.TASKS_IN_PROGRESS, new RenderHelper.IntegerRenderer());
-        RenderHelper.setColumnRenderer(f_table, ExecutorData.HEAP_FREE, new RenderHelper.IntegerRenderer());
-        RenderHelper.setColumnRenderer(f_table, ExecutorData.HEAP_MAX, new RenderHelper.IntegerRenderer());
-        RenderHelper.setColumnRenderer(f_table, ExecutorData.HEAP_USED, new RenderHelper.IntegerRenderer());
         RenderHelper.setHeaderAlignment(f_table, JLabel.CENTER);
 
         // Add some space
