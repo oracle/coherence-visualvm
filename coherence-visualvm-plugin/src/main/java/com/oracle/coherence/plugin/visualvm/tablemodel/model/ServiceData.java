@@ -70,9 +70,7 @@ public class ServiceData
 
     // ----- DataRetriever methods ------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings("rawtypes")
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender sender, VisualVMModel model)
         {
@@ -175,17 +173,13 @@ public class ServiceData
             }
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getReporterReport()
         {
         return REPORT_SERVICE;
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
         Data    data = new ServiceData();
@@ -225,18 +219,12 @@ public class ServiceData
         return data;
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void preProcessReporterData(VisualVMModel model)
         {
         setDistributedCaches = new HashSet<>();
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected SortedMap<Object, Data> postProcessReporterData(SortedMap<Object, Data> mapData, VisualVMModel model)
         {

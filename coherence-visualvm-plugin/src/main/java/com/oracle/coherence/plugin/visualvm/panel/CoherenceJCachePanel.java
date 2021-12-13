@@ -161,9 +161,6 @@ public class CoherenceJCachePanel
 
     // ----- AbstractCoherencePanel methods ---------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateGUI()
         {
@@ -203,9 +200,6 @@ public class CoherenceJCachePanel
             }
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateData()
         {

@@ -55,26 +55,20 @@ public class JCacheStatisticsData
 
     // ----- DataRetriever methods ------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
         // only available via report
         return null;
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getReporterReport()
         {
         return REPORT_JCACHE_CONFIGURATION;
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
         Data data = new JCacheStatisticsData();

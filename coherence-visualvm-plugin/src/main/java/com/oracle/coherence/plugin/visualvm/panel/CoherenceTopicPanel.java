@@ -130,9 +130,6 @@ public class CoherenceTopicPanel
 
     // ---- AbstractCoherencePanel methods ----------------------------------
 
-    /**
-      * {@inheritDoc}
-      */
     @Override
     public void updateData()
         {
@@ -140,9 +137,6 @@ public class CoherenceTopicPanel
         f_tmodel.setDataList(m_topicData);
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateGUI()
         {

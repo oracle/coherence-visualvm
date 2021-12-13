@@ -86,9 +86,6 @@ public class VisualVMViewProvider
         return false;
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected DataSourceView createView(Application application)
         {

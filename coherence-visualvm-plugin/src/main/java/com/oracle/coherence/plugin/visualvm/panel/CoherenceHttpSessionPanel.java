@@ -142,9 +142,6 @@ public class CoherenceHttpSessionPanel
 
     // ----- AbstractCoherencePanel methods ---------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateGUI()
         {
@@ -212,9 +209,6 @@ public class CoherenceHttpSessionPanel
         fireTableDataChangedWithSelection(f_table, f_tmodel);
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateData()
         {

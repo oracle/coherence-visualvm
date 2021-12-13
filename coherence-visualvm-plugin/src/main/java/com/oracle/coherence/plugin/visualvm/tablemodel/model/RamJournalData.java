@@ -47,17 +47,13 @@ public class RamJournalData
 
     // ----- AbstractElasticData methods ------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected Data getDataObject()
         {
         return new RamJournalData();
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected String getJMXQueryPrefix()
         {
         return "RamJournalRM";

@@ -71,9 +71,7 @@ public class CacheData
 
     // ----- DataRetriever methods ------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender sender, VisualVMModel model)
         {
         SortedMap<Object, Data> mapData = new TreeMap<Object, Data>();
@@ -221,9 +219,7 @@ public class CacheData
             }
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getReporterReport()
         {
         return null;    // until the following JIRA is fixed we cannot implement this
@@ -232,9 +228,7 @@ public class CacheData
         // return REPORT_CACHE_SIZE;
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
         Data data = new CacheData();
@@ -426,9 +420,6 @@ public class CacheData
         return data;
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected SortedMap<Object, Data> postProcessReporterData(SortedMap<Object, Data> mapData, VisualVMModel model)
         {

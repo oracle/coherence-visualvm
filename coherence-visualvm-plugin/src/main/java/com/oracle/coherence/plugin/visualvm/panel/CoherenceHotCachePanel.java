@@ -189,9 +189,6 @@ public class CoherenceHotCachePanel
         pnebottom.add(m_hotcacheGraph8.getChart());
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateGUI()
         {
@@ -204,9 +201,6 @@ public class CoherenceHotCachePanel
             }
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateData()
         {

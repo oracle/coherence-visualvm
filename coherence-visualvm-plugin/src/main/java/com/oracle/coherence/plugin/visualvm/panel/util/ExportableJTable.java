@@ -104,9 +104,6 @@ public class ExportableJTable
 
     // ---- JTable methods --------------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public JPopupMenu getComponentPopupMenu()
         {

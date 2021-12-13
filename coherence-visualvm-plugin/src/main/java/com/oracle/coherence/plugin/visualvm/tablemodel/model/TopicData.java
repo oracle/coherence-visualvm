@@ -59,9 +59,7 @@ public class TopicData
 
     // ----- DataRetriever methods ------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings("unchecked")
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender sender, VisualVMModel model)
         {
@@ -71,17 +69,13 @@ public class TopicData
         return null;
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getReporterReport()
         {
         return REPORT_TOPICS;
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
         Data data = new TopicData();
@@ -158,9 +152,6 @@ public class TopicData
         return mapData;
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected SortedMap<Object, Data> postProcessReporterData(SortedMap<Object, Data> mapData, VisualVMModel model)
         {

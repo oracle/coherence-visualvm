@@ -71,9 +71,7 @@ public class ProxyData
 
     // ----- DataRetriever methods ------------------------------------------
 
-    /**
-    * {@inheritDoc}
-    */
+    @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
         SortedMap<Object, Data> mapData = new TreeMap<Object, Data>();
@@ -137,17 +135,13 @@ public class ProxyData
             }
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getReporterReport()
         {
         return REPORT_PROXY;
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
         String sServiceName = aoColumns[3].toString();

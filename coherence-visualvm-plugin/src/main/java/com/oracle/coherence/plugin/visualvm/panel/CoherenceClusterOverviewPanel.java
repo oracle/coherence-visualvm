@@ -179,9 +179,7 @@ public class CoherenceClusterOverviewPanel
         }
 
     // ----- AbstractCoherencePanel methods ---------------------------------
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void updateGUI()
         {
@@ -315,9 +313,6 @@ public class CoherenceClusterOverviewPanel
             }
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateData()
         {

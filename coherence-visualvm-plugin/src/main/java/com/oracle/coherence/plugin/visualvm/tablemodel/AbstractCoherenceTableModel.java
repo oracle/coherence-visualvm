@@ -77,17 +77,12 @@ public abstract class AbstractCoherenceTableModel<K, V>
         return f_asColumnNames.length;
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public int getRowCount()
         {
         return m_dataList == null ? 0 : m_dataList.size();
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getColumnName(int col)
         {
@@ -99,9 +94,6 @@ public abstract class AbstractCoherenceTableModel<K, V>
         return f_asColumnNames[col];
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Class<?> getColumnClass(int col)
         {
@@ -115,9 +107,7 @@ public abstract class AbstractCoherenceTableModel<K, V>
             }
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Object getValueAt(int row, int col)
         {
         if (m_dataList == null || m_dataList.size() == 0)

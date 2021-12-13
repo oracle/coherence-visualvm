@@ -138,9 +138,6 @@ public class CoherenceExecutorPanel
 
     // ----- AbstractCoherencePanel methods ---------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateGUI()
         {
@@ -198,9 +195,6 @@ public class CoherenceExecutorPanel
             }
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateData()
         {

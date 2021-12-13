@@ -266,9 +266,6 @@ public class CoherencePersistencePanel
 
     // ----- AbstractCoherencePanel methods ---------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateGUI()
         {
@@ -306,9 +303,6 @@ public class CoherencePersistencePanel
         fireTableDataChangedWithSelection(f_tableNotifications, f_tmodelNotifications);
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateData()
         {

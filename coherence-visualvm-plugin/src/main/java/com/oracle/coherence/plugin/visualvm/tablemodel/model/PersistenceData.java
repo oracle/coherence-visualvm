@@ -72,9 +72,7 @@ public class PersistenceData
 
     // ----- DataRetriever methods ------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
         SortedMap<Object, Data> mapData = new TreeMap<>();
@@ -214,17 +212,14 @@ public class PersistenceData
             return null;
             }
         }
-    /**
-     * {@inheritDoc }
-     */
+
+    @Override
     public String getReporterReport()
         {
         return null;    // see comment below
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
         // The reporter does not support running a method on an extracted value and therefore

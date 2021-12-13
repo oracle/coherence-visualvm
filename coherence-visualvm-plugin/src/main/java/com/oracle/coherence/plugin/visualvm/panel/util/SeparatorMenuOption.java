@@ -44,18 +44,12 @@ public class SeparatorMenuOption
         super(model, requestSender, jtable);
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getMenuItem()
         {
         return null;
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void actionPerformed(ActionEvent actionEvent)
         {

@@ -62,26 +62,19 @@ public class FederationOriginDetailsData
 
     // ----- DataRetriever methods ------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     @SuppressWarnings("rawtypes")
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
         return null;
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getReporterReport()
         {
         return REPORT_DESTINATION_DETAILS;
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String preProcessReporterXML(VisualVMModel model, String sReporterXML)
         {
@@ -97,9 +90,7 @@ public class FederationOriginDetailsData
         return query;
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
         Data data = new FederationOriginDetailsData();

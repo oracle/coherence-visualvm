@@ -68,9 +68,7 @@ public class CacheStorageManagerData
 
     // ----- DataRetriever methods ------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
         SortedMap<Object, Data> mapData = new TreeMap<Object, Data>();
@@ -150,9 +148,6 @@ public class CacheStorageManagerData
             }
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String preProcessReporterXML(VisualVMModel model, String sReporterXML)
         {
@@ -179,17 +174,13 @@ public class CacheStorageManagerData
                                  .replaceAll("%CACHE_NAME%",   selectedCache.getY());
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getReporterReport()
         {
         return REPORT_STORAGE_MANAGER;
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
         Data data = new CacheStorageManagerData();
