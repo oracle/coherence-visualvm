@@ -140,9 +140,6 @@ public class CoherenceElasticDataPanel
 
     // ----- AbstractCoherencePanel methods ---------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateGUI()
         {
@@ -226,9 +223,6 @@ public class CoherenceElasticDataPanel
         m_cLastRamExhaustive   = cRamExhaustive;
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateData()
         {

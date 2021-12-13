@@ -231,9 +231,6 @@ public class CoherenceServicePanel
 
     // ----- AbstractCoherencePanel methods ---------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateGUI()
         {
@@ -248,9 +245,6 @@ public class CoherenceServicePanel
 
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateData()
         {

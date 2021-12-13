@@ -82,9 +82,7 @@ public class CacheDetailData
 
     // ----- DataRetriever methods ------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
         SortedMap<Object, Data> cacheMap = new TreeMap<Object, Data>();
@@ -131,9 +129,7 @@ public class CacheDetailData
             }
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getReporterReport()
         {
         return REPORT_CACHE_DETAIL;
@@ -195,9 +191,6 @@ public class CacheDetailData
         return data;
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String preProcessReporterXML(VisualVMModel model, String sReporterXML)
         {

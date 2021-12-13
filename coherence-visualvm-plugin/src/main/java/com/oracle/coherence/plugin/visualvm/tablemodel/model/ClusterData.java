@@ -65,25 +65,19 @@ public class ClusterData
 
     // ----- DataRetriever methods ------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
         return new ArrayList<Map.Entry<Object, Data>>(getJMXDataMap(requestSender, model).entrySet());
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getReporterReport()
         {
         return REPORT_CLUSTER;
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
         Data data = new ClusterData();
@@ -107,6 +101,14 @@ public class ClusterData
 
     // ----- DataRetriever methods ------------------------------------------
 
+    /**
+     * Retrieve JMX data.
+     *
+     * @param requestSender   {@link RequestSender}
+     * @param model           {@link VisualVMModel}
+     *
+     * @return JMX data
+     */
     protected SortedMap<Object, Data> getJMXDataMap(RequestSender requestSender, VisualVMModel model)
         {
         SortedMap<Object, Data> mapData = new TreeMap<Object, Data>();

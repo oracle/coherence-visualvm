@@ -64,7 +64,6 @@ public class HttpProxyMemberData extends AbstractData
 
     // ----- DataRetriever methods ------------------------------------------
 
-
     @Override
     public List<Map.Entry<Object, Data>> getJMXData (RequestSender requestSender, VisualVMModel model)
         {
@@ -101,9 +100,6 @@ public class HttpProxyMemberData extends AbstractData
         return data;
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String preProcessReporterXML(VisualVMModel model, String sReporterXML)
         {

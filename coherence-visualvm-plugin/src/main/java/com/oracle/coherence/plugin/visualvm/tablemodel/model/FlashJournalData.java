@@ -47,17 +47,13 @@ public class FlashJournalData
 
     // ----- AbstractElasticData methods ------------------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected Data getDataObject()
         {
         return new FlashJournalData();
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     protected String getJMXQueryPrefix()
         {
         return "FlashJournalRM";
@@ -68,5 +64,4 @@ public class FlashJournalData
         {
         return "flash";
         }
-
     }

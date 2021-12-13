@@ -97,9 +97,6 @@ public class CoherenceClusterSnapshotPanel
 
     // ----- AbstractCoherencePanel methods ----------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateGUI()
         {
@@ -706,9 +703,6 @@ public class CoherenceClusterSnapshotPanel
         return "</table>";
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateData()
         {

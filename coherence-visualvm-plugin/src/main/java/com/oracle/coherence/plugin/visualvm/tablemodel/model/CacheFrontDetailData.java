@@ -50,9 +50,6 @@ public class CacheFrontDetailData
         super(CacheType.FRONT_TIER, CacheFrontDetailData.HIT_PROBABILITY + 1);
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Data populateData(RequestSender sender, ObjectName objName)
         throws Exception
@@ -76,9 +73,6 @@ public class CacheFrontDetailData
         return data;
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Data populateData(Object[] aoColumns)
         {

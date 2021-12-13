@@ -157,9 +157,6 @@ public class CoherenceProxyPanel
 
     // ----- AbstractCoherencePanel methods ---------------------------------
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateGUI()
         {
@@ -215,9 +212,6 @@ public class CoherenceProxyPanel
             }
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void updateData()
         {

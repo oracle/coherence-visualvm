@@ -150,6 +150,7 @@ public class VisualVMView
      * Create the new {@link DataViewComponent} which will display all the
      * Coherence related information.
      */
+    @Override
     protected DataViewComponent createComponent()
         {
         final VisualVMModel model = VisualVMModel.getInstance();
@@ -394,9 +395,6 @@ public class VisualVMView
         return m_dvc;
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void removed()
         {

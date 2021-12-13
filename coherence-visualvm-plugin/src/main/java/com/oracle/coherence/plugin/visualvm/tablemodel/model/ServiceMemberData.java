@@ -67,9 +67,7 @@ public class ServiceMemberData
 
     // ----- DataRetriever methods ------------------------------------------
 
-    /**
-    * {@inheritDoc}
-    */
+    @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender sender, VisualVMModel model)
         {
         String sSelectedService = model.getSelectedService();
@@ -143,17 +141,13 @@ public class ServiceMemberData
             }
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getReporterReport()
         {
         return REPORT_SERVICE_MEMBER;
         }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
         Data data = null;

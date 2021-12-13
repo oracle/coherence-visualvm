@@ -59,9 +59,6 @@ public class HotCachePerCacheData
         super(5);
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
@@ -85,7 +82,7 @@ public class HotCachePerCacheData
                         new String[]{ATTR_PERCACHESTATISTICS});
 
                 TabularData tabularData = ((TabularData) JMXUtils.getAttributeValue(listAttr,ATTR_PERCACHESTATISTICS));
-                SortedMap<String,Object[]> tabledata = extractdata(tabularData);
+                SortedMap<String,Object[]> tabledata = extractData(tabularData);
 
                 for (Map.Entry<String, Object[]> entry : tabledata.entrySet())
                     {
@@ -115,7 +112,7 @@ public class HotCachePerCacheData
      * @param tabularData {@link TabularData} to process
      * @return Map
      */
-    public SortedMap<String,Object[]> extractdata(TabularData tabularData)
+    public SortedMap<String,Object[]> extractData(TabularData tabularData)
         {
         TabularData innertabulardata;
         CompositeData innercompositedata2;
@@ -173,18 +170,12 @@ public class HotCachePerCacheData
         return map;
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getReporterReport()
         {
         return null;
         }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {

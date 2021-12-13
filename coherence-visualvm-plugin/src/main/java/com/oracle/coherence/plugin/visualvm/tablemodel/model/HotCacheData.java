@@ -61,9 +61,7 @@ public class HotCacheData
         }
 
     // ----- DataRetriever methods ------------------------------------------
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
@@ -129,23 +127,18 @@ public class HotCacheData
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String getReporterReport() {
-            return null;
+    @Override
+    public String getReporterReport()
+        {
+        return null;
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Data processReporterData(Object[] aoColumns, VisualVMModel model)
-            {
-            Data   data         = null;
-            return data;
-            }
+    @Override
+    public Data processReporterData(Object[] aoColumns, VisualVMModel model)
+        {
+        Data   data         = null;
+        return data;
+        }
 
     @Override
     public SortedMap<Object, Data> getAggregatedDataFromHttpQuerying(VisualVMModel     model,
@@ -157,199 +150,199 @@ public class HotCacheData
         }
 
     // ----- constants ------------------------------------------------------
-        /**
-         * Array index for node id.
-         */
-        public static final int MEMBER = 0;
 
-        /**
-         * Array index for total number of operations processed.
-         */
-        public static final int NUMBER_OF_OPERATIONS_PROCESSED = 1;
+    /**
+     * Array index for node id.
+     */
+    public static final int MEMBER = 0;
 
-        /**
-         * Array index for start time.
-         */
-        public static final int START_TIME = 2;
+    /**
+     * Array index for total number of operations processed.
+     */
+    public static final int NUMBER_OF_OPERATIONS_PROCESSED = 1;
 
-        /**
-         * Array index for trail file name.
-         */
-        public static final int TRAIL_FILENAME = 3;
+    /**
+     * Array index for start time.
+     */
+    public static final int START_TIME = 2;
 
-        /**
-         * Array index for trail file position.
-         */
-        public static final int TRAIL_FILEPOS = 4;
+    /**
+     * Array index for trail file name.
+     */
+    public static final int TRAIL_FILENAME = 3;
 
-        /**
-         * Array index for maximum execution time per operation.
-         */
-        public static final int Max1 = 5;
+    /**
+     * Array index for trail file position.
+     */
+    public static final int TRAIL_FILEPOS = 4;
 
-        /**
-         * Array index for maximum execution time per transaction.
-         */
-        public static final int Max2 = 6;
+    /**
+     * Array index for maximum execution time per operation.
+     */
+    public static final int Max1 = 5;
 
-        /**
-         * Array index for maximum number of Invocations Per Operation.
-         */
-        public static final int Max3 = 7;
+    /**
+     * Array index for maximum execution time per transaction.
+     */
+    public static final int Max2 = 6;
 
-        /**
-         * Array index for maximum Last execution time Per Operation.
-         */
-        public static final int Max4 = 8;
+    /**
+     * Array index for maximum number of Invocations Per Operation.
+     */
+    public static final int Max3 = 7;
 
-        /**
-         * Array index for maximum Last Operation Replication Lag.
-         */
-        public static final int Max5 = 9;
+    /**
+     * Array index for maximum Last execution time Per Operation.
+     */
+    public static final int Max4 = 8;
 
-        /**
-         * Array index for maximum Operation Replication Lag.
-         */
-        public static final int Max6 = 10;
+    /**
+     * Array index for maximum Last Operation Replication Lag.
+     */
+    public static final int Max5 = 9;
 
-        /**
-         * Array index for maximum number of Operations Per Transaction.
-         */
-        public static final int Max7 = 11;
+    /**
+     * Array index for maximum Operation Replication Lag.
+     */
+    public static final int Max6 = 10;
 
-        /**
-         * Array index for mean execution time per operation.
-         */
-        public static final int Mean1 = 12;
+    /**
+     * Array index for maximum number of Operations Per Transaction.
+     */
+    public static final int Max7 = 11;
 
-        /**
-         * Array index for mean execution time per transaction.
-         */
-        public static final int Mean2 = 13;
+    /**
+     * Array index for mean execution time per operation.
+     */
+    public static final int Mean1 = 12;
 
-        /**
-         * Array index for mean number of Invocations Per Operation.
-         */
-        public static final int Mean3 = 14;
+    /**
+     * Array index for mean execution time per transaction.
+     */
+    public static final int Mean2 = 13;
 
-        /**
-         * Array index for mean Last execution time Per Operation.
-         */
-        public static final int Mean4 = 15;
+    /**
+     * Array index for mean number of Invocations Per Operation.
+     */
+    public static final int Mean3 = 14;
 
-        /**
-         * Array index for mean Last Operation Replication Lag.
-         */
-        public static final int Mean5 = 16;
+    /**
+     * Array index for mean Last execution time Per Operation.
+     */
+    public static final int Mean4 = 15;
 
-        /**
-         * Array index for mean Operation Replication Lag.
-         */
-        public static final int Mean6 = 17;
+    /**
+     * Array index for mean Last Operation Replication Lag.
+     */
+    public static final int Mean5 = 16;
 
-        /**
-         * Array index for mean number of Operations Per Transaction.
-         */
-        public static final int Mean7 = 18;
+    /**
+     * Array index for mean Operation Replication Lag.
+     */
+    public static final int Mean6 = 17;
 
-        /**
-         * Array index for minimum execution time per operation.
-         */
-        public static final int Min1 = 19;
+    /**
+     * Array index for mean number of Operations Per Transaction.
+     */
+    public static final int Mean7 = 18;
 
-        /**
-         * Array index for minimum execution time per transaction.
-         */
-        public static final int Min2 = 20;
+    /**
+     * Array index for minimum execution time per operation.
+     */
+    public static final int Min1 = 19;
 
-        /**
-         * Array index for minimum number of Invocations Per Operation.
-         */
-        public static final int Min3 = 21;
+    /**
+     * Array index for minimum execution time per transaction.
+     */
+    public static final int Min2 = 20;
 
-        /**
-         * Array index for minimum Last execution time Per Operation.
-         */
-        public static final int Min4 = 22;
+    /**
+     * Array index for minimum number of Invocations Per Operation.
+     */
+    public static final int Min3 = 21;
 
-        /**
-         * Array index for minimum Last Operation Replication Lag.
-         */
-        public static final int Min5 = 23;
+    /**
+     * Array index for minimum Last execution time Per Operation.
+     */
+    public static final int Min4 = 22;
 
-        /**
-         * Array index for minimum Operation Replication Lag.
-         */
-        public static final int Min6 = 24;
+    /**
+     * Array index for minimum Last Operation Replication Lag.
+     */
+    public static final int Min5 = 23;
 
-        /**
-         * Array index for minimum number of Operations Per Transaction.
-         */
-        public static final int Min7 = 25;
+    /**
+     * Array index for minimum Operation Replication Lag.
+     */
+    public static final int Min6 = 24;
 
-        /**
-         * The logger object to use.
-         */
-        private static final Logger LOGGER = Logger.getLogger(HotCacheData.class.getName());
+    /**
+     * Array index for minimum number of Operations Per Transaction.
+     */
+    public static final int Min7 = 25;
 
-        /**
-         * JMX attribute name for Hotcache member.
-         */
-        private static final String ATTR_MEMBER = "MEMBER";
+    /**
+     * The logger object to use.
+     */
+    private static final Logger LOGGER = Logger.getLogger(HotCacheData.class.getName());
 
-        /**
-         * JMX attribute name for Number Of Operations Processed.
-         */
-        private static final String ATTR_NUMBER_OF_OPERATIONS_PROCESSED = "NumberOfOperationsProcessed";
+    /**
+     * JMX attribute name for Hotcache member.
+     */
+    private static final String ATTR_MEMBER = "MEMBER";
 
-        /**
-         * JMX attribute name for start time.
-         */
-        private static final String ATTR_START_TIME = "StartTime";
+    /**
+     * JMX attribute name for Number Of Operations Processed.
+     */
+    private static final String ATTR_NUMBER_OF_OPERATIONS_PROCESSED = "NumberOfOperationsProcessed";
 
-        /**
-         * JMX attribute name for trail filename.
-         */
-        private static final String ATTR_TRAIL_FILENAME = "TrailFileName";
+    /**
+     * JMX attribute name for start time.
+     */
+    private static final String ATTR_START_TIME = "StartTime";
 
-        /**
-         * JMX attribute name for trailfile position.
-         */
-        private static final String ATTR_TRAIL_FILEPOS = "TrailFilePosition";
+    /**
+     * JMX attribute name for trail filename.
+     */
+    private static final String ATTR_TRAIL_FILENAME = "TrailFileName";
 
-        /**
-         * JMX attribute name for Execution Time Per Operation Statistics.
-         */
-        private static final String ATTR_ExecTime_PerOpr = "ExecutionTimePerOperationStatistics";
+    /**
+     * JMX attribute name for trailfile position.
+     */
+    private static final String ATTR_TRAIL_FILEPOS = "TrailFilePosition";
 
-        /**
-         * JMX attribute name for Execution Time Per Transaction Statistics.
-         */
-        private static final String ATTR_ExecTime_PerTr = "ExecutionTimePerTransactionStatistics";
+    /**
+     * JMX attribute name for Execution Time Per Operation Statistics.
+     */
+    private static final String ATTR_ExecTime_PerOpr = "ExecutionTimePerOperationStatistics";
 
-        /**
-         * JMX attribute name for Number Of Invocations Per Operation Statistics.
-         */
-        private static final String ATTR_Invocations_PerOp = "InvocationsPerOperationStatistics";
+    /**
+     * JMX attribute name for Execution Time Per Transaction Statistics.
+     */
+    private static final String ATTR_ExecTime_PerTr = "ExecutionTimePerTransactionStatistics";
 
-        /**
-         * JMX attribute name for Last ExecutionTime Per Operation Statistics.
-         */
-        private static final String ATTR_LastExecTime_PerOp = "LastExecutionTimePerOperationStatistics";
+    /**
+     * JMX attribute name for Number Of Invocations Per Operation Statistics.
+     */
+    private static final String ATTR_Invocations_PerOp = "InvocationsPerOperationStatistics";
 
-        /**
-         * JMX attribute name for Last Operation ReplicationLag Statistics.
-         */
-        private static final String ATTR_LastOpRepLag = "LastOperationReplicationLagStatistics";
+    /**
+     * JMX attribute name for Last ExecutionTime Per Operation Statistics.
+     */
+    private static final String ATTR_LastExecTime_PerOp = "LastExecutionTimePerOperationStatistics";
 
-        /**
-         * JMX attribute name for Operation ReplicationLag Statistics.
-         */
-        private static final String ATTR_OpRepLag = "OperationReplicationLagStatistics";
+    /**
+     * JMX attribute name for Last Operation ReplicationLag Statistics.
+     */
+    private static final String ATTR_LastOpRepLag = "LastOperationReplicationLagStatistics";
 
-        /**
-         * JMX attribute name for Number Of Operations Per Transaction Statistics.
-         */
-        private static final String ATTR_OpPerTr = "OperationsPerTransactionStatistics";
+    /**
+     * JMX attribute name for Operation ReplicationLag Statistics.
+     */
+    private static final String ATTR_OpRepLag = "OperationReplicationLagStatistics";
 
+    /**
+     * JMX attribute name for Number Of Operations Per Transaction Statistics.
+     */
+    private static final String ATTR_OpPerTr = "OperationsPerTransactionStatistics";
     }
