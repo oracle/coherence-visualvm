@@ -65,6 +65,9 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.swing.JOptionPane;
+
+import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
 
 
 /**
@@ -1642,9 +1645,12 @@ public class HttpRequestSender
         // disable SSL verification if option set
         if (GlobalPreferences.sharedInstance().isSSLCertValidationDisabled())
             {
-            LOGGER.warning("SSL Certification validation has been explicitly disabled");
+            String sText =  getLocalText("LBL_ssl_validation_disabled");
+            LOGGER.warning(sText);
             m_sslContext.init(null, TRUST_ALL_CERTS, new java.security.SecureRandom());
             HttpsURLConnection.setDefaultHostnameVerifier(TRUST_ALL_HOSTS);
+            JOptionPane.showMessageDialog(null, getLocalText("LBL_ssl_validation_disabled"), getLocalText("LBL_warning"),
+                    JOptionPane.WARNING_MESSAGE);
             }
         else
             {
