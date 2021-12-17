@@ -260,22 +260,20 @@ public class CoherenceClusterOverviewPanel
                 // now set the "cluster statusHA"
                 String sStatusHA = STATUSHA_VALUES[bestStatusHA];
 
+                f_txtClusterStatusHA.setForeground(Color.black);
                 if (bestStatusHA == 0)
                     {
                     f_txtClusterStatusHA.setBackground(Color.red);
-                    f_txtClusterStatusHA.setForeground(Color.white);
                     f_txtClusterStatusHA.setToolTipText(RenderHelper.ENDANGERED_TOOLTIP);
                     }
                 else if (bestStatusHA == 1)
                     {
                     f_txtClusterStatusHA.setBackground(Color.orange);
-                    f_txtClusterStatusHA.setForeground(Color.black);
                     f_txtClusterStatusHA.setToolTipText(RenderHelper.NODE_SAFE_TOOLTIP);
                     }
                 else
                     {
                     f_txtClusterStatusHA.setBackground(Color.green);
-                    f_txtClusterStatusHA.setForeground(Color.black);
                     f_txtClusterStatusHA.setToolTipText(RenderHelper.MACHINE_SAFE_TOOLTIP);
                     }
 
