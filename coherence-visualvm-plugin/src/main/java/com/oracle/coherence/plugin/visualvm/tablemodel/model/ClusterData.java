@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,12 +25,15 @@
 
 package com.oracle.coherence.plugin.visualvm.tablemodel.model;
 
+import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.JMXUtils;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +46,9 @@ import java.util.logging.Logger;
 
 import javax.management.AttributeList;
 import javax.management.ObjectName;
+import javax.swing.JOptionPane;
+
+import static com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender.CLUSTER_PREFIX;
 
 /**
  * A class to hold basic cluster data.
@@ -121,7 +127,43 @@ public class ClusterData
             if (requestSender instanceof HttpRequestSender)
                 {
                 httpRequestSender = (HttpRequestSender) requestSender;
-            }
+                }
+
+            if (clusterSet.size() > 1)
+                {
+                // choose the cluster to connect to if we have more than one
+                ArrayList<String> listClusters = new ArrayList<>();
+
+                for (ObjectName cluster : clusterSet)
+                    {
+                    listClusters.add(cluster.getCanonicalName().replaceAll("Coherence:", "")
+                                            .replaceAll("cluster=", "")
+                                            .replaceAll("type=Cluster","")
+                                            .replaceAll(",", ""));
+                    }
+
+                String[] asClusters = listClusters.toArray(new String[0]);
+                Arrays.sort(asClusters);
+                 // request the user to choose from an existing list
+
+                String sSelectedCluster = (String) JOptionPane.showInputDialog(
+                        null, "Cluster",
+                        Localization.getLocalText("LBL_select_cluster"),
+                        JOptionPane.QUESTION_MESSAGE,
+                        null, // default icon
+                        asClusters,
+                        asClusters[0]);
+
+
+                if (sSelectedCluster != null)
+                    {
+                    clusterSet = Collections.singleton(new ObjectName(CLUSTER_PREFIX + sSelectedCluster));
+                    if (httpRequestSender != null)
+                        {
+                        httpRequestSender.setClusterName(sSelectedCluster);
+                        }
+                    }
+                }
 
             for (Iterator<ObjectName> cacheNameIter = clusterSet.iterator(); cacheNameIter.hasNext(); )
                 {
