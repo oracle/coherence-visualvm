@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -328,7 +328,38 @@ public class HttpRequestSender
     public Set<ObjectName> getAllClusters()
             throws Exception
         {
-        return Collections.singleton(new ObjectName("Coherence:type=Cluster"));
+        if (!f_fisWebLogic)
+            {
+            // return immediately if we are not in WebLogic as only once cluster is possible
+            // for non-WebLogic clusters
+            return Collections.singleton(new ObjectName("Coherence:type=Cluster"));
+            }
+
+        // continue on and check for WebLogic Server
+        String sClusterName = getClusterName();
+        if (sClusterName != null)
+            {
+            // cluster name is set so return what we have chosen
+            return Collections.singleton(new ObjectName(CLUSTER_PREFIX + sClusterName));
+            }
+
+        // build the list of clusters
+        URLBuilder urlBuilder = getBasePath().addQueryParameter("links", "");
+        JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
+        JsonNode clusterItems = rootNode.get("items");
+        Set<ObjectName> setObjectNames = new HashSet<>();
+
+        if (clusterItems != null && clusterItems.isArray())
+            {
+            for (int k = 0; k < (clusterItems).size(); k++)
+                {
+                JsonNode cluster = clusterItems.get(k);
+
+                setObjectNames.add(new ObjectName(CLUSTER_PREFIX + cluster.get("cluster").asText()));
+                }
+            }
+
+        return setObjectNames;
         }
 
     @Override
@@ -1691,6 +1722,11 @@ public class HttpRequestSender
      * Header required for POST and DELETE to WebLogic Server.
      */
     private static final String REQUESTED_BY = "X-Requested-By";
+
+    /**
+     * Prefix for cluster object name.
+     */
+    public static final String CLUSTER_PREFIX = "Coherence:type=Cluster,cluster=";
 
     /**
      * A trust manager that will trust all certificates. Only used when the preference to ignore SSL certs is chosen.
