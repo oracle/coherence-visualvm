@@ -101,7 +101,7 @@ public class ExecutorData
             }
         catch (Exception e)
             {
-            LOGGER.log(Level.WARNING, "Error getting member statistics", e);
+            LOGGER.log(Level.WARNING, "Error getting executor statistics", e);
 
             return null;
             }

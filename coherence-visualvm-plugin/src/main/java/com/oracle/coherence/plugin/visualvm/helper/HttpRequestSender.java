@@ -456,6 +456,14 @@ public class HttpRequestSender
         return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
         }
 
+
+    @Override
+    public Set<ObjectName> getAllGrpcProxyMembers()
+            throws Exception
+        {
+        return Collections.emptySet();
+        }
+
     @Override
     public Set<ObjectName> getAllServiceMembers()
             throws Exception

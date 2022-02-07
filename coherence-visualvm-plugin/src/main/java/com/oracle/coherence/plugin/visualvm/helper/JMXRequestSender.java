@@ -196,6 +196,13 @@ public class JMXRequestSender
         return f_connection.queryNames(new ObjectName("Coherence:type=Executor,*"), null);
         }
 
+    @Override
+    public Set<ObjectName> getAllGrpcProxyMembers()
+            throws Exception
+        {
+        return f_connection.queryNames(new ObjectName("Coherence:type=GrpcNamedCacheProxy,*"), null);
+        }
+
 
     @Override
     public Set<ObjectName> getAllServiceMembers()

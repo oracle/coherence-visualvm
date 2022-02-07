@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -176,6 +176,52 @@ public class GraphHelper
         }
 
     /**
+     * Create a graph representing the messages received and responses sent.
+     *
+     * @return a {@link SimpleXYChartSupport} representing the graph
+     */
+    public static SimpleXYChartSupport createGrpcMessagesGraph()
+        {
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
+
+        sxycd.setChartTitle(getLocalText("GRPH_grpc_messages"));
+        sxycd.addLineItems(getLocalText("LBL_total_grpc_resp_sent"));
+        sxycd.addLineItems(getLocalText("LBL_total_grpc_msg_rec"));
+
+        return createChart(sxycd);
+        }
+
+    /**
+     * Create a graph representing the mean message and response times.
+     *
+     * @return a {@link SimpleXYChartSupport} representing the graph
+     */
+    public static SimpleXYChartSupport createMeanGrpcStatsGraph()
+        {
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(1,
+                0.0001, true, VALUES_LIMIT);
+
+        sxycd.setChartTitle(getLocalText("GRPH_mean_values"));
+        sxycd.addLineFillItems(getLocalText("LBL_request_duration_mean"), getLocalText("LBL_message_duration_mean"));
+
+        return createChart(sxycd);
+        }
+
+    /**
+     * Add values to the mean message and response graph.
+     *
+     * @param graph      {@link SimpleXYChartSupport} to add values to
+     * @param cReqMean   current request mean
+     * @param cMsgMean   current message mean
+     */
+    public static void addValuesToMeanGrpcStatsGraph(SimpleXYChartSupport graph, float cReqMean, float cMsgMean)
+        {
+        graph.addValues(System.currentTimeMillis(), new long[] {(long) (cReqMean * 10000),
+            (long) (cMsgMean * 10000)});
+        }
+
+
+    /**
      * Create a graph representing the currently executing tasks.
      *
      * @return a {@link SimpleXYChartSupport} representing the graph
@@ -255,7 +301,19 @@ public class GraphHelper
         graph.addValues(System.currentTimeMillis(), new long[] {(long) cTotalConnections});
         }
 
-        /**
+    /**
+     * Add values to the gRPC proxy messages graph.
+     *
+     * @param graph      {@link SimpleXYChartSupport} to add values to
+     * @param cTotalSent total grpc responses sent
+     * @param cTotalRec  total grpc messages rec
+     */
+    public static void addValuesToGrpcMessagesGraph(SimpleXYChartSupport graph, long cTotalSent, long cTotalRec)
+        {
+        graph.addValues(System.currentTimeMillis(), new long[] {cTotalSent, cTotalRec});
+        }
+
+    /**
      * Add values to the total topics unconsumed graph.
      *
      * @param graph             {@link SimpleXYChartSupport} to add values to
