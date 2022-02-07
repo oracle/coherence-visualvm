@@ -219,6 +219,16 @@ public interface RequestSender
             throws Exception;
 
     /**
+     * Get all the gRPCProxy members.
+     *
+     * @return the list of gRPCProxy members
+     *
+     * @throws Exception in case of errors
+     */
+    Set<ObjectName> getAllGrpcProxyMembers()
+            throws Exception;
+
+    /**
      * Get the list of ServiceMBeans in the cluster.
      *
      * @return list of service MBeans

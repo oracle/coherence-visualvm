@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -39,6 +39,7 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationDestinati
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationOriginData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationOriginDetailsData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.FlashJournalData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.GrpcProxyData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.HotCacheData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.HotCachePerCacheData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.HttpProxyData;
@@ -161,6 +162,7 @@ public class VisualVMModel
         f_mapDataRetrievers.put(HotCachePerCacheData.class, new HotCachePerCacheData());
         f_mapDataRetrievers.put(NodeStorageData.class, new NodeStorageData());
         f_mapDataRetrievers.put(ExecutorData.class, new ExecutorData());
+        f_mapDataRetrievers.put(GrpcProxyData.class, new GrpcProxyData());
 
         // Loop through each data retriever and initialize the map of
         // report XML. Doing it this way we load it only once
@@ -1004,6 +1006,17 @@ public class VisualVMModel
         }
 
     /**
+     * Returns if GrpcProxy is configured.
+     *
+     * @return true if GrpcProxy is configured.
+     */
+    public boolean isGrpcProxyConfigured()
+        {
+        return (m_mapCollectedData.get(DataType.GRPC_PROXY) != null
+                && m_mapCollectedData.get(DataType.GRPC_PROXY).size() != 0);
+        }
+
+    /**
      * Returns if JCache is configured.
      *
      * @return true if JCache is configured.
@@ -1221,7 +1234,8 @@ public class VisualVMModel
         HTTP_PROXY_DETAIL(HttpProxyMemberData.class, HTTP_PROXY_DETAIL_LABELS),
         HOTCACHE(HotCacheData.class, HOTCACHE_LABELS),
         HOTCACHE_PERCACHE(HotCachePerCacheData.class, HOTCACHE_PERCACHE_LABELS),
-        EXECUTOR(ExecutorData.class, EXECUTOR_LABELS);
+        EXECUTOR(ExecutorData.class, EXECUTOR_LABELS),
+        GRPC_PROXY(GrpcProxyData.class, GRPC_PROXY_LABELS);
 
         private DataType(Class clz, String[] asMeta)
             {
@@ -1405,6 +1419,17 @@ public class VisualVMModel
         Localization.getLocalText("LBL_executor"),         Localization.getLocalText("LBL_executor_count"),
         Localization.getLocalText("LBL_tasks_in_progress"), Localization.getLocalText("LBL_tasks_completed"),
         Localization.getLocalText("LBL_tasks_rejected"), Localization.getLocalText("LBL_exec_description")
+        };
+
+    /**
+     * Labels for gRPC Proxy table.
+     */
+    private static final String[] GRPC_PROXY_LABELS = new String[]
+        {
+        Localization.getLocalText("LBL_node_id"), Localization.getLocalText("LBL_successful_requests"),
+        Localization.getLocalText("LBL_error_requests"), Localization.getLocalText("LBL_responses_sent"),
+        Localization.getLocalText("LBL_messages_received"), Localization.getLocalText("LBL_request_duration_mean"),
+        Localization.getLocalText("LBL_message_duration_mean")
         };
 
     /**

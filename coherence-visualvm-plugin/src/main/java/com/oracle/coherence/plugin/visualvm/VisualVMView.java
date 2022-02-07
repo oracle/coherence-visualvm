@@ -34,6 +34,7 @@ import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.panel.AbstractCoherencePanel;
 import com.oracle.coherence.plugin.visualvm.panel.CoherenceClusterSnapshotPanel;
 import com.oracle.coherence.plugin.visualvm.panel.CoherenceExecutorPanel;
+import com.oracle.coherence.plugin.visualvm.panel.CoherenceGrpcProxyPanel;
 import com.oracle.coherence.plugin.visualvm.panel.CoherenceTopicPanel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.panel.CoherenceHttpProxyPanel;
@@ -189,6 +190,7 @@ public class VisualVMView
         final CoherenceJCachePanel pnlJCache = new CoherenceJCachePanel(model);
         final CoherenceHttpProxyPanel pnlHttpProxy = new CoherenceHttpProxyPanel(model);
         final CoherenceExecutorPanel pnlExecutor = new CoherenceExecutorPanel(model);
+        final CoherenceGrpcProxyPanel pnlGrpcProxy = new CoherenceGrpcProxyPanel(model);
 
         String sClusterVersion = model.getClusterVersion();
         String sClusterName = null;
@@ -317,6 +319,13 @@ public class VisualVMView
             f_setPanels.add(pnlExecutor);
             }
 
+        if (model.isGrpcProxyConfigured())
+            {
+            m_dvc.addDetailsView(new DataViewComponent.DetailsView(Localization.getLocalText("LBL_grpc"),
+                                                                   null, 10, pnlGrpcProxy, null), DataViewComponent.TOP_RIGHT);
+            f_setPanels.add(pnlGrpcProxy);
+            }
+
         // update the request sender
         pnlClusterOverview.setRequestSender(requestSender);
         pnlMachine.setRequestSender(requestSender);
@@ -326,12 +335,13 @@ public class VisualVMView
         pnlHotCache.setRequestSender(requestSender);
         pnlFederation.setRequestSender(requestSender);
         pnlProxy.setRequestSender(requestSender);
-        pnlHttpSession.setRequestSender(requestSender);
         pnlTopic.setRequestSender(requestSender);
         pnlPersistence.setRequestSender(requestSender);
         pnlHttpSession.setRequestSender(requestSender);
         pnlElasticData.setRequestSender(requestSender);
         pnlJCache.setRequestSender(requestSender);
+        pnlExecutor.setRequestSender(requestSender);
+        pnlGrpcProxy.setRequestSender(requestSender);
 
         // display a warning if we are connected to a WLS domain and we can
         // see more that 1 domainPartition key. This code relies on us
