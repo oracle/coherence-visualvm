@@ -461,6 +461,7 @@ public class HttpRequestSender
     public Set<ObjectName> getAllGrpcProxyMembers()
             throws Exception
         {
+        // not currently supported in REST
         return Collections.emptySet();
         }
 

@@ -189,7 +189,7 @@ public class VisualVMView
         final CoherenceElasticDataPanel pnlElasticData = new CoherenceElasticDataPanel(model);
         final CoherenceJCachePanel pnlJCache = new CoherenceJCachePanel(model);
         final CoherenceHttpProxyPanel pnlHttpProxy = new CoherenceHttpProxyPanel(model);
-        final CoherenceExecutorPanel  pnlExecutor = new CoherenceExecutorPanel(model);
+        final CoherenceExecutorPanel pnlExecutor = new CoherenceExecutorPanel(model);
         final CoherenceGrpcProxyPanel pnlGrpcProxy = new CoherenceGrpcProxyPanel(model);
 
         String sClusterVersion = model.getClusterVersion();

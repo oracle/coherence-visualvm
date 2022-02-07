@@ -1426,8 +1426,8 @@ public class VisualVMModel
      */
     private static final String[] GRPC_PROXY_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_node_id"),         Localization.getLocalText("LBL_successful_requests"),
-        Localization.getLocalText("LBL_error_requests"),  Localization.getLocalText("LBL_responses_sent"),
+        Localization.getLocalText("LBL_node_id"), Localization.getLocalText("LBL_successful_requests"),
+        Localization.getLocalText("LBL_error_requests"), Localization.getLocalText("LBL_responses_sent"),
         Localization.getLocalText("LBL_messages_received"), Localization.getLocalText("LBL_request_duration_mean"),
         Localization.getLocalText("LBL_message_duration_mean")
         };
