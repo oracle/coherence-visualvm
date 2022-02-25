@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -34,6 +34,7 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.ClusterData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ExecutorData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.GrpcProxyData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.HttpProxyData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.MachineData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.MemberData;
@@ -139,8 +140,11 @@ public class CoherenceClusterSnapshotPanel
                 }
             if (f_model.isExecutorConfigured())
                 {
-                sb.append(executorOverview())
-                  .append("<hr>");
+                sb.append(executorOverview()).append("<hr>");
+                }
+            if (f_model.isGrpcProxyConfigured())
+                {
+                sb.append(grpcOverview()).append("<hr>");
                 }
 
             String sCurrent = sb.append("</body></html>").toString();
@@ -352,7 +356,7 @@ public class CoherenceClusterSnapshotPanel
                     .append(td(getMemoryFormat(entry.getValue().getColumn(CacheData.MEMORY_USAGE_BYTES))))
                     .append(td(getMemoryFormat(entry.getValue().getColumn(CacheData.MEMORY_USAGE_MB))))
                     .append(td(getMemoryFormat(entry.getValue().getColumn(CacheData.AVG_OBJECT_SIZE))))
-                    .append(td(entry.getValue().getColumn(CacheData.UNIT_CALCULATOR).toString()))
+                    .append(td((String) entry.getValue().getColumn(CacheData.UNIT_CALCULATOR)))
                     .append("</tr>");
             }
 
@@ -495,6 +499,50 @@ public class CoherenceClusterSnapshotPanel
                     .append(td(entry.getValue().getColumn(ExecutorData.TASKS_COMPLETED).toString()))
                     .append(td(entry.getValue().getColumn(ExecutorData.TASKS_REJECTED).toString()))
                     .append(td(entry.getValue().getColumn(ExecutorData.DESCRIPTION).toString()))
+                    .append("</tr>");
+            }
+
+        return sb.append(tableEnd()).toString();
+        }
+
+    /**
+     * Returns a gRPC overview.
+     *
+     * @return a gRPC overview
+     */
+    private String grpcOverview()
+        {
+        StringBuilder sb = new StringBuilder(title(getLabel("LBL_grpc")));
+
+        long  nSentCount        = 0L;
+        long  nRecCount         = 0L;
+
+       for (Map.Entry<Object, Data> entry : m_grpcData)
+            {
+            nSentCount        += (Long) entry.getValue().getColumn(GrpcProxyData.RESPONSES_SENT_COUNT);
+            nRecCount         += (Long) entry.getValue().getColumn(GrpcProxyData.MESSAGES_RECEIVED_COUNT);
+            }
+
+       sb.append(tableStart())
+                .append(tableRow(getLabel("LBL_total_grpc_servers"), Integer.toString(m_grpcData.size())))
+                .append(tableRow(getLabel("LBL_total_grpc_msg_rec"), getMemoryFormat(Long.toString(nRecCount))))
+                .append(tableRow(getLabel("LBL_total_grpc_resp_sent"), getMemoryFormat(Long.toString(nSentCount))))
+                .append(tableEnd());
+
+        sb.append(tableStart());
+
+        sb.append(columnHeaders(VisualVMModel.DataType.GRPC_PROXY));
+
+        for (Map.Entry<Object, Data> entry : m_grpcData)
+            {
+            sb.append("<tr>")
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(GrpcProxyData.NODE_ID).toString())))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(GrpcProxyData.SUCCESSFUL_REQUEST_COUNT).toString())))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(GrpcProxyData.ERROR_REQUEST_COUNT).toString())))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(GrpcProxyData.RESPONSES_SENT_COUNT).toString())))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(GrpcProxyData.MESSAGES_RECEIVED_COUNT).toString())))
+                    .append(td(getLatencyValue(entry.getValue().getColumn(GrpcProxyData.REQUEST_DURATION_MEAN).toString())))
+                    .append(td(getLatencyValue(entry.getValue().getColumn(GrpcProxyData.MESSAGE_DURATION_MEAN).toString())))
                     .append("</tr>");
             }
 
@@ -729,16 +777,17 @@ public class CoherenceClusterSnapshotPanel
             m_fedOriginDetailData = f_model.getData(VisualVMModel.DataType.FEDERATION_ORIGIN_DETAILS);
             }
 
-        m_hotcacheData = f_model.getData(VisualVMModel.DataType.HOTCACHE);
+        m_hotcacheData         = f_model.getData(VisualVMModel.DataType.HOTCACHE);
         m_hotcachepercacheData = f_model.getData(VisualVMModel.DataType.HOTCACHE_PERCACHE);
-        m_httpProxyData = f_model.getData(VisualVMModel.DataType.HTTP_PROXY);
-        m_httpProxyMemberData = f_model.getData(VisualVMModel.DataType.HTTP_PROXY_DETAIL);
-        m_httpSessionData = f_model.getData(VisualVMModel.DataType.HTTP_SESSION);
-        m_configData = f_model.getData(VisualVMModel.DataType.JCACHE_CONFIG);
-        m_statsData = f_model.getData(VisualVMModel.DataType.JCACHE_STATS);
-        m_persistenceData = f_model.getData(VisualVMModel.DataType.PERSISTENCE);
-        m_topicData = f_model.getData(VisualVMModel.DataType.TOPICS_DETAIL);
-        m_executorData = f_model.getData(VisualVMModel.DataType.EXECUTOR);
+        m_httpProxyData        = f_model.getData(VisualVMModel.DataType.HTTP_PROXY);
+        m_httpProxyMemberData  = f_model.getData(VisualVMModel.DataType.HTTP_PROXY_DETAIL);
+        m_httpSessionData      = f_model.getData(VisualVMModel.DataType.HTTP_SESSION);
+        m_configData           = f_model.getData(VisualVMModel.DataType.JCACHE_CONFIG);
+        m_statsData            = f_model.getData(VisualVMModel.DataType.JCACHE_STATS);
+        m_persistenceData      = f_model.getData(VisualVMModel.DataType.PERSISTENCE);
+        m_topicData            = f_model.getData(VisualVMModel.DataType.TOPICS_DETAIL);
+        m_executorData         = f_model.getData(VisualVMModel.DataType.EXECUTOR);
+        m_grpcData             = f_model.getData(VisualVMModel.DataType.GRPC_PROXY);
         }
 
     // ----- constants ------------------------------------------------------
@@ -853,6 +902,11 @@ public class CoherenceClusterSnapshotPanel
      * The executor statistics data retrieved from the {@link VisualVMModel}.
      */
     private List<Map.Entry<Object, Data>> m_executorData;
+
+    /**
+     * The gRPC statistics data retrieved from the {@link VisualVMModel}.
+     */
+    private List<Map.Entry<Object, Data>> m_grpcData;
 
     /**
      * The machine statistics data retrieved from the {@link VisualVMModel}.
