@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
 DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
 This code is free software; you can redistribute it and/or modify it
@@ -206,13 +206,14 @@ Depending upon the edition and functionality you are using, the following option
 
 * **Proxy Servers**  - If your cluster is running proxy servers, this tab displays information about the proxy servers and the number of connections across each proxy server and total connections.
 * **HTTP Servers**  - If your cluster is running proxy servers with HTTP acceptors, this tab displays information about the HTTP servers, the number of connections across each server, total connections and graphs of response codes, errors and requests over time for a selected service.
-* **Executors** - If your cluster is configured to run the Executor Service, this tab displays information number of tasks completed, in-progress and rejected.
+* **Executors** - If your cluster is configured to run the Executor Service, this tab displays information about the number of tasks completed, in-progress and rejected.
 * **Coherence*Web** - If your cluster is configured for Coherence*Web, this tab displays information about the number applications deployed, the number of HTTP sessions being stored as well as other information regarding session reaping.
 * **Federation** - If your cluster is configured with Federated Caching, this tab displays information about each federated service. If you select a service, on the next data refresh you will see detailed outbound/inbound federation traffic information for each node of the service as well as graphs of that information.
 * **Persistence** - If your cluster is configured with Persistence, this tab displays information about each service configured with Persistence.  Graphs showing active space used and any additional latencies incurred are also showed.
 * **Elastic Data** - If your cluster is configured with Elastic Data, this tab displays graphs and information about RAM Journal and Flash Journal usage.  You can click on each of the usage bars to show detailed node information
 * **JCache** - If your cluster is being used to store JCache caches, this tab displays JCache "Management" and "Statistics" MBean information regarding the configured caches.
 * **HotCache** - If your cluster contains HotCache node(s), then this tab lists the running HotCache instances. If you select an instance, on the next data refresh the console will display statistics and graphs for the operations performed. You may click on tabs and cache-ops to see further fine-grained information.
+* **gRPC Proxies** – If you cluster is configured with gRPC Proxies, this tab displays information about the requests sent and received as well as successful and failed requests. A Graph of message rates and durations is also displayed. This tab will only show when connected via JMX and is not supported for REST connections.
 
 [#build]
 == Building the Plugin
