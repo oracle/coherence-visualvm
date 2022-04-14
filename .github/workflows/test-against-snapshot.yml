@@ -1,5 +1,5 @@
 #
-#  Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+#  Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
 #  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 #
 #  This code is free software; you can redistribute it and/or modify it
@@ -91,8 +91,12 @@ jobs:
         cd $CLONE_DIR
         if [ $COH_BRANCH != "main" ] ; then
            git checkout $COH_BRANCH
+           mvn --file prj/pom.xml --batch-mode -e -DskipTests clean install
+        else
+           # main requires updated 2 step build for coherence.jar and everything else
+           mvn --file prj/pom.xml --batch-mode -e -DskipTests clean install
+           mvn --file prj/pom.xml --batch-mode -e -P-coherence,modules -nsu -DskipTests clean install
         fi
-        mvn --file prj/pom.xml --batch-mode -e -DskipTests clean install
         cd $DIR
 
     - name: Build Plugin

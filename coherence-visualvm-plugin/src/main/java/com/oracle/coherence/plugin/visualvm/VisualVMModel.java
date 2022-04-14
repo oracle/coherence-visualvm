@@ -368,7 +368,7 @@ public class VisualVMModel
         {
         boolean fFallBack = false;
 
-        // Re Bug 22132359 - When we are connecting to pre 12.2.1.1.0 cluster from 12.2.1.1.0 or above and we
+        // Re Bug 22132359 - When we are connecting to pre 12.2.1.1.0 cluster from 12.2.1.1.0 or above, and we
         // are collecting ProxyStats, we need to force to use JMX rather than report
         if (isReporterAvailable() != null && isReporterAvailable() &&
             !(clazz.equals(ProxyData.class) && getClusterVersionAsInt() < 122110))
@@ -462,7 +462,7 @@ public class VisualVMModel
                                     }
                                 else if (sCoherenceVersion.startsWith("2"))
                                     {
-                                    // check for versions such as 20.06 or 20.06.01 and convert them to an ever increasing number
+                                    // check for versions such as 20.06 or 20.06.01 and convert them to an ever-increasing number
                                     // 20.06    -> 2006000
                                     // 20.06.1  -> 2006100
                                     // 20.06.10 -> 2006100
@@ -474,16 +474,19 @@ public class VisualVMModel
                                     nVersion = Integer.parseInt(sCoherenceVersion.replaceAll("\\.", ""));
                                     }
 
+                                LOGGER.info("RAW Coherence version identified as " + m_sClusterVersion);
+                                LOGGER.info("Numeric Coherence version identified as " + nVersion);
+
                                 if (nVersion >= 121300)
                                     {
                                     // only set if the reporter available is it is not already set as we may have
                                     // got to this code path because is1213AndAbove() is still null
-                                    setReporterAvailable(isReporterAvailable() == null ? true : isReporterAvailable());
+                                    setReporterAvailable(isReporterAvailable() == null || isReporterAvailable());
                                     m_fis1213AndAbove = true;
                                     }
                                 else
                                     {
-                                    setReporterAvailable(isReporterAvailable() == null ? false : isReporterAvailable());
+                                    setReporterAvailable(isReporterAvailable() != null && isReporterAvailable());
                                     m_fis1213AndAbove = false;
                                     }
                                 m_nClusterVersion = nVersion;

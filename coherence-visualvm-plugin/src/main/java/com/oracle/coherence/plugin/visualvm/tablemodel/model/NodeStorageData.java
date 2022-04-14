@@ -49,7 +49,7 @@ import static com.oracle.coherence.plugin.visualvm.helper.JMXUtils.getAttributeV
 
 
 /**
- * A class to hold basic member data.
+ * A class to hold storage enabled node data
  *
  * @author tam  2020.02.13
  * @since  14.1.1.0
@@ -122,7 +122,7 @@ public class NodeStorageData
         }
 
     /**
-     * Check if a node is storage enabled or not byt checking if the owned
+     * Check if a node is storage enabled or not by checking if the owned
      * partitions > 0 on at least one for the services.
      *
      * @param mapNodes      {@link Map} of nodes
@@ -139,7 +139,7 @@ public class NodeStorageData
             if (ownedPrimaryPartitions <= 0 && nOwnedPrimary > 0)
                 {
                 // currently the node we are working with has no-storage enabled partitions
-                // and the the current service and node does, so lets update it
+                // and the current service and node does, so lets update it
                 mapNodes.put(nNodeId, nOwnedPrimary);
                 }
             // else fallthrough as we leave any node with > 0 with that value
