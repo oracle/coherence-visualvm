@@ -75,5 +75,5 @@ public class CoherenceApplicationTypeFactory
     /**
      * Factory instance.
      */
-    private final static CoherenceApplicationTypeFactory INSTANCE = new CoherenceApplicationTypeFactory();
+    private static final CoherenceApplicationTypeFactory INSTANCE = new CoherenceApplicationTypeFactory();
     }

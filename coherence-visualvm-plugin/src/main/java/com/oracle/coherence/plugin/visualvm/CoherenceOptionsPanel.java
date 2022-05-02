@@ -89,7 +89,7 @@ public class CoherenceOptionsPanel
 
     // ----- CoherenceOptionsPanel methods ---------------------------------
 
-    private final ChangeListener changeListener = new ChangeListener()
+    private final transient ChangeListener f_changeListener = new ChangeListener()
         {
         public void stateChanged(ChangeEvent e)
             {
@@ -146,8 +146,8 @@ public class CoherenceOptionsPanel
             }
         catch (Exception e)
             {
+            return false;
             }
-        return false;
         }
 
     /**
@@ -365,16 +365,16 @@ public class CoherenceOptionsPanel
      */
     private void startTrackingChanges()
         {
-        m_refreshTime.getModel().addChangeListener(changeListener);
-        m_logQueryTimes.getModel().addChangeListener(changeListener);
-        m_disableMBeanCheck.getModel().addChangeListener(changeListener);
-        m_enableRestDebug.getModel().addChangeListener(changeListener);
-        m_restRequestTimout.getModel().addChangeListener(changeListener);
-        m_enableZoom.getModel().addChangeListener(changeListener);
-        m_enablePersistenceList.getModel().addChangeListener(changeListener);
-        m_enableClusterSnapshot.getModel().addChangeListener(changeListener);
-        m_adminFunctionsEnabled.getModel().addChangeListener(changeListener);
-        m_disableSSLCertValidation.getModel().addChangeListener(changeListener);
+        m_refreshTime.getModel().addChangeListener(f_changeListener);
+        m_logQueryTimes.getModel().addChangeListener(f_changeListener);
+        m_disableMBeanCheck.getModel().addChangeListener(f_changeListener);
+        m_enableRestDebug.getModel().addChangeListener(f_changeListener);
+        m_restRequestTimout.getModel().addChangeListener(f_changeListener);
+        m_enableZoom.getModel().addChangeListener(f_changeListener);
+        m_enablePersistenceList.getModel().addChangeListener(f_changeListener);
+        m_enableClusterSnapshot.getModel().addChangeListener(f_changeListener);
+        m_adminFunctionsEnabled.getModel().addChangeListener(f_changeListener);
+        m_disableSSLCertValidation.getModel().addChangeListener(f_changeListener);
         }
 
     //----- inner classes ---------------------------------------------------
@@ -441,20 +441,20 @@ public class CoherenceOptionsPanel
                                      long nLineId = lineId.incrementAndGet();
                                      mapLines.put(nLineId, s);
                                      return  nLineId + " " +
-                                             s.replaceAll("^.*thread=","")
-                                              .replaceAll(", .*" + PARTITION_ID, "")
-                                              .replaceAll(", .*" + PARTITION_SET, " ")
-                                              .replaceAll(", " + OWNER, "")
-                                              .replaceAll(", " + ACTION, "")
-                                              .replaceAll(", " + UNAVAILABLE_TIME, "");
+                                             s.replace("^.*thread=","")
+                                              .replace(", .*" + PARTITION_ID, "")
+                                              .replace(", .*" + PARTITION_SET, " ")
+                                              .replace(", " + OWNER, "")
+                                              .replace(", " + ACTION, "")
+                                              .replace(", " + UNAVAILABLE_TIME, "");
                                      })
                                  .map(s -> s.split(" "))
                                  .filter(a -> a.length == 6)
                                  .map(a -> {
                                      // determine the service name from the thread as it is not always obvious
-                                     String sServiceName = a[1].replaceAll("Dedicated.*$", "")
-                                            .replaceAll("DistributedCache:", "")
-                                            .replaceAll("FederatedCache:", "");
+                                     String sServiceName = a[1].replace("Dedicated.*$", "")
+                                            .replace("DistributedCache:", "")
+                                            .replace("FederatedCache:", "");
 
                                      // check for initial PartitionSet ASSIGN and allocate a partition id of -1 meaning all partitions
                                      String sPartitionId = a[2];
@@ -470,12 +470,12 @@ public class CoherenceOptionsPanel
                     Set<String> setServices = setMetrics.stream()
                                                      .map(UnavailabilityMetrics::getServiceName)
                                                      .collect(Collectors.toSet());
-                    if (setServices.size() == 0) {
+                    if (setServices.isEmpty()) {
                         sb.append("No services found. This may not be a Coherence log file.");
                         return sb.toString();
                     }
 
-                    sb.append(String.format("Total lines in file: %,d, total matching lines processed: %,d\n", listLines.size(), lineId.get()));
+                    sb.append(String.format("Total lines in file: %,d, total matching lines processed: %,d%n", listLines.size(), lineId.get()));
 
                     int nMaxLength = Math.max(setServices.stream().mapToInt(String::length).max().getAsInt(), 23);
                     long nTotalMillis = setMetrics.stream().mapToLong(UnavailabilityMetrics::getMillis).sum();
@@ -546,11 +546,11 @@ public class CoherenceOptionsPanel
                                   .forEach((e) ->
                                       {
                                       int nPartitionId = e.getKey();
-                                      sb.append(String.format("- Partition: %d, total millis: %,d\n", nPartitionId,
+                                      sb.append(String.format("- Partition: %d, total millis: %,d%n", nPartitionId,
                                               e.getValue()));
                                       setMetrics.stream()
                                                 .filter(m->m.getServiceName().equals(s) && m.getPartitionId() == nPartitionId)
-                                                .forEach(m->sb.append(String.format("  %s\n", mapLines.get(m.getLineId()))));
+                                                .forEach(m->sb.append(String.format("  %s%n", mapLines.get(m.getLineId()))));
                                       });
 
                             sb.append("\nOutput by partition and event for ").append(s).append('\n');
@@ -565,10 +565,10 @@ public class CoherenceOptionsPanel
                                 sb.append("- Partition ").append(p).append('\n');
                                 // retrieve the initial partition assign which has been marked with partition of -1
                                 setMetrics.stream().filter(m -> m.getServiceName().equals(s) && m.getPartitionId() == -1)
-                                       .forEach(m -> sb.append(String.format("  %s\n", mapLines.get(m.getLineId()))));
+                                       .forEach(m -> sb.append(String.format("  %s%n", mapLines.get(m.getLineId()))));
                                 setMetrics.stream()
                                        .filter(m -> m.getServiceName().equals(s) && m.getPartitionId() == p)
-                                       .forEach(m -> sb.append(String.format("  %s\n", mapLines.get(m.getLineId()))));
+                                       .forEach(m -> sb.append(String.format("  %s%n", mapLines.get(m.getLineId()))));
                                 });
                             }
                         });

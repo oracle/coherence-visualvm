@@ -119,7 +119,8 @@ class CoherenceClusterConfigurator extends JPanel
         // Valid URL's are
         // Standard Coherence:  http://host:management-port/management/coherence/cluster
         // Managed Coherence Servers: http://<admin-host>:<admin-port>/management/coherence/<version>/clusters
-        if (!sender.isValidUrl() || !sUrl.contains("/management/coherence"))
+        // No trailing slash should be present
+        if (!sender.isValidUrl() || !sUrl.contains("/management/coherence") || sUrl.endsWith("/"))
             {
             DialogDisplayer.getDefault().notify(
                     new NotifyDescriptor.Message(Localization.getLocalText("ERR_Invalid_URL", sUrl)));

@@ -245,7 +245,7 @@ public class CoherenceClusterOverviewPanel
                 f_txtClusterName.setText(entry.getValue().getColumn(ClusterData.CLUSTER_NAME).toString());
                 f_txtRefreshDate.setText(new Date(f_model.getLastUpdate()).toString());
                 f_txtVersion.setText(entry.getValue().getColumn(ClusterData.VERSION).toString().replaceFirst(" .*$", ""));
-                f_txtClusterSize.setText(String.format("%d", entry.getValue().getColumn(ClusterData.CLUSTER_SIZE)));
+                f_txtClusterSize.setText(String.format("%d", (Integer) entry.getValue().getColumn(ClusterData.CLUSTER_SIZE)));
                 }
             }
 

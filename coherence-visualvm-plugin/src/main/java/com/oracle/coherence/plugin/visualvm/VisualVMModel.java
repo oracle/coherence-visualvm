@@ -474,8 +474,8 @@ public class VisualVMModel
                                     nVersion = Integer.parseInt(sCoherenceVersion.replaceAll("\\.", ""));
                                     }
 
-                                LOGGER.info("RAW Coherence version identified as " + m_sClusterVersion);
-                                LOGGER.info("Numeric Coherence version identified as " + nVersion);
+                                LOGGER.log(Level.INFO, "Raw Coherence version identified as {0}", m_sClusterVersion);
+                                LOGGER.log(Level.INFO,"Numeric Coherence version identified as {0}", String.format("%d", nVersion));
 
                                 if (nVersion >= 121300)
                                     {

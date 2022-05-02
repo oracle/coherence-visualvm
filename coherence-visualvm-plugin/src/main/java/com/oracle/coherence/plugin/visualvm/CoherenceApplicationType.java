@@ -55,7 +55,7 @@ public class CoherenceApplicationType
         this.f_description = sDescription
                              + " (" + sMainClass + ")"
                              + "\nCommand Line:"  + jvm.getJvmArgs();
-        this.iconPath      = IMAGE_PATH;
+        this.f_sIconPath = IMAGE_PATH;
         }
 
     // ----- accessors ------------------------------------------------------
@@ -81,7 +81,7 @@ public class CoherenceApplicationType
     @Override
     public Image getIcon()
         {
-        return ImageUtilities.loadImage(iconPath, true);
+        return ImageUtilities.loadImage(f_sIconPath, true);
         }
 
     // ----- data members ----------------------------------------------------
@@ -99,16 +99,18 @@ public class CoherenceApplicationType
     /**
      * Icon path.
      */
-    private final String  iconPath;
+    private final String f_sIconPath;
 
     /**
      * {@link Map} of possible classes to detect.
      */
-    static final Map<String, String> f_mapClasses = new HashMap<String, String>()
-        {{
-        put("com.tangosol.net.DefaultCacheServer", "Default Cache Server");
-        put("com.tangosol.net.CacheFactory", "CacheFactory");
-        put("com.tangosol.net.Coherence", "Coherence Bootstrap");
-        put("com.tangosol.coherence.dslquery", "CohQL Client");
-        }};
+    static final Map<String, String> f_mapClasses = new HashMap<String, String>();
+
+    static
+        {
+        f_mapClasses.put("com.tangosol.net.DefaultCacheServer", "Default Cache Server");
+        f_mapClasses.put("com.tangosol.net.CacheFactory", "CacheFactory");
+        f_mapClasses.put("com.tangosol.net.Coherence", "Coherence Bootstrap");
+        f_mapClasses.put("com.tangosol.coherence.dslquery", "CohQL Client");
+        }
     }
