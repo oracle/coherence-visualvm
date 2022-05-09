@@ -167,8 +167,6 @@ public abstract class AbstractElasticData
         catch (Exception e)
             {
             LOGGER.log(Level.WARNING, "Error getting " + this.getClass().getName() + "  statistics", e);
-            e.printStackTrace();
-
             return null;
             }
         }

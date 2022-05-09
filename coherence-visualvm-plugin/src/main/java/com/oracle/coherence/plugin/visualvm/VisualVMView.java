@@ -60,7 +60,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
@@ -69,7 +69,6 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import org.graalvm.visualvm.application.Application;
-import org.graalvm.visualvm.core.options.GlobalPreferences;
 import org.graalvm.visualvm.core.ui.DataSourceView;
 import org.graalvm.visualvm.core.ui.components.DataViewComponent;
 import org.graalvm.visualvm.tools.jmx.JmxModel;
@@ -388,8 +387,7 @@ public class VisualVMView
                             }
                         catch (Exception ex)
                             {
-                            LOGGER.warning("Error while refreshing tabs. " + ex.toString());
-                            ex.printStackTrace();
+                            LOGGER.log(Level.WARNING, "Error while refreshing tabs. ", e);
                             }
                         finally
                             {

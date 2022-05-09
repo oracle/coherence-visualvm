@@ -176,8 +176,7 @@ public abstract class AbstractData
                 String sError = Localization.getLocalText("ERR_error_running_report",
                         sReportXML, this.getClass().getCanonicalName(), e.getMessage());
 
-                LOGGER.log(Level.WARNING, sError);
-                e.printStackTrace();
+                LOGGER.log(Level.WARNING, sError, e);
 
                 model.setReporterAvailable(false);
 

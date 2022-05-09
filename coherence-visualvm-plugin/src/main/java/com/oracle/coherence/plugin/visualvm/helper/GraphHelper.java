@@ -1209,7 +1209,7 @@ public class GraphHelper
     /**
      * Static TB value.
      */
-    public static final long TB = MB * MB;
+    public static final long TB = (long) MB * MB;
 
     /**
      * The number of values to hold for an individual graph. The default value of

@@ -167,10 +167,10 @@ public class VisualVMModel
         // Loop through each data retriever and initialize the map of
         // report XML. Doing it this way we load it only once
 
-        Iterator<Map.Entry<Class, DataRetriever>> iter = f_mapDataRetrievers.entrySet().iterator();
+        Iterator<Map.Entry<Class<?>, DataRetriever>> iter = f_mapDataRetrievers.entrySet().iterator();
         while (iter.hasNext())
             {
-            Map.Entry<Class, DataRetriever> entry = iter.next();
+            Map.Entry<Class<?>, DataRetriever> entry = iter.next();
             String sReport = entry.getValue().getReporterReport();
             if (sReport != null)
                 {
@@ -229,7 +229,7 @@ public class VisualVMModel
                     {
                     if (m_fLogJMXQueryTimes)
                         {
-                        LOGGER.info("Starting querying statistics for " + type.toString());
+                        LOGGER.log(Level.INFO, "Starting querying statistics for {0}", type.toString());
                         }
 
                     long ldtCollectionStart = System.currentTimeMillis();
@@ -246,7 +246,7 @@ public class VisualVMModel
                     {
                     if (m_fLogJMXQueryTimes)
                         {
-                        LOGGER.info("Skipping querying statistics for " + type.toString() + " as it is not configured");
+                        LOGGER.log(Level.INFO, "Skipping querying statistics for {0} as it is not configured", type);
                         }
                     }
                 }
@@ -255,7 +255,7 @@ public class VisualVMModel
 
             if (m_fLogJMXQueryTimes)
                {
-               LOGGER.info("Time to query all statistics was " + ldtTotalDuration + " ms");
+               LOGGER.log(Level.INFO, "Time to query all statistics was {0} ms", ldtTotalDuration);
                }
 
             m_nRefreshTime  = getRefreshTime();
@@ -364,7 +364,7 @@ public class VisualVMModel
      *
      * @return the {@link List} of data obtainer by either method
      */
-    public List<Entry<Object, Data>> getData(RequestSender requestSender, Class clazz)
+    public List<Entry<Object, Data>> getData(RequestSender requestSender, Class<?> clazz)
         {
         boolean fFallBack = false;
 
@@ -410,8 +410,7 @@ public class VisualVMModel
                     {
                     // we received an error running the report, so mark as
                     // a fall back so it will be immediately run
-                    LOGGER.warning(Localization.getLocalText("ERR_Failed_to_run_report", clazz.toString(), e.toString()));
-                    e.printStackTrace(); 
+                    LOGGER.log(Level.WARNING, Localization.getLocalText("ERR_Failed_to_run_report", clazz.toString()), e);
                     fFallBack = true;
                     }
                 }
@@ -440,7 +439,7 @@ public class VisualVMModel
                     if (isReporterAvailable() == null || is1213AndAbove() == null)
                         {
                         // get the Coherence version. Easier to do if we are connected to a cluster,
-                        // but we are have JMX connection as we have to look in data we collected.
+                        // but we have JMX connection as we have to look in data we collected.
 
                         if (clusterData != null)
                             {
@@ -467,7 +466,7 @@ public class VisualVMModel
                                     // 20.06.1  -> 2006100
                                     // 20.06.10 -> 2006100
                                     String sStrippedVersion = sCoherenceVersion.replaceAll("\\.", "");
-                                    nVersion = Integer.parseInt(sStrippedVersion) * (int) Math.pow(10, 7 - sStrippedVersion.length());
+                                    nVersion = Integer.parseInt(sStrippedVersion) * (int) Math.pow(10, 7 - (double) sStrippedVersion.length());
                                     }
                                 else
                                     {
@@ -475,7 +474,7 @@ public class VisualVMModel
                                     }
 
                                 LOGGER.log(Level.INFO, "Raw Coherence version identified as {0}", m_sClusterVersion);
-                                LOGGER.log(Level.INFO,"Numeric Coherence version identified as {0}", String.format("%d", nVersion));
+                                LOGGER.log(Level.INFO, "Numeric Coherence version identified as {0}", String.format("%d", nVersion));
 
                                 if (nVersion >= 121300)
                                     {
@@ -1721,7 +1720,7 @@ public class VisualVMModel
     /**
      * Map of instances of data retrievers for execution of actual JMX queries.
      */
-    private final Map<Class, DataRetriever> f_mapDataRetrievers = new HashMap<Class, DataRetriever>();
+    private final Map<Class<?>, DataRetriever> f_mapDataRetrievers = new HashMap<>();
 
     /**
      * The set of distributed caches so that we don't double count replicated

@@ -27,6 +27,7 @@ package com.oracle.coherence.plugin.visualvm.panel;
 
 
 import com.oracle.coherence.plugin.visualvm.Localization;
+import com.oracle.coherence.plugin.visualvm.VisualVMView;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
@@ -58,6 +59,8 @@ import java.util.Set;
 
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.management.Attribute;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
@@ -415,7 +418,7 @@ public abstract class AbstractCoherencePanel
                     {
                     showMessageDialog(Localization.getLocalText("LBL_error"), e.getMessage(),
                                       JOptionPane.ERROR_MESSAGE);
-                    e.printStackTrace();
+                    LOGGER.log(Level.WARNING, Localization.getLocalText("LBL_error"), e);
                     }
                 }
             }
@@ -859,4 +862,10 @@ public abstract class AbstractCoherencePanel
      * The visualVM model.
      */
     protected final VisualVMModel f_model;
+
+    /**
+     * The logger object to use.
+     */
+    private static final Logger LOGGER = Logger.getLogger(AbstractCoherencePanel.class.getName());
+
     }

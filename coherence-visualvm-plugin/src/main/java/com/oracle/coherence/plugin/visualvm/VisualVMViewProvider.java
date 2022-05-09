@@ -33,6 +33,8 @@ import org.graalvm.visualvm.core.ui.DataSourceViewProvider;
 import org.graalvm.visualvm.core.ui.DataSourceViewsManager;
 import org.graalvm.visualvm.tools.jmx.JmxModel;
 import org.graalvm.visualvm.tools.jmx.JmxModelFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class to provide the view for Coherence JVisualVM plugin.
@@ -79,7 +81,7 @@ public class VisualVMViewProvider
                 }
             catch (Exception ex)
                 {
-                ex.printStackTrace();
+                LOGGER.log(Level.WARNING, "Error initializing", ex);
                 }
             }
 
@@ -132,5 +134,12 @@ public class VisualVMViewProvider
 
     // ----- constants ------------------------------------------------------
 
-    private static DataSourceViewProvider<Application> s_instance = new VisualVMViewProvider();
+    private static final DataSourceViewProvider<Application> s_instance = new VisualVMViewProvider();
+
+
+    /**
+     * The logger object to use.
+     */
+    private static final Logger LOGGER = Logger.getLogger(VisualVMViewProvider.class.getName());
+
     }
