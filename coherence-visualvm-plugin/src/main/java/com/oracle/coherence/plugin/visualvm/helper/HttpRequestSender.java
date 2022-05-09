@@ -52,6 +52,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -106,8 +107,7 @@ public class HttpRequestSender
                 }
             catch (Exception e)
                 {
-                LOGGER.warning("Unable to initialize SSL: " + e);
-                e.printStackTrace();
+                LOGGER.log(Level.WARNING, "Unable to initialize SSL: ", e);
                 }
             }
         }
