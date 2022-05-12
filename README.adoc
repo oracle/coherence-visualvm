@@ -37,7 +37,7 @@ You can connect to clusters via JMX or via management over REST with Coherence v
 The Plugin is an ideal tool for monitoring and managing Coherence clusters during the development and testing lifecycle and supports connecting to both
 Community Edition and Commercial versions of Coherence.
 
-NOTE: This version of the Plugin requires VisualVM release 2.0.6 or later which is available from https://visualvm.github.io/.
+NOTE: This version of the Plugin requires VisualVM release 2.1 or later which is available from https://visualvm.github.io/.
 
 image::assets/coherence-visualvm.png[Coherence VisualVM Plugin,800,479]
 
@@ -218,21 +218,15 @@ Depending upon the edition and functionality you are using, the following option
 [#build]
 == Building the Plugin
 
-If you wish to build the Plugin from scratch you need to build the VisualVM dependencies first.
-To build the plugin is a two-step process:
-
-1. Generate the VisualVM dependencies
-2. Build the Coherence VisualVM Plugin
+If you wish to build the Plugin from scratch please follow the instructions below.
 
 === Pre-requisites
 
 You must have the following:
 
-1. Java JDK 1.8 - To build VisualVM dependencies
-2. Java JDK 11+ - To build and test the plugin
-3. Ant version >= 1.9.9
-4. Maven 3.6.3+
-5. Git
+1. Java JDK 11+ - To build and test the plugin
+2. Maven 3.6.3+
+3. Git
 
 === Clone the Repository
 
@@ -242,81 +236,6 @@ You must have the following:
 ----
 $ git clone https://github.com/oracle/coherence-visualvm.git
 ----
-
-=== Generate the VisualVM dependencies
-
-NOTE: These instructions have been summarized from https://github.com/oracle/visualvm/blob/release204/README.md.
-
-NOTE: A Script `install-artifacts.sh` is available in the `bin` directory to run this for a Linux/Mac environment.
-
-1. Ensure you have JDK8 in you PATH.
-
-2. Checkout the VisualVM repository
-+
-[source,shell]
-----
-$ git clone https://github.com/oracle/visualvm.git
-
-Cloning into 'visualvm'...
-----
-
-3. Checkout the `release204` branch
-+
-[source,shell]
-----
-$ cd visualvm
-
-$ git checkout release204
-
-Switched to a new branch 'release204'
-----
-
-4. Unzip the NetBeans Platform 11.3
-+
-[source,shell]
-----
-$ cd visualvm
-
-$ unzip nb113_platform_19062020.zip
-----
-
-5. Build the Plugins
-+
-[source,shell]
-----
-$ ant build-zip
-----
-
-6. Unzip the artefacts
-+
-[source,shell]
-----
-$ cd dist
-
-$ unzip visualvm.zip
-
-$ cd ..
-----
-
-7. Generate the NBM's
-+
-[source,shell]
-----
-$ ant nbms
-----
-
-8. Install into the local repository
-+
-[source,shell]
-----
-$ mvn -DnetbeansInstallDirectory=dist/visualvm   \
-    -DnetbeansNbmDirectory=build/updates   \
-    -DgroupIdPrefix=org.graalvm.visualvm  \
-    -DforcedVersion=RELEASE204 org.apache.netbeans.utilities:nb-repository-plugin:populate
-----
-
-NOTE: See https://github.com/oracle/visualvm/blob/release204/README.md[here] for instructions on how to
-push the artefacts to a remote Maven repository.
 
 ==== Build the VisualVM Plugin
 
@@ -335,7 +254,7 @@ If you wish to run the Community Edition tests then leave out the `-DskipTests`.
 
 3. Install the Plugin
 +
-The plugin will be available in the location `coherence-visualvm-plugin/target/coherence-visualvm-plugin-{version}`
+The plugin will be available in the location `coherence-visualvm-plugin/target/coherence-visualvm-plugin-{version}.nbm`
 
 Follow the instructions https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/using-jmx-manage-oracle-coherence.html[here]
 to install the plugin manually.
