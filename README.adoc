@@ -32,7 +32,7 @@ The Coherence-VisualVM Plugin (the Plugin) provides management and monitoring of
 
 The Plugin aggregates Coherence MBean data and shows a concise operational view of a single Coherence cluster.
 Some management information is presented over time, which allows real-time analysis and troubleshooting.
-You can connect to clusters via JMX or via management over REST with Coherence versions 14.1.1 or above.
+You can connect to clusters via JMX or via management over REST with Coherence versions 12.2.1.4 or above.
 
 The Plugin is an ideal tool for monitoring and managing Coherence clusters during the development and testing lifecycle and supports connecting to both
 Community Edition and Commercial versions of Coherence.
