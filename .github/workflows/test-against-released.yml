@@ -55,14 +55,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Set up JDK 1.8 for NetBeans Dependencies build
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-
-    - name: Print Versions
-      run: mvn -version && ant -version
-
     - name: Cache Maven packages
       uses: actions/cache@v1
       with:
@@ -70,15 +62,13 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
-    - name: Generate NetBeans Dependencies
-      shell: bash
-      run: |
-        bin/install-artifacts.sh /tmp/install/${{ matrix.version }}
-
     - name: Set up JDK 11 for Build
       uses: actions/setup-java@v1
       with:
         java-version: '11'
+
+    - name: Print Versions
+      run: mvn -version && ant -version
 
     - name: Build
       shell: bash

@@ -33,7 +33,7 @@
   <parent>
     <groupId>com.oracle.coherence.plugin.visualvm</groupId>
     <artifactId>coherence-visualvm-main</artifactId>
-    <version>1.3.1-SNAPSHOT</version>
+    <version>1.4.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -55,7 +55,7 @@
       <artifactId>org-graalvm-visualvm-uisupport</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.graalvm.visualvm.api</groupId>
+      <groupId>org.netbeans.api</groupId>
       <artifactId>org-openide-awt</artifactId>
     </dependency>
     <dependency>
@@ -79,23 +79,23 @@
       <artifactId>org-graalvm-visualvm-tools</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.graalvm.visualvm.api</groupId>
+      <groupId>org.netbeans.api</groupId>
       <artifactId>org-openide-modules</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.graalvm.visualvm.api</groupId>
+      <groupId>org.netbeans.api</groupId>
       <artifactId>org-openide-util</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.graalvm.visualvm.api</groupId>
+      <groupId>org.netbeans.api</groupId>
       <artifactId>org-openide-dialogs</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.graalvm.visualvm.api</groupId>
+      <groupId>org.netbeans.api</groupId>
       <artifactId>org-openide-windows</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.graalvm.visualvm.api</groupId>
+      <groupId>org.netbeans.api</groupId>
       <artifactId>org-netbeans-modules-options-api</artifactId>
     </dependency>
     <dependency>
