@@ -206,7 +206,6 @@
   <build>
     <pluginManagement>
       <plugins>
-
         <!-- maven-enforcer-plugin -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -265,7 +264,6 @@
           <version>${maven.nbm.plugin.version}</version>
         </plugin>
 
-
         <!-- maven-jar-plugin -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -283,5 +281,4 @@
       </plugins>
     </pluginManagement>
   </build>
-
 </project>
