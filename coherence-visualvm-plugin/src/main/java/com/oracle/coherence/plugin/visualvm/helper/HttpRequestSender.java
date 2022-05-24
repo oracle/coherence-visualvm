@@ -249,7 +249,7 @@ public class HttpRequestSender
                 Hashtable<String, String> mapKeysProps = new Hashtable<>();
 
                 mapKeysProps.put("name", cacheMember.get("name").asText());
-                mapKeysProps.put("service", cacheMember.get("service").asText());
+                mapKeysProps.put(SERVICE, cacheMember.get(SERVICE).asText());
 
                 JsonNode domainPartition = cacheMember.get("domainPartition");
                 if (domainPartition != null)
@@ -627,14 +627,14 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment(encodeServiceName(sService)).addPathSegment("persistence").addPathSegment("snapshots");
+                .addPathSegment(encodeServiceName(sService)).addPathSegment(PERSISTENCE).addPathSegment(SNAPSHOTS);
         if (sDomainPartition != null)
             {
             urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
             }
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode nodeSnapshots = rootNode.get("snapshots");
+        JsonNode nodeSnapshots = rootNode.get(SNAPSHOTS);
 
         List<String> listSnapshots = new ArrayList<>();
         if (nodeSnapshots != null && nodeSnapshots.isArray())
@@ -653,7 +653,7 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment(encodeServiceName(sService)).addPathSegment("persistence").addPathSegment("archives");
+                .addPathSegment(encodeServiceName(sService)).addPathSegment(PERSISTENCE).addPathSegment("archives");
         if (sDomainPartition != null)
             {
             urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
@@ -681,7 +681,7 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment(encodeServiceName(sService)).addPathSegment("persistence");
+                .addPathSegment(encodeServiceName(sService)).addPathSegment(PERSISTENCE);
 
         switch (sOperationName)
             {
@@ -698,15 +698,15 @@ public class HttpRequestSender
                 sendPostRequest(urlBuilder);
                 break;
             case CoherencePersistencePanel.CREATE_SNAPSHOT:
-                urlBuilder.addPathSegment("snapshots").addPathSegment(sSnapshotName);
+                urlBuilder.addPathSegment(SNAPSHOTS).addPathSegment(sSnapshotName);
                 sendPostRequest(urlBuilder);
                 break;
             case CoherencePersistencePanel.REMOVE_SNAPSHOT:
-                urlBuilder.addPathSegment("snapshots").addPathSegment(sSnapshotName);
+                urlBuilder.addPathSegment(SNAPSHOTS).addPathSegment(sSnapshotName);
                 sendDeleteRequest(urlBuilder);
                 break;
             case CoherencePersistencePanel.RECOVER_SNAPSHOT:
-                urlBuilder.addPathSegment("snapshots").addPathSegment(sSnapshotName).addPathSegment("recover");
+                urlBuilder.addPathSegment(SNAPSHOTS).addPathSegment(sSnapshotName).addPathSegment("recover");
                 sendPostRequest(urlBuilder);
                 break;
             case CoherencePersistencePanel.FORCE_RECOVERY:
@@ -1393,7 +1393,7 @@ public class HttpRequestSender
                         .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"));
             case "Cache":
                 urlBuilder = urlBuilder.addPathSegment(SERVICES)
-                        .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "service")))
+                        .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
                         .addPathSegment(CACHES).addPathSegment(getKeyPropertyFromObjName(objectName, "name"))
                         .addPathSegment(MEMBERS)
                         .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
@@ -1406,7 +1406,7 @@ public class HttpRequestSender
                 return urlBuilder;
             case "StorageManager":
                 return urlBuilder.addPathSegment(SERVICES)
-                        .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "service")))
+                        .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
                         .addPathSegment(CACHES).addPathSegment(objectName.getKeyProperty("cache"))
                         .addPathSegment(MEMBERS).addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"));
             case "Service":
@@ -1423,8 +1423,8 @@ public class HttpRequestSender
                 return urlBuilder;
             case "Persistence":
                 return urlBuilder.addPathSegment(SERVICES)
-                        .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "service")))
-                        .addPathSegment("persistence");
+                        .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
+                        .addPathSegment(PERSISTENCE);
             case "Platform":
                 urlBuilder = urlBuilder.addPathSegment(MEMBERS)
                         .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
@@ -1740,11 +1740,14 @@ public class HttpRequestSender
     /**
      * Various constants.
      */
-    private static final String FIELDS   = "fields";
-    private static final String LINKS    = "links";
-    private static final String SERVICES = "services";
-    private static final String MEMBERS  = "members";
-    private static final String CACHES   = "caches";
+    private static final String FIELDS      = "fields";
+    private static final String LINKS       = "links";
+    private static final String SERVICES    = "services";
+    private static final String SERVICE     = "service";
+    private static final String MEMBERS     = "members";
+    private static final String CACHES      = "caches";
+    private static final String PERSISTENCE = "persistence";
+    private static final String SNAPSHOTS   = "snapshots";
 
     /**
      * A trust manager that will trust all certificates. Only used when the preference to ignore SSL certs is chosen.
