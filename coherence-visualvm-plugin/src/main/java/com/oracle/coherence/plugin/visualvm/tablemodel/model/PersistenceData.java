@@ -162,8 +162,8 @@ public class PersistenceData
                         {
                         data = (PersistenceData) mapData.get(sServiceNameKey);
 
-                        // PersistenceActiveSpaceUsed is only valid for active persistence mode
-                        if ("active".equals(data.getColumn(PERSISTENCE_MODE)))
+                        // PersistenceActiveSpaceUsed is only valid for active or active-backup persistence mode
+                        if (isActivePersistence((String) data.getColumn(PERSISTENCE_MODE)))
                             {
                             data.setColumn(TOTAL_ACTIVE_SPACE_USED,
                                            (Long) data.getColumn(TOTAL_ACTIVE_SPACE_USED)
@@ -275,8 +275,8 @@ public class PersistenceData
                         }
 
                     // update the details for each node
-                    // PersistenceActiveSpaceUsed is only valid for active persistence mode
-                    if ("active".equals(sPersistenceMode))
+                    // PersistenceActiveSpaceUsed is only valid for active or active-backup persistence mode
+                    if (isActivePersistence(sPersistenceMode))
                         {
                         long nPersistenceActiveSpaceUsed = details.get("persistenceActiveSpaceUsed").asLong();
                         data.setColumn(TOTAL_ACTIVE_SPACE_USED,
@@ -407,6 +407,17 @@ public class PersistenceData
         return "Coherence:" + PERSISTENCE_MBEAN + ",service=" + sService +
                 (sDomainPartition != null ? ",domainPartition=" + asParts[0] : "")
                 + "," + PERSISTENCE_COORDINATOR +",*";
+        }
+
+    /**
+     * Returns true if we are using active persistence mode.
+     *
+     * @param sPersistenceMode the persistence mode
+     * @return true if we are using active persistence mode.
+     */
+    public static boolean isActivePersistence(String sPersistenceMode)
+        {
+        return sPersistenceMode != null && sPersistenceMode.startsWith("active-");
         }
 
     // ----- constants ------------------------------------------------------

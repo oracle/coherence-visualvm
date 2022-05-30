@@ -698,7 +698,9 @@ public abstract class AbstractCoherencePanel
         for (Map.Entry<Object, Data> entry : persistenceData)
             {
             // only include services with active persistence
-            if (entry.getValue().getColumn(PersistenceData.PERSISTENCE_MODE).equals("active"))
+            String sPersistenceMode = (String) entry.getValue().getColumn(PersistenceData.PERSISTENCE_MODE);
+
+            if (PersistenceData.isActivePersistence(sPersistenceMode))
                 {
                 long cTotalMem = (Long) entry.getValue().getColumn(PersistenceData.TOTAL_ACTIVE_SPACE_USED);
 
