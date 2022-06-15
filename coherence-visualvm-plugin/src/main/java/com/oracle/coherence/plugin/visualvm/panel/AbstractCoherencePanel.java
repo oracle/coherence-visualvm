@@ -731,7 +731,7 @@ public abstract class AbstractCoherencePanel
      */
     protected int getNullEntry(Object oValue)
         {
-        return (oValue == null ? Integer.valueOf(0) : (Integer) oValue);
+        return (oValue == null ? 0 : (Integer) oValue);
         }
 
     /**
