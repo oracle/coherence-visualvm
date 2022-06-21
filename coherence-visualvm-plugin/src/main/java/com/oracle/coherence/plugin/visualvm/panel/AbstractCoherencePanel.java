@@ -28,6 +28,7 @@ package com.oracle.coherence.plugin.visualvm.panel;
 
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMView;
+import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
@@ -685,12 +686,14 @@ public abstract class AbstractCoherencePanel
     protected Object[] getPersistenceData(List<Map.Entry<Object, Data>> persistenceData)
         {
         Object[] aoResults = new Object[] {};
-        // [0] = cTotalMemory (long)
-        // [1] = cLatencyMax  (long)
-        // [2] = cLatencyTotal(float)
-        // [3] = count
+        // [0] = cTotalActiveSpace (long)
+        // [1] = cTotalBackupSpace (long)
+        // [2] = cLatencyMax  (long)
+        // [3] = cLatencyTotal(float)
+        // [4] = count
 
-        long cTotalMemory = 0;
+        long cTotalActiveSpace = 0;
+        long cTotalBackupSpace = 0;
         long cLatencyMax = 0L;
         float cLatencyTotal = 0.0f;
         int count = 0;
@@ -702,9 +705,12 @@ public abstract class AbstractCoherencePanel
 
             if (PersistenceData.isActivePersistence(sPersistenceMode))
                 {
-                long cTotalMem = (Long) entry.getValue().getColumn(PersistenceData.TOTAL_ACTIVE_SPACE_USED);
+                long cTotalActive = (Long) entry.getValue().getColumn(PersistenceData.TOTAL_ACTIVE_SPACE_USED);
+                long cTotalBackup = (Long) entry.getValue().getColumn(PersistenceData.TOTAL_BACKUP_SPACE_USED_MB);
 
-                cTotalMemory += cTotalMem == -1 ? 0 : cTotalMem;
+                cTotalActiveSpace += cTotalActive == -1 ? 0 : cTotalActive;
+                cTotalBackupSpace += cTotalBackup == -1 ? 0 : cTotalBackup * GraphHelper.MB;
+
                 cLatencyTotal += (Float) entry.getValue().getColumn(PersistenceData.AVERAGE_LATENCY);
 
                 cLatencyMax = (Long) entry.getValue().getColumn(PersistenceData.MAX_LATENCY);
@@ -717,7 +723,7 @@ public abstract class AbstractCoherencePanel
                 }
             }
 
-        return new Object[] {cTotalMemory, cMaxLatencyMax, cLatencyTotal, count};
+        return new Object[] {cTotalActiveSpace, cTotalBackupSpace, cMaxLatencyMax, cLatencyTotal, count};
         }
 
     /**

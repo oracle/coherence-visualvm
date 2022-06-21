@@ -1441,8 +1441,9 @@ public class VisualVMModel
         {
         Localization.getLocalText("LBL_service_name"), Localization.getLocalText("LBL_persistence_mode"),
         Localization.getLocalText("LBL_active_space_bytes"), Localization.getLocalText("LBL_active_space_mb"),
-        Localization.getLocalText("LBL_avge_persistence"), Localization.getLocalText("LBL_max_persistence"),
-        Localization.getLocalText("LBL_snapshot_count"), Localization.getLocalText("LBL_status")
+        Localization.getLocalText("LBL_backup_space_mb"), Localization.getLocalText("LBL_avge_persistence"),
+        Localization.getLocalText("LBL_max_persistence"), Localization.getLocalText("LBL_snapshot_count"),
+        Localization.getLocalText("LBL_status")
         };
 
     /**

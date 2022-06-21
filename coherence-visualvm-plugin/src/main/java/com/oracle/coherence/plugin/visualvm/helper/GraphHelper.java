@@ -589,7 +589,8 @@ public class GraphHelper
                 VALUES_LIMIT);
 
         sxycd.setChartTitle(getLocalText("GRPH_total_active_space"));
-        sxycd.addLineFillItems(getLocalText("GRPH_total_space"));
+        sxycd.addLineItems(getLocalText("GRPH_total_space"));
+        sxycd.addLineItems(getLocalText("GRPH_backup_space"));
 
         return createChart(sxycd);
         }
@@ -598,11 +599,12 @@ public class GraphHelper
      * Add values to the total active persistence space used.
      *
      * @param graph                   {@link SimpleXYChartSupport} to add values to
-     * @param cTotalPersistenceSpace  total persistence size of all caches
+     * @param cTotalPersistenceSpace  total persistence active size of all caches
+     * @param cTotalBackupSpace       total persistence backup size of all caches
      */
-    public static void addValuesToPersistenceActiveTotalGraph(SimpleXYChartSupport graph, long cTotalPersistenceSpace)
+    public static void addValuesToPersistenceActiveTotalGraph(SimpleXYChartSupport graph, long cTotalPersistenceSpace, long cTotalBackupSpace)
         {
-        graph.addValues(System.currentTimeMillis(), new long[] {cTotalPersistenceSpace});
+        graph.addValues(System.currentTimeMillis(), new long[] {cTotalPersistenceSpace, cTotalBackupSpace});
         }
 
     /**

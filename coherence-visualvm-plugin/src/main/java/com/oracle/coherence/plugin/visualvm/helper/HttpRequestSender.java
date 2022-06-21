@@ -858,7 +858,7 @@ public class HttpRequestSender
                 .addPathSegment(MEMBERS)
                 .addQueryParameter(LINKS, "")
                 .addQueryParameter(FIELDS, "type,name,domainPartition,nodeId,persistenceMode," +
-                                             "storageEnabled,persistenceActiveSpaceUsed,persistenceLatencyMax,persistenceLatencyAverage");
+                                             "storageEnabled,persistenceActiveSpaceUsed,persistenceBackupSpaceUsed,persistenceLatencyMax,persistenceLatencyAverage");
         return getResponseJson(sendGetRequest(urlBuilder));
         }
 

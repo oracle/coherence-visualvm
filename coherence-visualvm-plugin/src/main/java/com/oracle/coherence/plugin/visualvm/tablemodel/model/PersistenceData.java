@@ -145,7 +145,7 @@ public class PersistenceData
                 String sDomainPartition = asParts.length == 2 ? asParts[0] : null;
                 sServiceName            = sDomainPartition == null ? sServiceNameKey : asParts[1];
 
-                // select only the current service so we can determine the number of storage-enabled
+                // select only the current service, so we can determine the number of storage-enabled
                 // members.
                 Set<ObjectName> resultSet = requestSender.getMembersOfService(sServiceName, sDomainPartition);
 
@@ -156,7 +156,7 @@ public class PersistenceData
 
                     // only include storage-enabled members
                     AttributeList listAttr = requestSender.getAttributes(objectName,
-                            new String[] { "StorageEnabled", "PersistenceActiveSpaceUsed", "PersistenceLatencyMax", "PersistenceLatencyAverage" });
+                            new String[] { "StorageEnabled", MBEAN_ACTIVE_SPACE, MBEAN_BACKUP_SPACE, "PersistenceLatencyMax", "PersistenceLatencyAverage" });
 
                     if (Boolean.parseBoolean(getAttributeValueAsString(listAttr, "StorageEnabled")))
                         {
@@ -166,8 +166,16 @@ public class PersistenceData
                         if (isActivePersistence((String) data.getColumn(PERSISTENCE_MODE)))
                             {
                             data.setColumn(TOTAL_ACTIVE_SPACE_USED,
-                                           (Long) data.getColumn(TOTAL_ACTIVE_SPACE_USED)
-                                           + Long.parseLong(getAttributeValueAsString(listAttr, "PersistenceActiveSpaceUsed")));
+                                    ((Long) data.getColumn(TOTAL_ACTIVE_SPACE_USED)) +
+                                           + Long.parseLong(getAttributeValueAsString(listAttr, MBEAN_ACTIVE_SPACE)));
+
+                            String sData = getAttributeValueAsString(listAttr, MBEAN_BACKUP_SPACE);
+
+                            long nBackupSpaceUsed = sData == null ? 0L : Long.parseLong(sData);
+
+                            data.setColumn(TOTAL_BACKUP_SPACE_USED_MB,
+                                           (Long) data.getColumn(TOTAL_BACKUP_SPACE_USED_MB) +
+                                           Math.max(nBackupSpaceUsed, 0));
                             }
 
                         // update the max (of the max latencies)
@@ -199,6 +207,7 @@ public class PersistenceData
                     }
 
                 data.setColumn(TOTAL_ACTIVE_SPACE_USED_MB, (Long) data.getColumn(TOTAL_ACTIVE_SPACE_USED) / GraphHelper.MB);
+                data.setColumn(TOTAL_BACKUP_SPACE_USED_MB, (Long) data.getColumn(TOTAL_BACKUP_SPACE_USED_MB) / GraphHelper.MB);
 
                 mapData.put(sServiceNameKey, data);
                 }
@@ -279,8 +288,14 @@ public class PersistenceData
                     if (isActivePersistence(sPersistenceMode))
                         {
                         long nPersistenceActiveSpaceUsed = details.get("persistenceActiveSpaceUsed").asLong();
+                        JsonNode jsonBackup = details.get("persistenceBackupSpaceUsed");
+                        long nPersistenceBackupSpaceUsed = jsonBackup == null ? 0L : jsonBackup.asLong();
+
                         data.setColumn(TOTAL_ACTIVE_SPACE_USED,
                                 (Long) data.getColumn(TOTAL_ACTIVE_SPACE_USED) + nPersistenceActiveSpaceUsed);
+
+                        data.setColumn(TOTAL_BACKUP_SPACE_USED_MB,
+                                (Long) data.getColumn(TOTAL_BACKUP_SPACE_USED_MB) + nPersistenceBackupSpaceUsed);
                         }
 
                     // update the max (of the max latencies)
@@ -312,6 +327,8 @@ public class PersistenceData
 
                 v.setColumn(TOTAL_ACTIVE_SPACE_USED_MB,
                            (Long) v.getColumn(TOTAL_ACTIVE_SPACE_USED) / GraphHelper.MB);
+                v.setColumn(TOTAL_BACKUP_SPACE_USED_MB,
+                           (Long) v.getColumn(TOTAL_BACKUP_SPACE_USED_MB) / GraphHelper.MB);
 
                 int cNodes = mapNodeCount.get(k);
                 // update the average of the averages only if > 1 service node
@@ -342,6 +359,7 @@ public class PersistenceData
         data.setColumn(SERVICE_NAME, sServiceName);
         data.setColumn(PERSISTENCE_MODE, sPersistenceMode);
         data.setColumn(TOTAL_ACTIVE_SPACE_USED, 0L);
+        data.setColumn(TOTAL_BACKUP_SPACE_USED_MB, 0L);
         data.setColumn(MAX_LATENCY, 0L);
         data.setColumn(AVERAGE_LATENCY, 0.0f);
 
@@ -455,27 +473,42 @@ public class PersistenceData
     public static final int TOTAL_ACTIVE_SPACE_USED_MB = 3;
 
     /**
+     * Array index for total backup space used MB.
+     */
+    public static final int TOTAL_BACKUP_SPACE_USED_MB = 4;
+
+    /**
      * Array index for average latency
      */
-    public static final int AVERAGE_LATENCY = 4;
+    public static final int AVERAGE_LATENCY = 5;
 
     /**
      * Array index for max latency.
      */
-    public static final int MAX_LATENCY = 5;
+    public static final int MAX_LATENCY = 6;
 
     /**
      * Array index for number of snapshots.
      */
-    public static final int SNAPSHOT_COUNT = 6;
+    public static final int SNAPSHOT_COUNT = 7;
 
     /**
      * Array index for status.
       */
-    public static final int STATUS = 7;
+    public static final int STATUS = 8;
 
     /**
      * The logger object to use.
      */
     private static final Logger LOGGER = Logger.getLogger(PersistenceData.class.getName());
+
+    /**
+     * Attribute for active space.
+     */
+    private static final String MBEAN_ACTIVE_SPACE = "PersistenceActiveSpaceUsed";
+
+    /**
+     * Attribute for backup space.
+     */
+    private static final String MBEAN_BACKUP_SPACE = "PersistenceBackupSpaceUsed";
     }
