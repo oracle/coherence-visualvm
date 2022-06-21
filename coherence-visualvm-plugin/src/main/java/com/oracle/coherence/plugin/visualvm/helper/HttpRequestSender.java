@@ -608,6 +608,17 @@ public class HttpRequestSender
         return rootNode.get("state").asText();
         }
 
+    @Override
+    public String reportEnvironment(Integer nNodeId)
+            throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(MEMBERS)
+                .addPathSegment(nNodeId + "").addPathSegment("environment");
+
+        JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
+        return rootNode.get("environment").asText();
+        }
+
     /**
      * Issue a dump cluster heap request.
      *

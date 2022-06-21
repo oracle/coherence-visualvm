@@ -329,6 +329,25 @@ public class JMXRequestSender
         return (String) invoke(new ObjectName(sFQN), "reportNodeState", new Object[0], new String[0]);
         }
 
+    @Override
+    public String reportEnvironment(Integer nNodeId)
+            throws Exception
+        {
+        // look up the full name of the MBean in case we are in container
+        Set<ObjectName> setResult = getCompleteObjectName(
+                new ObjectName("Coherence:type=Node,nodeId=" + nNodeId + ",*"));
+
+        String sFQN = null;
+
+        for (Object oResult : setResult)
+            {
+            sFQN = oResult.toString();
+            break;
+            }
+
+        return (String) invoke(new ObjectName(sFQN), "reportEnvironment", new Object[0], new String[0]);
+        }
+
     /**
      * Issue a dump cluster heap request.
      *

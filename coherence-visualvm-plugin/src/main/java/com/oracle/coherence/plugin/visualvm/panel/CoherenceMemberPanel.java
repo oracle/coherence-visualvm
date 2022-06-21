@@ -26,7 +26,6 @@
 package com.oracle.coherence.plugin.visualvm.panel;
 
 
-import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
@@ -183,6 +182,7 @@ public class CoherenceMemberPanel
             f_table.setMenuOptions(new MenuOption[] {
                     menuDetail,
                     new ReportNodeStateMenuOption(model, m_requestSender, f_table),
+                    new ReportEnvironmentMenuOption(model, m_requestSender, f_table),
                     new ReportNodeStateMultiMenuOption(model, m_requestSender, f_table)});
             }
         else
@@ -294,6 +294,62 @@ public class CoherenceMemberPanel
             f_tmodel.setDataList(m_memberData);
             }
 
+        }
+
+
+    // ----- inner classes ReportEnvironmentMenuOption ----------------------
+
+    /**
+     * A class to call the environment operation on the selected ClusterNode
+     * MBean and display the details.
+     */
+    private class ReportEnvironmentMenuOption
+            extends AbstractMenuOption
+        {
+
+        /**
+         * {@inheritDoc}
+         */
+        public ReportEnvironmentMenuOption(VisualVMModel model, RequestSender requestSender,
+                                           ExportableJTable jtable)
+            {
+            super(model, requestSender, jtable);
+            }
+
+           // ----- MenuOptions methods ----------------------------------------
+
+        @Override
+        public String getMenuItem()
+            {
+            return getLocalizedText("LBL_report_node_environment");
+            }
+
+        @Override
+        public void actionPerformed(ActionEvent e)
+            {
+            int nRow = getSelectedRow();
+            Integer nNodeId = null;
+
+            if (nRow == -1)
+                {
+                JOptionPane.showMessageDialog(null, getLocalizedText("LBL_must_select_row"));
+                }
+            else
+                {
+                try
+                    {
+                    nNodeId        = (Integer) getJTable().getModel().getValueAt(nRow, 0);
+                    String sResult = generateHeader(nNodeId) + m_requestSender.reportEnvironment(nNodeId);
+
+                    showMessageDialog(getLocalizedText("LBL_environment_for_node") + " " + nNodeId,
+                        sResult, JOptionPane.INFORMATION_MESSAGE, 500, 400, true);
+                    }
+                catch (Exception ee)
+                    {
+                    showMessageDialog("Error running reportEnvironment for Node " + nNodeId, ee.getMessage(), JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
         }
 
     // ----- inner classes ReportNodeDetailsMenuOption ----------------------
