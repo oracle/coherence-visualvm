@@ -181,8 +181,8 @@ public class CoherenceMemberPanel
             {
             f_table.setMenuOptions(new MenuOption[] {
                     menuDetail,
-                    new ReportNodeStateMenuOption(model, m_requestSender, f_table),
                     new ReportEnvironmentMenuOption(model, m_requestSender, f_table),
+                    new ReportNodeStateMenuOption(model, m_requestSender, f_table),
                     new ReportNodeStateMultiMenuOption(model, m_requestSender, f_table)});
             }
         else
