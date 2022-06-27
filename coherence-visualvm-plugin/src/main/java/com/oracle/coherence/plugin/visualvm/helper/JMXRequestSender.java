@@ -250,13 +250,7 @@ public class JMXRequestSender
         // look up the full name of the MBean in case we are in container
         Set<ObjectName> setResult = getPartitionAssignmentObjectName(sService, sDomainPartition);
 
-        String sFQN = null;
-
-        for (Object oResult : setResult)
-            {
-            sFQN = oResult.toString();
-            break;
-            }
+        String sFQN = getFirstResult(setResult);
 
         return (String) invoke(new ObjectName(sFQN), "reportScheduledDistributions",
                 new Object[]{true}, new String[]{boolean.class.getName()});
@@ -269,15 +263,8 @@ public class JMXRequestSender
         // look up the full name of the MBean in case we are in container
         Set<ObjectName> setResult = getPartitionAssignmentObjectName(sService, sDomainPartition);
 
-        String sFQN = null;
+        String sFQN = getFirstResult(setResult);
 
-        for (Object oResult : setResult)
-            {
-            sFQN = oResult.toString();
-            break;
-
-
-            }
         return JMXUtils.runJMXQuery(f_connection, sFQN, new JMXUtils.JMXField[]{
                 new JMXUtils.Attribute("AveragePartitionSizeKB"),
                 new JMXUtils.Attribute("MaxPartitionSizeKB"),
@@ -318,13 +305,7 @@ public class JMXRequestSender
         Set<ObjectName> setResult = getCompleteObjectName(
                 new ObjectName("Coherence:type=Node,nodeId=" + nNodeId + ",*"));
 
-        String sFQN = null;
-
-        for (Object oResult : setResult)
-            {
-            sFQN = oResult.toString();
-            break;
-            }
+        String sFQN = getFirstResult(setResult);
 
         return (String) invoke(new ObjectName(sFQN), "reportNodeState", new Object[0], new String[0]);
         }
@@ -337,13 +318,7 @@ public class JMXRequestSender
         Set<ObjectName> setResult = getCompleteObjectName(
                 new ObjectName("Coherence:type=Node,nodeId=" + nNodeId + ",*"));
 
-        String sFQN = null;
-
-        for (Object oResult : setResult)
-            {
-            sFQN = oResult.toString();
-            break;
-            }
+        String sFQN = getFirstResult(setResult);
 
         return (String) invoke(new ObjectName(sFQN), "reportEnvironment", new Object[0], new String[0]);
         }
@@ -360,13 +335,8 @@ public class JMXRequestSender
         Set<ObjectName> setResult = getCompleteObjectName(
                 new ObjectName("Coherence:type=Cluster,*"));
 
-        String sFQN = null;
+        String sFQN = getFirstResult(setResult);
 
-        for (Object oResult : setResult)
-            {
-            sFQN = oResult.toString();
-            break;
-            }
         invoke(new ObjectName(sFQN), "dumpClusterHeap", new Object[]{sRole},
                     new String[] {String.class.getName()});
         }
@@ -380,13 +350,7 @@ public class JMXRequestSender
                 : PersistenceData.getFullServiceName(sDomainPartition, sService);
         Set<ObjectName> setResult = getCompleteObjectName(new ObjectName(PersistenceData.getMBeanName(sServiceName)));
 
-        String sFQN = null;
-
-        for (Object oResult : setResult)
-            {
-            sFQN = oResult.toString();
-            break;
-            }
+        String sFQN = getFirstResult(setResult);
 
         return (String[]) f_connection.getAttribute(new ObjectName(sFQN), "Snapshots");
         }
@@ -398,13 +362,7 @@ public class JMXRequestSender
         Set<ObjectName> setResult = getCompleteObjectName(new ObjectName(PersistenceData.getMBeanName(
                 PersistenceData.getFullServiceName(sDomainPartition, sService))));
 
-        String sFQN = null;
-
-        for (Object oResult : setResult)
-            {
-            sFQN = oResult.toString();
-            break;
-            }
+        String sFQN = getFirstResult(setResult);
 
         return (String[]) invoke(new ObjectName(sFQN), "listArchivedSnapshots", null, null);
         }
@@ -419,13 +377,8 @@ public class JMXRequestSender
         ObjectName      objectName = new ObjectName(PersistenceData.getMBeanName(PersistenceData.getFullServiceName(sDomainPartition, sService)));
         Set<ObjectName> setResult  = getCompleteObjectName(objectName);
 
-        String sFQN = null;
+        String sFQN = getFirstResult(setResult);
 
-        for (Object oResult : setResult)
-            {
-            sFQN = oResult.toString();
-            break;
-            }
         invoke(new ObjectName(sFQN), sOperationName, new Object[]{sSnapshotName},
                 new String[]{String.class.getName()});
         }
@@ -447,17 +400,14 @@ public class JMXRequestSender
         try
             {
             Set<ObjectName> setResult = server.queryNames(new ObjectName(sQuery), null);
-            for (Object oResult : setResult)
-                {
-                return oResult.toString();
-                }
+
+            return getFirstResult(setResult);
             }
         catch (Exception e)
             {
             throw new RuntimeException("Unable to obtain reporter for nodeId=" + nLocalMemberId +
                     ": " + e.getMessage());
             }
-        return null;
         }
 
     /**
@@ -571,6 +521,24 @@ public class JMXRequestSender
             return oResult.toString();
             }
         return null;
+        }
+
+    /**
+     * Returns the first result from a {@link Set} of {@link ObjectName}s.
+     *
+     * @param setResult {@link Set} of {@link ObjectName}s
+     *
+     * @return result
+     */
+    private String getFirstResult(Set<ObjectName> setResult)
+        {
+        String sFQN = null;
+
+        if (!setResult.isEmpty())
+            {
+            sFQN = setResult.iterator().next().toString();
+            }
+        return sFQN;
         }
 
     // ------ constants -----------------------------------------------------
