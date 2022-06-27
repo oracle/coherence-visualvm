@@ -858,7 +858,21 @@ public class HttpRequestSender
         }
 
     /**
-     * Get a list of all storage members.
+     * Get a list of all health members.
+     *
+     * @return a list of all storage members
+     * @throws Exception in case of errors
+     */
+    public JsonNode getAllHealthMembers() throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment("health")
+                .addPathSegment(MEMBERS)
+                .addQueryParameter(LINKS, "");
+        return getResponseJson(sendGetRequest(urlBuilder));
+        }
+
+    /**
+     * Get a list of all health checks.
      *
      * @return a list of all storage members
      * @throws Exception in case of errors

@@ -130,7 +130,6 @@ public class MachineData
 
                     // put it into the mapData with just a machine as the key
                     mapData.put(machineName, data);
-
                     }
                 }
 

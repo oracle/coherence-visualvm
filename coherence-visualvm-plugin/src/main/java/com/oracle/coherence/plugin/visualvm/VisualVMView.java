@@ -35,6 +35,7 @@ import com.oracle.coherence.plugin.visualvm.panel.AbstractCoherencePanel;
 import com.oracle.coherence.plugin.visualvm.panel.CoherenceClusterSnapshotPanel;
 import com.oracle.coherence.plugin.visualvm.panel.CoherenceExecutorPanel;
 import com.oracle.coherence.plugin.visualvm.panel.CoherenceGrpcProxyPanel;
+import com.oracle.coherence.plugin.visualvm.panel.CoherenceHealthPanel;
 import com.oracle.coherence.plugin.visualvm.panel.CoherenceTopicPanel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.panel.CoherenceHttpProxyPanel;
@@ -190,6 +191,7 @@ public class VisualVMView
         final CoherenceHttpProxyPanel pnlHttpProxy = new CoherenceHttpProxyPanel(model);
         final CoherenceExecutorPanel pnlExecutor = new CoherenceExecutorPanel(model);
         final CoherenceGrpcProxyPanel pnlGrpcProxy = new CoherenceGrpcProxyPanel(model);
+        final CoherenceHealthPanel pnlHealth = new CoherenceHealthPanel(model);
 
         String sClusterVersion = model.getClusterVersion();
         String sClusterName = null;
@@ -325,6 +327,13 @@ public class VisualVMView
             f_setPanels.add(pnlGrpcProxy);
             }
 
+        if (model.isHealthConfigured())
+            {
+            m_dvc.addDetailsView(new DataViewComponent.DetailsView(Localization.getLocalText("LBL_health"),
+                                                                   null, 10, pnlHealth, null), DataViewComponent.TOP_RIGHT);
+            f_setPanels.add(pnlHealth);
+            }
+
         // update the request sender
         pnlClusterOverview.setRequestSender(requestSender);
         pnlMachine.setRequestSender(requestSender);
@@ -341,6 +350,7 @@ public class VisualVMView
         pnlJCache.setRequestSender(requestSender);
         pnlExecutor.setRequestSender(requestSender);
         pnlGrpcProxy.setRequestSender(requestSender);
+        pnlHealth.setRequestSender(requestSender);
 
         // display a warning if we are connected to a WLS domain and we can
         // see more that 1 domainPartition key. This code relies on us

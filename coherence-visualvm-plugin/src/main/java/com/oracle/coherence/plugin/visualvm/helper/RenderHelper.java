@@ -150,7 +150,7 @@ public class RenderHelper
             boolean hasFocus, int row, int column)
             {
             Component c      = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            float     fValue = Float.valueOf(getText());
+            float     fValue = Float.parseFloat(getText());
 
             if (fValue <= 0.500)
                 {
@@ -178,6 +178,56 @@ public class RenderHelper
                 String text = MILLIS_FORMAT.format((Number) value);
 
                 renderedLabel.setText(text);
+                }
+
+            return c;
+            }
+        }
+
+    /**
+     * Renderer for health.
+     */
+    @SuppressWarnings("serial")
+    public static class HealthRenderer
+            extends DefaultTableCellRenderer
+        {
+        /**
+        * {@inheritDoc}
+        */
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+            boolean hasFocus, int row, int column)
+            {
+            Component c      = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            String sValue = getText();
+
+            if (sValue.contains("0/"))
+                {
+                // means zero out of n are started so make this red
+                setBackground(Color.red);
+                setForeground(Color.black);
+                }
+            else if (sValue.contains("/"))
+                {
+                // means at least 1 is not ready so make orange
+                setBackground(Color.orange);
+                setForeground(Color.black);
+                }
+            else
+                {
+                // must be ok so make it green
+                setBackground(Color.green);
+                setForeground(Color.black);
+                }
+
+            if (c instanceof JLabel && value instanceof Number)
+                {
+                JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+                                           row, column);
+
+                renderedLabel.setHorizontalAlignment(JLabel.RIGHT);
+                renderedLabel.setText(sValue);
                 }
 
             return c;
@@ -262,7 +312,7 @@ public class RenderHelper
 
             if (!"".equals(getText()) && getText() != null)
                 {
-                float fValue = Float.valueOf(getText());
+                float fValue = Float.parseFloat(getText());
 
                 if (fValue < .15)
                     {

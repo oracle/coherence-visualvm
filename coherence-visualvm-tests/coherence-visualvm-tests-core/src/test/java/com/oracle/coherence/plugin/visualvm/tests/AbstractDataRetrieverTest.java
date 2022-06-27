@@ -354,6 +354,8 @@ public abstract class AbstractDataRetrieverTest
             {
             testElasticData();
             }
+
+        testHealthData();
         }
 
     /**
@@ -672,7 +674,24 @@ public abstract class AbstractDataRetrieverTest
         int cSnapshots = (Integer) entryPersistence1.getValue().getColumn(PersistenceData.SNAPSHOT_COUNT);
 
         assertThat(cSnapshots, is(0));
+        }
 
+    public void testHealthData()
+        {
+        List<Map.Entry<Object, Data>> healthData;
+
+        VisualVMModel model = getModel();
+        assertClusterReady();
+        waitForRefresh();
+
+        // refresh the statistics
+        model.refreshStatistics(getRequestSender());
+        healthData = model.getData(VisualVMModel.DataType.HEALTH);
+
+        if (healthData != null && !healthData.isEmpty())
+            {
+
+            }
         }
 
     // ----- helpers --------------------------------------------------------

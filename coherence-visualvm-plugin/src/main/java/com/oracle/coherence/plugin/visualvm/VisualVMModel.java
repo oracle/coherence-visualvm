@@ -40,6 +40,7 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationOriginDat
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationOriginDetailsData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.FlashJournalData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.GrpcProxyData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.HealthData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.HotCacheData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.HotCachePerCacheData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.HttpProxyData;
@@ -163,6 +164,7 @@ public class VisualVMModel
         f_mapDataRetrievers.put(NodeStorageData.class, new NodeStorageData());
         f_mapDataRetrievers.put(ExecutorData.class, new ExecutorData());
         f_mapDataRetrievers.put(GrpcProxyData.class, new GrpcProxyData());
+        f_mapDataRetrievers.put(HealthData.class, new HealthData());
 
         // Loop through each data retriever and initialize the map of
         // report XML. Doing it this way we load it only once
@@ -346,6 +348,22 @@ public class VisualVMModel
             (
             clazz.equals(DataType.HTTP_PROXY.getClassName()) ||
             clazz.equals(DataType.HTTP_PROXY_DETAIL.getClassName())
+            ))
+            {
+            return false;
+            }
+
+        if (!isHealthConfigured() &&
+            (
+            clazz.equals(DataType.HEALTH.getClassName())
+            ))
+            {
+            return false;
+            }
+
+        if (!isExecutorConfigured() &&
+            (
+            clazz.equals(DataType.EXECUTOR.getClassName())
             ))
             {
             return false;
@@ -1019,6 +1037,17 @@ public class VisualVMModel
         }
 
     /**
+     * Returns if Health is configured.
+     *
+     * @return true if Health is configured.
+     */
+    public boolean isHealthConfigured()
+        {
+        return (m_mapCollectedData.get(DataType.HEALTH) != null
+                && m_mapCollectedData.get(DataType.HEALTH).size() != 0);
+        }
+
+    /**
      * Returns if JCache is configured.
      *
      * @return true if JCache is configured.
@@ -1237,7 +1266,8 @@ public class VisualVMModel
         HOTCACHE(HotCacheData.class, HOTCACHE_LABELS),
         HOTCACHE_PERCACHE(HotCachePerCacheData.class, HOTCACHE_PERCACHE_LABELS),
         EXECUTOR(ExecutorData.class, EXECUTOR_LABELS),
-        GRPC_PROXY(GrpcProxyData.class, GRPC_PROXY_LABELS);
+        GRPC_PROXY(GrpcProxyData.class, GRPC_PROXY_LABELS),
+        HEALTH(HealthData.class, HEALTH_LABELS);
 
         private DataType(Class clz, String[] asMeta)
             {
@@ -1432,6 +1462,28 @@ public class VisualVMModel
         Localization.getLocalText("LBL_error_requests"), Localization.getLocalText("LBL_responses_sent"),
         Localization.getLocalText("LBL_messages_received"), Localization.getLocalText("LBL_request_duration_mean"),
         Localization.getLocalText("LBL_message_duration_mean")
+        };
+
+    /**
+     * Labels for Health table.
+     */
+    private static final String[] HEALTH_LABELS = new String[]
+        {
+        Localization.getLocalText("LBL_health_name"), Localization.getLocalText("LBL_health_subtype"),
+        Localization.getLocalText("LBL_members"), Localization.getLocalText("LBL_started"),
+        Localization.getLocalText("LBL_live"), Localization.getLocalText("LBL_ready"),
+        Localization.getLocalText("LBL_safe"), Localization.getLocalText("LBL_health_class")
+        };
+
+    /**
+     * Labels for Health table.
+     */
+    public static final String[] HEALTH_SUMMARY_LABELS = new String[]
+        {
+        Localization.getLocalText("LBL_health_name"),
+        Localization.getLocalText("LBL_members"), Localization.getLocalText("LBL_started"),
+        Localization.getLocalText("LBL_live"), Localization.getLocalText("LBL_ready"),
+        Localization.getLocalText("LBL_safe"), Localization.getLocalText("LBL_health_class")
         };
 
     /**
