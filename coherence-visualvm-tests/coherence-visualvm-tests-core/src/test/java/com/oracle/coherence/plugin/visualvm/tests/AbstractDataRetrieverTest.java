@@ -28,6 +28,7 @@ package com.oracle.coherence.plugin.visualvm.tests;
 import com.oracle.bedrock.testsupport.deferred.Eventually;
 
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
+import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheDetailData;
@@ -355,7 +356,8 @@ public abstract class AbstractDataRetrieverTest
             testElasticData();
             }
 
-        if (isHealthCheckAvailable())
+        // only include health check if the reporter is available and HealthCheck is available
+        if (isHealthCheckAvailable() && (getRequestSender() instanceof HttpRequestSender || model.isReporterAvailable()))
             {
             testHealthData();
             }
@@ -662,9 +664,12 @@ public abstract class AbstractDataRetrieverTest
 
         validateData(VisualVMModel.DataType.PERSISTENCE, persistenceData, cCount);
 
+        int nIndex1 = isHealthCheckAvailable() ? 1 : 0;
+        int nIndex2 = isHealthCheckAvailable() ? 2 : 1;
+
         // the services will be ordered as above, alphabetically
-        Map.Entry<Object, Data> entryPersistence1 = persistenceData.get(0);
-        Map.Entry<Object, Data> entryPersistence2 = persistenceData.get(1);
+        Map.Entry<Object, Data> entryPersistence1 = persistenceData.get(nIndex1);
+        Map.Entry<Object, Data> entryPersistence2 = persistenceData.get(nIndex2);
 
         assertThat(entryPersistence1, is(notNullValue()));
         assertThat(entryPersistence2, is(notNullValue()));
@@ -683,6 +688,11 @@ public abstract class AbstractDataRetrieverTest
         {
         List<Map.Entry<Object, Data>> healthData;
 
+        if (!getModel().isReporterAvailable())
+            {
+            return;
+            }
+
         VisualVMModel model = getModel();
         assertClusterReady();
         waitForRefresh();
@@ -691,7 +701,7 @@ public abstract class AbstractDataRetrieverTest
         model.refreshStatistics(getRequestSender());
         healthData = model.getData(VisualVMModel.DataType.HEALTH);
 
-        assertTrue("Health Data is Missing", healthData.size() > 0);
+        assertTrue("Health Data is Missing", healthData != null && healthData.size() > 0);
         }
 
     // ----- helpers --------------------------------------------------------
