@@ -903,12 +903,12 @@ public class CoherencePersistencePanel
     /**
      * The graph of persistence latency averages.
      */
-    private final SimpleXYChartSupport f_persistenceLatencyGraph;
+    private final transient SimpleXYChartSupport f_persistenceLatencyGraph;
 
     /**
      * The graph of persistence latency averages.
      */
-    private final SimpleXYChartSupport f_persistenceTotalSpaceGraph;
+    private final transient SimpleXYChartSupport f_persistenceTotalSpaceGraph;
 
     /**
      * the {@link ExportableJTable} to use to display data.

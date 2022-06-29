@@ -25,7 +25,6 @@
 
 package com.oracle.coherence.plugin.visualvm.tablemodel.model;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -100,7 +99,6 @@ public class HealthData
         JsonNode                allStorageMembers = requestSender.getAllHealthMembers();
         JsonNode healthItemsNode  = allStorageMembers.get("items");
 
-        Map<String,Integer>     mapNodeCount = new HashMap<>();
         Data                    data;
 
         if (healthItemsNode != null && healthItemsNode.isArray())

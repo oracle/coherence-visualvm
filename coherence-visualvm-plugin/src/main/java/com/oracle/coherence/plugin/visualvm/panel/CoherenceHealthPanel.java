@@ -157,19 +157,19 @@ public class CoherenceHealthPanel
 
             // increment the values
             data.setColumn(HealthSummaryData.MEMBERS, (Integer)data.getColumn(HealthSummaryData.MEMBERS) + 1);
-            if ((Boolean) value.getColumn(HealthData.STARTED))
+            if (Boolean.TRUE.equals(value.getColumn(HealthData.STARTED)))
                {
                data.setColumn(HealthSummaryData.STARTED, (Integer)data.getColumn(HealthSummaryData.STARTED) + 1);
                }
-            if ((Boolean) value.getColumn(HealthData.LIVE))
+            if (Boolean.TRUE.equals(value.getColumn(HealthData.LIVE)))
                {
                data.setColumn(HealthSummaryData.LIVE, (Integer)data.getColumn(HealthSummaryData.LIVE) + 1);
                }
-            if ((Boolean) value.getColumn(HealthData.READY))
+            if (Boolean.TRUE.equals(value.getColumn(HealthData.READY)))
                {
                data.setColumn(HealthSummaryData.READY, (Integer)data.getColumn(HealthSummaryData.READY) + 1);
                }
-           if ((Boolean) value.getColumn(HealthData.SAFE))
+           if (Boolean.TRUE.equals(value.getColumn(HealthData.SAFE)))
                {
                data.setColumn(HealthSummaryData.SAFE, (Integer)data.getColumn(HealthSummaryData.SAFE) + 1);
                }
@@ -192,19 +192,19 @@ public class CoherenceHealthPanel
 
             if (cStarted != cMembers)
                 {
-                v.setColumn(HealthSummaryData.STARTED, String.format("%d/%d", cStarted, cMembers));
+                v.setColumn(HealthSummaryData.STARTED, String.format(FORMAT, cStarted, cMembers));
                 }
             if (cLive != cMembers)
                 {
-                v.setColumn(HealthSummaryData.LIVE, String.format("%d/%d", cLive, cMembers));
+                v.setColumn(HealthSummaryData.LIVE, String.format(FORMAT, cLive, cMembers));
                 }
             if (cReady != cMembers)
                 {
-                v.setColumn(HealthSummaryData.READY, String.format("%d/%d", cReady, cMembers));
+                v.setColumn(HealthSummaryData.READY, String.format(FORMAT, cReady, cMembers));
                 }
             if (cSafe != cMembers)
                 {
-                v.setColumn(HealthSummaryData.SAFE, String.format("%d/%d", cSafe, cMembers));
+                v.setColumn(HealthSummaryData.SAFE, String.format(FORMAT, cSafe, cMembers));
                 }
 
             totalChecks.addAndGet(cMembers * 4);
@@ -213,7 +213,7 @@ public class CoherenceHealthPanel
 
         // update total health
         f_txtTotalHealthChecks.setForeground(Color.black);
-        String sValue = String.format("%d/%d", totalOk.get(), totalChecks.get());
+        String sValue = String.format(FORMAT, totalOk.get(), totalChecks.get());
         
         f_txtTotalHealthChecks.setText(sValue);
         if (totalOk.get() != totalChecks.get())
@@ -234,6 +234,8 @@ public class CoherenceHealthPanel
     // ----- constants ------------------------------------------------------
 
     private static final long serialVersionUID = -7612569043492412546L;
+
+    private static final String FORMAT = "%d/%d";
 
     // ----- data members ----------------------------------------------------
 

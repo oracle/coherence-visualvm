@@ -70,6 +70,7 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import org.graalvm.visualvm.application.Application;
+import org.graalvm.visualvm.core.datasupport.Stateful;
 import org.graalvm.visualvm.core.ui.DataSourceView;
 import org.graalvm.visualvm.core.ui.components.DataViewComponent;
 import org.graalvm.visualvm.tools.jmx.JmxModel;
@@ -382,7 +383,7 @@ public class VisualVMView
                         try
                             {
                             // application may be null inside the constructor
-                            if (m_application == null || m_application.getState() == Application.STATE_AVAILABLE)
+                            if (m_application == null || m_application.getState() == Stateful.STATE_AVAILABLE)
                                 {
                                 // Schedule the SwingWorker to update the GUI
                                 model.refreshStatistics(requestSender);

@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.logging.Logger;
+
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;

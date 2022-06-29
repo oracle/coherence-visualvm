@@ -1009,9 +1009,9 @@ public class VisualVMModel
     public boolean isElasticDataConfigured()
         {
         return (m_mapCollectedData.get(DataType.RAMJOURNAL) != null
-                && m_mapCollectedData.get(DataType.RAMJOURNAL).size() != 0) ||
+                && !m_mapCollectedData.get(DataType.RAMJOURNAL).isEmpty()) ||
                (m_mapCollectedData.get(DataType.FLASHJOURNAL) != null
-                && m_mapCollectedData.get(DataType.FLASHJOURNAL).size() != 0);
+                && !m_mapCollectedData.get(DataType.FLASHJOURNAL).isEmpty());
         }
 
     /**
@@ -1022,7 +1022,7 @@ public class VisualVMModel
     public boolean isExecutorConfigured()
         {
         return (m_mapCollectedData.get(DataType.EXECUTOR) != null
-                && m_mapCollectedData.get(DataType.EXECUTOR).size() != 0);
+                && !m_mapCollectedData.get(DataType.EXECUTOR).isEmpty());
         }
 
     /**
@@ -1033,7 +1033,7 @@ public class VisualVMModel
     public boolean isGrpcProxyConfigured()
         {
         return (m_mapCollectedData.get(DataType.GRPC_PROXY) != null
-                && m_mapCollectedData.get(DataType.GRPC_PROXY).size() != 0);
+                && !m_mapCollectedData.get(DataType.GRPC_PROXY).isEmpty());
         }
 
     /**
@@ -1044,7 +1044,7 @@ public class VisualVMModel
     public boolean isHealthConfigured()
         {
         return (m_mapCollectedData.get(DataType.HEALTH) != null
-                && m_mapCollectedData.get(DataType.HEALTH).size() != 0);
+                && !m_mapCollectedData.get(DataType.HEALTH).isEmpty());
         }
 
     /**
@@ -1055,9 +1055,9 @@ public class VisualVMModel
     public boolean isJCacheConfigured()
         {
         return (m_mapCollectedData.get(DataType.JCACHE_CONFIG) != null
-                && m_mapCollectedData.get(DataType.JCACHE_CONFIG).size() != 0) ||
+                && !m_mapCollectedData.get(DataType.JCACHE_CONFIG).isEmpty()) ||
                (m_mapCollectedData.get(DataType.JCACHE_STATS) != null
-                && m_mapCollectedData.get(DataType.JCACHE_STATS).size() != 0);
+                && !m_mapCollectedData.get(DataType.JCACHE_STATS).isEmpty());
         }
 
     /**
@@ -1068,7 +1068,7 @@ public class VisualVMModel
     public boolean isHttpProxyConfigured()
         {
         return (m_mapCollectedData.get(DataType.HTTP_PROXY) != null
-                && m_mapCollectedData.get(DataType.HTTP_PROXY).size() != 0);
+                && !m_mapCollectedData.get(DataType.HTTP_PROXY).isEmpty());
         }
 
     /**

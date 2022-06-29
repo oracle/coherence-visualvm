@@ -289,7 +289,7 @@ public abstract class AbstractVisualVMTest
             {
             try
                 {
-                optionsByType.add(ClassName.of( Class.forName(HEALTH_CLASS)));
+                optionsByType.add(ClassName.of(Class.forName("com.tangosol.net.Coherence")));
                 }
             catch (ClassNotFoundException e)
                 {
