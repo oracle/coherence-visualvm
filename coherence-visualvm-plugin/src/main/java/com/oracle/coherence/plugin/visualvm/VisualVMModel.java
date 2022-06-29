@@ -1480,10 +1480,9 @@ public class VisualVMModel
      */
     public static final String[] HEALTH_SUMMARY_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_health_name"),
-        Localization.getLocalText("LBL_members"), Localization.getLocalText("LBL_started"),
-        Localization.getLocalText("LBL_live"), Localization.getLocalText("LBL_ready"),
-        Localization.getLocalText("LBL_safe"), Localization.getLocalText("LBL_health_class")
+        Localization.getLocalText("LBL_health_name"), Localization.getLocalText("LBL_members"),
+        Localization.getLocalText("LBL_started"), Localization.getLocalText("LBL_live"),
+        Localization.getLocalText("LBL_ready"), Localization.getLocalText("LBL_safe")
         };
 
     /**

@@ -50,7 +50,7 @@ public class HealthSummaryData
      */
     public HealthSummaryData()
         {
-        super(CLASS_NAME + 1);
+        super(SAFE + 1);
         }
 
     // ----- DataRetriever methods ------------------------------------------
@@ -111,16 +111,6 @@ public class HealthSummaryData
      * Array index for safe
      */
     public static final int SAFE = 5;
-
-    /**
-     * Array index for description.
-     */
-    public static final int CLASS_NAME = 6;
-
-    /**
-     * The logger object to use.
-     */
-    private static final Logger LOGGER = Logger.getLogger(HealthSummaryData.class.getName());
 
     /**
      * Report for cluster data.

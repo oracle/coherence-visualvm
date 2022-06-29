@@ -355,7 +355,10 @@ public abstract class AbstractDataRetrieverTest
             testElasticData();
             }
 
-        testHealthData();
+        if (isHealthCheckAvailable())
+            {
+            testHealthData();
+            }
         }
 
     /**
@@ -688,10 +691,7 @@ public abstract class AbstractDataRetrieverTest
         model.refreshStatistics(getRequestSender());
         healthData = model.getData(VisualVMModel.DataType.HEALTH);
 
-        if (healthData != null && !healthData.isEmpty())
-            {
-
-            }
+        assertTrue("Health Data is Missing", healthData.size() > 0);
         }
 
     // ----- helpers --------------------------------------------------------

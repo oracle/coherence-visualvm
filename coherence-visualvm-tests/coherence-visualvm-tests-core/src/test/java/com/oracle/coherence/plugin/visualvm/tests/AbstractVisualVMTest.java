@@ -51,6 +51,7 @@ import com.oracle.bedrock.runtime.coherence.options.OperationalOverride;
 import com.oracle.bedrock.runtime.coherence.options.RoleName;
 import com.oracle.bedrock.runtime.coherence.options.WellKnownAddress;
 import com.oracle.bedrock.runtime.java.features.JmxFeature;
+import com.oracle.bedrock.runtime.java.options.ClassName;
 import com.oracle.bedrock.runtime.java.options.SystemProperty;
 import com.oracle.bedrock.runtime.java.profiles.JmxProfile;
 import com.oracle.bedrock.runtime.network.AvailablePortIterator;
@@ -283,7 +284,39 @@ public abstract class AbstractVisualVMTest
                              RoleName.of(ROLE_NAME),
                              s_logs.builder());
 
+        // check if HealthCheck class is available, then use Coherence to start
+        if (isHealthCheckAvailable())
+            {
+            try
+                {
+                optionsByType.add(ClassName.of( Class.forName(HEALTH_CLASS)));
+                }
+            catch (ClassNotFoundException e)
+                {
+                // ignore as it should not fail as we have already done the check
+                }
+            }
+
         return optionsByType;
+        }
+
+    /**
+     * Returns true if health check is available.
+     *
+     * @return true if health check is available
+     */
+    protected static boolean isHealthCheckAvailable()
+        {
+        try
+            {
+            Class.forName(HEALTH_CLASS);
+            // health check available
+            return true;
+            }
+        catch (ClassNotFoundException e)
+            {
+            return false;
+            }
         }
 
     /**
@@ -299,7 +332,7 @@ public abstract class AbstractVisualVMTest
         String sClass = type.getClassName().toString();
 
         // if the type is Member then add one as the number of columns displayed is
-        // different to the number of columns in the model. This is the only type that that this different.
+        // different to the number of columns in the model. This is the only type that has this difference.
         int cColumns = type.getMetadata().length + (type.equals(VisualVMModel.DataType.MEMBER) ? 1 : 0);
 
         assertThat("Data for " + sClass + " should not be null", data, is(notNullValue()));
@@ -586,6 +619,11 @@ public abstract class AbstractVisualVMTest
      * The edition we are running under.
      */
     private static String s_sEdition;
+
+    /**
+     * HealthCheck class.
+     */
+    private static final String HEALTH_CLASS = "com.tangosol.util.HealthCheck";
 
     // ----- data members -----------------------------------------------
 

@@ -126,7 +126,7 @@ public class CoherenceHealthPanel
     @Override
     public void updateGUI()
         {
-
+        // no-op, done in update data
         }
 
     @Override
@@ -148,7 +148,6 @@ public class CoherenceHealthPanel
                 {
                 data = new HealthSummaryData();
                 data.setColumn(HealthSummaryData.HEALTH_NAME, newKey);
-                data.setColumn(HealthSummaryData.CLASS_NAME, value.getColumn(HealthData.CLASS_NAME));
                 data.setColumn(HealthSummaryData.MEMBERS, 0);
                 data.setColumn(HealthSummaryData.STARTED, 0);
                 data.setColumn(HealthSummaryData.LIVE, 0);
@@ -178,7 +177,6 @@ public class CoherenceHealthPanel
             // update the map
             mapData.put(newKey, data);
             });
-
 
         AtomicInteger totalChecks = new AtomicInteger(0);
         AtomicInteger totalOk     = new AtomicInteger(0);
