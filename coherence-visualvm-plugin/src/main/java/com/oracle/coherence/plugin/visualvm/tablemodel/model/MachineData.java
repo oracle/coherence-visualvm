@@ -105,7 +105,7 @@ public class MachineData
                             new String[] { "Name", ATTR_FREE_MEM, ATTR_LOAD_AVG, ATTR_AVAIL_PROC, ATTR_TOTAL_MEM_AIX, ATTR_TOTAL_MEM });
 
                     String sOSType     = getAttributeValueAsString(listAttr, "Name");
-                    String sMemoryAttr = sOSType.toLowerCase().contains("aix") ? ATTR_TOTAL_MEM_AIX : ATTR_TOTAL_MEM;
+                    String sMemoryAttr = sOSType != null && sOSType.toLowerCase().contains("aix") ? ATTR_TOTAL_MEM_AIX : ATTR_TOTAL_MEM;
 
                     data.setColumn(MACHINE_NAME, machineName);
                     data.setColumn(FREE_PHYSICAL_MEMORY, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_FREE_MEM)));

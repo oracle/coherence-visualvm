@@ -166,6 +166,14 @@ public abstract class AbstractVisualVMTest
                 OptionsByType optionsByTypeMemberB1 = OptionsByType.of(optionsByTypeB1).add(DisplayName.of("memberB1"));
                 OptionsByType optionsByTypeMemberB2 = OptionsByType.of(optionsByTypeB2).add(DisplayName.of("memberB2"));
 
+                if (fRestRequestSender)
+                    {
+                    optionsByTypeMemberB1.add(SystemProperty.of("coherence.management", "dynamic"));
+                    optionsByTypeMemberB1.add(SystemProperty.of("coherence.management.http", "inherit"));
+                    optionsByTypeMemberB1.add(SystemProperty.of("coherence.management.http.host", REST_MGMT_HOST));
+                    optionsByTypeMemberB1.add(SystemProperty.of("coherence.management.http.port", REST_MGMT_PORT2));
+                    }
+
                 s_memberB1 = platform.launch(CoherenceCacheServer.class, optionsByTypeMemberB1.asArray());
                 s_memberB2 = platform.launch(CoherenceCacheServer.class, optionsByTypeMemberB2.asArray());
 
@@ -584,6 +592,11 @@ public abstract class AbstractVisualVMTest
      * Rest Management Port
      */
     protected static String REST_MGMT_PORT = "8080";
+
+    /**
+     * Rest Management Port2
+     */
+    protected static String REST_MGMT_PORT2 = "8081";
 
     /**
      * port iterator for ephemeral ports.

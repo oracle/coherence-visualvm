@@ -81,7 +81,7 @@ public class CoherenceHealthPanel
         pnlHeader.setLayout(new FlowLayout());
         pnlHeader.setOpaque(false);
 
-        f_txtTotalHealthChecks = getTextField(5, JTextField.RIGHT);
+        f_txtTotalHealthChecks = getTextField(10, JTextField.RIGHT);
         pnlHeader.add(getLocalizedLabel("LBL_total_health_checks", f_txtTotalHealthChecks));
         pnlHeader.add(f_txtTotalHealthChecks);
 

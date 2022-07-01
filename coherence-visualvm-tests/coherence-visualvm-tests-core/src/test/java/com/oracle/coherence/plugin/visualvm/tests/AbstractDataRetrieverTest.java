@@ -55,6 +55,7 @@ import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
+import com.tangosol.util.Base;
 import javax.management.Attribute;
 import javax.management.ObjectName;
 
@@ -513,6 +514,11 @@ public abstract class AbstractDataRetrieverTest
 
         assertThat(federationOriginDetailsData, is(notNullValue()));
         assertThat("Total origin entries sent should be positive.", lTotalOrigEntriesSent, is(greaterThan(0L)));
+
+        if ("true".equals(System.getProperty("pause.federation")))
+            {
+            Base.sleep(Long.MAX_VALUE);
+            }
         }
 
     /**
