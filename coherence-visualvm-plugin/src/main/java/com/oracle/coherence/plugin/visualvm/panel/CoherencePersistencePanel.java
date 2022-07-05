@@ -83,6 +83,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+import javax.swing.SwingConstants;
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
 
@@ -202,7 +203,7 @@ public class CoherencePersistencePanel
                                        new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, PersistenceData.TOTAL_BACKUP_SPACE_USED_MB,
                                        new RenderHelper.IntegerRenderer());
-        RenderHelper.setHeaderAlignment(f_table, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
         // Add some space
         f_table.setIntercellSpacing(new Dimension(6, 3));
@@ -236,7 +237,7 @@ public class CoherencePersistencePanel
                                        new RenderHelper.ToolTipRenderer());
         RenderHelper.setColumnRenderer(f_tableNotifications, PersistenceNotificationsData.DURATION,
                                        new RenderHelper.IntegerRenderer());
-        RenderHelper.setHeaderAlignment(f_tableNotifications, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(f_tableNotifications, SwingConstants.CENTER);
 
         // Add some space
         f_tableNotifications.setIntercellSpacing(new Dimension(6, 3));

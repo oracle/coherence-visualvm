@@ -57,6 +57,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -119,8 +120,8 @@ public class CoherenceServicePanel
         RenderHelper.setColumnRenderer(f_tableDetail, ServiceMemberData.TASK_AVERAGE_DURATION,
                                        new RenderHelper.DecimalRenderer());
 
-        RenderHelper.setHeaderAlignment(table, JLabel.CENTER);
-        RenderHelper.setHeaderAlignment(f_tableDetail, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(table, SwingConstants.CENTER);
+        RenderHelper.setHeaderAlignment(f_tableDetail, SwingConstants.CENTER);
 
         table.setPreferredScrollableViewportSize(new Dimension(500, table.getRowHeight() * 5));
         f_tableDetail.setPreferredScrollableViewportSize(new Dimension(700, 125));

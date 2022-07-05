@@ -49,6 +49,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
+import javax.swing.SwingConstants;
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
 /**
@@ -121,7 +122,7 @@ public class CoherenceProxyPanel
         RenderHelper.setColumnRenderer(f_table, ProxyData.TOTAL_BYTES_SENT, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, ProxyData.TOTAL_MSG_RECEIVED, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, ProxyData.TOTAL_MSG_SENT, new RenderHelper.IntegerRenderer());
-        RenderHelper.setHeaderAlignment(f_table, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
         // Add some space
         f_table.setIntercellSpacing(new Dimension(6, 3));

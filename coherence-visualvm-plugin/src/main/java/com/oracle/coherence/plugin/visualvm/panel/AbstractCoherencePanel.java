@@ -73,6 +73,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -317,7 +318,7 @@ public abstract class AbstractCoherencePanel
                     }
                 };
             m_table = new ExportableJTable(m_tmodel);
-            RenderHelper.setHeaderAlignment(m_table, JLabel.CENTER);
+            RenderHelper.setHeaderAlignment(m_table, SwingConstants.CENTER);
 
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 

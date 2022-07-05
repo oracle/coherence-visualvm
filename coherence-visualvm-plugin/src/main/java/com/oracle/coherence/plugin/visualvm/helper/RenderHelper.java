@@ -36,6 +36,7 @@ import java.text.NumberFormat;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -173,7 +174,7 @@ public class RenderHelper
                 JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
                                            row, column);
 
-                renderedLabel.setHorizontalAlignment(JLabel.RIGHT);
+                renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
                 String text = MILLIS_FORMAT.format((Number) value);
 
@@ -226,7 +227,7 @@ public class RenderHelper
                 JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
                                            row, column);
 
-                renderedLabel.setHorizontalAlignment(JLabel.RIGHT);
+                renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
                 renderedLabel.setText(sValue);
                 }
 
@@ -249,7 +250,7 @@ public class RenderHelper
         public DecimalRenderer()
             {
             super();
-            setHorizontalAlignment(JLabel.RIGHT);
+            setHorizontalAlignment(SwingConstants.RIGHT);
             }
 
         /**
@@ -262,7 +263,7 @@ public class RenderHelper
             {
             super();
             this.numberFormat = sFormat;
-            setHorizontalAlignment(JLabel.RIGHT);
+            setHorizontalAlignment(SwingConstants.RIGHT);
             }
 
         /**
@@ -279,7 +280,7 @@ public class RenderHelper
                 JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
                                            row, column);
 
-                renderedLabel.setHorizontalAlignment(JLabel.RIGHT);
+                renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
                 String text = numberFormat.format((Number) value);
 
@@ -338,7 +339,7 @@ public class RenderHelper
                     JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected,
                                                hasFocus, row, column);
 
-                    renderedLabel.setHorizontalAlignment(JLabel.RIGHT);
+                    renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
                     String text = PERCENT_FORMAT.format((Number) value);
 
@@ -369,7 +370,7 @@ public class RenderHelper
         public IntegerRenderer()
             {
             super();
-            setHorizontalAlignment(JLabel.RIGHT);
+            setHorizontalAlignment(SwingConstants.RIGHT);
             }
 
         /**
@@ -385,7 +386,7 @@ public class RenderHelper
                 {
                 JLabel label = (JLabel) c;
 
-                label.setHorizontalAlignment(JLabel.RIGHT);
+                label.setHorizontalAlignment(SwingConstants.RIGHT);
 
                 String text = INTEGER_FORMAT.format((Number) value);
 
@@ -419,7 +420,7 @@ public class RenderHelper
                {
                JLabel label = (JLabel) c;
 
-               label.setHorizontalAlignment(JLabel.RIGHT);
+               label.setHorizontalAlignment(SwingConstants.RIGHT);
                long nLongValue = value instanceof Integer ? ((Integer)value) * 1L : ((Long)value).longValue();
 
                label.setText(getRenderedBytes(nLongValue));
@@ -572,7 +573,7 @@ public class RenderHelper
                 JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
                                            row, column);
 
-                renderedLabel.setHorizontalAlignment(JLabel.RIGHT);
+                renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
                 String text = MILLIS_FORMAT.format((Number) value);
 
@@ -623,7 +624,7 @@ public class RenderHelper
                     JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected,
                                                hasFocus, row, column);
 
-                    renderedLabel.setHorizontalAlignment(JLabel.RIGHT);
+                    renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
                     String text = PERCENT_FORMAT.format((Number) value);
 

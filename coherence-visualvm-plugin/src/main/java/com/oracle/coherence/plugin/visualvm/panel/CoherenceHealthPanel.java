@@ -35,6 +35,7 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.panel.util.ExportableJTable;
@@ -49,6 +50,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 /**
  * An implementation of an {@link AbstractCoherencePanel} to view
@@ -86,7 +88,7 @@ public class CoherenceHealthPanel
         pnlHeader.add(f_txtTotalHealthChecks);
 
         // create the table
-        f_tmodel = new HealthSummaryTableModel(VisualVMModel.HEALTH_SUMMARY_LABELS);
+        f_tmodel = new HealthSummaryTableModel(HEALTH_SUMMARY_LABELS);
 
         f_table = new ExportableJTable(f_tmodel);
 
@@ -99,7 +101,7 @@ public class CoherenceHealthPanel
         RenderHelper.setColumnRenderer(f_table, HealthSummaryData.READY, new RenderHelper.HealthRenderer());
         RenderHelper.setColumnRenderer(f_table, HealthSummaryData.SAFE, new RenderHelper.HealthRenderer());
 
-        RenderHelper.setHeaderAlignment(f_table, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
         // Add some space
         f_table.setIntercellSpacing(new Dimension(6, 3));
@@ -132,7 +134,7 @@ public class CoherenceHealthPanel
     @Override
     public void updateData()
         {
-        m_healthData = f_model.getData(VisualVMModel.DataType.HEALTH);
+        List<Entry<Object, Data>>  m_healthData = f_model.getData(VisualVMModel.DataType.HEALTH);
 
         SortedMap<Object, Data> mapData = new TreeMap<>();
 
@@ -245,16 +247,6 @@ public class CoherenceHealthPanel
     private final JTextField f_txtTotalHealthChecks;
 
     /**
-     * A check-box to indicate if the NameService should be included in the list of proxy servers.
-     */
-    private JCheckBox m_cbxIncludeNameService = null;
-
-    /**
-     * The health data retrieved from the {@link VisualVMModel}.
-     */
-    private List<Entry<Object, Data>> m_healthData;
-
-    /**
      * The {@link HealthSummaryTableModel} to display proxy data.
      */
     protected final HealthSummaryTableModel f_tmodel;
@@ -263,4 +255,14 @@ public class CoherenceHealthPanel
      * the {@link ExportableJTable} to use to display data.
      */
     protected final ExportableJTable f_table;
+
+    /**
+     * Labels for Health table.
+     */
+    private static final String[] HEALTH_SUMMARY_LABELS = new String[]
+        {
+        Localization.getLocalText("LBL_health_name"), Localization.getLocalText("LBL_members"),
+        Localization.getLocalText("LBL_started"), Localization.getLocalText("LBL_live"),
+        Localization.getLocalText("LBL_ready"), Localization.getLocalText("LBL_safe")
+        };
     }

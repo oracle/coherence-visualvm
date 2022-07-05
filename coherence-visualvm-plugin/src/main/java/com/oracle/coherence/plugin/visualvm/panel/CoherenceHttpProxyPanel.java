@@ -43,6 +43,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.BorderLayout;
@@ -98,8 +99,8 @@ public class CoherenceHttpProxyPanel
         RenderHelper.setMillisRenderer(f_tableDetail, HttpProxyMemberData.AVG_REQ_TIME);
         RenderHelper.setMillisRenderer(f_tableDetail, HttpProxyMemberData.REQ_PER_SECOND);
 
-        RenderHelper.setHeaderAlignment(f_table, JLabel.CENTER);
-        RenderHelper.setHeaderAlignment(f_tableDetail, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
+        RenderHelper.setHeaderAlignment(f_tableDetail, SwingConstants.CENTER);
         f_table.setPreferredScrollableViewportSize(new Dimension(500, f_table.getRowHeight() * 5));
         f_tableDetail.setPreferredScrollableViewportSize(new Dimension(500, 125));
 

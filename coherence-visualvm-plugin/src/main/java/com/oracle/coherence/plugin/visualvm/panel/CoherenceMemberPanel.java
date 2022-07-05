@@ -168,7 +168,7 @@ public class CoherenceMemberPanel
         RenderHelper.setColumnRenderer(f_table, MemberData.RECEIVER_SUCCESS, new RenderHelper.SuccessRateRenderer());
         RenderHelper.setColumnRenderer(f_table, MemberData.SENDQ_SIZE, new RenderHelper.IntegerRenderer());
 
-        RenderHelper.setHeaderAlignment(f_table, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
         // Add some space
         f_table.setIntercellSpacing(new Dimension(6, 3));

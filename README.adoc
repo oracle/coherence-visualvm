@@ -56,9 +56,9 @@ image::assets/coherence-visualvm.png[Coherence VisualVM Plugin,800,479]
 
 The Plugin will connect to and display data for the following Coherence versions:
 
-**Community Editions**: 14.1.1.0.x, 20.06.x, 20.12.x, 21.06.x and 21.12.x
+**Community Editions**: 14.1.1.0.x, 20.06.x, 20.12.x, 21.06.x, 21.12.x and 22.06.x
 
-**Commercial Editions**: 14.1.1.0.x, 12.2.1.5.x, 12.2.1.4.x, 12.1.3.x, 12.1.2.x and 3.7.1.x
+**Commercial Editions**: 14.1.1.0.x, 12.2.1.5.x, 12.2.1.4.x, 12.1.3.x, 12.1.2.x and 3.7.1.x (Support will be dropped for versions 12.1.3.x and older in an upcoming release)
 
 NOTE: If you wish to connect to Coherence version 12.2.1.4.x via REST you should have Coherence version 12.2.1.4.7 or greater.
 
@@ -85,7 +85,7 @@ Other useful resources:
 * https://coherence.community/[The Coherence Community - All things Coherence]
 * https://visualvm.github.io/[VisualVM Home Page]
 * https://github.com/oracle/coherence[Coherence Community Edition on GitHub]
-* https://github.com/oracle/coherence/tree/master/examples[Various Coherence Examples]
+* https://coherence.community/latest/22.06/docs/#/examples/README[Various Coherence Examples]
 * https://github.com/oracle/coherence-operator[The Coherence Operator - Run your clusters in Kubernetes]
 
 [#connect]
@@ -186,7 +186,7 @@ There are tool tips for each of the preferences, but a summary is shown below.
 | Enable Zoom on Graphs | false | Enables additional zoom function for all graphs.
 | Enable Cluster Snapshot tab | false | Enables experimental Cluster Snapshot tab. This tab is useful for seeing all the relevant cluster information on one pae in a text format.
 | Enable Cluster Heap Dump | false | Enables the cluster heap dump button on the Cluster Overview tab.
-| Analyze Unavailable Time in LogFile| | Provides the ability to analyze log files where Partition Events Logging has been enabled for logs generated from Coherence versions 21.06 and above. See https://coherence.community/21.06/docs/#/docs/core/07_partition_events_logging[here] for more details. Note: You select a Coherence log file to analyze and don't need to be connected to a running cluster.
+| Analyze Unavailable Time in LogFile| | Provides the ability to analyze log files where Partition Events Logging has been enabled for logs generated from Coherence versions 21.06 and above. See https://docs.oracle.com/pls/topic/lookup?ctx=en/middleware/standalone/coherence/14.1.1.2206/release-notes&id=COHDG-GUID-41F5341C-0318-41B2-AEBF-B9DB7FBF25E7[here] for more details. Note: You select a Coherence log file to analyze and don't need to be connected to a running cluster.
 !===
 
 [#capabilities]
@@ -213,7 +213,8 @@ Depending upon the edition and functionality you are using, the following option
 * **Elastic Data** - If your cluster is configured with Elastic Data, this tab displays graphs and information about RAM Journal and Flash Journal usage.  You can click on each of the usage bars to show detailed node information
 * **JCache** - If your cluster is being used to store JCache caches, this tab displays JCache "Management" and "Statistics" MBean information regarding the configured caches.
 * **HotCache** - If your cluster contains HotCache node(s), then this tab lists the running HotCache instances. If you select an instance, on the next data refresh the console will display statistics and graphs for the operations performed. You may click on tabs and cache-ops to see further fine-grained information.
-* **gRPC Proxies** – If you cluster is configured with gRPC Proxies, this tab displays information about the requests sent and received as well as successful and failed requests. A Graph of message rates and durations is also displayed. This tab will only show when connected via JMX and is not supported for REST connections.
+* **gRPC Proxies** – If your cluster is configured with gRPC Proxies, this tab displays information about the requests sent and received as well as successful and failed requests. A Graph of message rates and durations is also displayed. This tab will only show when connected via JMX and is not supported for REST connections.
+* **Health** – If your cluster supports the Health Check API, this tab displays information regarding the status of all health endpoints.
 
 [#build]
 == Building the Plugin

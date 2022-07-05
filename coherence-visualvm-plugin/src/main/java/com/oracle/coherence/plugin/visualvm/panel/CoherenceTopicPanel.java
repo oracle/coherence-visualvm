@@ -46,6 +46,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
+import javax.swing.SwingConstants;
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
 /**
@@ -104,7 +105,7 @@ public class CoherenceTopicPanel
         RenderHelper.setColumnRenderer(f_table, TopicData.MEMORY_USAGE_BYTES, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, TopicData.PUBLISHER_SENDS, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, TopicData.SUBSCRIBER_RECEIVES, new RenderHelper.IntegerRenderer());
-        RenderHelper.setHeaderAlignment(f_table, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
         f_table.setIntercellSpacing(new Dimension(6, 3));
         f_table.setRowHeight(f_table.getRowHeight() + 4);

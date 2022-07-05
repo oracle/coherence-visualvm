@@ -65,6 +65,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -281,9 +282,9 @@ public class CoherenceFederationPanel
         RenderHelper.setColumnRenderer(tableInbound, FederationOriginDetailsData.Column.TOTAL_MSG_UNACKED.ordinal(),
             new RenderHelper.IntegerRenderer());
 
-        RenderHelper.setHeaderAlignment(tableFed, JLabel.CENTER);
-        RenderHelper.setHeaderAlignment(tableInbound, JLabel.CENTER);
-        RenderHelper.setHeaderAlignment(tableOutbound, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(tableFed, SwingConstants.CENTER);
+        RenderHelper.setHeaderAlignment(tableInbound, SwingConstants.CENTER);
+        RenderHelper.setHeaderAlignment(tableOutbound, SwingConstants.CENTER);
 
         // set sizes
         tableFed.setPreferredScrollableViewportSize(new Dimension(500, tableFed.getRowHeight() * 4));

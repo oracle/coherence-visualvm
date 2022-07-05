@@ -42,6 +42,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.JLabel;
 
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.BorderLayout;
@@ -107,8 +108,8 @@ public class CoherenceHotCachePanel
         RenderHelper.setColumnRenderer(f_percachetable, HotCachePerCacheData.Max, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_percachetable, HotCachePerCacheData.Min, new RenderHelper.IntegerRenderer());
 
-        RenderHelper.setHeaderAlignment(table, JLabel.CENTER);
-        RenderHelper.setHeaderAlignment(f_percachetable, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(table, SwingConstants.CENTER);
+        RenderHelper.setHeaderAlignment(f_percachetable, SwingConstants.CENTER);
 
         f_percachetable.setIntercellSpacing(new Dimension(6,3));
         f_percachetable.setRowHeight(f_percachetable.getRowHeight() + 4);

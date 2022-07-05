@@ -1476,16 +1476,6 @@ public class VisualVMModel
         };
 
     /**
-     * Labels for Health table.
-     */
-    public static final String[] HEALTH_SUMMARY_LABELS = new String[]
-        {
-        Localization.getLocalText("LBL_health_name"), Localization.getLocalText("LBL_members"),
-        Localization.getLocalText("LBL_started"), Localization.getLocalText("LBL_live"),
-        Localization.getLocalText("LBL_ready"), Localization.getLocalText("LBL_safe")
-        };
-
-    /**
      * Labels for persistence table.
      */
     private static final String[] PERSISTENCE_LABELS = new String[]
