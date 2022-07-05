@@ -368,7 +368,8 @@ public class HttpRequestSender
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("hotcache")
                 .addPathSegment(MEMBERS);
-        urlBuilder.addQueryParameter(FIELDS, "name,type,nodeId");
+        urlBuilder.addQueryParameter(FIELDS, "name,type,nodeId")
+                  .addQueryParameter(LINKS, "");
 
         return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
         }
@@ -1407,6 +1408,10 @@ public class HttpRequestSender
         {
         switch (objectName.getKeyProperty("type"))
             {
+            case "CoherenceAdapter":
+                return urlBuilder.addPathSegment("hotcache").addPathSegment(MEMBERS)
+                         .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
+                         .addQueryParameter(LINKS, "");
             case "Node":
                 return urlBuilder.addPathSegment(MEMBERS)
                         .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
