@@ -29,12 +29,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
@@ -44,8 +46,7 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.HealthData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.HealthSummaryData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Pair;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -83,7 +84,7 @@ public class CoherenceHealthPanel
         pnlHeader.setLayout(new FlowLayout());
         pnlHeader.setOpaque(false);
 
-        f_txtTotalHealthChecks = getTextField(10, JTextField.RIGHT);
+        f_txtTotalHealthChecks = getTextField(10, SwingConstants.RIGHT);
         pnlHeader.add(getLocalizedLabel("LBL_total_health_checks", f_txtTotalHealthChecks));
         pnlHeader.add(f_txtTotalHealthChecks);
 
@@ -134,12 +135,12 @@ public class CoherenceHealthPanel
     @Override
     public void updateData()
         {
-        List<Entry<Object, Data>>  m_healthData = f_model.getData(VisualVMModel.DataType.HEALTH);
+        List<Entry<Object, Data>> healthData = f_model.getData(VisualVMModel.DataType.HEALTH);
 
         SortedMap<Object, Data> mapData = new TreeMap<>();
 
         // summarise the data by name and sub-type
-        m_healthData.forEach(v ->
+        healthData.forEach(v ->
             {
             HealthData.HealthKey key = (HealthData.HealthKey) v.getKey();
             HealthData value = (HealthData) v.getValue();
