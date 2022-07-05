@@ -42,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -251,12 +250,12 @@ public class CoherenceHttpSessionPanel
     /**
      * The graph of session counts.
      */
-    private final SimpleXYChartSupport f_sessionCountGraph;
+    private transient final SimpleXYChartSupport f_sessionCountGraph;
 
     /**
      * The graph of overflow session counts.
      */
-    private final SimpleXYChartSupport f_reapDurationGraph;
+    private transient final SimpleXYChartSupport f_reapDurationGraph;
 
     /**
      * the {@link ExportableJTable} to use to display data.

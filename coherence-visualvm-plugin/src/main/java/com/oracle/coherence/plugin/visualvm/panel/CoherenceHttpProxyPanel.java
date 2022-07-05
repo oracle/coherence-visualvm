@@ -36,7 +36,6 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.HttpProxyMemberData
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.panel.util.ExportableJTable;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -490,22 +489,22 @@ public class CoherenceHttpProxyPanel
     /**
      * The graph of request time.
      */
-    private SimpleXYChartSupport m_requestTimeGraph;
+    private transient SimpleXYChartSupport m_requestTimeGraph;
 
     /**
      * The graph of average requests per second time.
      */
-    private SimpleXYChartSupport m_requestsPerSecondGraph;
+    private transient SimpleXYChartSupport m_requestsPerSecondGraph;
 
     /**
      * The graph of requests and errors
      */
-    private SimpleXYChartSupport m_requestsGraph;
+    private transient SimpleXYChartSupport m_requestsGraph;
 
     /**
      * The graphs of response codes
      */
-    private SimpleXYChartSupport m_responseGraph;
+    private transient SimpleXYChartSupport m_responseGraph;
 
     /**
      * Last error count.

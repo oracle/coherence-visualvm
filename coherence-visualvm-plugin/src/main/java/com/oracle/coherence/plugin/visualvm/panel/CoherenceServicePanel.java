@@ -49,7 +49,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -677,27 +676,27 @@ public class CoherenceServicePanel
     /**
      * The graph of thread utilization percent.
      */
-    private SimpleXYChartSupport m_threadUtilGraph = null;
+    private transient SimpleXYChartSupport m_threadUtilGraph = null;
 
     /**
      * The graph of task average duration.
      */
-    private SimpleXYChartSupport m_taskAverageGraph = null;
+    private transient SimpleXYChartSupport m_taskAverageGraph = null;
 
     /**
      * The graph of task backlog.
      */
-    private SimpleXYChartSupport m_taskBacklogGraph = null;
+    private transient SimpleXYChartSupport m_taskBacklogGraph = null;
 
     /**
      * The graph of request average.
      */
-    private SimpleXYChartSupport m_requestAverageGraph = null;
+    private transient SimpleXYChartSupport m_requestAverageGraph = null;
 
     /**
      * The graph of service partitions.
      */
-    private SimpleXYChartSupport m_servicePartitionsGraph = null;
+    private transient SimpleXYChartSupport m_servicePartitionsGraph = null;
 
     /**
      * The row selection listener.

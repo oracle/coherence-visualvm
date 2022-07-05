@@ -41,7 +41,6 @@ import java.awt.GridLayout;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -208,7 +207,7 @@ public class CoherenceMachinePanel
     /**
      * The graph of machine load averages.
      */
-    private final SimpleXYChartSupport f_machineGraph;
+    private transient final SimpleXYChartSupport f_machineGraph;
 
     /**
      * The machine statistics data retrieved from the {@link VisualVMModel}.

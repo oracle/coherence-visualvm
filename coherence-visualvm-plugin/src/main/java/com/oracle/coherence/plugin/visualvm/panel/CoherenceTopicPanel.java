@@ -40,7 +40,6 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.TopicTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -223,12 +222,12 @@ public class CoherenceTopicPanel
     /**
      * The graph of unconsumed messages.
      */
-    private final SimpleXYChartSupport f_unconsumedGraph;
+    private final transient SimpleXYChartSupport f_unconsumedGraph;
 
     /**
      * The graph of topics rates.
      */
-    private final SimpleXYChartSupport f_topicsRatesGraph;
+    private final transient SimpleXYChartSupport f_topicsRatesGraph;
 
     /**
      * the {@link ExportableJTable} to use to display data.

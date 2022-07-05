@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -248,12 +247,12 @@ public class CoherenceProxyPanel
     /**
      * The graph of proxy server connections.
      */
-    private final SimpleXYChartSupport f_proxyGraph;
+    private final transient SimpleXYChartSupport f_proxyGraph;
 
     /**
      * The graph of proxy server stats.
      */
-    private final SimpleXYChartSupport f_proxyStatsGraph;
+    private final transient SimpleXYChartSupport f_proxyStatsGraph;
 
     /**
      * The proxy statistics data retrieved from the {@link VisualVMModel}.

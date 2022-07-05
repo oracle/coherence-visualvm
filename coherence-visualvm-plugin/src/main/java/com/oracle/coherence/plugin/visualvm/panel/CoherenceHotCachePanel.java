@@ -40,7 +40,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.JLabel;
 
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
@@ -408,42 +407,42 @@ public class CoherenceHotCachePanel
     /**
      * The graph of Execution Time Per Operation statistics.
      */
-    private SimpleXYChartSupport m_hotcacheGraph1;
+    private transient SimpleXYChartSupport m_hotcacheGraph1;
 
     /**
      * The graph of Execution Time Per Transaction Statistics.
      */
-    private SimpleXYChartSupport m_hotcacheGraph2;
+    private transient SimpleXYChartSupport m_hotcacheGraph2;
 
     /**
      * The graph of Number Of Invocations Per Operation Statistics.
      */
-    private SimpleXYChartSupport m_hotcacheGraph3;
+    private transient SimpleXYChartSupport m_hotcacheGraph3;
 
     /**
      * The graph of Last ExecutionTime Per Operation Statistics.
      */
-    private SimpleXYChartSupport m_hotcacheGraph4;
+    private transient SimpleXYChartSupport m_hotcacheGraph4;
 
     /**
      * The graph of Last Operation ReplicationLag Statistics.
      */
-    private SimpleXYChartSupport m_hotcacheGraph5;
+    private transient SimpleXYChartSupport m_hotcacheGraph5;
 
     /**
      * The graph of Operation ReplicationLag Statistics.
      */
-    private SimpleXYChartSupport m_hotcacheGraph6;
+    private transient SimpleXYChartSupport m_hotcacheGraph6;
 
     /**
      * The graph of Number Of Operations Per Transaction Statistics.
      */
-    private SimpleXYChartSupport m_hotcacheGraph7;
+    private transient SimpleXYChartSupport m_hotcacheGraph7;
 
     /**
      * The graph of PerCacheOperation Statistics
      */
-    private SimpleXYChartSupport m_hotcacheGraph8;
+    private transient SimpleXYChartSupport m_hotcacheGraph8;
 
     /**
      * The tabbed panel.
