@@ -399,8 +399,9 @@ public class CacheData
                              : nCacheSize / nMembers);
 
         data.setColumn(UNIT_CALCULATOR, sUnitCalculator);
+        JsonNode units = cacheDetails.get("units");
         long cMemoryUsageBytes = Long.parseLong(getFirstMemberOfArray(cacheDetails, "unitFactor"))
-                                 * cacheDetails.get("units").asLong();
+                                 * (units == null ? 0 : units.asLong());
         data.setColumn(MEMORY_USAGE_BYTES, cMemoryUsageBytes);
         data.setColumn(MEMORY_USAGE_MB, (int) (cMemoryUsageBytes / 1024 / 1024));
 

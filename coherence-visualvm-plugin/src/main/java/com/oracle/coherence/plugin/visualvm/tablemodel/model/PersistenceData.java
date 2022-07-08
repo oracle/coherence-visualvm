@@ -435,7 +435,7 @@ public class PersistenceData
      */
     public static boolean isActivePersistence(String sPersistenceMode)
         {
-        return sPersistenceMode != null && sPersistenceMode.startsWith("active-");
+        return sPersistenceMode != null && sPersistenceMode.startsWith("active");
         }
 
     // ----- constants ------------------------------------------------------
