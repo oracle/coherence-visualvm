@@ -346,7 +346,7 @@ public class CoherenceMemberPanel
                     }
                 catch (Exception ee)
                     {
-                    showMessageDialog("Error running reportEnvironment for Node " + nNodeId, ee.getMessage(), JOptionPane.ERROR_MESSAGE);
+                    showMessageDialog("Error running reportEnvironment for Node " + nNodeId, getSanitizedMessage(ee), JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -501,7 +501,7 @@ public class CoherenceMemberPanel
                     }
                 catch (Exception ee)
                     {
-                    showMessageDialog("Error running reportNodeState for Node " + nNodeId, ee.getMessage(), JOptionPane.ERROR_MESSAGE);
+                    showMessageDialog("Error running reportNodeState for Node " + nNodeId, getSanitizedMessage(ee), JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -628,6 +628,17 @@ public class CoherenceMemberPanel
             {
             return getLocalizedText("LBL_report_node_state_multi");
             }
+        }
+
+    /**
+     * Return a sanitized message to make common errors more meaningful.
+     * @param e {@link Exception} to get message from
+     * @return final message
+     */
+    private String getSanitizedMessage(Exception e)
+        {
+        String sError = e.getMessage();
+        return sError.contains("name cannot be null") ? "Node no longer available." : sError;
         }
 
     // ----- constants ------------------------------------------------------

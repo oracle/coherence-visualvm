@@ -437,7 +437,6 @@ public class CoherenceServicePanel
         public void actionPerformed(ActionEvent e)
             {
             int nRow = getSelectedRow();
-            int nCol = getSelectedColumn();
             String sService    = null;
             String sRawService = null;
 
@@ -496,15 +495,26 @@ public class CoherenceServicePanel
                         throw new RuntimeException("Invalid option " + f_nOption);
                         }
 
-                    showMessageDialog(Localization.getLocalText("LBL_details_service", new String[] { sRawService}),
+                    showMessageDialog(Localization.getLocalText("LBL_details_service", sRawService),
                                                                 sResult, JOptionPane.INFORMATION_MESSAGE);
                     }
                 catch (Exception ee)
                     {
-                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", new String[] { sRawService }),
-                                      ee.getMessage(), JOptionPane.ERROR_MESSAGE);
+                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", sRawService),
+                                      getSanitizedMessage(ee), JOptionPane.ERROR_MESSAGE);
                     }
                 }
+            }
+
+        /**
+         * Return a sanitized message to make common errors more meaningful.
+         * @param e {@link Exception} to get message from
+         * @return final message
+         */
+        private String getSanitizedMessage(Exception e)
+            {
+            String sError = e.getMessage();
+            return sError.contains("name cannot be null") ? "Node no longer available or operation not valid for service type." : sError;
             }
 
         /**
