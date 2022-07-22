@@ -320,10 +320,10 @@ public abstract class AbstractData
      */
     protected String getFirstMemberOfArray(JsonNode nodeJson, String sAttributeName)
         {
-        JsonNode partitionsVulnerableNode = nodeJson.get(sAttributeName);
-        return partitionsVulnerableNode == null && partitionsVulnerableNode.isArray()
-                ? 0 + ""
-                : partitionsVulnerableNode.get(0).asText();
+        JsonNode jsonNode = nodeJson.get(sAttributeName);
+        return jsonNode == null || !jsonNode.isArray()
+                ? (0 + "")
+                : jsonNode.get(0).asText();
         }
 
     /**

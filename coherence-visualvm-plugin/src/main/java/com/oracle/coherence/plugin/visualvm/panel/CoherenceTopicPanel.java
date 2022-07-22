@@ -40,12 +40,12 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.TopicTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
+import javax.swing.SwingConstants;
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
 /**
@@ -104,7 +104,7 @@ public class CoherenceTopicPanel
         RenderHelper.setColumnRenderer(f_table, TopicData.MEMORY_USAGE_BYTES, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, TopicData.PUBLISHER_SENDS, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, TopicData.SUBSCRIBER_RECEIVES, new RenderHelper.IntegerRenderer());
-        RenderHelper.setHeaderAlignment(f_table, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
         f_table.setIntercellSpacing(new Dimension(6, 3));
         f_table.setRowHeight(f_table.getRowHeight() + 4);
@@ -222,12 +222,12 @@ public class CoherenceTopicPanel
     /**
      * The graph of unconsumed messages.
      */
-    private final SimpleXYChartSupport f_unconsumedGraph;
+    private final transient SimpleXYChartSupport f_unconsumedGraph;
 
     /**
      * The graph of topics rates.
      */
-    private final SimpleXYChartSupport f_topicsRatesGraph;
+    private final transient SimpleXYChartSupport f_topicsRatesGraph;
 
     /**
      * the {@link ExportableJTable} to use to display data.

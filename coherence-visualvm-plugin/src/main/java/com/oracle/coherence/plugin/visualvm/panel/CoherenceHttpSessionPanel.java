@@ -42,12 +42,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
+import javax.swing.SwingConstants;
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
 /**
@@ -105,7 +105,7 @@ public class CoherenceHttpSessionPanel
                                        new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, HttpSessionData.SESSION_UPDATES, new RenderHelper.IntegerRenderer());
 
-        RenderHelper.setHeaderAlignment(f_table, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
         // Add some space
         f_table.setIntercellSpacing(new Dimension(6, 3));
@@ -250,12 +250,12 @@ public class CoherenceHttpSessionPanel
     /**
      * The graph of session counts.
      */
-    private final SimpleXYChartSupport f_sessionCountGraph;
+    private transient final SimpleXYChartSupport f_sessionCountGraph;
 
     /**
      * The graph of overflow session counts.
      */
-    private final SimpleXYChartSupport f_reapDurationGraph;
+    private transient final SimpleXYChartSupport f_reapDurationGraph;
 
     /**
      * the {@link ExportableJTable} to use to display data.

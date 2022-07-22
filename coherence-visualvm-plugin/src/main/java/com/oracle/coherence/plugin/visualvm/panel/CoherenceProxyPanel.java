@@ -43,12 +43,12 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
+import javax.swing.SwingConstants;
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
 /**
@@ -121,7 +121,7 @@ public class CoherenceProxyPanel
         RenderHelper.setColumnRenderer(f_table, ProxyData.TOTAL_BYTES_SENT, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, ProxyData.TOTAL_MSG_RECEIVED, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, ProxyData.TOTAL_MSG_SENT, new RenderHelper.IntegerRenderer());
-        RenderHelper.setHeaderAlignment(f_table, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
         // Add some space
         f_table.setIntercellSpacing(new Dimension(6, 3));
@@ -247,12 +247,12 @@ public class CoherenceProxyPanel
     /**
      * The graph of proxy server connections.
      */
-    private final SimpleXYChartSupport f_proxyGraph;
+    private final transient SimpleXYChartSupport f_proxyGraph;
 
     /**
      * The graph of proxy server stats.
      */
-    private final SimpleXYChartSupport f_proxyStatsGraph;
+    private final transient SimpleXYChartSupport f_proxyStatsGraph;
 
     /**
      * The proxy statistics data retrieved from the {@link VisualVMModel}.

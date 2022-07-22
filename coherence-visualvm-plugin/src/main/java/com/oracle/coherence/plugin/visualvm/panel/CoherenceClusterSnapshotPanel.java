@@ -417,11 +417,13 @@ public class CoherenceClusterSnapshotPanel
         StringBuilder sb = new StringBuilder(title(getLabel("LBL_persistence")));
 
         Object[] persistenceData = getPersistenceData(m_persistenceData);
-        long cTotalMemory = (Long) persistenceData[0];
-        long cLatencyMax = (Long) persistenceData[1];
+        long cTotalActive = (Long) persistenceData[0];
+        long cTotalBackup = (Long) persistenceData[1];
+        float cLatencyMax = (Float) persistenceData[3];
 
         sb.append(tableStart())
-                .append(tableRow(getLabel("LBL_total_active_space"), getMemoryFormat(cTotalMemory)))
+                .append(tableRow(getLabel("LBL_total_active_space"), getMemoryFormat(cTotalActive)))
+                .append(tableRow(getLabel("LBL_total_backup_space"), getMemoryFormat(cTotalBackup)))
                 .append(tableRow(getLabel("LBL_max_latency_across_services"), getLatencyValue(Float.toString(cLatencyMax))))
                 .append(tableEnd());
 
@@ -437,6 +439,7 @@ public class CoherenceClusterSnapshotPanel
                     .append(td(entry.getValue().getColumn(PersistenceData.PERSISTENCE_MODE).toString()))
                     .append(td(getMemoryFormat(entry.getValue().getColumn(PersistenceData.TOTAL_ACTIVE_SPACE_USED).toString())))
                     .append(td(getMemoryFormat(entry.getValue().getColumn(PersistenceData.TOTAL_ACTIVE_SPACE_USED_MB).toString())))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(PersistenceData.TOTAL_BACKUP_SPACE_USED_MB).toString())))
                     .append(td(getLatencyValue(entry.getValue().getColumn(PersistenceData.AVERAGE_LATENCY).toString())))
                     .append(td(getLatencyValue(entry.getValue().getColumn(PersistenceData.MAX_LATENCY).toString())))
                     .append(td(getMemoryFormat(entry.getValue().getColumn(PersistenceData.SNAPSHOT_COUNT).toString())))

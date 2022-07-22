@@ -36,6 +36,7 @@ import java.text.NumberFormat;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -150,7 +151,7 @@ public class RenderHelper
             boolean hasFocus, int row, int column)
             {
             Component c      = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            float     fValue = Float.valueOf(getText());
+            float     fValue = Float.parseFloat(getText());
 
             if (fValue <= 0.500)
                 {
@@ -173,11 +174,61 @@ public class RenderHelper
                 JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
                                            row, column);
 
-                renderedLabel.setHorizontalAlignment(JLabel.RIGHT);
+                renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
                 String text = MILLIS_FORMAT.format((Number) value);
 
                 renderedLabel.setText(text);
+                }
+
+            return c;
+            }
+        }
+
+    /**
+     * Renderer for health.
+     */
+    @SuppressWarnings("serial")
+    public static class HealthRenderer
+            extends DefaultTableCellRenderer
+        {
+        /**
+        * {@inheritDoc}
+        */
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+            boolean hasFocus, int row, int column)
+            {
+            Component c      = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            String sValue = getText();
+
+            if (sValue.contains("0/"))
+                {
+                // means zero out of n are started so make this red
+                setBackground(Color.red);
+                setForeground(Color.black);
+                }
+            else if (sValue.contains("/"))
+                {
+                // means at least 1 is not ready so make orange
+                setBackground(Color.orange);
+                setForeground(Color.black);
+                }
+            else
+                {
+                // must be ok so make it green
+                setBackground(Color.green);
+                setForeground(Color.black);
+                }
+
+            if (c instanceof JLabel && value instanceof Number)
+                {
+                JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+                                           row, column);
+
+                renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+                renderedLabel.setText(sValue);
                 }
 
             return c;
@@ -199,7 +250,7 @@ public class RenderHelper
         public DecimalRenderer()
             {
             super();
-            setHorizontalAlignment(JLabel.RIGHT);
+            setHorizontalAlignment(SwingConstants.RIGHT);
             }
 
         /**
@@ -212,7 +263,7 @@ public class RenderHelper
             {
             super();
             this.numberFormat = sFormat;
-            setHorizontalAlignment(JLabel.RIGHT);
+            setHorizontalAlignment(SwingConstants.RIGHT);
             }
 
         /**
@@ -229,7 +280,7 @@ public class RenderHelper
                 JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
                                            row, column);
 
-                renderedLabel.setHorizontalAlignment(JLabel.RIGHT);
+                renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
                 String text = numberFormat.format((Number) value);
 
@@ -262,7 +313,7 @@ public class RenderHelper
 
             if (!"".equals(getText()) && getText() != null)
                 {
-                float fValue = Float.valueOf(getText());
+                float fValue = Float.parseFloat(getText());
 
                 if (fValue < .15)
                     {
@@ -288,7 +339,7 @@ public class RenderHelper
                     JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected,
                                                hasFocus, row, column);
 
-                    renderedLabel.setHorizontalAlignment(JLabel.RIGHT);
+                    renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
                     String text = PERCENT_FORMAT.format((Number) value);
 
@@ -319,7 +370,7 @@ public class RenderHelper
         public IntegerRenderer()
             {
             super();
-            setHorizontalAlignment(JLabel.RIGHT);
+            setHorizontalAlignment(SwingConstants.RIGHT);
             }
 
         /**
@@ -335,7 +386,7 @@ public class RenderHelper
                 {
                 JLabel label = (JLabel) c;
 
-                label.setHorizontalAlignment(JLabel.RIGHT);
+                label.setHorizontalAlignment(SwingConstants.RIGHT);
 
                 String text = INTEGER_FORMAT.format((Number) value);
 
@@ -369,7 +420,7 @@ public class RenderHelper
                {
                JLabel label = (JLabel) c;
 
-               label.setHorizontalAlignment(JLabel.RIGHT);
+               label.setHorizontalAlignment(SwingConstants.RIGHT);
                long nLongValue = value instanceof Integer ? ((Integer)value) * 1L : ((Long)value).longValue();
 
                label.setText(getRenderedBytes(nLongValue));
@@ -522,7 +573,7 @@ public class RenderHelper
                 JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
                                            row, column);
 
-                renderedLabel.setHorizontalAlignment(JLabel.RIGHT);
+                renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
                 String text = MILLIS_FORMAT.format((Number) value);
 
@@ -573,7 +624,7 @@ public class RenderHelper
                     JLabel renderedLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected,
                                                hasFocus, row, column);
 
-                    renderedLabel.setHorizontalAlignment(JLabel.RIGHT);
+                    renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
                     String text = PERCENT_FORMAT.format((Number) value);
 

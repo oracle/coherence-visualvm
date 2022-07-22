@@ -50,6 +50,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -211,10 +212,10 @@ public class CoherenceElasticDataPanel
         int cFlashExhaustiveDelta = cFlashExhaustive - m_cLastFlashExhaustive;
 
         GraphHelper.addValuesToRamJournalCompactionGraph(f_ramJournalCompactionGraph,
-            cRamCompactionDelta < 0 ? 0 : cRamCompactionDelta, cRamExhaustiveDelta < 0 ? 0 : cRamExhaustiveDelta);
+                Math.max(cRamCompactionDelta, 0), Math.max(cRamExhaustiveDelta, 0));
         GraphHelper.addValuesToFlashJournalCompactionGraph(f_flashJournalCompactionGraph,
-            cFlashCompactionDelta < 0 ? 0 : cFlashCompactionDelta,
-            cFlashExhaustiveDelta < 0 ? 0 : cFlashExhaustiveDelta);
+                Math.max(cFlashCompactionDelta, 0),
+                Math.max(cFlashExhaustiveDelta, 0));
 
         // set the last values to calculate deltas
         m_cLastFlashCompaction = cFlashCompaction;
@@ -297,7 +298,7 @@ public class CoherenceElasticDataPanel
             setColumnRenderer(f_table, 5, null);                                              // load factor
             RenderHelper.setColumnRenderer(f_table, 6, new RenderHelper.BytesRenderer());     // max file size
 
-            RenderHelper.setHeaderAlignment(f_table, JLabel.CENTER);
+            RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -328,7 +329,7 @@ public class CoherenceElasticDataPanel
                 rndRightAlign.setToolTipText(sToolTip);
                 }
 
-            rndRightAlign.setHorizontalAlignment(JLabel.RIGHT);
+            rndRightAlign.setHorizontalAlignment(SwingConstants.RIGHT);
             exportableJTable.getColumnModel().getColumn(nColumn).setCellRenderer(rndRightAlign);
             }
 

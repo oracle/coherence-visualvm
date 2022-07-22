@@ -40,6 +40,7 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationOriginDat
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationOriginDetailsData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.FlashJournalData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.GrpcProxyData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.HealthData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.HotCacheData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.HotCachePerCacheData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.HttpProxyData;
@@ -163,6 +164,7 @@ public class VisualVMModel
         f_mapDataRetrievers.put(NodeStorageData.class, new NodeStorageData());
         f_mapDataRetrievers.put(ExecutorData.class, new ExecutorData());
         f_mapDataRetrievers.put(GrpcProxyData.class, new GrpcProxyData());
+        f_mapDataRetrievers.put(HealthData.class, new HealthData());
 
         // Loop through each data retriever and initialize the map of
         // report XML. Doing it this way we load it only once
@@ -346,6 +348,22 @@ public class VisualVMModel
             (
             clazz.equals(DataType.HTTP_PROXY.getClassName()) ||
             clazz.equals(DataType.HTTP_PROXY_DETAIL.getClassName())
+            ))
+            {
+            return false;
+            }
+
+        if (!isHealthConfigured() &&
+            (
+            clazz.equals(DataType.HEALTH.getClassName())
+            ))
+            {
+            return false;
+            }
+
+        if (!isExecutorConfigured() &&
+            (
+            clazz.equals(DataType.EXECUTOR.getClassName())
             ))
             {
             return false;
@@ -991,9 +1009,9 @@ public class VisualVMModel
     public boolean isElasticDataConfigured()
         {
         return (m_mapCollectedData.get(DataType.RAMJOURNAL) != null
-                && m_mapCollectedData.get(DataType.RAMJOURNAL).size() != 0) ||
+                && !m_mapCollectedData.get(DataType.RAMJOURNAL).isEmpty()) ||
                (m_mapCollectedData.get(DataType.FLASHJOURNAL) != null
-                && m_mapCollectedData.get(DataType.FLASHJOURNAL).size() != 0);
+                && !m_mapCollectedData.get(DataType.FLASHJOURNAL).isEmpty());
         }
 
     /**
@@ -1004,7 +1022,7 @@ public class VisualVMModel
     public boolean isExecutorConfigured()
         {
         return (m_mapCollectedData.get(DataType.EXECUTOR) != null
-                && m_mapCollectedData.get(DataType.EXECUTOR).size() != 0);
+                && !m_mapCollectedData.get(DataType.EXECUTOR).isEmpty());
         }
 
     /**
@@ -1015,7 +1033,18 @@ public class VisualVMModel
     public boolean isGrpcProxyConfigured()
         {
         return (m_mapCollectedData.get(DataType.GRPC_PROXY) != null
-                && m_mapCollectedData.get(DataType.GRPC_PROXY).size() != 0);
+                && !m_mapCollectedData.get(DataType.GRPC_PROXY).isEmpty());
+        }
+
+    /**
+     * Returns if Health is configured.
+     *
+     * @return true if Health is configured.
+     */
+    public boolean isHealthConfigured()
+        {
+        return (m_mapCollectedData.get(DataType.HEALTH) != null
+                && !m_mapCollectedData.get(DataType.HEALTH).isEmpty());
         }
 
     /**
@@ -1026,9 +1055,9 @@ public class VisualVMModel
     public boolean isJCacheConfigured()
         {
         return (m_mapCollectedData.get(DataType.JCACHE_CONFIG) != null
-                && m_mapCollectedData.get(DataType.JCACHE_CONFIG).size() != 0) ||
+                && !m_mapCollectedData.get(DataType.JCACHE_CONFIG).isEmpty()) ||
                (m_mapCollectedData.get(DataType.JCACHE_STATS) != null
-                && m_mapCollectedData.get(DataType.JCACHE_STATS).size() != 0);
+                && !m_mapCollectedData.get(DataType.JCACHE_STATS).isEmpty());
         }
 
     /**
@@ -1039,7 +1068,7 @@ public class VisualVMModel
     public boolean isHttpProxyConfigured()
         {
         return (m_mapCollectedData.get(DataType.HTTP_PROXY) != null
-                && m_mapCollectedData.get(DataType.HTTP_PROXY).size() != 0);
+                && !m_mapCollectedData.get(DataType.HTTP_PROXY).isEmpty());
         }
 
     /**
@@ -1237,7 +1266,8 @@ public class VisualVMModel
         HOTCACHE(HotCacheData.class, HOTCACHE_LABELS),
         HOTCACHE_PERCACHE(HotCachePerCacheData.class, HOTCACHE_PERCACHE_LABELS),
         EXECUTOR(ExecutorData.class, EXECUTOR_LABELS),
-        GRPC_PROXY(GrpcProxyData.class, GRPC_PROXY_LABELS);
+        GRPC_PROXY(GrpcProxyData.class, GRPC_PROXY_LABELS),
+        HEALTH(HealthData.class, HEALTH_LABELS);
 
         private DataType(Class clz, String[] asMeta)
             {
@@ -1435,14 +1465,26 @@ public class VisualVMModel
         };
 
     /**
+     * Labels for Health table.
+     */
+    private static final String[] HEALTH_LABELS = new String[]
+        {
+        Localization.getLocalText("LBL_health_name"), Localization.getLocalText("LBL_health_subtype"),
+        Localization.getLocalText("LBL_members"), Localization.getLocalText("LBL_started"),
+        Localization.getLocalText("LBL_live"), Localization.getLocalText("LBL_ready"),
+        Localization.getLocalText("LBL_safe"), Localization.getLocalText("LBL_health_class")
+        };
+
+    /**
      * Labels for persistence table.
      */
     private static final String[] PERSISTENCE_LABELS = new String[]
         {
         Localization.getLocalText("LBL_service_name"), Localization.getLocalText("LBL_persistence_mode"),
         Localization.getLocalText("LBL_active_space_bytes"), Localization.getLocalText("LBL_active_space_mb"),
-        Localization.getLocalText("LBL_avge_persistence"), Localization.getLocalText("LBL_max_persistence"),
-        Localization.getLocalText("LBL_snapshot_count"), Localization.getLocalText("LBL_status")
+        Localization.getLocalText("LBL_backup_space_mb"), Localization.getLocalText("LBL_avge_persistence"),
+        Localization.getLocalText("LBL_max_persistence"), Localization.getLocalText("LBL_snapshot_count"),
+        Localization.getLocalText("LBL_status")
         };
 
     /**

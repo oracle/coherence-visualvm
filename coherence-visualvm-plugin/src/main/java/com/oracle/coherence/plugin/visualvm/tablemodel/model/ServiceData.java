@@ -103,8 +103,8 @@ public class ServiceData
 
                 // if its dist cache or federated then save so we don't, double count size for repl
                 // caches
-                String sCacheType = (String) sender.getAttribute(cacheNameObjName, "Type");
-                if (DISTRIBUTED_CACHE_TYPE.equals(sCacheType) || FEDERATED_CACHE_TYPE.equals(sCacheType) )
+                String sServiceType = (String) sender.getAttribute(cacheNameObjName, "Type");
+                if (isDistributed(sServiceType))
                     {
                     setDistributedCaches.add(sServiceName);
                     }
@@ -205,7 +205,7 @@ public class ServiceData
         data.setColumn(ServiceData.PARTITIONS_PENDING, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
 
         // record the list of distributed & federated caches
-        if (DISTRIBUTED_CACHE_TYPE.equals(aoColumns[nStart]) || FEDERATED_CACHE_TYPE.equals(aoColumns[nStart]))
+        if (isDistributed((String) aoColumns[nStart]))
             {
             setDistributedCaches.add(data.getColumn(ServiceData.SERVICE_NAME).toString());
             }
@@ -269,8 +269,7 @@ public class ServiceData
                 data.setColumn(ServiceData.MEMBERS, nTotalMemberCount);
 
                 // record the list of distributed, federated or replicated caches
-                if (DISTRIBUTED_CACHE_TYPE.equals(sServiceType) || FEDERATED_CACHE_TYPE.equals(sServiceType) ||
-                    REPLICATED_CACHE_TYPE.equals(sServiceType))
+                if (isDistributed(sServiceType) || REPLICATED_CACHE_TYPE.equals(sServiceType))
                     {
                     data.setColumn(ServiceData.PARTITION_COUNT, serviceDetails.get("partitionsAll").asInt());
 
@@ -310,6 +309,18 @@ public class ServiceData
 
         return mapData;
         }
+
+    /**
+     * Returns true if the server type is a distributed cache.
+     * @param sServiceType cache type
+     *
+     * @return true if the cache type is a distributed cache
+     */
+    public static boolean isDistributed(String sServiceType)
+        {
+        return DISTRIBUTED_CACHE_TYPE.equals(sServiceType) || FEDERATED_CACHE_TYPE.equals(sServiceType) ||
+             PAGED_TOPIC_TYPE.equals(sServiceType);
+         }
 
     // ----- constants ------------------------------------------------------
 
@@ -375,6 +386,11 @@ public class ServiceData
      * Service of type DistributedCache.
      */
     private static final String DISTRIBUTED_CACHE_TYPE = "DistributedCache";
+
+    /**
+     * Service of type PagedTopic.
+     */
+    private static final String PAGED_TOPIC_TYPE = "PagedTopic";
 
     /**
      * Service of type FederatedCache.

@@ -28,6 +28,7 @@ package com.oracle.coherence.plugin.visualvm.panel;
 
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMView;
+import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
@@ -72,6 +73,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -316,7 +318,7 @@ public abstract class AbstractCoherencePanel
                     }
                 };
             m_table = new ExportableJTable(m_tmodel);
-            RenderHelper.setHeaderAlignment(m_table, JLabel.CENTER);
+            RenderHelper.setHeaderAlignment(m_table, SwingConstants.CENTER);
 
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -685,12 +687,14 @@ public abstract class AbstractCoherencePanel
     protected Object[] getPersistenceData(List<Map.Entry<Object, Data>> persistenceData)
         {
         Object[] aoResults = new Object[] {};
-        // [0] = cTotalMemory (long)
-        // [1] = cLatencyMax  (long)
-        // [2] = cLatencyTotal(float)
-        // [3] = count
+        // [0] = cTotalActiveSpace (long)
+        // [1] = cTotalBackupSpace (long)
+        // [2] = cLatencyMax  (long)
+        // [3] = cLatencyTotal(float)
+        // [4] = count
 
-        long cTotalMemory = 0;
+        long cTotalActiveSpace = 0;
+        long cTotalBackupSpace = 0;
         long cLatencyMax = 0L;
         float cLatencyTotal = 0.0f;
         int count = 0;
@@ -698,11 +702,16 @@ public abstract class AbstractCoherencePanel
         for (Map.Entry<Object, Data> entry : persistenceData)
             {
             // only include services with active persistence
-            if (entry.getValue().getColumn(PersistenceData.PERSISTENCE_MODE).equals("active"))
-                {
-                long cTotalMem = (Long) entry.getValue().getColumn(PersistenceData.TOTAL_ACTIVE_SPACE_USED);
+            String sPersistenceMode = (String) entry.getValue().getColumn(PersistenceData.PERSISTENCE_MODE);
 
-                cTotalMemory += cTotalMem == -1 ? 0 : cTotalMem;
+            if (PersistenceData.isActivePersistence(sPersistenceMode))
+                {
+                long cTotalActive = (Long) entry.getValue().getColumn(PersistenceData.TOTAL_ACTIVE_SPACE_USED);
+                long cTotalBackup = (Long) entry.getValue().getColumn(PersistenceData.TOTAL_BACKUP_SPACE_USED_MB);
+
+                cTotalActiveSpace += cTotalActive == -1 ? 0 : cTotalActive;
+                cTotalBackupSpace += cTotalBackup == -1 ? 0 : cTotalBackup * GraphHelper.MB;
+
                 cLatencyTotal += (Float) entry.getValue().getColumn(PersistenceData.AVERAGE_LATENCY);
 
                 cLatencyMax = (Long) entry.getValue().getColumn(PersistenceData.MAX_LATENCY);
@@ -715,7 +724,7 @@ public abstract class AbstractCoherencePanel
                 }
             }
 
-        return new Object[] {cTotalMemory, cMaxLatencyMax, cLatencyTotal, count};
+        return new Object[] {cTotalActiveSpace, cTotalBackupSpace, cMaxLatencyMax, cLatencyTotal, count};
         }
 
     /**
@@ -729,7 +738,7 @@ public abstract class AbstractCoherencePanel
      */
     protected int getNullEntry(Object oValue)
         {
-        return (oValue == null ? Integer.valueOf(0) : (Integer) oValue);
+        return (oValue == null ? 0 : (Integer) oValue);
         }
 
     /**

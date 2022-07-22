@@ -137,7 +137,7 @@ public class JMXUtils
         for (int i = 0; i < listAttr.size() ; i++)
             {
             javax.management.Attribute attr = (javax.management.Attribute) listAttr.get(i);
-            if (attr.getName().equals(sName))
+            if (sName.equals(attr.getName()))
                 {
                 return (attr.getValue() == null ? "" : attr.getValue().toString());
                 }
@@ -159,7 +159,7 @@ public class JMXUtils
         for (int i = 0; i < listAttr.size() ; i++)
             {
             javax.management.Attribute attr = (javax.management.Attribute) listAttr.get(i);
-            if (attr.getName().equals(sName))
+            if (sName.equals(attr.getName()))
                 {
                 return attr.getValue();
                 }

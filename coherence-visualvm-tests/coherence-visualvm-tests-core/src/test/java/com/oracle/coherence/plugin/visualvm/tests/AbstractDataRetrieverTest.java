@@ -28,6 +28,7 @@ package com.oracle.coherence.plugin.visualvm.tests;
 import com.oracle.bedrock.testsupport.deferred.Eventually;
 
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
+import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheDetailData;
@@ -54,6 +55,7 @@ import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
+import com.tangosol.util.Base;
 import javax.management.Attribute;
 import javax.management.ObjectName;
 
@@ -354,6 +356,12 @@ public abstract class AbstractDataRetrieverTest
             {
             testElasticData();
             }
+
+        // only include health check if the reporter is available and HealthCheck is available
+        if (isHealthCheckAvailable() && (getRequestSender() instanceof HttpRequestSender || model.isReporterAvailable()))
+            {
+            testHealthData();
+            }
         }
 
     /**
@@ -506,6 +514,11 @@ public abstract class AbstractDataRetrieverTest
 
         assertThat(federationOriginDetailsData, is(notNullValue()));
         assertThat("Total origin entries sent should be positive.", lTotalOrigEntriesSent, is(greaterThan(0L)));
+
+        if ("true".equals(System.getProperty("pause.federation")))
+            {
+            Base.sleep(Long.MAX_VALUE);
+            }
         }
 
     /**
@@ -657,9 +670,12 @@ public abstract class AbstractDataRetrieverTest
 
         validateData(VisualVMModel.DataType.PERSISTENCE, persistenceData, cCount);
 
+        int nIndex1 = isHealthCheckAvailable() ? 1 : 0;
+        int nIndex2 = isHealthCheckAvailable() ? 2 : 1;
+
         // the services will be ordered as above, alphabetically
-        Map.Entry<Object, Data> entryPersistence1 = persistenceData.get(0);
-        Map.Entry<Object, Data> entryPersistence2 = persistenceData.get(1);
+        Map.Entry<Object, Data> entryPersistence1 = persistenceData.get(nIndex1);
+        Map.Entry<Object, Data> entryPersistence2 = persistenceData.get(nIndex2);
 
         assertThat(entryPersistence1, is(notNullValue()));
         assertThat(entryPersistence2, is(notNullValue()));
@@ -672,7 +688,26 @@ public abstract class AbstractDataRetrieverTest
         int cSnapshots = (Integer) entryPersistence1.getValue().getColumn(PersistenceData.SNAPSHOT_COUNT);
 
         assertThat(cSnapshots, is(0));
+        }
 
+    public void testHealthData()
+        {
+        List<Map.Entry<Object, Data>> healthData;
+
+        if (!getModel().isReporterAvailable())
+            {
+            return;
+            }
+
+        VisualVMModel model = getModel();
+        assertClusterReady();
+        waitForRefresh();
+
+        // refresh the statistics
+        model.refreshStatistics(getRequestSender());
+        healthData = model.getData(VisualVMModel.DataType.HEALTH);
+
+        assertTrue("Health Data is Missing", healthData != null && healthData.size() > 0);
         }
 
     // ----- helpers --------------------------------------------------------

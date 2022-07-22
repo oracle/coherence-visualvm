@@ -49,7 +49,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -57,6 +56,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -119,8 +119,8 @@ public class CoherenceServicePanel
         RenderHelper.setColumnRenderer(f_tableDetail, ServiceMemberData.TASK_AVERAGE_DURATION,
                                        new RenderHelper.DecimalRenderer());
 
-        RenderHelper.setHeaderAlignment(table, JLabel.CENTER);
-        RenderHelper.setHeaderAlignment(f_tableDetail, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(table, SwingConstants.CENTER);
+        RenderHelper.setHeaderAlignment(f_tableDetail, SwingConstants.CENTER);
 
         table.setPreferredScrollableViewportSize(new Dimension(500, table.getRowHeight() * 5));
         f_tableDetail.setPreferredScrollableViewportSize(new Dimension(700, 125));
@@ -437,7 +437,6 @@ public class CoherenceServicePanel
         public void actionPerformed(ActionEvent e)
             {
             int nRow = getSelectedRow();
-            int nCol = getSelectedColumn();
             String sService    = null;
             String sRawService = null;
 
@@ -496,15 +495,26 @@ public class CoherenceServicePanel
                         throw new RuntimeException("Invalid option " + f_nOption);
                         }
 
-                    showMessageDialog(Localization.getLocalText("LBL_details_service", new String[] { sRawService}),
+                    showMessageDialog(Localization.getLocalText("LBL_details_service", sRawService),
                                                                 sResult, JOptionPane.INFORMATION_MESSAGE);
                     }
                 catch (Exception ee)
                     {
-                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", new String[] { sRawService }),
-                                      ee.getMessage(), JOptionPane.ERROR_MESSAGE);
+                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", sRawService),
+                                      getSanitizedMessage(ee), JOptionPane.ERROR_MESSAGE);
                     }
                 }
+            }
+
+        /**
+         * Return a sanitized message to make common errors more meaningful.
+         * @param e {@link Exception} to get message from
+         * @return final message
+         */
+        private String getSanitizedMessage(Exception e)
+            {
+            String sError = e.getMessage();
+            return sError.contains("name cannot be null") ? "Node no longer available or operation not valid for service type." : sError;
             }
 
         /**
@@ -676,27 +686,27 @@ public class CoherenceServicePanel
     /**
      * The graph of thread utilization percent.
      */
-    private SimpleXYChartSupport m_threadUtilGraph = null;
+    private transient SimpleXYChartSupport m_threadUtilGraph = null;
 
     /**
      * The graph of task average duration.
      */
-    private SimpleXYChartSupport m_taskAverageGraph = null;
+    private transient SimpleXYChartSupport m_taskAverageGraph = null;
 
     /**
      * The graph of task backlog.
      */
-    private SimpleXYChartSupport m_taskBacklogGraph = null;
+    private transient SimpleXYChartSupport m_taskBacklogGraph = null;
 
     /**
      * The graph of request average.
      */
-    private SimpleXYChartSupport m_requestAverageGraph = null;
+    private transient SimpleXYChartSupport m_requestAverageGraph = null;
 
     /**
      * The graph of service partitions.
      */
-    private SimpleXYChartSupport m_servicePartitionsGraph = null;
+    private transient SimpleXYChartSupport m_servicePartitionsGraph = null;
 
     /**
      * The row selection listener.

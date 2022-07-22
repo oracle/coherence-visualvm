@@ -83,6 +83,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+import javax.swing.SwingConstants;
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
 
@@ -200,7 +201,9 @@ public class CoherencePersistencePanel
                                        new RenderHelper.DecimalRenderer(RenderHelper.MILLIS_FORMAT));
         RenderHelper.setColumnRenderer(f_table, PersistenceData.TOTAL_ACTIVE_SPACE_USED_MB,
                                        new RenderHelper.IntegerRenderer());
-        RenderHelper.setHeaderAlignment(f_table, JLabel.CENTER);
+        RenderHelper.setColumnRenderer(f_table, PersistenceData.TOTAL_BACKUP_SPACE_USED_MB,
+                                       new RenderHelper.IntegerRenderer());
+        RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
         // Add some space
         f_table.setIntercellSpacing(new Dimension(6, 3));
@@ -234,7 +237,7 @@ public class CoherencePersistencePanel
                                        new RenderHelper.ToolTipRenderer());
         RenderHelper.setColumnRenderer(f_tableNotifications, PersistenceNotificationsData.DURATION,
                                        new RenderHelper.IntegerRenderer());
-        RenderHelper.setHeaderAlignment(f_tableNotifications, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(f_tableNotifications, SwingConstants.CENTER);
 
         // Add some space
         f_tableNotifications.setIntercellSpacing(new Dimension(6, 3));
@@ -272,17 +275,18 @@ public class CoherencePersistencePanel
         final String MEM_FORMAT = "%,10.2f";
 
         Object[] persistenceData = getPersistenceData(m_persistenceData);
-        long cTotalMemory = (Long) persistenceData[0];
-        long cLatencyMax = (Long) persistenceData[1];
-        float cLatencyTotal = (Float) persistenceData[2];
-        int count = (Integer) persistenceData[3];
+        long cTotalActive = (Long) persistenceData[0];
+        long cTotalBackup = (Long) persistenceData[1];
+        long cLatencyMax = (Long) persistenceData[2];
+        float cLatencyTotal = (Float) persistenceData[3];
+        int count = (Integer) persistenceData[4];
         float cLatencyAverage = 0.0f;
 
 
         if (m_persistenceData != null)
             {
             m_cMaxMaxLatency = cLatencyMax;
-            f_txtTotalActiveSpaceUsed.setText(String.format(MEM_FORMAT, (cTotalMemory * 1.0f) / GraphHelper.MB));
+            f_txtTotalActiveSpaceUsed.setText(String.format(MEM_FORMAT, (cTotalActive * 1.0f) / GraphHelper.MB));
             cLatencyAverage = cLatencyTotal / count;
             if (cLatencyMax > m_cMaxMaxLatency)
                 {
@@ -294,7 +298,7 @@ public class CoherencePersistencePanel
             f_txtTotalActiveSpaceUsed.setText(String.format(MEM_FORMAT, 0));
             }
 
-        GraphHelper.addValuesToPersistenceActiveTotalGraph(f_persistenceTotalSpaceGraph, cTotalMemory);
+        GraphHelper.addValuesToPersistenceActiveTotalGraph(f_persistenceTotalSpaceGraph, cTotalActive, cTotalBackup);
         GraphHelper.addValuesToPersistenceLatencyGraph(f_persistenceLatencyGraph, cLatencyAverage * 1000.0f);
 
         f_txtMaxLatency.setText(Long.toString(m_cMaxMaxLatency));
@@ -900,12 +904,12 @@ public class CoherencePersistencePanel
     /**
      * The graph of persistence latency averages.
      */
-    private final SimpleXYChartSupport f_persistenceLatencyGraph;
+    private final transient SimpleXYChartSupport f_persistenceLatencyGraph;
 
     /**
      * The graph of persistence latency averages.
      */
-    private final SimpleXYChartSupport f_persistenceTotalSpaceGraph;
+    private final transient SimpleXYChartSupport f_persistenceTotalSpaceGraph;
 
     /**
      * the {@link ExportableJTable} to use to display data.

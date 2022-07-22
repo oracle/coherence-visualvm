@@ -41,12 +41,12 @@ import java.awt.GridLayout;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
+import javax.swing.SwingConstants;
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
 /**
@@ -100,7 +100,7 @@ public class CoherenceMachinePanel
         RenderHelper.setColumnRenderer(f_table, MachineData.SYSTEM_LOAD_AVERAGE,
                                        new RenderHelper.DecimalRenderer(RenderHelper.LOAD_AVERAGE_FORMAT));
         RenderHelper.setColumnRenderer(f_table, MachineData.PERCENT_FREE_MEMORY, new RenderHelper.FreeMemoryRenderer());
-        RenderHelper.setHeaderAlignment(f_table, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
         // Add some space
         f_table.setIntercellSpacing(new Dimension(6, 3));
@@ -207,7 +207,7 @@ public class CoherenceMachinePanel
     /**
      * The graph of machine load averages.
      */
-    private final SimpleXYChartSupport f_machineGraph;
+    private transient final SimpleXYChartSupport f_machineGraph;
 
     /**
      * The machine statistics data retrieved from the {@link VisualVMModel}.

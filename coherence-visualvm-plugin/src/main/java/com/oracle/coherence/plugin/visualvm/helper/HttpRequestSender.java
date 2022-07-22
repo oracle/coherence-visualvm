@@ -163,7 +163,7 @@ public class HttpRequestSender
         String restName = getRestName(attribute);
         URLBuilder urlBuilder = getBasePath();
 
-        modifyTarget(objectName, urlBuilder).addQueryParameter("fields", restName);
+        modifyTarget(objectName, urlBuilder).addQueryParameter(FIELDS, restName);
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
 
@@ -197,7 +197,7 @@ public class HttpRequestSender
 
         URLBuilder urlBuilder = getBasePath();
 
-        modifyTarget(objectName, urlBuilder).addQueryParameter("fields", attributes);
+        modifyTarget(objectName, urlBuilder).addQueryParameter(FIELDS, attributes);
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
 
@@ -234,8 +234,8 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath();
-        urlBuilder.addPathSegment("caches").addPathSegment("members")
-                .addQueryParameter("fields", "name,service,domainPartition");
+        urlBuilder.addPathSegment(CACHES).addPathSegment(MEMBERS)
+                .addQueryParameter(FIELDS, "name,service,domainPartition");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
         JsonNode nodeCacheItems = rootNode.get("items");
@@ -249,7 +249,7 @@ public class HttpRequestSender
                 Hashtable<String, String> mapKeysProps = new Hashtable<>();
 
                 mapKeysProps.put("name", cacheMember.get("name").asText());
-                mapKeysProps.put("service", cacheMember.get("service").asText());
+                mapKeysProps.put(SERVICE, cacheMember.get(SERVICE).asText());
 
                 JsonNode domainPartition = cacheMember.get("domainPartition");
                 if (domainPartition != null)
@@ -273,8 +273,8 @@ public class HttpRequestSender
 
         URLBuilder urlBuilder = getBasePath();
         urlBuilder.addPathSegment("journal")
-                .addPathSegment(sJournalUrlType).addPathSegment("members")
-                .addQueryParameter("fields", "nodeId,type,name");
+                .addPathSegment(sJournalUrlType).addPathSegment(MEMBERS)
+                .addQueryParameter(FIELDS, "nodeId,type,name");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
         JsonNode nodeJournalMemberItems = rootNode.get("items");
@@ -302,16 +302,16 @@ public class HttpRequestSender
     public Set<ObjectName> getCacheMembers(String sServiceName, String sCacheName, String sDomainPartition)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("caches")
-                .addPathSegment(sCacheName).addPathSegment("members");
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(CACHES)
+                .addPathSegment(sCacheName).addPathSegment(MEMBERS);
         if (sDomainPartition != null)
             {
             urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
             }
 
-        urlBuilder.addQueryParameter("fields", "service,name,type,tier,nodeId")
-                .addQueryParameter("links", "");
+        urlBuilder.addQueryParameter(FIELDS, "service,name,type,tier,nodeId")
+                .addQueryParameter(LINKS, "");
 
         return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
         }
@@ -344,7 +344,7 @@ public class HttpRequestSender
             }
 
         // build the list of clusters
-        URLBuilder urlBuilder = getBasePath().addQueryParameter("links", "");
+        URLBuilder urlBuilder = getBasePath().addQueryParameter(LINKS, "");
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
         JsonNode clusterItems = rootNode.get("items");
         Set<ObjectName> setObjectNames = new HashSet<>();
@@ -367,8 +367,9 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("hotcache")
-                .addPathSegment("members");
-        urlBuilder.addQueryParameter("fields", "name,type,nodeId");
+                .addPathSegment(MEMBERS);
+        urlBuilder.addQueryParameter(FIELDS, "name,type,nodeId")
+                  .addQueryParameter(LINKS, "");
 
         return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
         }
@@ -378,10 +379,10 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("hotcache")
-                .addPathSegment("members").addPathSegment(sMember);
+                .addPathSegment(MEMBERS).addPathSegment(sMember);
 
-        urlBuilder.addQueryParameter("fields", "name,type,nodeId")
-                .addQueryParameter("links", "");
+        urlBuilder.addQueryParameter(FIELDS, "name,type,nodeId")
+                .addQueryParameter(LINKS, "");
 
         return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
         }
@@ -390,8 +391,8 @@ public class HttpRequestSender
     public Set<ObjectName> getAllCoherenceWebMembers(String sSessionManager)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment("proxy").addPathSegment("members").addQueryParameter("fields", "name,type,nodeId");
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment("proxy").addPathSegment(MEMBERS).addQueryParameter(FIELDS, "name,type,nodeId");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
         JsonNode nodeWebAppItems = (JsonNode) rootNode.get("items");
@@ -419,10 +420,10 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("webApplications")
-                .addPathSegment(sAppId).addPathSegment("members");
+                .addPathSegment(sAppId).addPathSegment(MEMBERS);
 
-        urlBuilder.addQueryParameter("fields", "name,type,nodeId")
-                .addQueryParameter("links", "");
+        urlBuilder.addQueryParameter(FIELDS, "name,type,nodeId")
+                .addQueryParameter(LINKS, "");
 
         return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
         }
@@ -440,9 +441,9 @@ public class HttpRequestSender
     public Set<ObjectName> getAllClusterMembers()
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("members");
-        urlBuilder.addQueryParameter("fields", "type,nodeId")
-                .addQueryParameter("links", "");
+        URLBuilder urlBuilder = getBasePath().addPathSegment(MEMBERS);
+        urlBuilder.addQueryParameter(FIELDS, "type,nodeId")
+                .addQueryParameter(LINKS, "");
 
         return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
         }
@@ -450,8 +451,8 @@ public class HttpRequestSender
     @Override
     public Set<ObjectName> getAllExecutorMembers() throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("executors").addPathSegment("members");
-        urlBuilder.addQueryParameter("links", "").addQueryParameter("fields", "name");
+        URLBuilder urlBuilder = getBasePath().addPathSegment("executors").addPathSegment(MEMBERS);
+        urlBuilder.addQueryParameter(LINKS, "").addQueryParameter(FIELDS, "name");
 
         return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
         }
@@ -469,10 +470,10 @@ public class HttpRequestSender
     public Set<ObjectName> getAllServiceMembers()
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment("members").addQueryParameter("fields", "name,type,domainPartition,nodeId," +
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(MEMBERS).addQueryParameter(FIELDS, "name,type,domainPartition,nodeId," +
                                                                        "storageEnabled,persistenceActiveSpaceUsed,persistenceLatencyMax,persistenceLatencyAverage")
-                .addQueryParameter("links", "");
+                .addQueryParameter(LINKS, "");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
         JsonNode nodeServiceMembersItems = (JsonNode) rootNode.get("items");
@@ -501,9 +502,9 @@ public class HttpRequestSender
     public Set<ObjectName> getAllProxyServerMembers()
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment("proxy").addPathSegment("members")
-                .addQueryParameter("fields", "name,type,domainPartition,nodeId");
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment("proxy").addPathSegment(MEMBERS)
+                .addQueryParameter(FIELDS, "name,type,domainPartition,nodeId");
 
         return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
         }
@@ -529,7 +530,7 @@ public class HttpRequestSender
     public String getScheduledDistributions(String sService, String sDomainPartition)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
                 .addPathSegment(encodeServiceName(sService)).addPathSegment("partition").addPathSegment("scheduledDistributions");
         if (sDomainPartition != null)
             {
@@ -544,9 +545,9 @@ public class HttpRequestSender
     public Set<Object[]> getPartitionAssignmentAttributes(String sService, String sDomainPartition)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
                 .addPathSegment(encodeServiceName(sService)).addPathSegment("partition")
-                .addQueryParameter("fields", "averagePartitionSizeKB,maxPartitionSizeKB,averageStorageSizeKB," +
+                .addQueryParameter(FIELDS, "averagePartitionSizeKB,maxPartitionSizeKB,averageStorageSizeKB," +
                                              "maxStorageSizeKB,maxLoadNodeId");
         if (sDomainPartition != null)
             {
@@ -569,7 +570,7 @@ public class HttpRequestSender
     public void invokeFederationOperation(String sService, String sOperation, String sParticipant)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
                 .addPathSegment(encodeServiceName(sService)).addPathSegment("federation").addPathSegment("participants")
                 .addPathSegment(sParticipant).addPathSegment(sOperation);
         sendPostRequest(urlBuilder);
@@ -579,7 +580,7 @@ public class HttpRequestSender
     public Integer retrievePendingIncomingMessages(String sService)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
                 .addPathSegment(encodeServiceName(sService)).addPathSegment("federation").addPathSegment("pendingIncomingMessages");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
@@ -590,7 +591,7 @@ public class HttpRequestSender
     public Integer retrievePendingOutgoingMessages(String sService)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
                 .addPathSegment(encodeServiceName(sService)).addPathSegment("federation").addPathSegment("pendingOutgoingMessages");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
@@ -601,11 +602,22 @@ public class HttpRequestSender
     public String getNodeState(Integer nNodeId)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("members")
+        URLBuilder urlBuilder = getBasePath().addPathSegment(MEMBERS)
                 .addPathSegment(nNodeId + "").addPathSegment("state");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
         return rootNode.get("state").asText();
+        }
+
+    @Override
+    public String reportEnvironment(Integer nNodeId)
+            throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(MEMBERS)
+                .addPathSegment(nNodeId + "").addPathSegment("environment");
+
+        JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
+        return rootNode.get("environment").asText();
         }
 
     /**
@@ -626,15 +638,15 @@ public class HttpRequestSender
     public String[] getSnapshots(String sService, String sDomainPartition)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment(encodeServiceName(sService)).addPathSegment("persistence").addPathSegment("snapshots");
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sService)).addPathSegment(PERSISTENCE).addPathSegment(SNAPSHOTS);
         if (sDomainPartition != null)
             {
             urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
             }
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode nodeSnapshots = rootNode.get("snapshots");
+        JsonNode nodeSnapshots = rootNode.get(SNAPSHOTS);
 
         List<String> listSnapshots = new ArrayList<>();
         if (nodeSnapshots != null && nodeSnapshots.isArray())
@@ -652,8 +664,8 @@ public class HttpRequestSender
     public String[] getArchivedSnapshots(String sService, String sDomainPartition)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment(encodeServiceName(sService)).addPathSegment("persistence").addPathSegment("archives");
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sService)).addPathSegment(PERSISTENCE).addPathSegment("archives");
         if (sDomainPartition != null)
             {
             urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
@@ -680,8 +692,8 @@ public class HttpRequestSender
                                             String sSnapshotName)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment(encodeServiceName(sService)).addPathSegment("persistence");
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sService)).addPathSegment(PERSISTENCE);
 
         switch (sOperationName)
             {
@@ -698,15 +710,15 @@ public class HttpRequestSender
                 sendPostRequest(urlBuilder);
                 break;
             case CoherencePersistencePanel.CREATE_SNAPSHOT:
-                urlBuilder.addPathSegment("snapshots").addPathSegment(sSnapshotName);
+                urlBuilder.addPathSegment(SNAPSHOTS).addPathSegment(sSnapshotName);
                 sendPostRequest(urlBuilder);
                 break;
             case CoherencePersistencePanel.REMOVE_SNAPSHOT:
-                urlBuilder.addPathSegment("snapshots").addPathSegment(sSnapshotName);
+                urlBuilder.addPathSegment(SNAPSHOTS).addPathSegment(sSnapshotName);
                 sendDeleteRequest(urlBuilder);
                 break;
             case CoherencePersistencePanel.RECOVER_SNAPSHOT:
-                urlBuilder.addPathSegment("snapshots").addPathSegment(sSnapshotName).addPathSegment("recover");
+                urlBuilder.addPathSegment(SNAPSHOTS).addPathSegment(sSnapshotName).addPathSegment("recover");
                 sendPostRequest(urlBuilder);
                 break;
             case CoherencePersistencePanel.FORCE_RECOVERY:
@@ -729,15 +741,15 @@ public class HttpRequestSender
     public Set<ObjectName> getMembersOfService(String sServiceName, String sDomainPartition)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("members");
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(MEMBERS);
         if (sDomainPartition != null)
             {
             urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
             }
 
-        urlBuilder.addQueryParameter("fields", "name,type,nodeId,domainPartition")
-                .addQueryParameter("links", "");
+        urlBuilder.addQueryParameter(FIELDS, "name,type,nodeId,domainPartition")
+                .addQueryParameter(LINKS, "");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
         JsonNode nodeServiceMembers = (JsonNode) rootNode.get("items");
@@ -772,10 +784,10 @@ public class HttpRequestSender
     public JsonNode getListOfServiceCaches(String sServiceName, String sDomainPartition)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("caches")
-                .addQueryParameter("links", "")
-                .addQueryParameter("fields", "nodeId,name,unitFactor,size,unitsBytes,units,memoryUnits,"
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(CACHES)
+                .addQueryParameter(LINKS, "")
+                .addQueryParameter(FIELDS, "nodeId,name,unitFactor,size,unitsBytes,units,memoryUnits,"
                                              + "averageMissMillis");
 
         if (sDomainPartition != null)
@@ -797,9 +809,9 @@ public class HttpRequestSender
     public JsonNode getListOfCaches()
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("caches")
-                .addQueryParameter("links", "")
-                .addQueryParameter("fields", "nodeId,name,unitFactor,size,unitsBytes,units,memoryUnits,"
+        URLBuilder urlBuilder = getBasePath().addPathSegment(CACHES)
+                .addQueryParameter(LINKS, "")
+                .addQueryParameter(FIELDS, "nodeId,name,unitFactor,size,unitsBytes,units,memoryUnits,"
                                              + "averageMissMillis,service");
 
         return getResponseJson(sendGetRequest(urlBuilder));
@@ -814,10 +826,10 @@ public class HttpRequestSender
     public JsonNode getNodeStorage()
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment("members")
-                .addQueryParameter("links", "")
-                .addQueryParameter("fields", "nodeId,ownedPartitionsPrimary");
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(MEMBERS)
+                .addQueryParameter(LINKS, "")
+                .addQueryParameter(FIELDS, "nodeId,ownedPartitionsPrimary");
         return getResponseJson(sendGetRequest(urlBuilder));
         }
 
@@ -833,10 +845,10 @@ public class HttpRequestSender
     public JsonNode getListOfStorageMembers(String sServiceName, String sDomainPartition)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("members")
-                .addQueryParameter("links", "")
-                .addQueryParameter("fields", "ownedPartitionsPrimary,nodeId");
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(MEMBERS)
+                .addQueryParameter(LINKS, "")
+                .addQueryParameter(FIELDS, "ownedPartitionsPrimary,nodeId");
 
         if (sDomainPartition != null)
             {
@@ -847,18 +859,32 @@ public class HttpRequestSender
         }
 
     /**
-     * Get a list of all storage members.
+     * Get a list of all health members.
+     *
+     * @return a list of all storage members
+     * @throws Exception in case of errors
+     */
+    public JsonNode getAllHealthMembers() throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment("health")
+                .addPathSegment(MEMBERS)
+                .addQueryParameter(LINKS, "");
+        return getResponseJson(sendGetRequest(urlBuilder));
+        }
+
+    /**
+     * Get a list of all health checks.
      *
      * @return a list of all storage members
      * @throws Exception in case of errors
      */
     public JsonNode getAllStorageMembers() throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment("members")
-                .addQueryParameter("links", "")
-                .addQueryParameter("fields", "type,name,domainPartition,nodeId,persistenceMode," +
-                                             "storageEnabled,persistenceActiveSpaceUsed,persistenceLatencyMax,persistenceLatencyAverage");
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(MEMBERS)
+                .addQueryParameter(LINKS, "")
+                .addQueryParameter(FIELDS, "type,name,domainPartition,nodeId,persistenceMode," +
+                                             "storageEnabled,persistenceActiveSpaceUsed,persistenceBackupSpaceUsed,persistenceLatencyMax,persistenceLatencyAverage");
         return getResponseJson(sendGetRequest(urlBuilder));
         }
 
@@ -875,12 +901,12 @@ public class HttpRequestSender
     public JsonNode getDataForStorageManagerMembers(String sServiceName, String sDomainPartition, String sCacheName)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("caches").addPathSegment(sCacheName)
-                .addPathSegment("members").addQueryParameter("fields",
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(CACHES).addPathSegment(sCacheName)
+                .addPathSegment(MEMBERS).addQueryParameter(FIELDS,
                                                                    "nodeId,locksGranted,locksPending,listenerRegistrations,maxQueryDurationMillis,maxQueryDescription," +
                                                                    "nonOptimizedQueryAverageMillis,optimizedQueryAverageMillis,indexTotalUnits,indexingTotalMillis")
-                .addQueryParameter("links", "");
+                .addQueryParameter(LINKS, "");
 
         if (sDomainPartition != null)
             {
@@ -904,17 +930,17 @@ public class HttpRequestSender
     public JsonNode getDataForCacheMembers(String sServiceName, String sCacheName, String sDomainPartition)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("caches").addPathSegment(sCacheName)
-                .addPathSegment("members");
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(CACHES).addPathSegment(sCacheName)
+                .addPathSegment(MEMBERS);
         if (sDomainPartition != null)
             {
             urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
             }
 
-        urlBuilder.addQueryParameter("fields", "name,type,size,service,nodeId," +
+        urlBuilder.addQueryParameter(FIELDS, "name,type,size,service,nodeId," +
                                                "domainPartition,tier,units,unitFactor,totalGets,totalPuts,cacheHits,cacheMisses,hitProbability")
-                .addQueryParameter("links", "");
+                .addQueryParameter(LINKS, "");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -927,13 +953,13 @@ public class HttpRequestSender
      */
     public JsonNode getListOfClusterMembers() throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("members");
+        URLBuilder urlBuilder = getBasePath().addPathSegment(MEMBERS);
 
-        urlBuilder = urlBuilder.addQueryParameter("fields", "nodeId," +
+        urlBuilder = urlBuilder.addQueryParameter(FIELDS, "nodeId," +
                                                             "publisherSuccessRate,receiverSuccessRate," +
                                                             "sendQueueSize,memoryMaxMB,memoryAvailableMB,unicastAddress,roleName,unicastPort," +
                                                             "machineName,rackName,siteName,productEdition")
-                .addQueryParameter("links", "");
+                .addQueryParameter(LINKS, "");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -946,13 +972,13 @@ public class HttpRequestSender
      */
     public JsonNode getListOfServices() throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment("members")
-                .addQueryParameter("fields", "name,type,domainPartition,nodeId," +
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(MEMBERS)
+                .addQueryParameter(FIELDS, "name,type,domainPartition,nodeId," +
                                              "statusHA,memberCount,partitionsAll,partitionsEndangered," +
                                              "partitionsVulnerable,partitionsUnbalanced,requestPendingCount," +
                                              "storageEnabledCount,type")
-                .addQueryParameter("links", "");
+                .addQueryParameter(LINKS, "");
         return getResponseJson(sendGetRequest(urlBuilder));
         }
 
@@ -964,8 +990,8 @@ public class HttpRequestSender
      */
     public JsonNode getExecutors() throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("executors").addPathSegment("members")
-                     .addQueryParameter("links", "");
+        URLBuilder urlBuilder = getBasePath().addPathSegment("executors").addPathSegment(MEMBERS)
+                     .addQueryParameter(LINKS, "");
         return getResponseJson(sendGetRequest(urlBuilder));
         }
 
@@ -977,8 +1003,8 @@ public class HttpRequestSender
      */
     public JsonNode getDataForProxyMembers() throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment("proxy").addPathSegment("members").addQueryParameter("fields", "hostIP,name,nodeId," +
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment("proxy").addPathSegment(MEMBERS).addQueryParameter(FIELDS, "hostIP,name,nodeId," +
                                                                                                "connectionCount,outgoingMessageBacklog,totalBytesReceived,totalBytesSent," +
                                                                                                "totalMessagesReceived,totalMessagesSent,protocol," +
                                                                                                "domainPartition,httpServerType,totalRequestCount," +
@@ -996,8 +1022,8 @@ public class HttpRequestSender
      */
     public JsonNode getDataForServiceMembers() throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
-                .addPathSegment("members").addQueryParameter("fields", "name,type,domainPartition,nodeId,taskBacklog," +
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(MEMBERS).addQueryParameter(FIELDS, "name,type,domainPartition,nodeId,taskBacklog," +
                                                                        "threadCount,threadIdleCount,requestAverageDuration,taskAverageDuration");
 
         return getResponseJson(sendGetRequest(urlBuilder));
@@ -1014,10 +1040,10 @@ public class HttpRequestSender
     public JsonNode getIncomingDataForParticipant(String sServiceName, String sParticipantName)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
                 .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("federation").addPathSegment("statistics")
                 .addPathSegment("incoming").addPathSegment("participants")
-                .addPathSegment(sParticipantName).addPathSegment("members");
+                .addPathSegment(sParticipantName).addPathSegment(MEMBERS);
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -1033,10 +1059,10 @@ public class HttpRequestSender
     public JsonNode getOutgoingDataForParticipant(String sServiceName, String sParticipantName)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
                 .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("federation").addPathSegment("statistics")
                 .addPathSegment("outgoing").addPathSegment("participants").addPathSegment(sParticipantName)
-                .addPathSegment("members");
+                .addPathSegment(MEMBERS);
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -1052,8 +1078,8 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment("journal")
-                .addPathSegment(sElasticDataType).addPathSegment("members")
-                .addQueryParameter("fields", "nodeId,fileCount,maxJournalFilesNumber,maxFileSize,totalDataSize," +
+                .addPathSegment(sElasticDataType).addPathSegment(MEMBERS)
+                .addQueryParameter(FIELDS, "nodeId,fileCount,maxJournalFilesNumber,maxFileSize,totalDataSize," +
                                              "compactionCount,exhaustiveCompactionCount,currentCollectorLoadFactor");
 
         return getResponseJson(sendGetRequest(urlBuilder));
@@ -1071,16 +1097,16 @@ public class HttpRequestSender
     public JsonNode getAggregatedProxyData(String sServiceName, String sDomainPartition)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
                 .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("proxy");
         if (sDomainPartition != null)
             {
             urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
             }
 
-        urlBuilder = urlBuilder.addQueryParameter("fields", "name,type,httpServerType,totalRequestCount," +
+        urlBuilder = urlBuilder.addQueryParameter(FIELDS, "name,type,httpServerType,totalRequestCount," +
                                                             "totalErrorCount,requestsPerSecond,averageRequestTime,protocol")
-                .addQueryParameter("links", "");
+                .addQueryParameter(LINKS, "");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -1097,16 +1123,16 @@ public class HttpRequestSender
     public JsonNode getAggregatedServiceData(String sServiceName, String sDomainPartition)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
                 .addPathSegment(encodeServiceName(sServiceName));
         if (sDomainPartition != null)
             {
             urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
             }
 
-        urlBuilder = urlBuilder.addQueryParameter("fields", "name,domainPartition,statusHA,partitionsAll," +
+        urlBuilder = urlBuilder.addQueryParameter(FIELDS, "name,domainPartition,statusHA,partitionsAll," +
                                                             "partitionsEndangered,partitionsVulnerable,partitionsUnbalanced,requestPendingCount,storageEnabled," +
-                                                            "memberCount").addQueryParameter("links", "");
+                                                            "memberCount").addQueryParameter(LINKS, "");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -1124,7 +1150,7 @@ public class HttpRequestSender
     public JsonNode getAggregatedIncomingData(String sServiceName, String sDomainPartition)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
                 .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("federation").addPathSegment("statistics")
                 .addPathSegment("incoming").addPathSegment("participants");
 
@@ -1133,8 +1159,8 @@ public class HttpRequestSender
             urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
             }
 
-        urlBuilder = urlBuilder.addQueryParameter("fields", "status,bytesReceivedSecs,msgsReceivedSecs")
-                .addQueryParameter("links", "");
+        urlBuilder = urlBuilder.addQueryParameter(FIELDS, "status,bytesReceivedSecs,msgsReceivedSecs")
+                .addQueryParameter(LINKS, "");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -1152,7 +1178,7 @@ public class HttpRequestSender
     public JsonNode getAggregatedOutgoingData(String sServiceName, String sDomainPartition)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("services")
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
                 .addPathSegment(encodeServiceName(sServiceName))
                 .addPathSegment("federation").addPathSegment("statistics").addPathSegment("outgoing")
                 .addPathSegment("participants");
@@ -1163,8 +1189,8 @@ public class HttpRequestSender
             urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
             }
 
-        urlBuilder = urlBuilder.addQueryParameter("fields", "status,bytesSentSecs,msgsSentSecs")
-                .addQueryParameter("links", "");
+        urlBuilder = urlBuilder.addQueryParameter(FIELDS, "status,bytesSentSecs,msgsSentSecs")
+                .addQueryParameter(LINKS, "");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -1382,20 +1408,24 @@ public class HttpRequestSender
         {
         switch (objectName.getKeyProperty("type"))
             {
+            case "CoherenceAdapter":
+                return urlBuilder.addPathSegment("hotcache").addPathSegment(MEMBERS)
+                         .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
+                         .addQueryParameter(LINKS, "");
             case "Node":
-                return urlBuilder.addPathSegment("members")
+                return urlBuilder.addPathSegment(MEMBERS)
                         .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
-                        .addQueryParameter("links", "");
+                        .addQueryParameter(LINKS, "");
             case "Journal":
                 String sJournalUrlType = objectName.getKeyProperty("name").equals("FlashJournalRM")
                                          ? "flash" : "ram";
-                return urlBuilder.addPathSegment("journal").addPathSegment(sJournalUrlType).addPathSegment("members")
+                return urlBuilder.addPathSegment("journal").addPathSegment(sJournalUrlType).addPathSegment(MEMBERS)
                         .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"));
             case "Cache":
-                urlBuilder = urlBuilder.addPathSegment("services")
-                        .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "service")))
-                        .addPathSegment("caches").addPathSegment(getKeyPropertyFromObjName(objectName, "name"))
-                        .addPathSegment("members")
+                urlBuilder = urlBuilder.addPathSegment(SERVICES)
+                        .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
+                        .addPathSegment(CACHES).addPathSegment(getKeyPropertyFromObjName(objectName, "name"))
+                        .addPathSegment(MEMBERS)
                         .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
                         .addQueryParameter("tier", getKeyPropertyFromObjName(objectName, "tier"));
                 String loader = objectName.getKeyProperty("loader");
@@ -1405,28 +1435,28 @@ public class HttpRequestSender
                     }
                 return urlBuilder;
             case "StorageManager":
-                return urlBuilder.addPathSegment("services")
-                        .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "service")))
-                        .addPathSegment("caches").addPathSegment(objectName.getKeyProperty("cache"))
-                        .addPathSegment("members").addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"));
+                return urlBuilder.addPathSegment(SERVICES)
+                        .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
+                        .addPathSegment(CACHES).addPathSegment(objectName.getKeyProperty("cache"))
+                        .addPathSegment(MEMBERS).addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"));
             case "Service":
-                return urlBuilder.addPathSegment("services")
+                return urlBuilder.addPathSegment(SERVICES)
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))
-                        .addPathSegment("members").addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
-                        .addQueryParameter("links", "");
+                        .addPathSegment(MEMBERS).addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
+                        .addQueryParameter(LINKS, "");
             case "ConnectionManager":
-                return urlBuilder.addPathSegment("services")
+                return urlBuilder.addPathSegment(SERVICES)
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))
-                        .addPathSegment("members").addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
+                        .addPathSegment(MEMBERS).addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
                         .addPathSegment("proxy");
             case "Cluster":
                 return urlBuilder;
             case "Persistence":
-                return urlBuilder.addPathSegment("services")
-                        .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "service")))
-                        .addPathSegment("persistence");
+                return urlBuilder.addPathSegment(SERVICES)
+                        .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
+                        .addPathSegment(PERSISTENCE);
             case "Platform":
-                urlBuilder = urlBuilder.addPathSegment("members")
+                urlBuilder = urlBuilder.addPathSegment(MEMBERS)
                         .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
                         .addPathSegment("platform");
                 String subType = objectName.getKeyProperty("subType");
@@ -1736,6 +1766,18 @@ public class HttpRequestSender
      * Prefix for cluster object name.
      */
     public static final String CLUSTER_PREFIX = "Coherence:type=Cluster,cluster=";
+
+    /**
+     * Various constants.
+     */
+    private static final String FIELDS      = "fields";
+    private static final String LINKS       = "links";
+    private static final String SERVICES    = "services";
+    private static final String SERVICE     = "service";
+    private static final String MEMBERS     = "members";
+    private static final String CACHES      = "caches";
+    private static final String PERSISTENCE = "persistence";
+    private static final String SNAPSHOTS   = "snapshots";
 
     /**
      * A trust manager that will trust all certificates. Only used when the preference to ignore SSL certs is chosen.

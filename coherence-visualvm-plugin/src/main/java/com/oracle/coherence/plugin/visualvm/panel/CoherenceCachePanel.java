@@ -83,6 +83,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -156,10 +157,10 @@ public class CoherenceCachePanel
         RenderHelper.setColumnRenderer(table, CacheData.MEMORY_USAGE_BYTES, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(table, CacheData.UNIT_CALCULATOR, new RenderHelper.UnitCalculatorRenderer());
 
-        RenderHelper.setHeaderAlignment(table, JLabel.CENTER);
-        RenderHelper.setHeaderAlignment(f_tableDetail, JLabel.CENTER);
-        RenderHelper.setHeaderAlignment(f_tableFrontDetail, JLabel.CENTER);
-        RenderHelper.setHeaderAlignment(f_tableStorage, JLabel.CENTER);
+        RenderHelper.setHeaderAlignment(table, SwingConstants.CENTER);
+        RenderHelper.setHeaderAlignment(f_tableDetail, SwingConstants.CENTER);
+        RenderHelper.setHeaderAlignment(f_tableFrontDetail, SwingConstants.CENTER);
+        RenderHelper.setHeaderAlignment(f_tableStorage, SwingConstants.CENTER);
 
         RenderHelper.setColumnRenderer(f_tableDetail, CacheDetailData.CACHE_HITS, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_tableDetail, CacheDetailData.CACHE_MISSES, new RenderHelper.IntegerRenderer());

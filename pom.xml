@@ -34,7 +34,7 @@
   <groupId>com.oracle.coherence.plugin.visualvm</groupId>
   <artifactId>coherence-visualvm-main</artifactId>
   <packaging>pom</packaging>
-  <version>1.3.1-SNAPSHOT</version>
+  <version>1.4.0-SNAPSHOT</version>
   <name>Coherence VisualVM Plugin Parent</name>
 
   <description>
@@ -53,27 +53,27 @@
     <com.sun.xml.bind.version>2.3.0</com.sun.xml.bind.version>
 
     <!-- default coherence versions -->
-    <default.coherence.ce.version>21.12.3</default.coherence.ce.version>
-    <default.coherence.commercial.version>14.1.2-0-0-SNAPSHOT
-    </default.coherence.commercial.version>
+    <default.coherence.ce.version>21.12.4</default.coherence.ce.version>
+    <default.coherence.commercial.version>14.1.2-0-0-SNAPSHOT</default.coherence.commercial.version>
 
     <failsafe.argLine>-Xmx1g -XX:+HeapDumpOnOutOfMemoryError
       -XX:HeapDumpPath=${project.build.directory} -XX:+ExitOnOutOfMemoryError
       -Dfile.encoding=UTF-8 --illegal-access=permit
     </failsafe.argLine>
-    <jackson.version>2.11.3</jackson.version>
+    <jackson.version>2.13.3</jackson.version>
     <jackson.databind.version>${jackson.version}</jackson.databind.version>
     <java.version>1.8</java.version>
     <java.version.eight>1.8</java.version.eight>
     <java.version.release>8</java.version.release>
     <javax.activation.version>1.2.0</javax.activation.version>
     <junit.version>4.13.1</junit.version>
-    <jvisualvm.version>RELEASE204</jvisualvm.version>
+    <visualvm.version>2.1</visualvm.version>
+    <netbeans.version>RELEASE124</netbeans.version>
 
     <hamcrest.version>2.2</hamcrest.version>
     <maven.version>3.6.0</maven.version>
 
-    <oracle.bedrock.version>5.0.20</oracle.bedrock.version>
+    <oracle.bedrock.version>6.0.0</oracle.bedrock.version>
 
     <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
     <maven.bundle.plugin.version>4.2.1</maven.bundle.plugin.version>
@@ -97,67 +97,67 @@
       <dependency>
         <groupId>org.graalvm.visualvm.modules</groupId>
         <artifactId>org-graalvm-visualvm-uisupport</artifactId>
-        <version>${jvisualvm.version}</version>
+        <version>${visualvm.version}</version>
       </dependency>
       <dependency>
         <groupId>org.graalvm.visualvm.api</groupId>
         <artifactId>org-graalvm-visualvm-application</artifactId>
-        <version>${jvisualvm.version}</version>
+        <version>${visualvm.version}</version>
       </dependency>
       <dependency>
         <groupId>org.graalvm.visualvm.api</groupId>
         <artifactId>org-graalvm-visualvm-application-views</artifactId>
-        <version>${jvisualvm.version}</version>
+        <version>${visualvm.version}</version>
       </dependency>
       <dependency>
         <groupId>org.graalvm.visualvm.api</groupId>
         <artifactId>org-graalvm-visualvm-charts</artifactId>
-        <version>${jvisualvm.version}</version>
+        <version>${visualvm.version}</version>
       </dependency>
       <dependency>
         <groupId>org.graalvm.visualvm.api</groupId>
         <artifactId>org-graalvm-visualvm-core</artifactId>
-        <version>${jvisualvm.version}</version>
+        <version>${visualvm.version}</version>
       </dependency>
       <dependency>
         <groupId>org.graalvm.visualvm.api</groupId>
         <artifactId>org-graalvm-visualvm-tools</artifactId>
-        <version>${jvisualvm.version}</version>
+        <version>${visualvm.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.graalvm.visualvm.api</groupId>
+        <groupId>org.netbeans.api</groupId>
         <artifactId>org-openide-modules</artifactId>
-        <version>${jvisualvm.version}</version>
+        <version>${netbeans.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.graalvm.visualvm.api</groupId>
+        <groupId>org.netbeans.api</groupId>
         <artifactId>org-openide-awt</artifactId>
-        <version>${jvisualvm.version}</version>
+        <version>${netbeans.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.graalvm.visualvm.api</groupId>
+        <groupId>org.netbeans.api</groupId>
         <artifactId>org-openide-util</artifactId>
-        <version>${jvisualvm.version}</version>
+        <version>${netbeans.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.graalvm.visualvm.api</groupId>
+        <groupId>org.netbeans.api</groupId>
         <artifactId>org-openide-dialogs</artifactId>
-        <version>${jvisualvm.version}</version>
+        <version>${netbeans.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.graalvm.visualvm.api</groupId>
+        <groupId>org.netbeans.api</groupId>
         <artifactId>org-openide-windows</artifactId>
-        <version>${jvisualvm.version}</version>
+        <version>${netbeans.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.graalvm.visualvm.api</groupId>
+        <groupId>org.netbeans.api</groupId>
         <artifactId>org-netbeans-modules-options-api</artifactId>
-        <version>${jvisualvm.version}</version>
+        <version>${netbeans.version}</version>
       </dependency>
       <dependency>
         <groupId>org.graalvm.visualvm.modules</groupId>
         <artifactId>org-graalvm-visualvm-lib-ui</artifactId>
-        <version>${jvisualvm.version}</version>
+        <version>${visualvm.version}</version>
       </dependency>
 
       <!-- jackson -->
@@ -205,7 +205,6 @@
   <build>
     <pluginManagement>
       <plugins>
-
         <!-- maven-enforcer-plugin -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -264,7 +263,6 @@
           <version>${maven.nbm.plugin.version}</version>
         </plugin>
 
-
         <!-- maven-jar-plugin -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -282,5 +280,4 @@
       </plugins>
     </pluginManagement>
   </build>
-
 </project>
