@@ -42,12 +42,12 @@ jobs:
       fail-fast: false
       matrix:
         version:
+          - 14.1.1-0-10
           - 14.1.1-0-9
-          - 14.1.1-0-8
-          - 20.12.2
           - 21.06.1
           - 21.12.4
           - 22.06
+          - 22.06.1
 
     steps:
     - name: Checkout

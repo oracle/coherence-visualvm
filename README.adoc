@@ -67,7 +67,8 @@ NOTE: If you wish to connect to Coherence version 12.2.1.4.x via REST you should
 [#install]
 == Installing the Plugin from VisualVM
 
-The Coherence VisualVM Plugin is available from the list of plugins in VisualVM versions 2.0.6 and above.
+The Coherence VisualVM Plugin is available from the list of plugins in VisualVM versions 2.0.6 and above. It is recommended
+to install the latest VisualVM version 2.1 to ensure you can install the most up-to-date Coherence Plugin.
 
 To install the Plugin carry out the following:
 
