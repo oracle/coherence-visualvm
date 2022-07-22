@@ -39,7 +39,7 @@ You can connect to clusters via JMX or via management over REST with Coherence v
 The Plugin is an ideal tool for monitoring and managing Coherence clusters during the development and testing lifecycle and supports connecting to both
 Community Edition and Commercial versions of Coherence.
 
-NOTE: This version of the Plugin requires VisualVM release 2.1 or later which is available from https://visualvm.github.io/.
+NOTE: The most current version of the Plugin requires VisualVM release 2.1 or later which is available from https://visualvm.github.io/.
 
 image::assets/coherence-visualvm.png[Coherence VisualVM Plugin,800,479]
 
@@ -67,8 +67,9 @@ NOTE: If you wish to connect to Coherence version 12.2.1.4.x via REST you should
 [#install]
 == Installing the Plugin from VisualVM
 
-The Coherence VisualVM Plugin is available from the list of plugins in VisualVM versions 2.0.6 and above. It is recommended
-to install the latest VisualVM version 2.1 to ensure you can install the most up-to-date Coherence Plugin.
+The Coherence VisualVM Plugin is available from the list of plugins in VisualVM versions 2.0.6 and above.
+
+NOTE: It is recommended to install VisualVM version 2.1 or later. This will ensure you can install the most up-to-date Coherence Plugin.
 
 To install the Plugin carry out the following:
 
