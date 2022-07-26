@@ -122,7 +122,7 @@ public class HttpRequestSender
         JsonNode rootNode = getResponseJson(sendGetRequest(modifyTarget(objName, urlBuilder)));
 
         // in case of back cache or storage manager we have to get the first item
-        if (objName.getKeyProperty("type").equals("Cache") ||
+        if (objName.getKeyProperty("type").equals(CACHE) ||
             objName.getKeyProperty("type").equals("StorageManager"))
             {
             ArrayNode itemsNode = (ArrayNode) rootNode.get(ITEMS);
@@ -174,7 +174,7 @@ public class HttpRequestSender
             }
 
         // in case of back cache, we have to get the first item
-        if (objectName.getKeyProperty("type").equals("Cache"))
+        if (objectName.getKeyProperty("type").equals(CACHE))
             {
             ArrayNode itemsNode = (ArrayNode) rootNode.get(ITEMS);
             if (itemsNode != null)
@@ -208,7 +208,7 @@ public class HttpRequestSender
             }
 
         // in case of back cache, we have to get the first item
-        if (objectName.getKeyProperty("type").equals("Cache"))
+        if (objectName.getKeyProperty("type").equals(CACHE))
             {
             ArrayNode itemsNode = (ArrayNode) rootNode.get(ITEMS);
             if (itemsNode != null)
@@ -1421,7 +1421,7 @@ public class HttpRequestSender
                                          ? "flash" : "ram";
                 return urlBuilder.addPathSegment(JOURNAL).addPathSegment(sJournalUrlType).addPathSegment(MEMBERS)
                         .addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID));
-            case "Cache":
+            case CACHE:
                 urlBuilder = urlBuilder.addPathSegment(SERVICES)
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
                         .addPathSegment(CACHES).addPathSegment(getKeyPropertyFromObjName(objectName, "name"))
@@ -1787,6 +1787,7 @@ public class HttpRequestSender
     private static final String PARTICIPANTS = "participants";
     private static final String ARCHIVES     = "archives";
     private static final String STATISTICS   = "statistics";
+    private static final String CACHE        = "Cache";
 
     /**
      * A trust manager that will trust all certificates. Only used when the preference to ignore SSL certs is chosen.

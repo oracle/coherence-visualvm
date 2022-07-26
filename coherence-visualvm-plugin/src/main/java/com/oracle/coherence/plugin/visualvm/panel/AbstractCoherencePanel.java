@@ -27,7 +27,6 @@ package com.oracle.coherence.plugin.visualvm.panel;
 
 
 import com.oracle.coherence.plugin.visualvm.Localization;
-import com.oracle.coherence.plugin.visualvm.VisualVMView;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
@@ -98,7 +97,7 @@ public abstract class AbstractCoherencePanel
      * @param manager the {@link LayoutManager} to use
      * @param model   the {@link VisualVMModel} to interrogate for data
      */
-    public AbstractCoherencePanel(LayoutManager manager, VisualVMModel model)
+    protected AbstractCoherencePanel(LayoutManager manager, VisualVMModel model)
         {
         super(manager);
         f_model = model;
@@ -260,14 +259,15 @@ public abstract class AbstractCoherencePanel
             throws Exception
         {
         // look up the full name of the MBean in case we are in container
-        Set<ObjectName> setResult = requestSender.getCompleteObjectName(new ObjectName(sQuery));
+        Set<ObjectName> setResults = requestSender.getCompleteObjectName(new ObjectName(sQuery));
 
-        for (Object oResult : setResult)
+        if (setResults.size() != 1)
             {
-            return oResult.toString();
+            return null;
             }
 
-        return null;
+        Object oResult = setResults.iterator().next();
+        return oResult == null ? null : oResult.toString();
         }
 
     /**

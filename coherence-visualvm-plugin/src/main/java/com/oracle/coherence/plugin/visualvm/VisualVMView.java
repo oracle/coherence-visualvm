@@ -112,7 +112,7 @@ public class VisualVMView
 
         JmxModel jmx = JmxModelFactory.getJmxModelFor(application);
 
-        requestSender = new JMXRequestSender(jmx.getMBeanServerConnection());
+        m_requestSender = new JMXRequestSender(jmx.getMBeanServerConnection());
         }
 
     /**
@@ -125,13 +125,13 @@ public class VisualVMView
         super(dataSource, "Oracle Coherence", new ImageIcon(ImageUtilities.loadImage(IMAGE_PATH, true)).getImage(), 60,
               false);
         String sUrl = dataSource.getUrl();
-        requestSender = new HttpRequestSender(sUrl);
+        m_requestSender = new HttpRequestSender(sUrl);
 
         // BUG 29213475 - Check for a valid HttpRequestSender URL before we start the refresh
         String sMessage = Localization.getLocalText("ERR_Invalid_URL", sUrl);
         try
             {
-            JsonNode rootClusterMembers = ((HttpRequestSender) requestSender).getListOfClusterMembers();
+            JsonNode rootClusterMembers = ((HttpRequestSender) m_requestSender).getListOfClusterMembers();
             if (rootClusterMembers == null)
                 {
                 LOGGER.warning(sMessage);
@@ -166,7 +166,7 @@ public class VisualVMView
 
         // do an initial refresh of the data so we can see if we need to display
         // the proxy server tab
-        model.refreshStatistics(requestSender);
+        model.refreshStatistics(m_requestSender);
         model.setIsFirstRefresh(false);
 
         // we then construct the panels after the initial refresh so we can utilize
@@ -198,10 +198,10 @@ public class VisualVMView
         String sClusterName = null;
 
         List<Map.Entry<Object, Data>> clusterData = model.getData(VisualVMModel.DataType.CLUSTER);
-        for (Map.Entry<Object, Data> entry : clusterData)
+
+        if (!clusterData.isEmpty())
             {
-            sClusterName = entry.getValue().getColumn(ClusterData.CLUSTER_NAME).toString();
-            break;
+            sClusterName =clusterData.iterator().next().getValue().getColumn(ClusterData.CLUSTER_NAME).toString();
             }
 
         // Master view:
@@ -242,7 +242,7 @@ public class VisualVMView
         if (pnlClusterSnapshot != null)
             {
             f_setPanels.add(pnlClusterSnapshot);
-            pnlClusterSnapshot.setRequestSender(requestSender);
+            pnlClusterSnapshot.setRequestSender(m_requestSender);
             }
         f_setPanels.add(pnlClusterOverview);
         f_setPanels.add(pnlMachine);
@@ -336,22 +336,22 @@ public class VisualVMView
             }
 
         // update the request sender
-        pnlClusterOverview.setRequestSender(requestSender);
-        pnlMachine.setRequestSender(requestSender);
-        pnlMember.setRequestSender(requestSender);
-        pnlService.setRequestSender(requestSender);
-        pnlCache.setRequestSender(requestSender);
-        pnlHotCache.setRequestSender(requestSender);
-        pnlFederation.setRequestSender(requestSender);
-        pnlProxy.setRequestSender(requestSender);
-        pnlTopic.setRequestSender(requestSender);
-        pnlPersistence.setRequestSender(requestSender);
-        pnlHttpSession.setRequestSender(requestSender);
-        pnlElasticData.setRequestSender(requestSender);
-        pnlJCache.setRequestSender(requestSender);
-        pnlExecutor.setRequestSender(requestSender);
-        pnlGrpcProxy.setRequestSender(requestSender);
-        pnlHealth.setRequestSender(requestSender);
+        pnlClusterOverview.setRequestSender(m_requestSender);
+        pnlMachine.setRequestSender(m_requestSender);
+        pnlMember.setRequestSender(m_requestSender);
+        pnlService.setRequestSender(m_requestSender);
+        pnlCache.setRequestSender(m_requestSender);
+        pnlHotCache.setRequestSender(m_requestSender);
+        pnlFederation.setRequestSender(m_requestSender);
+        pnlProxy.setRequestSender(m_requestSender);
+        pnlTopic.setRequestSender(m_requestSender);
+        pnlPersistence.setRequestSender(m_requestSender);
+        pnlHttpSession.setRequestSender(m_requestSender);
+        pnlElasticData.setRequestSender(m_requestSender);
+        pnlJCache.setRequestSender(m_requestSender);
+        pnlExecutor.setRequestSender(m_requestSender);
+        pnlGrpcProxy.setRequestSender(m_requestSender);
+        pnlHealth.setRequestSender(m_requestSender);
 
         // display a warning if we are connected to a WLS domain and we can
         // see more than 1 domainPartition key. This code relies on us
@@ -386,7 +386,7 @@ public class VisualVMView
                             if (m_application == null || m_application.getState() == Stateful.STATE_AVAILABLE)
                                 {
                                 // Schedule the SwingWorker to update the GUI
-                                model.refreshStatistics(requestSender);
+                                model.refreshStatistics(m_requestSender);
 
                                 // refresh only the panels that were activated on startup
                                 for (AbstractCoherencePanel panel : f_setPanels)
@@ -472,7 +472,7 @@ public class VisualVMView
     /**
      * The Request Sender to use.
      */
-    private RequestSender requestSender = null;
+    private RequestSender m_requestSender = null;
 
     /**
      * Set of panels to refresh and update.

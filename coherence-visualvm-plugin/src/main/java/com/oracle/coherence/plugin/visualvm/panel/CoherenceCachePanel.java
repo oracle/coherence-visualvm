@@ -74,7 +74,7 @@ import java.util.Set;
 import javax.management.Attribute;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
-import javax.swing.JLabel;
+
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -253,7 +253,7 @@ public class CoherenceCachePanel
         bottomPanel.setOpaque(false);
         detailHeaderPanel.setOpaque(false);
 
-        f_txtSelectedCache = getTextField(30, JTextField.LEFT);
+        f_txtSelectedCache = getTextField(30, SwingConstants.LEFT);
         detailHeaderPanel.add(getLocalizedLabel("LBL_selected_service_cache", f_txtSelectedCache));
         detailHeaderPanel.add(f_txtSelectedCache);
 
@@ -261,7 +261,7 @@ public class CoherenceCachePanel
         detailHeaderPanel.add(getLocalizedLabel("LBL_max_query_millis", f_txtMaxQueryDuration));
         detailHeaderPanel.add(f_txtMaxQueryDuration);
 
-        f_txtMaxQueryDescription = getTextField(30, JTextField.LEFT);
+        f_txtMaxQueryDescription = getTextField(30, SwingConstants.LEFT);
         detailHeaderPanel.add(getLocalizedLabel("LBL_max_query_desc", f_txtMaxQueryDescription));
         detailHeaderPanel.add(f_txtMaxQueryDescription);
 

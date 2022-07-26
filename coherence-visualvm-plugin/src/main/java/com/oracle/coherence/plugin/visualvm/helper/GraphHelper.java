@@ -349,14 +349,14 @@ public class GraphHelper
             sxycd = SimpleXYChartDescriptor.decimal(0, 0.01, true, VALUES_LIMIT);
 
             sxycd.setChartTitle(getLocalText("GRPH_load_average"));
-            sxycd.addLineFillItems(getLocalText("GRPH_current_maximum"), getLocalText(GRPH_CURRENT_AVERAGE));
+            sxycd.addLineFillItems(getLocalText(GRPH_CURRENT_MAXIMUM), getLocalText(GRPH_CURRENT_AVERAGE));
             }
         else
             {
             sxycd = SimpleXYChartDescriptor.percent(true, VALUES_LIMIT);
 
             sxycd.setChartTitle(getLocalText("GRPH_cpu_load"));
-            sxycd.addLineFillItems(getLocalText("GRPH_current_maximum"), getLocalText(GRPH_CURRENT_AVERAGE));
+            sxycd.addLineFillItems(getLocalText(GRPH_CURRENT_MAXIMUM), getLocalText(GRPH_CURRENT_AVERAGE));
             }
 
         return createChart(sxycd);
@@ -482,7 +482,7 @@ public class GraphHelper
                 0.0001, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(Localization.getLocalText("GRPH_task_average", sServiceName));
-        sxycd.addLineFillItems(getLocalText("GRPH_current_maximum"), getLocalText(GRPH_CURRENT_AVERAGE));
+        sxycd.addLineFillItems(getLocalText(GRPH_CURRENT_MAXIMUM), getLocalText(GRPH_CURRENT_AVERAGE));
 
         return createChart(sxycd);
         }
@@ -512,7 +512,7 @@ public class GraphHelper
         SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(1, 0.0001, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(Localization.getLocalText("GRPH_request_average", sServiceName));
-        sxycd.addLineFillItems(getLocalText("GRPH_current_maximum"), getLocalText(GRPH_CURRENT_AVERAGE));
+        sxycd.addLineFillItems(getLocalText(GRPH_CURRENT_MAXIMUM), getLocalText(GRPH_CURRENT_AVERAGE));
 
         return createChart(sxycd);
         }
@@ -542,7 +542,7 @@ public class GraphHelper
         SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, 0.01, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(Localization.getLocalText("GRPH_task_backlog", sServiceName));
-        sxycd.addLineFillItems(getLocalText("GRPH_current_maximum"), getLocalText(GRPH_CURRENT_AVERAGE));
+        sxycd.addLineFillItems(getLocalText(GRPH_CURRENT_MAXIMUM), getLocalText(GRPH_CURRENT_AVERAGE));
 
         return createChart(sxycd);
         }
@@ -666,7 +666,7 @@ public class GraphHelper
         SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(getLocalText("GRPH_reap_druation"));
-        sxycd.addLineFillItems(getLocalText("GRPH_current_maximum"),
+        sxycd.addLineFillItems(getLocalText(GRPH_CURRENT_MAXIMUM),
                 getLocalText(GRPH_CURRENT_AVERAGE));
 
         return createChart(sxycd);
@@ -1009,7 +1009,7 @@ public class GraphHelper
 
         sxycd.setChartTitle(
                 Localization.getLocalText("GRPH_average_request_time", sServiceName));
-        sxycd.addLineFillItems(getLocalText("GRPH_current_maximum"), getLocalText(GRPH_CURRENT_AVERAGE));
+        sxycd.addLineFillItems(getLocalText(GRPH_CURRENT_MAXIMUM), getLocalText(GRPH_CURRENT_AVERAGE));
 
         return createChart(sxycd);
         }
@@ -1039,7 +1039,7 @@ public class GraphHelper
         SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(1, 0.0001, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(Localization.getLocalText("GRPH_average_request_per_second", sServiceName));
-        sxycd.addLineFillItems(getLocalText("GRPH_current_maximum"), getLocalText(GRPH_CURRENT_AVERAGE));
+        sxycd.addLineFillItems(getLocalText(GRPH_CURRENT_MAXIMUM), getLocalText(GRPH_CURRENT_AVERAGE));
 
         return createChart(sxycd);
         }
@@ -1232,7 +1232,8 @@ public class GraphHelper
     public static final int VALUES_LIMIT = Integer.getInteger("coherence.plugin.visualvm.values.limit", 50000);
 
     private static final String GRPH_CURRENT_AVERAGE = "GRPH_current_average";
-    private static final String GRPH_MINIMUM = "GRPH_minimum";
-    private static final String GRPH_MAXIMUM = "GRPH_maximum";
-    private static final String GRPH_AVERAGE = "GRPH_average";
+    private static final String GRPH_MINIMUM         = "GRPH_minimum";
+    private static final String GRPH_MAXIMUM         = "GRPH_maximum";
+    private static final String GRPH_AVERAGE         = "GRPH_average";
+    private static final String GRPH_CURRENT_MAXIMUM = "GRPH_current_maximum";
     }

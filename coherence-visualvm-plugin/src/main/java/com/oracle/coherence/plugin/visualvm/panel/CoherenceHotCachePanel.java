@@ -333,7 +333,7 @@ public class CoherenceHotCachePanel
                 if(!sSelectedHotcachePercacheOperation.equals(f_model.getSelectedHotCachePerCacheOperation()))
                     {
                     // set the selected cache Operation
-                    f_model.setSelectedHotCachePerCacheOperation((String) sSelectedHotcachePercacheOperation);
+                    f_model.setSelectedHotCachePerCacheOperation(sSelectedHotcachePercacheOperation);
                     populateBottomPanel(f_pnebottom, sSelectedHotcachePercacheOperation);
                     }
                 }
@@ -397,12 +397,12 @@ public class CoherenceHotCachePanel
     /**
      * The statistics hotcache data retrieved from the {@link VisualVMModel}.
      */
-    private java.util.List<Map.Entry<Object, Data>> m_hotcacheData;
+    private transient java.util.List<Map.Entry<Object, Data>> m_hotcacheData;
 
     /**
      * The statistics hotcachepercache data retrieved from the {@link VisualVMModel}.
      */
-    private java.util.List<Map.Entry<Object, Data>> m_hotcachepercacheData;
+    private transient java.util.List<Map.Entry<Object, Data>> m_hotcachepercacheData;
 
     /**
      * The graph of Execution Time Per Operation statistics.
@@ -452,12 +452,12 @@ public class CoherenceHotCachePanel
     /**
      * The row selection listener.
      */
-    private final SelectRowListSelectionListener f_listener;
+    private final transient SelectRowListSelectionListener f_listener;
 
     /**
      * The {@link ListSelectionModel} of table.
      */
-    private final ListSelectionModel f_rowSelectionDataModel;
+    private final transient ListSelectionModel f_rowSelectionDataModel;
 
     /**
      * The {@link ListSelectionModel} of percachetable.

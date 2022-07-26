@@ -160,7 +160,7 @@ public class PersistenceData
 
                     if (Boolean.parseBoolean(getAttributeValueAsString(listAttr, "StorageEnabled")))
                         {
-                        data = (PersistenceData) mapData.get(sServiceNameKey);
+                        data = mapData.get(sServiceNameKey);
 
                         // PersistenceActiveSpaceUsed is only valid for active or active-backup persistence mode
                         if (isActivePersistence((String) data.getColumn(PERSISTENCE_MODE)))
@@ -198,7 +198,7 @@ public class PersistenceData
                         }
                     }
 
-                data = (PersistenceData) mapData.get(sServiceNameKey);
+                data = mapData.get(sServiceNameKey);
 
                 // update the average of the averages only if > 1 service node
                 if (cNodes > 0)
@@ -383,14 +383,14 @@ public class PersistenceData
                 break;
                 }
 
-            sStatus = (String) requestSender.getAttribute(new ObjectName(sFQN), "OperationStatus");
+            sStatus = requestSender.getAttribute(new ObjectName(sFQN), "OperationStatus");
             }
         catch (Exception e)
             {
             // if we get here then its likely we are connected to a 12.1.3 cluster where
             // persistence was experimental, or an early 12.2.1 cluster before CurrentOperationStatus
             // was renamed to OperationStatus
-            sStatus = (String) requestSender.getAttribute(
+            sStatus = requestSender.getAttribute(
                     new ObjectName(getMBeanName(sServiceName)), "CurrentOperationStatus");
             }
 

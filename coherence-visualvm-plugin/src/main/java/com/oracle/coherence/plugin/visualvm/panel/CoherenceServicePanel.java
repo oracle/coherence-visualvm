@@ -152,19 +152,19 @@ public class CoherenceServicePanel
         JPanel detailHeaderPanel = new JPanel();
         detailHeaderPanel.setOpaque(false);
 
-        f_txtSelectedService = getTextField(22, JTextField.LEFT);
+        f_txtSelectedService = getTextField(22, SwingConstants.LEFT);
         detailHeaderPanel.add(getLocalizedLabel("LBL_selected_service", f_txtSelectedService));
         detailHeaderPanel.add(f_txtSelectedService);
 
-        f_txtTotalThreads = getTextField(5, JTextField.RIGHT);
+        f_txtTotalThreads = getTextField(5, SwingConstants.RIGHT);
         detailHeaderPanel.add(getLocalizedLabel("LBL_total_threads", f_txtTotalThreads));
         detailHeaderPanel.add(f_txtTotalThreads);
 
-        f_txtTotalIdle = getTextField(5, JTextField.RIGHT);
+        f_txtTotalIdle = getTextField(5, SwingConstants.RIGHT);
         detailHeaderPanel.add(getLocalizedLabel("LBL_total_idle", f_txtTotalIdle));
         detailHeaderPanel.add(f_txtTotalIdle);
 
-        f_txtTotalThreadUtil = getTextField(5, JTextField.RIGHT);
+        f_txtTotalThreadUtil = getTextField(5, SwingConstants.RIGHT);
         detailHeaderPanel.add(getLocalizedLabel("LBL_total_utilization", f_txtTotalThreadUtil));
         detailHeaderPanel.add(f_txtTotalThreadUtil);
 
@@ -449,7 +449,6 @@ public class CoherenceServicePanel
                 try
                     {
                     sRawService    = (String) getJTable().getModel().getValueAt(nRow, 0);
-                    String sFQN    = null;
                     String sResult = null;
 
                     String[] asParts          = AbstractData.getServiceParts(sRawService);
@@ -464,12 +463,14 @@ public class CoherenceServicePanel
                         {
                         Set<Object[]> setResults = m_requestSender.getPartitionAssignmentAttributes(sService, sDomainPartition);
 
-                         for (Object[] aoResults : setResults)
-                             {
-                             StringBuffer sb = new StringBuffer(
+                        if (setResults.size() == 1)
+                            {
+                            Object[] aoResults = setResults.iterator().next();
+
+                            StringBuilder sb = new StringBuilder(
                                      Localization.getLocalText("LBL_partitions_stats_title", sRawService));
 
-                              sb.append("\n\n")
+                            sb.append("\n\n")
                                 .append(getLocalizedText("LBL_avg_partition_size"))
                                 .append(formatLong(aoResults[0]))
                                 .append("\n")
@@ -486,9 +487,8 @@ public class CoherenceServicePanel
                                 .append(formatLong(aoResults[4]))
                                 .append("\n");
 
-                             sResult = sb.toString();
-                             break;
-                             }
+                            sResult = sb.toString();
+                            }
                         }
                     else
                         {
