@@ -34,7 +34,6 @@ import org.openide.util.NbPreferences;
 
 import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_CLUSTER_SNAPSHOT;
 import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_DISABLE_MBEAN_CHECK;
-import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_HEATMAP_ENABLED;
 import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_LOG_QUERY_TIMES;
 import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_PERSISTENCE_LIST_ENABLED;
 import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_REFRESH_TIME;
@@ -164,6 +163,7 @@ public class GlobalPreferences
     @Override
     public void preferenceChange(PreferenceChangeEvent evt)
         {
+        // no-op as no preferences are added in realtime
         }
 
     // ----- accessors ------------------------------------------------------
@@ -498,7 +498,7 @@ public class GlobalPreferences
     /**
      * Singleton.
      */
-    private final static GlobalPreferences INSTANCE = new GlobalPreferences();
+    private static final GlobalPreferences INSTANCE = new GlobalPreferences();
 
     /**
      * Preference key for refresh time.

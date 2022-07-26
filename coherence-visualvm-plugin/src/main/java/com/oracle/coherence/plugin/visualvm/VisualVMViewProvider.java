@@ -114,6 +114,7 @@ public class VisualVMViewProvider
      */
     public void saveViews(Application appSource, Application appDest)
         {
+        // no-op
         }
 
     /**

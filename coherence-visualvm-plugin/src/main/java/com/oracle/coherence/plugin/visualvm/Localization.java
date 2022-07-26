@@ -48,6 +48,12 @@ import org.openide.util.NbBundle;
 public class Localization
     {
 
+    // ----- constructors ---------------------------------------------------
+
+    private Localization()
+        {
+        }
+
     // ----- helpers --------------------------------------------------------
 
     /**

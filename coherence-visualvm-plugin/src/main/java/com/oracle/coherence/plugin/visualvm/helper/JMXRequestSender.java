@@ -25,6 +25,7 @@
 
 package com.oracle.coherence.plugin.visualvm.helper;
 
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.AbstractData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.PersistenceData;
 import com.oracle.coherence.plugin.visualvm.Localization;
 
@@ -347,7 +348,7 @@ public class JMXRequestSender
         {
         String sServiceName = sDomainPartition == null
                 ? sService
-                : PersistenceData.getFullServiceName(sDomainPartition, sService);
+                : AbstractData.getFullServiceName(sDomainPartition, sService);
         Set<ObjectName> setResult = getCompleteObjectName(new ObjectName(PersistenceData.getMBeanName(sServiceName)));
 
         String sFQN = getFirstResult(setResult);
@@ -360,7 +361,7 @@ public class JMXRequestSender
             throws Exception
         {
         Set<ObjectName> setResult = getCompleteObjectName(new ObjectName(PersistenceData.getMBeanName(
-                PersistenceData.getFullServiceName(sDomainPartition, sService))));
+                AbstractData.getFullServiceName(sDomainPartition, sService))));
 
         String sFQN = getFirstResult(setResult);
 
@@ -374,7 +375,7 @@ public class JMXRequestSender
                                             String sSnapshotName)
             throws Exception
         {
-        ObjectName      objectName = new ObjectName(PersistenceData.getMBeanName(PersistenceData.getFullServiceName(sDomainPartition, sService)));
+        ObjectName      objectName = new ObjectName(PersistenceData.getMBeanName(AbstractData.getFullServiceName(sDomainPartition, sService)));
         Set<ObjectName> setResult  = getCompleteObjectName(objectName);
 
         String sFQN = getFirstResult(setResult);
@@ -427,7 +428,7 @@ public class JMXRequestSender
             }
         catch (Exception e)
             {
-            LOGGER.log(Level.WARNING, Localization.getLocalText("ERR_local_member", new String[] {e.getMessage()}));
+            LOGGER.log(Level.WARNING, Localization.getLocalText("ERR_local_member", e.getMessage()));
             }
 
         return memberId;
@@ -509,7 +510,6 @@ public class JMXRequestSender
     protected String getFederationManagerObjectName(String sService)
             throws Exception
         {
-        String sObjName = null;
         String sQuery = "Coherence:type=Federation,service="
                 + sService + ",responsibility=Coordinator,*";
 

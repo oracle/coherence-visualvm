@@ -197,7 +197,7 @@ public abstract class AbstractCoherencePanel
      */
     protected JTextField getTextField(int width)
         {
-        return getTextField(width, JTextField.RIGHT);
+        return getTextField(width, SwingConstants.RIGHT);
         }
 
     /**
@@ -322,7 +322,7 @@ public abstract class AbstractCoherencePanel
 
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-            m_table.setPreferredScrollableViewportSize(new Dimension((int) (Math.max((int) (screenSize.getWidth() * 0.5),
+            m_table.setPreferredScrollableViewportSize(new Dimension((Math.max((int) (screenSize.getWidth() * 0.5),
                                                                                      800)), m_table.getRowHeight() * 20));
 
             m_table.setIntercellSpacing(new Dimension(6, 3));
@@ -510,7 +510,7 @@ public abstract class AbstractCoherencePanel
             // remove duplicate entries
             for (Map.Entry<Object, Data> entryOrig : fedOriginData)
                 {
-                Pair key = (Pair) entryOrig.getKey();
+                Pair<?, ?> key = (Pair<?,?>) entryOrig.getKey();
                 boolean fFound = false;
 
                 // merge destination data and origin data into one entry (in destination data list)
@@ -686,7 +686,6 @@ public abstract class AbstractCoherencePanel
      */
     protected Object[] getPersistenceData(List<Map.Entry<Object, Data>> persistenceData)
         {
-        Object[] aoResults = new Object[] {};
         // [0] = cTotalActiveSpace (long)
         // [1] = cTotalBackupSpace (long)
         // [2] = cLatencyMax  (long)
@@ -816,11 +815,6 @@ public abstract class AbstractCoherencePanel
      * Filler for spacing.
      */
     protected static final String FILLER = "   ";
-
-    /**
-     * Comma number formatter.
-     */
-    protected final String COMMA_NUMBER_FORMAT = "%,d";
 
     /**
      * Indicates to select selected service.

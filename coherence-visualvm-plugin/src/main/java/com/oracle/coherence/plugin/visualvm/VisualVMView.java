@@ -354,7 +354,7 @@ public class VisualVMView
         pnlHealth.setRequestSender(requestSender);
 
         // display a warning if we are connected to a WLS domain and we can
-        // see more that 1 domainPartition key. This code relies on us
+        // see more than 1 domainPartition key. This code relies on us
         // using JMX queries rather than the reporter.
         if (model.getDomainPartitions().size() > 1)
             {
@@ -370,12 +370,12 @@ public class VisualVMView
             {
             public void actionPerformed(ActionEvent e)
                 {
-                if (refreshRunning)
+                if (f_refreshRunning)
                     {
                     return;
                     }
 
-                refreshRunning = true;
+                f_refreshRunning = true;
                 RequestProcessor.getDefault().post(new Runnable()
                     {
                     public void run()
@@ -398,11 +398,11 @@ public class VisualVMView
                             }
                         catch (Exception ex)
                             {
-                            LOGGER.log(Level.WARNING, "Error while refreshing tabs. ", e);
+                            LOGGER.log(Level.WARNING, "Error while refreshing tabs. {0} ", e);
                             }
                         finally
                             {
-                            refreshRunning = false;
+                            f_refreshRunning = false;
                             }
                         }
                     });
@@ -467,7 +467,7 @@ public class VisualVMView
     /**
      * Indicates if the refresh is running.
      */
-    private boolean refreshRunning;
+    private boolean f_refreshRunning;
 
     /**
      * The Request Sender to use.

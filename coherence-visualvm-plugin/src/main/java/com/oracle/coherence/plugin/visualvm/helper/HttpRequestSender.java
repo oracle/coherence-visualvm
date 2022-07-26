@@ -125,7 +125,7 @@ public class HttpRequestSender
         if (objName.getKeyProperty("type").equals("Cache") ||
             objName.getKeyProperty("type").equals("StorageManager"))
             {
-            ArrayNode itemsNode = (ArrayNode) rootNode.get("items");
+            ArrayNode itemsNode = (ArrayNode) rootNode.get(ITEMS);
             if (itemsNode != null)
                 {
                 rootNode = itemsNode.get(0);
@@ -176,7 +176,7 @@ public class HttpRequestSender
         // in case of back cache, we have to get the first item
         if (objectName.getKeyProperty("type").equals("Cache"))
             {
-            ArrayNode itemsNode = (ArrayNode) rootNode.get("items");
+            ArrayNode itemsNode = (ArrayNode) rootNode.get(ITEMS);
             if (itemsNode != null)
                 {
                 rootNode = itemsNode.get(0);
@@ -210,7 +210,7 @@ public class HttpRequestSender
         // in case of back cache, we have to get the first item
         if (objectName.getKeyProperty("type").equals("Cache"))
             {
-            ArrayNode itemsNode = (ArrayNode) rootNode.get("items");
+            ArrayNode itemsNode = (ArrayNode) rootNode.get(ITEMS);
             if (itemsNode != null)
                 {
                 rootNode = itemsNode.get(0);
@@ -238,7 +238,7 @@ public class HttpRequestSender
                 .addQueryParameter(FIELDS, "name,service,domainPartition");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode nodeCacheItems = rootNode.get("items");
+        JsonNode nodeCacheItems = rootNode.get(ITEMS);
         Set<ObjectName> setObjectNames = new HashSet<>();
 
         if (nodeCacheItems != null && nodeCacheItems.isArray())
@@ -256,7 +256,7 @@ public class HttpRequestSender
                     {
                     mapKeysProps.put("domainPartition", domainPartition.asText());
                     }
-                setObjectNames.add(new ObjectName("Coherence", mapKeysProps));
+                setObjectNames.add(new ObjectName(COHERENCE, mapKeysProps));
                 }
             }
 
@@ -272,12 +272,12 @@ public class HttpRequestSender
                                  : "ram";
 
         URLBuilder urlBuilder = getBasePath();
-        urlBuilder.addPathSegment("journal")
+        urlBuilder.addPathSegment(JOURNAL)
                 .addPathSegment(sJournalUrlType).addPathSegment(MEMBERS)
                 .addQueryParameter(FIELDS, "nodeId,type,name");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode nodeJournalMemberItems = rootNode.get("items");
+        JsonNode nodeJournalMemberItems = rootNode.get(ITEMS);
         Set<ObjectName> setObjectNames = new HashSet<>();
 
         if (nodeJournalMemberItems != null && nodeJournalMemberItems.isArray())
@@ -289,9 +289,9 @@ public class HttpRequestSender
 
                 mapKeysProps.put("name", nodeJournalMember.get("name").asText());
                 mapKeysProps.put("type", nodeJournalMember.get("type").asText());
-                mapKeysProps.put("nodeId", nodeJournalMember.get("nodeId").asText());
+                mapKeysProps.put(NODE_ID, nodeJournalMember.get(NODE_ID).asText());
 
-                setObjectNames.add(new ObjectName("Coherence", mapKeysProps));
+                setObjectNames.add(new ObjectName(COHERENCE, mapKeysProps));
                 }
             }
 
@@ -346,7 +346,7 @@ public class HttpRequestSender
         // build the list of clusters
         URLBuilder urlBuilder = getBasePath().addQueryParameter(LINKS, "");
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode clusterItems = rootNode.get("items");
+        JsonNode clusterItems = rootNode.get(ITEMS);
         Set<ObjectName> setObjectNames = new HashSet<>();
 
         if (clusterItems != null && clusterItems.isArray())
@@ -366,7 +366,7 @@ public class HttpRequestSender
     public Set<ObjectName> getHotCacheMembers()
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("hotcache")
+        URLBuilder urlBuilder = getBasePath().addPathSegment(HOTCACHE)
                 .addPathSegment(MEMBERS);
         urlBuilder.addQueryParameter(FIELDS, "name,type,nodeId")
                   .addQueryParameter(LINKS, "");
@@ -378,7 +378,7 @@ public class HttpRequestSender
     public Set<ObjectName> getHotCachePerCacheAdapters(String sMember)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("hotcache")
+        URLBuilder urlBuilder = getBasePath().addPathSegment(HOTCACHE)
                 .addPathSegment(MEMBERS).addPathSegment(sMember);
 
         urlBuilder.addQueryParameter(FIELDS, "name,type,nodeId")
@@ -392,10 +392,10 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment("proxy").addPathSegment(MEMBERS).addQueryParameter(FIELDS, "name,type,nodeId");
+                .addPathSegment(PROXY).addPathSegment(MEMBERS).addQueryParameter(FIELDS, "name,type,nodeId");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode nodeWebAppItems = (JsonNode) rootNode.get("items");
+        JsonNode nodeWebAppItems = (JsonNode) rootNode.get(ITEMS);
         Set<ObjectName> setObjectNames = new HashSet<>();
 
         if (nodeWebAppItems != null && nodeWebAppItems.isArray())
@@ -408,7 +408,7 @@ public class HttpRequestSender
                     {
                     Hashtable<String, String> mapKeysProps = new Hashtable<>();
                     webAppMember.fields().forEachRemaining(e -> mapKeysProps.put(e.getKey(), e.getValue().asText()));
-                    setObjectNames.add(new ObjectName("Coherence", mapKeysProps));
+                    setObjectNames.add(new ObjectName(COHERENCE, mapKeysProps));
                     }
                 }
             }
@@ -476,7 +476,7 @@ public class HttpRequestSender
                 .addQueryParameter(LINKS, "");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode nodeServiceMembersItems = (JsonNode) rootNode.get("items");
+        JsonNode nodeServiceMembersItems = (JsonNode) rootNode.get(ITEMS);
         Set<ObjectName> setObjectNames = new HashSet<>();
 
         if (nodeServiceMembersItems != null && nodeServiceMembersItems.isArray())
@@ -491,7 +491,7 @@ public class HttpRequestSender
                 // the type attribute returned in the response is the service type, but in the object name,
                 // type is always Service
                 mapKeysProps.put("type", "Service");
-                setObjectNames.add(new ObjectName("Coherence", mapKeysProps));
+                setObjectNames.add(new ObjectName(COHERENCE, mapKeysProps));
                 }
             }
 
@@ -503,7 +503,7 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment("proxy").addPathSegment(MEMBERS)
+                .addPathSegment(PROXY).addPathSegment(MEMBERS)
                 .addQueryParameter(FIELDS, "name,type,domainPartition,nodeId");
 
         return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
@@ -571,7 +571,7 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment(encodeServiceName(sService)).addPathSegment("federation").addPathSegment("participants")
+                .addPathSegment(encodeServiceName(sService)).addPathSegment(FEDERATION).addPathSegment(PARTICIPANTS)
                 .addPathSegment(sParticipant).addPathSegment(sOperation);
         sendPostRequest(urlBuilder);
         }
@@ -581,7 +581,7 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment(encodeServiceName(sService)).addPathSegment("federation").addPathSegment("pendingIncomingMessages");
+                .addPathSegment(encodeServiceName(sService)).addPathSegment(FEDERATION).addPathSegment("pendingIncomingMessages");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
         return Integer.parseInt(rootNode.get("pendingIncomingMessages").asText());
@@ -592,7 +592,7 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment(encodeServiceName(sService)).addPathSegment("federation").addPathSegment("pendingOutgoingMessages");
+                .addPathSegment(encodeServiceName(sService)).addPathSegment(FEDERATION).addPathSegment("pendingOutgoingMessages");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
         return Integer.parseInt(rootNode.get("pendingOutgoingMessages").asText());
@@ -665,13 +665,13 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment(encodeServiceName(sService)).addPathSegment(PERSISTENCE).addPathSegment("archives");
+                .addPathSegment(encodeServiceName(sService)).addPathSegment(PERSISTENCE).addPathSegment(ARCHIVES);
         if (sDomainPartition != null)
             {
             urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
             }
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode nodeSnapshots = rootNode.get("archives");
+        JsonNode nodeSnapshots = rootNode.get(ARCHIVES);
 
         List<String> listSnapshots = new ArrayList<>();
         if (nodeSnapshots != null && nodeSnapshots.isArray())
@@ -698,15 +698,15 @@ public class HttpRequestSender
         switch (sOperationName)
             {
             case CoherencePersistencePanel.RETRIEVE_ARCHIVED_SNAPSHOT:
-                urlBuilder.addPathSegment("archives").addPathSegment(sSnapshotName).addPathSegment("retrieve");
+                urlBuilder.addPathSegment(ARCHIVES).addPathSegment(sSnapshotName).addPathSegment("retrieve");
                 sendPostRequest(urlBuilder);
                 break;
             case CoherencePersistencePanel.REMOVE_ARCHIVED_SNAPSHOT:
-                urlBuilder.addPathSegment("archives").addPathSegment(sSnapshotName);
+                urlBuilder.addPathSegment(ARCHIVES).addPathSegment(sSnapshotName);
                 sendDeleteRequest(urlBuilder);
                 break;
             case CoherencePersistencePanel.ARCHIVE_SNAPSHOT:
-                urlBuilder.addPathSegment("archives").addPathSegment(sSnapshotName);
+                urlBuilder.addPathSegment(ARCHIVES).addPathSegment(sSnapshotName);
                 sendPostRequest(urlBuilder);
                 break;
             case CoherencePersistencePanel.CREATE_SNAPSHOT:
@@ -752,7 +752,7 @@ public class HttpRequestSender
                 .addQueryParameter(LINKS, "");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode nodeServiceMembers = (JsonNode) rootNode.get("items");
+        JsonNode nodeServiceMembers = (JsonNode) rootNode.get(ITEMS);
         Set<ObjectName> setObjectNames = new HashSet<>();
 
         if (nodeServiceMembers != null && nodeServiceMembers.isArray())
@@ -764,7 +764,7 @@ public class HttpRequestSender
                 Hashtable<String, String> mapKeysProps = new Hashtable<>();
                 serviceMember.fields().forEachRemaining(e -> mapKeysProps.put(e.getKey(), e.getValue().asText()));
                 mapKeysProps.put("type", "Service");
-                setObjectNames.add(new ObjectName("Coherence", mapKeysProps));
+                setObjectNames.add(new ObjectName(COHERENCE, mapKeysProps));
                 }
             }
         return setObjectNames;
@@ -1004,7 +1004,7 @@ public class HttpRequestSender
     public JsonNode getDataForProxyMembers() throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment("proxy").addPathSegment(MEMBERS).addQueryParameter(FIELDS, "hostIP,name,nodeId," +
+                .addPathSegment(PROXY).addPathSegment(MEMBERS).addQueryParameter(FIELDS, "hostIP,name,nodeId," +
                                                                                                "connectionCount,outgoingMessageBacklog,totalBytesReceived,totalBytesSent," +
                                                                                                "totalMessagesReceived,totalMessagesSent,protocol," +
                                                                                                "domainPartition,httpServerType,totalRequestCount," +
@@ -1041,8 +1041,8 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("federation").addPathSegment("statistics")
-                .addPathSegment("incoming").addPathSegment("participants")
+                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(FEDERATION).addPathSegment(STATISTICS)
+                .addPathSegment("incoming").addPathSegment(PARTICIPANTS)
                 .addPathSegment(sParticipantName).addPathSegment(MEMBERS);
 
         return getResponseJson(sendGetRequest(urlBuilder));
@@ -1060,8 +1060,8 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("federation").addPathSegment("statistics")
-                .addPathSegment("outgoing").addPathSegment("participants").addPathSegment(sParticipantName)
+                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(FEDERATION).addPathSegment(STATISTICS)
+                .addPathSegment("outgoing").addPathSegment(PARTICIPANTS).addPathSegment(sParticipantName)
                 .addPathSegment(MEMBERS);
 
         return getResponseJson(sendGetRequest(urlBuilder));
@@ -1077,7 +1077,7 @@ public class HttpRequestSender
     public JsonNode getDataForElasticDataMembers(String sElasticDataType)
             throws Exception
         {
-        URLBuilder urlBuilder = getBasePath().addPathSegment("journal")
+        URLBuilder urlBuilder = getBasePath().addPathSegment(JOURNAL)
                 .addPathSegment(sElasticDataType).addPathSegment(MEMBERS)
                 .addQueryParameter(FIELDS, "nodeId,fileCount,maxJournalFilesNumber,maxFileSize,totalDataSize," +
                                              "compactionCount,exhaustiveCompactionCount,currentCollectorLoadFactor");
@@ -1098,7 +1098,7 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("proxy");
+                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(PROXY);
         if (sDomainPartition != null)
             {
             urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
@@ -1151,8 +1151,8 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment("federation").addPathSegment("statistics")
-                .addPathSegment("incoming").addPathSegment("participants");
+                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(FEDERATION).addPathSegment(STATISTICS)
+                .addPathSegment("incoming").addPathSegment(PARTICIPANTS);
 
         if (sDomainPartition != null)
             {
@@ -1180,8 +1180,8 @@ public class HttpRequestSender
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
                 .addPathSegment(encodeServiceName(sServiceName))
-                .addPathSegment("federation").addPathSegment("statistics").addPathSegment("outgoing")
-                .addPathSegment("participants");
+                .addPathSegment(FEDERATION).addPathSegment(STATISTICS).addPathSegment("outgoing")
+                .addPathSegment(PARTICIPANTS);
 
 
         if (sDomainPartition != null)
@@ -1409,24 +1409,24 @@ public class HttpRequestSender
         switch (objectName.getKeyProperty("type"))
             {
             case "CoherenceAdapter":
-                return urlBuilder.addPathSegment("hotcache").addPathSegment(MEMBERS)
-                         .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
+                return urlBuilder.addPathSegment(HOTCACHE).addPathSegment(MEMBERS)
+                         .addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID))
                          .addQueryParameter(LINKS, "");
             case "Node":
                 return urlBuilder.addPathSegment(MEMBERS)
-                        .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
+                        .addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID))
                         .addQueryParameter(LINKS, "");
             case "Journal":
                 String sJournalUrlType = objectName.getKeyProperty("name").equals("FlashJournalRM")
                                          ? "flash" : "ram";
-                return urlBuilder.addPathSegment("journal").addPathSegment(sJournalUrlType).addPathSegment(MEMBERS)
-                        .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"));
+                return urlBuilder.addPathSegment(JOURNAL).addPathSegment(sJournalUrlType).addPathSegment(MEMBERS)
+                        .addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID));
             case "Cache":
                 urlBuilder = urlBuilder.addPathSegment(SERVICES)
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
                         .addPathSegment(CACHES).addPathSegment(getKeyPropertyFromObjName(objectName, "name"))
                         .addPathSegment(MEMBERS)
-                        .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
+                        .addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID))
                         .addQueryParameter("tier", getKeyPropertyFromObjName(objectName, "tier"));
                 String loader = objectName.getKeyProperty("loader");
                 if (loader != null)
@@ -1438,17 +1438,17 @@ public class HttpRequestSender
                 return urlBuilder.addPathSegment(SERVICES)
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
                         .addPathSegment(CACHES).addPathSegment(objectName.getKeyProperty("cache"))
-                        .addPathSegment(MEMBERS).addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"));
+                        .addPathSegment(MEMBERS).addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID));
             case "Service":
                 return urlBuilder.addPathSegment(SERVICES)
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))
-                        .addPathSegment(MEMBERS).addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
+                        .addPathSegment(MEMBERS).addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID))
                         .addQueryParameter(LINKS, "");
             case "ConnectionManager":
                 return urlBuilder.addPathSegment(SERVICES)
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))
-                        .addPathSegment(MEMBERS).addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
-                        .addPathSegment("proxy");
+                        .addPathSegment(MEMBERS).addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID))
+                        .addPathSegment(PROXY);
             case "Cluster":
                 return urlBuilder;
             case "Persistence":
@@ -1457,15 +1457,14 @@ public class HttpRequestSender
                         .addPathSegment(PERSISTENCE);
             case "Platform":
                 urlBuilder = urlBuilder.addPathSegment(MEMBERS)
-                        .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId"))
+                        .addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID))
                         .addPathSegment("platform");
                 String subType = objectName.getKeyProperty("subType");
                 if (subType != null)
                     {
-                    switch (subType)
+                    if ("OperatingSystem".equals(subType))
                         {
-                        case "OperatingSystem":
-                            return urlBuilder.addPathSegment("operatingSystem");
+                        return urlBuilder.addPathSegment("operatingSystem");
                         }
                     }
             }
@@ -1543,7 +1542,7 @@ public class HttpRequestSender
         {
         Set<ObjectName> setObjectNames = new HashSet<>();
         JsonNode rootNode = getResponseJson(streamInput);
-        JsonNode nodeItems = rootNode.get("items");
+        JsonNode nodeItems = rootNode.get(ITEMS);
         if (nodeItems != null && nodeItems.isArray())
             {
             for (int i = 0; i < nodeItems.size(); i++)
@@ -1552,7 +1551,7 @@ public class HttpRequestSender
                 Hashtable<String, String> mapKeysProps = new Hashtable<>();
 
                 nodeItem.fields().forEachRemaining(e -> mapKeysProps.put(e.getKey(), e.getValue().asText()));
-                setObjectNames.add(new ObjectName("Coherence", mapKeysProps));
+                setObjectNames.add(new ObjectName(COHERENCE, mapKeysProps));
                 }
             }
 
@@ -1587,7 +1586,7 @@ public class HttpRequestSender
      */
     private JsonNode getRootNodeForWebLogicServer(JsonNode rootNode)
         {
-        ArrayNode itemsNode = (ArrayNode) rootNode.get("items");
+        ArrayNode itemsNode = (ArrayNode) rootNode.get(ITEMS);
 
         if (itemsNode != null && itemsNode.size() > 0)
             {
@@ -1770,14 +1769,24 @@ public class HttpRequestSender
     /**
      * Various constants.
      */
-    private static final String FIELDS      = "fields";
-    private static final String LINKS       = "links";
-    private static final String SERVICES    = "services";
-    private static final String SERVICE     = "service";
-    private static final String MEMBERS     = "members";
-    private static final String CACHES      = "caches";
-    private static final String PERSISTENCE = "persistence";
-    private static final String SNAPSHOTS   = "snapshots";
+    private static final String FIELDS       = "fields";
+    private static final String LINKS        = "links";
+    private static final String SERVICES     = "services";
+    private static final String SERVICE      = "service";
+    private static final String MEMBERS      = "members";
+    private static final String CACHES       = "caches";
+    private static final String PERSISTENCE  = "persistence";
+    private static final String SNAPSHOTS    = "snapshots";
+    private static final String ITEMS        = "items";
+    private static final String COHERENCE    = "Coherence";
+    private static final String JOURNAL      =  "journal";
+    private static final String NODE_ID      = "nodeId";
+    private static final String HOTCACHE     = "hotcache";
+    private static final String PROXY        = "proxy";
+    private static final String FEDERATION   = "federation";
+    private static final String PARTICIPANTS = "participants";
+    private static final String ARCHIVES     = "archives";
+    private static final String STATISTICS   = "statistics";
 
     /**
      * A trust manager that will trust all certificates. Only used when the preference to ignore SSL certs is chosen.

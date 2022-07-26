@@ -500,12 +500,12 @@ public class CoherenceOptionsPanel
                     sb.append("\nSummary by Service. Total unavailable millis: ")
                       .append(String.format("%,d", nTotalMillis))
                       .append('\n')
-                      .append(String.format(sHeaderFormat, "Service Name", "    Count", "  Min (ms)", "  Max (ms)", " Average (ms)", "    Total (ms)", "   Percent"));
+                      .append(String.format(sHeaderFormat, "Service Name", COUNT, MIN, MAX, AVERAGE, TOTAL, PERCENT));
 
                     mapServiceStats.forEach((k, v) -> sb.append(formatLine(sLineFormat, nTotalMillis, k, v)));
 
                     sb.append("\nSummary by Action (All Services)\n")
-                      .append(String.format(sHeaderFormat, "Action", "    Count", "  Min (ms)", "  Max (ms)", " Average (ms)", "    Total (ms)", "   Percent"));
+                      .append(String.format(sHeaderFormat, "Action", COUNT, MIN, MAX, AVERAGE, TOTAL, PERCENT));
 
                     mapActionStats.forEach((k, v) -> sb.append(formatLine(sLineFormat, nTotalMillis, k, v)));
 
@@ -523,7 +523,7 @@ public class CoherenceOptionsPanel
                                 .collect(Collectors.groupingBy(UnavailabilityMetrics::getAction,
                                         Collectors.summarizingLong(UnavailabilityMetrics::getMillis)));
                         sb.append("Summary by Action\n")
-                          .append(String.format(sHeaderFormat, "Action", "    Count", "  Min (ms)", "  Max (ms)", " Average (ms)", "    Total (ms)", "   Percent"));
+                          .append(String.format(sHeaderFormat, "Action", COUNT, MIN, MAX, AVERAGE, TOTAL, PERCENT));
 
                         mapActionStatsPerService.forEach((k, v) -> sb.append(formatLine(sLineFormat, nServiceTotal, k, v)));
 
@@ -604,6 +604,12 @@ public class CoherenceOptionsPanel
         private static final String OWNER = "Owner:";
         private static final String ACTION = "Action:";
         private static final String UNAVAILABLE_TIME = "UnavailableTime:";
+        private static final String AVERAGE = " Average (ms)";
+        private static final String COUNT = "    Count";
+        private static final String MAX = "  Max (ms)";
+        private static final String MIN = "  Min (ms)";
+        private static final String TOTAL = "    Total (ms)";
+        private static final String PERCENT = "   Percent";
 
         // ----- data members -----------------------------------------------
 
@@ -680,7 +686,7 @@ public class CoherenceOptionsPanel
     /**
      * Controller associated with this panel.
      */
-    private final CoherenceOptionsPanelController f_controller;
+    private final transient CoherenceOptionsPanelController f_controller;
 
     /**
      * Refresh time spinner.

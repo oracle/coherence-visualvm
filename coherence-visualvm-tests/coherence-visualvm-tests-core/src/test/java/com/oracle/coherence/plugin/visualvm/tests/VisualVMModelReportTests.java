@@ -45,7 +45,7 @@ public class VisualVMModelReportTests
         {
         VisualVMModel model = VisualVMModel.getInstance();
 
-        Map<Class,String> mapReportXML = model.getReportXMLMap();
+        Map<Class<?>, String> mapReportXML = model.getReportXMLMap();
         Assert.assertTrue("mapReportXML must not be null", mapReportXML != null);
 
         Assert.assertTrue("mapReportXML size should be 18 but is " + mapReportXML.size(), mapReportXML.size() == 18);

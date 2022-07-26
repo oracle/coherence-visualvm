@@ -188,7 +188,7 @@ public class JMXUtils
     /**
      * A representation of a JMX Field request which can be an Attribute or Key.
      */
-    public static abstract class JMXField
+    protected static abstract class JMXField
         {
         /**
          * Construct a new field request for a given name.
@@ -197,7 +197,7 @@ public class JMXUtils
          */
         public JMXField(String sName)
             {
-            this.sName = sName;
+            this.m_sName = sName;
             }
 
         /**
@@ -207,10 +207,10 @@ public class JMXUtils
          */
         public String getName()
             {
-            return this.sName;
+            return this.m_sName;
             }
 
-        private String sName;
+        private String m_sName;
         }
 
     /**

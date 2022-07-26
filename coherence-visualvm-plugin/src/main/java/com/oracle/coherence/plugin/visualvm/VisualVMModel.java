@@ -69,6 +69,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -103,6 +104,7 @@ public class VisualVMModel
      */
     public VisualVMModel()
         {
+        // no-op
         }
 
     // ---- helper methods --------------------------------------------------
@@ -127,7 +129,7 @@ public class VisualVMModel
         m_ldtLastUpdate = System.currentTimeMillis() - m_nRefreshTime - 1L;
 
         // populate mapCollectedData which contains an entry for each type
-        m_mapCollectedData = new HashMap<DataType, List<Entry<Object, Data>>>();
+        m_mapCollectedData = new EnumMap<DataType, List<Entry<Object, Data>>>(DataType.class);
 
         for (DataType type : DataType.values())
             {
@@ -231,7 +233,7 @@ public class VisualVMModel
                     {
                     if (m_fLogJMXQueryTimes)
                         {
-                        LOGGER.log(Level.INFO, "Starting querying statistics for {0}", type.toString());
+                        LOGGER.log(Level.INFO, "Starting querying statistics for {0}", type);
                         }
 
                     long ldtCollectionStart = System.currentTimeMillis();
@@ -536,7 +538,7 @@ public class VisualVMModel
      * @return  a String containing the report XML
      */
     private String getReportXML(String sReport) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         InputStream in = this.getClass().getClassLoader().getResourceAsStream(sReport);
 
         if (in == null)
@@ -941,7 +943,7 @@ public class VisualVMModel
         if (m_fIsCoherenceExtendConfigured == null)
             {
             m_fIsCoherenceExtendConfigured = m_mapCollectedData.get(DataType.PROXY) != null
-                                             && m_mapCollectedData.get(DataType.PROXY).size() != 0;
+                                             && !m_mapCollectedData.get(DataType.PROXY).isEmpty();
             }
 
         return m_fIsCoherenceExtendConfigured;
@@ -955,7 +957,7 @@ public class VisualVMModel
     public boolean isCoherenceWebConfigured()
         {
         return m_mapCollectedData.get(DataType.HTTP_SESSION) != null
-               && m_mapCollectedData.get(DataType.HTTP_SESSION).size() != 0;
+               && !m_mapCollectedData.get(DataType.HTTP_SESSION).isEmpty();
         }
 
     /**
@@ -966,7 +968,7 @@ public class VisualVMModel
     public boolean isHotcacheConfigured()
         {
         return m_mapCollectedData.get(DataType.HOTCACHE) != null
-               && m_mapCollectedData.get(DataType.HOTCACHE).size() != 0;
+               && !m_mapCollectedData.get(DataType.HOTCACHE).isEmpty();
         }
 
     /**
@@ -977,7 +979,7 @@ public class VisualVMModel
     public boolean isPersistenceConfigured()
         {
         return m_mapCollectedData.get(DataType.PERSISTENCE) != null
-               && m_mapCollectedData.get(DataType.PERSISTENCE).size() != 0;
+               && !m_mapCollectedData.get(DataType.PERSISTENCE).isEmpty();
         }
 
     /**
@@ -988,7 +990,7 @@ public class VisualVMModel
     public boolean isTopicsConfigured()
         {
         return m_mapCollectedData.get(DataType.TOPICS_DETAIL) != null
-               && m_mapCollectedData.get(DataType.TOPICS_DETAIL).size() != 0;
+               && !m_mapCollectedData.get(DataType.TOPICS_DETAIL).isEmpty();
        }
 
     /**
@@ -1110,14 +1112,13 @@ public class VisualVMModel
      *
      * @return an instance of the data retriever class for executing JMX calls on
      */
-    public DataRetriever getDataRetrieverInstance(Class clazz)
+    public DataRetriever getDataRetrieverInstance(Class<?> clazz)
         {
         DataRetriever retriever = f_mapDataRetrievers.get(clazz);
 
         if (retriever == null)
             {
-            throw new IllegalArgumentException(Localization.getLocalText("ERR_instance",
-                new String[] {clazz.getCanonicalName()}));
+            throw new IllegalArgumentException(Localization.getLocalText("ERR_instance", clazz.getCanonicalName()));
             }
 
         return retriever;
@@ -1225,7 +1226,7 @@ public class VisualVMModel
      *
      * @return the report XML for a given class
      */
-    public Map<Class, String> getReportXMLMap()
+    public Map<Class<?>, String> getReportXMLMap()
         {
         return this.f_mapReportXML;
         }
@@ -1269,7 +1270,7 @@ public class VisualVMModel
         GRPC_PROXY(GrpcProxyData.class, GRPC_PROXY_LABELS),
         HEALTH(HealthData.class, HEALTH_LABELS);
 
-        private DataType(Class clz, String[] asMeta)
+        private DataType(Class<?> clz, String[] asMeta)
             {
             clazz      = clz;
             asMetadata = asMeta;
@@ -1280,7 +1281,7 @@ public class VisualVMModel
          *
          * @return the class for this enum
          */
-        public Class getClassName()
+        public Class<?> getClassName()
             {
             return clazz;
             }
@@ -1298,12 +1299,12 @@ public class VisualVMModel
         /**
          * The {@link Class} associated with this enum.
          */
-        private Class clazz;
+        private final Class<?> clazz;
 
         /**
          * The column name associated with this enum.
          */
-        private String[] asMetadata;
+        private final String[] asMetadata;
         }
 
     /**
@@ -1313,13 +1314,21 @@ public class VisualVMModel
     private static final String[] CLUSTER_LABELS = new String[] {"Cluster Name", "License Mode", "Version",
         "Departure Count", "Cluster Size"};
 
+    private static final String LBL_NAME         = "LBL_service_name";
+    private static final String LBL_MEMBERS      = "LBL_members";
+    private static final String LBL_NODE_ID      = "LBL_node_id";
+    private static final String LBL_MEMORY_BYTES = "LBL_memory_bytes";
+    private static final String LBL_SIZE         = "LBL_size";
+    private static final String LBL_CACHE_HITS   = "LBL_cache_hits";
+    private static final String LBL_CACHE_MISSES = "LBL_cache_misses";
+
     /**
      * Labels for service table.
      */
     private static final String[] SERVICE_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_service_name"), Localization.getLocalText("LBL_status_ha"),
-        Localization.getLocalText("LBL_members"), Localization.getLocalText("LBL_storage_enabled"),
+        Localization.getLocalText(LBL_NAME), Localization.getLocalText("LBL_status_ha"),
+        Localization.getLocalText(LBL_MEMBERS), Localization.getLocalText("LBL_storage_enabled"),
         Localization.getLocalText("LBL_partitions"), Localization.getLocalText("LBL_endangered"),
         Localization.getLocalText("LBL_vulnerable"), Localization.getLocalText("LBL_unbalanced"),
         Localization.getLocalText("LBL_pending")
@@ -1330,7 +1339,7 @@ public class VisualVMModel
      */
     private static final String[] SERVICE_DETAIL_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_node_id"), Localization.getLocalText("LBL_threads"),
+        Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText("LBL_threads"),
         Localization.getLocalText("LBL_idle_threads"), Localization.getLocalText("LBL_thread_util"),
         Localization.getLocalText("LBL_task_average"), Localization.getLocalText("LBL_task_backlog"),
         Localization.getLocalText("LBL_request_average")
@@ -1340,7 +1349,7 @@ public class VisualVMModel
      * Labels for cache table.
      */
     private static final String[] TOPICS_LABELS = new String[] {Localization.getLocalText("LBL_topic_name"),
-        Localization.getLocalText("LBL_topic_size"), Localization.getLocalText("LBL_memory_bytes"),
+        Localization.getLocalText("LBL_topic_size"), Localization.getLocalText(LBL_MEMORY_BYTES),
         Localization.getLocalText("LBL_memory_mb"), Localization.getLocalText("LBL_average_object_size"),
         Localization.getLocalText("LBL_publisher_sends"), Localization.getLocalText("LBL_subscriber_receives")
     };
@@ -1349,7 +1358,7 @@ public class VisualVMModel
      * Labels for topics table.
      */
     private static final String[] CACHE_LABELS = new String[] {Localization.getLocalText("LBL_service_cache_name"),
-        Localization.getLocalText("LBL_size"), Localization.getLocalText("LBL_memory_bytes"),
+        Localization.getLocalText(LBL_SIZE), Localization.getLocalText(LBL_MEMORY_BYTES),
         Localization.getLocalText("LBL_memory_mb"), Localization.getLocalText("LBL_average_object_size"),
         Localization.getLocalText("LBL_unit_calculator")
     };
@@ -1359,10 +1368,10 @@ public class VisualVMModel
      */
     private static final String[] CACHE_DETAIL_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_node_id"), Localization.getLocalText("LBL_size"),
-        Localization.getLocalText("LBL_memory_bytes"), Localization.getLocalText("LBL_total_gets"),
-        Localization.getLocalText("LBL_total_puts"), Localization.getLocalText("LBL_cache_hits"),
-        Localization.getLocalText("LBL_cache_misses"), Localization.getLocalText("LBL_hit_probability")
+        Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText(LBL_SIZE),
+        Localization.getLocalText(LBL_MEMORY_BYTES), Localization.getLocalText("LBL_total_gets"),
+        Localization.getLocalText("LBL_total_puts"), Localization.getLocalText(LBL_CACHE_HITS),
+        Localization.getLocalText(LBL_CACHE_MISSES), Localization.getLocalText("LBL_hit_probability")
         };
 
     /**
@@ -1370,9 +1379,9 @@ public class VisualVMModel
      */
     private static final String[] CACHE_FRONT_DETAIL_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_node_id"), Localization.getLocalText("LBL_size"),
+        Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText(LBL_SIZE),
         Localization.getLocalText("LBL_total_gets"), Localization.getLocalText("LBL_total_puts"),
-        Localization.getLocalText("LBL_cache_hits"), Localization.getLocalText("LBL_cache_misses"),
+        Localization.getLocalText(LBL_CACHE_HITS), Localization.getLocalText(LBL_CACHE_MISSES),
         Localization.getLocalText("LBL_hit_probability")
         };
 
@@ -1381,7 +1390,7 @@ public class VisualVMModel
      */
     private static final String[] CACHE_STORAGE_MANAGER_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_node_id"), Localization.getLocalText("LBL_locks_granted"),
+        Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText("LBL_locks_granted"),
         Localization.getLocalText("LBL_locks_pending"), Localization.getLocalText("LBL_listener_reg"),
         Localization.getLocalText("LBL_max_query_millis"), Localization.getLocalText("LBL_max_query_desc"),
         Localization.getLocalText("LBL_non_opt_avge"), Localization.getLocalText("LBL_opt_avge"),
@@ -1393,7 +1402,7 @@ public class VisualVMModel
      */
     private static final String[] MEMBER_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_node_id"), Localization.getLocalText("LBL_unicast_address"),
+        Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText("LBL_unicast_address"),
         Localization.getLocalText("LBL_port"), Localization.getLocalText("LBL_role"),
         Localization.getLocalText("LBL_publisher_rate"), Localization.getLocalText("LBL_receiver_rate"),
         Localization.getLocalText("LBL_send_q"), Localization.getLocalText("LBL_max_memory"),
@@ -1416,8 +1425,8 @@ public class VisualVMModel
      */
     private static final String[] PROXY_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_ip_port"), Localization.getLocalText("LBL_service_name"),
-        Localization.getLocalText("LBL_node_id"), Localization.getLocalText("LBL_connection_count"),
+        Localization.getLocalText("LBL_ip_port"), Localization.getLocalText(LBL_NAME),
+        Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText("LBL_connection_count"),
         Localization.getLocalText("LBL_outgoing_msg_backlog"), Localization.getLocalText("LBL_total_bytes_rcv"),
         Localization.getLocalText("LBL_total_bytes_sent"), Localization.getLocalText("LBL_total_msg_rcv"),
         Localization.getLocalText("LBL_total_msg_sent")
@@ -1458,7 +1467,7 @@ public class VisualVMModel
      */
     private static final String[] GRPC_PROXY_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_node_id"), Localization.getLocalText("LBL_successful_requests"),
+        Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText("LBL_successful_requests"),
         Localization.getLocalText("LBL_error_requests"), Localization.getLocalText("LBL_responses_sent"),
         Localization.getLocalText("LBL_messages_received"), Localization.getLocalText("LBL_request_duration_mean"),
         Localization.getLocalText("LBL_message_duration_mean")
@@ -1470,7 +1479,7 @@ public class VisualVMModel
     private static final String[] HEALTH_LABELS = new String[]
         {
         Localization.getLocalText("LBL_health_name"), Localization.getLocalText("LBL_health_subtype"),
-        Localization.getLocalText("LBL_members"), Localization.getLocalText("LBL_started"),
+        Localization.getLocalText(LBL_MEMBERS), Localization.getLocalText("LBL_started"),
         Localization.getLocalText("LBL_live"), Localization.getLocalText("LBL_ready"),
         Localization.getLocalText("LBL_safe"), Localization.getLocalText("LBL_health_class")
         };
@@ -1480,7 +1489,7 @@ public class VisualVMModel
      */
     private static final String[] PERSISTENCE_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_service_name"), Localization.getLocalText("LBL_persistence_mode"),
+        Localization.getLocalText(LBL_NAME), Localization.getLocalText("LBL_persistence_mode"),
         Localization.getLocalText("LBL_active_space_bytes"), Localization.getLocalText("LBL_active_space_mb"),
         Localization.getLocalText("LBL_backup_space_mb"), Localization.getLocalText("LBL_avge_persistence"),
         Localization.getLocalText("LBL_max_persistence"), Localization.getLocalText("LBL_snapshot_count"),
@@ -1492,7 +1501,7 @@ public class VisualVMModel
      */
     private static final String[] PERSISTENCE_NOTIFICATIONS_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_sequence"), Localization.getLocalText("LBL_service_name"),
+        Localization.getLocalText("LBL_sequence"), Localization.getLocalText(LBL_NAME),
         Localization.getLocalText("LBL_operation"), Localization.getLocalText("LBL_start_time"),
         Localization.getLocalText("LBL_end_time"), Localization.getLocalText("LBL_duration"),
         Localization.getLocalText("LBL_message")
@@ -1516,7 +1525,7 @@ public class VisualVMModel
      */
     private static final String[] FEDERATION_OVERALL_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_service_name"), Localization.getLocalText("LBL_participant"),
+        Localization.getLocalText(LBL_NAME), Localization.getLocalText("LBL_participant"),
         Localization.getLocalText("LBL_status"), Localization.getLocalText("LBL_total_bytes_sent_sec"),
         Localization.getLocalText("LBL_total_msgs_sent_sec"), Localization.getLocalText("LBL_total_bytes_received_sec"),
         Localization.getLocalText("LBL_total_msgs_received_sec")
@@ -1527,7 +1536,7 @@ public class VisualVMModel
      */
     private static final String[] FEDERATION_DESTINATION_DETAILS_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_node_id"), Localization.getLocalText("LBL_state"),
+        Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText("LBL_state"),
         Localization.getLocalText("LBL_current_bandwidth"), Localization.getLocalText("LBL_total_bytes_sent"),
         Localization.getLocalText("LBL_total_entries_sent"), Localization.getLocalText("LBL_total_records_sent"),
         Localization.getLocalText("LBL_total_msg_sent"), Localization.getLocalText("LBL_total_msg_unacked")
@@ -1538,7 +1547,7 @@ public class VisualVMModel
      */
     private static final String[] FEDERATION_ORIGIN_DETAILS_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_node_id"), Localization.getLocalText("LBL_total_bytes_received"),
+        Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText("LBL_total_bytes_received"),
         Localization.getLocalText("LBL_total_records_received"),Localization.getLocalText("LBL_total_entries_received"),
         Localization.getLocalText("LBL_total_msg_received"), Localization.getLocalText("LBL_total_msg_unacked"),
         };
@@ -1548,7 +1557,7 @@ public class VisualVMModel
      */
     private static final String[] ELASTIC_DATA_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_node_id"), Localization.getLocalText("LBL_file_count"),
+        Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText("LBL_file_count"),
         Localization.getLocalText("LBL_max_journal_files"), Localization.getLocalText("LBL_max_file_size"),
         Localization.getLocalText("LBL_total_committed_bytes"), Localization.getLocalText("LBL_max_committed_bytes"),
         Localization.getLocalText("LBL_total_data_size"), Localization.getLocalText("LBL_compaction_count"),
@@ -1573,7 +1582,7 @@ public class VisualVMModel
         {
         Localization.getLocalText("LBL_config_cache"), Localization.getLocalText("LBL_total_puts"),
         Localization.getLocalText("LBL_total_gets"), Localization.getLocalText("LBL_removals"),
-        Localization.getLocalText("LBL_cache_hits"), Localization.getLocalText("LBL_cache_misses"),
+        Localization.getLocalText(LBL_CACHE_HITS), Localization.getLocalText(LBL_CACHE_MISSES),
         Localization.getLocalText("LBL_evictions"), Localization.getLocalText("GRPH_average_get_time"),
         Localization.getLocalText("GRPH_average_put_time"), Localization.getLocalText("GRPH_average_remove_time"),
         Localization.getLocalText("LBL_hit_percentage"), Localization.getLocalText("LBL_miss_percentage")
@@ -1584,8 +1593,8 @@ public class VisualVMModel
      */
     private static final String[] HTTP_PROXY_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_service_name"), Localization.getLocalText("LBL_http_server_type"),
-        Localization.getLocalText("LBL_members"),
+        Localization.getLocalText(LBL_NAME), Localization.getLocalText("LBL_http_server_type"),
+        Localization.getLocalText(LBL_MEMBERS),
         Localization.getLocalText("LBL_total_request_count"), Localization.getLocalText("LBL_total_error_count"),
         Localization.getLocalText("LBL_avg_request_per_second"), Localization.getLocalText("LBL_avg_request_time")
         };
@@ -1595,7 +1604,7 @@ public class VisualVMModel
      */
     private static final String[] HTTP_PROXY_DETAIL_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_node_id"), Localization.getLocalText("LBL_ip_port"),
+        Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText("LBL_ip_port"),
         Localization.getLocalText("LBL_avg_request_time"), Localization.getLocalText("LBL_avg_request_per_second"),
         Localization.getLocalText("LBL_total_request_count"), Localization.getLocalText("LBL_total_error_count")
         };
@@ -1680,7 +1689,7 @@ public class VisualVMModel
     /**
      * a {@link Map} of report Class and their loaded XML.
      */
-    private final Map<Class, String> f_mapReportXML = new HashMap<>();
+    private final Map<Class<?>, String> f_mapReportXML = new HashMap<>();
 
     /**
      * The selected service for detailed service data.

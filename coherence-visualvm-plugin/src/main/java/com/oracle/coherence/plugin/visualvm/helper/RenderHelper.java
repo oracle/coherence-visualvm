@@ -341,7 +341,7 @@ public class RenderHelper
 
                     renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-                    String text = PERCENT_FORMAT.format((Number) value);
+                    String text = PERCENT_FORMAT.format(value);
 
                     renderedLabel.setText(text);
                     }
@@ -360,7 +360,6 @@ public class RenderHelper
      * Render for a standard Integer.
      *
      */
-    @SuppressWarnings("serial")
     public static class IntegerRenderer
             extends DefaultTableCellRenderer
         {
@@ -388,7 +387,7 @@ public class RenderHelper
 
                 label.setHorizontalAlignment(SwingConstants.RIGHT);
 
-                String text = INTEGER_FORMAT.format((Number) value);
+                String text = INTEGER_FORMAT.format(value);
 
                 label.setText(text);
                 }
@@ -547,7 +546,7 @@ public class RenderHelper
             boolean hasFocus, int row, int column)
             {
             Component c      = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            float     fValue = Float.valueOf(getText());
+            float     fValue = Float.parseFloat(getText());
 
             if (fValue <= 0.900)
                 {
@@ -575,7 +574,7 @@ public class RenderHelper
 
                 renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-                String text = MILLIS_FORMAT.format((Number) value);
+                String text = MILLIS_FORMAT.format(value);
 
                 renderedLabel.setText(text);
                 }
@@ -601,7 +600,7 @@ public class RenderHelper
 
             if (!"".equals(getText()) && getText() != null)
                 {
-                float fValue = Float.valueOf(getText());
+                float fValue = Float.parseFloat(getText());
 
                 if (fValue >= 0.90)
                     {
@@ -626,8 +625,7 @@ public class RenderHelper
 
                     renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-                    String text = PERCENT_FORMAT.format((Number) value);
-
+                    String text = PERCENT_FORMAT.format(value);
                     renderedLabel.setText(text);
                     }
                 }
@@ -642,9 +640,8 @@ public class RenderHelper
         }
 
     /**
-     * Render for node state attrubute in federation tab.
+     * Render for node state attribute in federation tab.
      */
-    @SuppressWarnings("serial")
     public static class FedNodeStateRenderer
             extends DefaultTableCellRenderer
         {
@@ -758,22 +755,22 @@ public class RenderHelper
     /**
      * Format for millis renderer.
      */
-    public static NumberFormat MILLIS_FORMAT = new DecimalFormat("#,##0.0000");
+    public static final NumberFormat MILLIS_FORMAT = new DecimalFormat("#,##0.0000");
 
     /**
      * Format for load average renderer.
      */
-    public static NumberFormat LOAD_AVERAGE_FORMAT = new DecimalFormat("#,##0.00");
+    public static final NumberFormat LOAD_AVERAGE_FORMAT = new DecimalFormat("#,##0.00");
 
     /**
      * Format for % renderer.
      */
-    public static NumberFormat PERCENT_FORMAT = new DecimalFormat("##0%");
+    public static final NumberFormat PERCENT_FORMAT = new DecimalFormat("##0%");
 
     /**
      * Format for integer renderer.
      */
-    public static NumberFormat INTEGER_FORMAT = new DecimalFormat("###,###,###,###,###");
+    public static final NumberFormat INTEGER_FORMAT = new DecimalFormat("###,###,###,###,###");
 
     /**
      * Node safe tool tip.
