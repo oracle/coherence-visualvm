@@ -165,23 +165,35 @@
       </plugin>
 
       <plugin>
-        <groupId>org.codehaus.gmaven</groupId>
-        <artifactId>gmaven-plugin</artifactId>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
         <version>${maven.gmaven.plugin.version}</version>
         <executions>
           <execution>
             <id>add-dynamic-properties</id>
-            <phase>initialize</phase>
+            <phase>validate</phase>
             <goals>
               <goal>execute</goal>
             </goals>
             <configuration>
-              <source>
-                project.properties.setProperty("official.version", ("${project.version}").replaceAll("-SNAPSHOT", ""))
-              </source>
+              <scripts>
+                <script><![CDATA[
+                    props = project.properties
+                    props.setProperty("official.version", ("${project.version}").replaceAll("-SNAPSHOT", ""))
+                    ]]>
+                </script>
+              </scripts>
             </configuration>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy.version}</version>
+            <type>pom</type>
+          </dependency>
+        </dependencies>
       </plugin>
 
       <plugin>
