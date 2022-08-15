@@ -1,5 +1,5 @@
 #
-#  Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+#  Copyright (c) 2022 Oracle and/or its affiliates. All rights reserved.
 #  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 #
 #  This code is free software; you can redistribute it and/or modify it
@@ -24,10 +24,10 @@
 #
 
 # ---------------------------------------------------------------------------
-# Coherence VisualVM Plugin GitHub Actions CI build against main
+# Coherence VisualVM Plugin GitHub Actions CI build for ce-14.1.1.0.X
 # ---------------------------------------------------------------------------
 
-name: Java CI - Snapshots
+name: Java CI - Snapshots 14.1.1.0.X
 
 on:
   push:
@@ -45,7 +45,7 @@ jobs:
       fail-fast: false
       matrix:
         branch:
-          - main
+          - v14.1.1.0
 
     steps:
     - name: Checkout
@@ -58,10 +58,10 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2-snapshots
 
-    - name: Set up JDK 17 for Build
+    - name: Set up JDK 11 for Build
       uses: actions/setup-java@v1
       with:
-        java-version: 17
+        java-version: 11
 
     - name: Print Versions
       run: mvn -version && ant -version
@@ -77,8 +77,9 @@ jobs:
         CLONE_DIR=coherence-$COH_BRANCH
         cd /tmp
         git clone https://github.com/oracle/coherence.git $CLONE_DIR
-        cd $CLONE_DIR/prj
-        make all
+        cd $CLONE_DIR
+        git checkout $COH_BRANCH
+        mvn --file prj/pom.xml --batch-mode -e -DskipTests clean install
         cd $DIR
 
     - name: Build Plugin
