@@ -265,7 +265,7 @@ public abstract class AbstractVisualVMTest
                                                             File fileSnapshotDir, File fileTrashDir,
                                                             int nFederationPortA, int nFederationPortB)
         {
-        String        hostName      = LocalPlatform.get().getLoopbackAddress().getHostAddress();
+        String        hostName      = "127.0.0.1";
         OptionsByType optionsByType = OptionsByType.empty();
 
         optionsByType.addAll(JMXManagementMode.ALL,
