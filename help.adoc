@@ -28,10 +28,13 @@ image::https://oracle.github.io/coherence/assets/images/logo-red.png[Coherence C
 
 This page shows help for the various tables in the Coherence VisualVM Plugin.
 
+For the main Coherence VisualVM Plugin documentation please see https://github.com/oracle/coherence-visualvm/[here].
+
 == Contents
 
-* <<MachineTableModel, Machines>>
-* <<MemberTableModel, Members>>
+* <<MachineTableModel, Machines Table>>
+* <<MemberTableModel, Members Table>>
+* <<ServiceTableModel, Services Table>>
 
 
 Please see the https://www.oracle.com/pls/topic/lookup?ctx=en/middleware/standalone/coherence/14.1.1.2206&id=COHMG5442[Coherence MBeans Reference] for detailed information on all the Coherence MBeans and attributes.
