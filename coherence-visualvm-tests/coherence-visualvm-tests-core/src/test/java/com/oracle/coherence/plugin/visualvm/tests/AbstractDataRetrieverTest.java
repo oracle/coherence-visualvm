@@ -724,7 +724,7 @@ public abstract class AbstractDataRetrieverTest
         validateColumn(ServiceData.PARTITION_COUNT, entry, PARTITION_COUNT);
         validateColumn(ServiceData.PARTITIONS_ENDANGERED, entry, 0);
         validateColumn(ServiceData.PARTITIONS_UNBALANCED, entry, 0);
-        validateColumn(ServiceData.PARTITIONS_PENDING, entry, 0);
+        validateColumn(ServiceData.REQUESTS_PENDING, entry, 0);
         validateColumn(ServiceData.PARTITIONS_VULNERABLE, entry, PARTITION_COUNT);
         validateColumn(ServiceData.MEMBERS, entry, 2);
         validateColumn(ServiceData.STORAGE_MEMBERS, entry, 2);

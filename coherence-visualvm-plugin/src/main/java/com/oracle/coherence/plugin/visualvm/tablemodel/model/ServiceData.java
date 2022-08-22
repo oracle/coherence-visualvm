@@ -65,7 +65,7 @@ public class ServiceData
      */
     public ServiceData()
         {
-        super(PARTITIONS_PENDING + 1);
+        super(REQUESTS_PENDING + 1);
         }
 
     // ----- DataRetriever methods ------------------------------------------
@@ -145,7 +145,7 @@ public class ServiceData
                         data.setColumn(ServiceData.PARTITIONS_VULNERABLE,
                                 Integer.parseInt(getAttributeValueAsString(listAttr, ATTR_PART_VULNERABLE)));
                         data.setColumn(ServiceData.STATUS_HA, (String) getAttributeValueAsString(listAttr, ATTR_STATUS_HA));
-                        data.setColumn(ServiceData.PARTITIONS_PENDING,
+                        data.setColumn(ServiceData.REQUESTS_PENDING,
                                        (int) (Long.parseLong(getAttributeValueAsString(listAttr, ATTR_REQ_PENDING))));
                         data.setColumn(ServiceData.PARTITION_COUNT,
                                 Integer.parseInt(getAttributeValueAsString(listAttr, ATTR_PARTITIONS_ALL)));
@@ -202,7 +202,7 @@ public class ServiceData
         data.setColumn(ServiceData.PARTITIONS_UNBALANCED, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
         data.setColumn(ServiceData.STORAGE_MEMBERS, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
         data.setColumn(ServiceData.MEMBERS, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
-        data.setColumn(ServiceData.PARTITIONS_PENDING, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(ServiceData.REQUESTS_PENDING, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
 
         // record the list of distributed & federated caches
         if (isDistributed((String) aoColumns[nStart]))
@@ -282,7 +282,7 @@ public class ServiceData
                     data.setColumn(ServiceData.PARTITIONS_ENDANGERED, serviceDetails.get("partitionsEndangered").asInt());
                     data.setColumn(ServiceData.PARTITIONS_VULNERABLE, serviceDetails.get("partitionsVulnerable").asInt());
                     data.setColumn(ServiceData.PARTITIONS_UNBALANCED, serviceDetails.get("partitionsUnbalanced").asInt());
-                    data.setColumn(ServiceData.PARTITIONS_PENDING, serviceDetails.get("requestPendingCount").asInt());
+                    data.setColumn(ServiceData.REQUESTS_PENDING, serviceDetails.get("requestPendingCount").asInt());
 
                     data.setColumn(ServiceData.STORAGE_MEMBERS, serviceDetails.get("storageEnabledCount").asInt());
                     }
@@ -293,7 +293,7 @@ public class ServiceData
                     data.setColumn(ServiceData.PARTITIONS_ENDANGERED, 0);
                     data.setColumn(ServiceData.PARTITIONS_VULNERABLE, 0);
                     data.setColumn(ServiceData.PARTITIONS_UNBALANCED, 0);
-                    data.setColumn(ServiceData.PARTITIONS_PENDING, 0);
+                    data.setColumn(ServiceData.REQUESTS_PENDING, 0);
                     data.setColumn(ServiceData.PARTITION_COUNT, 0);
                     }
 
@@ -369,8 +369,7 @@ public class ServiceData
     /**
      * Array index for partitions pending.
      */
-
-    public static final int PARTITIONS_PENDING = 8;
+    public static final int REQUESTS_PENDING = 8;
 
     /**
      * The logger object to use.

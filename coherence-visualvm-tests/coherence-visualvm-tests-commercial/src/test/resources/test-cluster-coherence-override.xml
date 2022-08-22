@@ -49,7 +49,7 @@
                 <remote-addresses>
                     <socket-address>
                         <address system-property="loopbackhost">127.0.0.1</address>
-                        <port system-property="test.federation.port.clusterA">11100</port>
+                        <port>7574</port>
                     </socket-address>
                 </remote-addresses>
             </participant>
@@ -58,7 +58,7 @@
                 <remote-addresses>
                     <socket-address>
                         <address system-property="loopbackhost">127.0.0.1</address>
-                        <port system-property="test.federation.port.clusterB">11200</port>
+                        <port>7574</port>
                     </socket-address>
                 </remote-addresses>
             </participant>
