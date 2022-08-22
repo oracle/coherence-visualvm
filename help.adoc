@@ -24,9 +24,17 @@ questions.
 ///////////////////////////////////////////////////////////////////////////////
 = Table Help for VisualVM Plugin
 
+image::https://oracle.github.io/coherence/assets/images/logo-red.png[Coherence CE]
+
 This page shows help for the various tables in the Coherence VisualVM Plugin.
 
-Please see the https://www.oracle.com/pls/topic/lookup?ctx=en/middleware/standalone/coherence/14.1.1.2206&id=COHMG5442[Coherence MBeans Reference] for detailed information on the following attributes.
+== Contents
+
+* <<MachineTableModel, Machines>>
+* <<MemberTableModel, Members>>
+
+
+Please see the https://www.oracle.com/pls/topic/lookup?ctx=en/middleware/standalone/coherence/14.1.1.2206&id=COHMG5442[Coherence MBeans Reference] for detailed information on all the Coherence MBeans and attributes.
 
 [#MachineTableModel]
 === Machines Table
@@ -37,7 +45,7 @@ NOTE: All attributes are from `Coherence:type=Platform,Domain=java.lang,subType=
 
 .Machines Table
 !===
-|Column | Comment
+|**Column** | **Source / Comment**
 |Machine Name| UnicastAddress
 |Core Count | AvailableProcessors
 |Load Average | SystemLoadAverage or SystemCpuLoad (Windows)
@@ -57,7 +65,7 @@ NOTE: All attributes are from `NodeMBean` (`Coherence:type=Node`).
 
 .Members Table
 !===
-|Column | Comment
+|**Column** | **Source / Comment**
 |Node Id| nodeId (Key)
 |Unicast Address | UnicastAddress
 |Port | UnicastPort

@@ -28,6 +28,7 @@ package com.oracle.coherence.plugin.visualvm.panel.util;
 import com.oracle.coherence.plugin.visualvm.Localization;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -36,8 +37,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import java.net.URI;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.oracle.coherence.plugin.visualvm.tablemodel.MachineTableModel;
+import com.oracle.coherence.plugin.visualvm.tablemodel.MemberTableModel;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -111,10 +120,13 @@ public class ExportableJTable
             {
             m_menu = new JPopupMenu("Table Options:");
 
-            m_menuItem = new JMenuItem(Localization.getLocalText("LBL_save_data_as"));
+            m_menuItemSaveAs = new JMenuItem(Localization.getLocalText("LBL_save_data_as"));
+            m_menuItemHelp = new JMenuItem(Localization.getLocalText("LBL_show_help"));
 
-            m_menuItem.addActionListener(this);
-            m_menu.add(m_menuItem);
+            m_menuItemSaveAs.addActionListener(this);
+            m_menu.add(m_menuItemSaveAs);
+            m_menuItemHelp.addActionListener(this);
+            m_menu.add(m_menuItemHelp);
 
             // add additional menu options
             if (m_menuOption != null)
@@ -151,17 +163,40 @@ public class ExportableJTable
      *
      * @param event  the event
      */
+    @SuppressWarnings("unchecked")
     public void actionPerformed(ActionEvent event)
         {
         JComponent src = (JComponent) event.getSource();
 
-        if (src.equals(m_menuItem))
+        if (src.equals(m_menuItemSaveAs))
             {
             int result = fileChooser.showSaveDialog(this);
 
             if (result == JFileChooser.APPROVE_OPTION)
                 {
                 saveTableDataToFile(fileChooser.getSelectedFile());
+                }
+            }
+        else if (src.equals(m_menuItemHelp))
+            {
+            String sSimpleName = dataModel.getClass().getSimpleName();
+            if (SET_HELP.contains(dataModel.getClass()))
+                {
+                try
+                    {
+                    if (Desktop.isDesktopSupported())
+                        {
+                        Desktop.getDesktop().browse(new URI(BASE_URL + sSimpleName));
+                        }
+                    }
+                catch (Exception ee)
+                    {
+                    JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_unable_to_open"));
+                    }
+                }
+            else
+                {
+                JOptionPane.showMessageDialog(null, Localization.getLocalText("HELP_none", dataModel.getClass().getSimpleName()));
                 }
             }
         }
@@ -410,12 +445,17 @@ public class ExportableJTable
 
     // ----- constants ------------------------------------------------------
 
+    private static final Set<Class> SET_HELP =
+            new HashSet<>(Arrays.asList(MachineTableModel.class, MemberTableModel.class));
+
+    private static final String BASE_URL = "https://github.com/oracle/coherence-visualvm/blob/jdk17-test/help.adoc#";
+
     private static final long serialVersionUID = 5999795232769091368L;
 
     /**
      * The line separator for the platform this process is running on.
      */
-    private static String LF = System.getProperty("line.separator");
+    private static final String LF = System.getProperty("line.separator");
 
     /**
      * File chooser to select a file.
@@ -448,7 +488,12 @@ public class ExportableJTable
     /**
      * Menu item for "Save As".
      */
-    private JMenuItem m_menuItem;
+    private JMenuItem m_menuItemSaveAs;
+
+    /**
+     * Menu item for "Help".
+     */
+    private JMenuItem m_menuItemHelp;
 
     /**
      * The row selection listener.
