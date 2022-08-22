@@ -41,9 +41,8 @@ Please see the https://www.oracle.com/pls/topic/lookup?ctx=en/middleware/standal
 
 This table shows information regarding the machines that are part of a Coherence Cluster.
 
-NOTE: All attributes are from `Coherence:type=Platform,Domain=java.lang,subType=OperatingSystem` except for `Machine Name` which is from `NodeMBean` (`Coherence:type=Node`).
+All attributes are from `Coherence:type=Platform,Domain=java.lang,subType=OperatingSystem` except for `Machine Name` which is from `NodeMBean` (`Coherence:type=Node`).
 
-.Machines Table
 !===
 |**Column** | **Source / Comment**
 |Machine Name| UnicastAddress
@@ -61,9 +60,8 @@ See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manag
 
 This table shows information regarding all the members in a Coherence cluster.
 
-NOTE: All attributes are from `NodeMBean` (`Coherence:type=Node`).
+All attributes are from `NodeMBean` (`Coherence:type=Node,nodeId=n`).
 
-.Members Table
 !===
 |**Column** | **Source / Comment**
 |Node Id| nodeId (Key)
@@ -79,3 +77,26 @@ NOTE: All attributes are from `NodeMBean` (`Coherence:type=Node`).
 !===
 
 See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-0AB8710B-2A1D-432D-AFBF-8E73B8230D51[ClusterNodeMBean] documentation for more information.
+
+[#ServiceTableModel]
+=== Services Table
+
+This table shows service summary information regarding all the services in a Coherence cluster.
+
+All attributes are summarized from `ServiceMBean` (`Coherence:type=Service,name=serviceName`).
+
+!===
+|**Column** | **Source / Comment**
+|Service Name| name (Key)
+|StatusHA | StatusHA - only applicable to partitioned services
+|Members | MemberCount
+|Storage Enabled | Count of members where StorageEnabled attribute is true
+|Partitions | PartitionsAll
+|Endangered | PartitionsEndangered
+|Vulnerable | PartitionsVulnerable
+|Unbalanced | PartitionsUnbalanced
+|Pending | RequestPendingCount
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-0C5A3074-50D1-4B15-A4C2-E014E5F4827B[ServiceMBean] documentation for more information.
+
