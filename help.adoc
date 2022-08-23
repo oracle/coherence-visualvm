@@ -35,9 +35,14 @@ For the main Coherence VisualVM Plugin documentation please see https://github.c
 * <<MachineTableModel, Machines Table>>
 * <<MemberTableModel, Members Table>>
 * <<ServiceTableModel, Services Table>>
-* <<ServiceMemberTableModel, Services Detail Table>>
+** <<ServiceMemberTableModel, Services Detail Table>>
 * <<CacheTableModel, Cache Summary Table>>
-* <<CacheDetailTableModel, Cache Details Tables>>
+** <<CacheDetailTableModel, Cache Details Tables>>
+** <<CacheStorageManagerTableModel, Cache Storage Table>>
+* <<FederationTableModel, Federation Summary Table>>
+** <<FederationOutboundTableModel, Federation Outbound Table>>
+** <<FederationInboundTableModel, Federation Inbound Table>>
+* <<ProxyTableModel, Proxy Servers Table>>
 
 Please see the https://www.oracle.com/pls/topic/lookup?ctx=en/middleware/standalone/coherence/14.1.1.2206&id=COHMG5442[Coherence MBeans Reference] for detailed information on all the Coherence MBeans and attributes.
 
@@ -69,7 +74,7 @@ All attributes are from `NodeMBean` (`Coherence:type=Node,nodeId=n`).
 
 !===
 |**Column** | **Source / Comment**
-|Node Id| nodeId (Key)
+|Node Id| nodeId (key)
 |Unicast Address | UnicastAddress
 |Port | UnicastPort
 |Publisher Success Rate | PublisherSuccessRate
@@ -92,7 +97,7 @@ All attributes are summarized from `ServiceMBean` (`Coherence:type=Service,name=
 
 !===
 |**Column** | **Source / Comment**
-|Service Name| name (Key)
+|Service Name| name (key)
 |StatusHA | StatusHA - only applicable to partitioned services
 |Members | MemberCount
 |Storage Enabled | Count of members where StorageEnabled attribute is true
@@ -114,7 +119,7 @@ All attributes are from `ServiceMBean` for specific nodes. (`Coherence:type=Serv
 
 !===
 |**Column** | **Source / Comment**
-|Node Id| nodeId (Key)
+|Node Id| nodeId (key)
 |Threads | ThreadCount
 |Idle Threads | ThreadIdleCount
 |Thread Util % | Calculated
@@ -134,7 +139,7 @@ All attributes are summarized from `CacheMBean` (`Coherence:type=CacheMBean,tier
 
 !===
 |**Column** | **Source / Comment**
-|Service / Cache Name| service (Key) + name (key)
+|Service / Cache Name| service (key) + name (key)
 |Size | Size summed by service / cache
 |Memory (bytes) | Unit * UnitFactor summed by service / cache
 |Memory (MB) | Above value via MB
@@ -154,7 +159,7 @@ All attributes are from `CacheMBean` (`Coherence:type=CacheMBean,tier=back`).
 
 !===
 |**Column** | **Source / Comment**
-|Node Id| nodeId (Key)
+|Node Id| nodeId (key)
 |Size | Size
 |Memory (bytes) | Unit * UnitFactor 
 |Total Gets | TotalGets
@@ -180,7 +185,7 @@ All attributes are from `StorageManager` (`Coherence:type=StorageManager,service
 
 !===
 |**Column** | **Source / Comment**
-|Node Id| nodeId (Key)
+|Node Id| nodeId (key)
 |Locks Granted | LocksGranted
 |Locks Pending | LocksPending
 |Listener Registrations | ListenerRegistrations
@@ -194,3 +199,88 @@ All attributes are from `StorageManager` (`Coherence:type=StorageManager,service
 
 See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-8F929EB2-2101-4F1C-A7E6-ACB80C67F0F6[StorageManagerMBean] documentation for more information.
 
+[#FederationTableModel]
+=== Federation Summary Table
+
+This table shows federation summary details in a Coherence cluster.
+
+All attributes are summarised from `DestinationMBean` and `OriginMBean` (Coherence:type=Federation,subType=Destination` and `Coherence:type=Federation,subType=Origin`).
+
+!===
+|**Column** | **Source / Comment**
+|Service Name | service (key)
+|Participant Name | name (key)
+|Status | State
+|Current Bytes Sent /sec | BytesSentSecs summed by service / participant from DestinationMBean
+|Current Msgs Sent /sec | MsgsSentSecs summed by service / participant from DestinationMBean
+|Current Bytes Rec /sec | BytesRecSecs summed by service / participant from DestinationMBean
+|Current Msgs Rec /sec | MsgsRecSecs summed by service / participant from DestinationMBean
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-858AA9C4-A756-4E64-8ACC-61AAE94C9387[OriginMBean] and
+https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-E936E914-6967-4E44-B8B6-FEBDF10CBE67[DestinationMBean] documentation for more information.
+
+[#FederationOutboundTableModel]
+=== Federation Outbound Table
+
+This table shows federation outbound details for the selected service.
+
+All attributes are from `DestinationMBean` (Coherence:type=Federation,subType=Destination`).
+
+!===
+|**Column** | **Source / Comment**
+|Node Id | nodeId (key)
+|State | State
+|Current Throughput (Mbps) | CurrentBandwidth
+|Total Bytes Sent | TotalBytesSent
+|Total Entries Sent | TotalEntriesSent
+|Total Records Sent | TotalRecordsSent
+|Total Msgs Sent | TotalMsgSent
+|Total Msgs Unacked | TotalMsgUnacked
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-E936E914-6967-4E44-B8B6-FEBDF10CBE67[DestinationMBean] documentation for more information.
+
+[#FederationInboundTableModel]
+=== Federation Inbound Table
+
+This table shows federation inbound details for the selected service.
+
+All attributes are from `OriginMBean` (Coherence:type=Federation,subType=Origin`).
+
+!===
+|**Column** | **Source / Comment**
+|Node Id | nodeId (key)
+|State | State
+|Current Throughput (Mbps) | CurrentBandwidth
+|Total Bytes Received | TotalBytesRec
+|Total Records Received | TotalRecordsRec
+|Total Entries Received | TotalEntriesRec
+|Total Msgs Received | TotalMsgRec
+|Total Msgs Unacked | TotalMsgUnacked
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-858AA9C4-A756-4E64-8ACC-61AAE94C9387[OriginMBean] documentation for more information.
+
+[#ProxyTableModel]
+=== Proxy Servers Table
+
+This table shows proxy servers in a Coherence cluster.
+
+All attributes are summarised from `ConnectionManagerMBean` where `Procotol=tcp` and `ConnectionMBean` (`Coherence:type=ConnectionManager` and  `Coherence:type=Connection`)
+
+!===
+|**Column** | **Source / Comment**
+|IP Address/Port | HostIP
+|Service Name | name (key)
+|Node Id | ndoeId (key)
+|Connection Count | ConnectionCount
+|Outgoing Msg Backlog | OutgoingMessageBacklog
+|Total Bytes Rcv | TotalBytesReceived
+|Total Bytes Sent | TotalBytesSent
+|Total Msgs Rcv | TotalMessagesReceived
+|Total Msgs Sent | TotalMessagesSent
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-022FB1A1-F377-405A-A424-2CB1781330C1[ConnectionManagerMBean]
+or https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-F247B2A6-85A6-4F87-AD69-C0E184EF25D5[ConnectionMBean] documentation for more information.

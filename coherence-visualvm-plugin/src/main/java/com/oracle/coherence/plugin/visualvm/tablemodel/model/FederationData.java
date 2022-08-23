@@ -87,7 +87,6 @@ public abstract class FederationData
         TOTAL_BYTES_RECEIVED(3),
         TOTAL_MSGS_SENT(5),
         TOTAL_MSGS_RECEIVED(4);
-        ;
 
         Column(int nCol)
             {
