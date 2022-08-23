@@ -39,16 +39,9 @@ import java.io.PrintStream;
 
 import java.net.URI;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.oracle.coherence.plugin.visualvm.tablemodel.MachineTableModel;
-import com.oracle.coherence.plugin.visualvm.tablemodel.MemberTableModel;
-
-import com.oracle.coherence.plugin.visualvm.tablemodel.ServiceTableModel;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;

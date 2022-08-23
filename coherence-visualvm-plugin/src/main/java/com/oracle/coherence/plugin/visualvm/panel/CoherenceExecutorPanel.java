@@ -39,7 +39,6 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.ExecutorTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ExecutorData;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
