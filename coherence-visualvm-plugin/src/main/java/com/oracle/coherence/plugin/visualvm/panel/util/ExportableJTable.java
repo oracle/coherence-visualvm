@@ -433,7 +433,7 @@ public class ExportableJTable
 
     // ----- constants ------------------------------------------------------
 
-    private static final String BASE_URL = "https://github.com/oracle/coherence-visualvm/blob/jdk17-test/help.adoc#";
+    private static final String BASE_URL = "https://github.com/oracle/coherence-visualvm/blob/main/help.adoc#";
 
     private static final long serialVersionUID = 5999795232769091368L;
 
