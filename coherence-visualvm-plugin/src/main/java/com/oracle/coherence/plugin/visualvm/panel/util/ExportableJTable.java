@@ -48,6 +48,7 @@ import java.util.logging.Logger;
 import com.oracle.coherence.plugin.visualvm.tablemodel.MachineTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.MemberTableModel;
 
+import com.oracle.coherence.plugin.visualvm.tablemodel.ServiceTableModel;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
@@ -180,23 +181,17 @@ public class ExportableJTable
         else if (src.equals(m_menuItemHelp))
             {
             String sSimpleName = dataModel.getClass().getSimpleName();
-            if (SET_HELP.contains(dataModel.getClass()))
+
+            try
                 {
-                try
+                if (Desktop.isDesktopSupported())
                     {
-                    if (Desktop.isDesktopSupported())
-                        {
-                        Desktop.getDesktop().browse(new URI(BASE_URL + sSimpleName));
-                        }
-                    }
-                catch (Exception ee)
-                    {
-                    JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_unable_to_open"));
+                    Desktop.getDesktop().browse(new URI(BASE_URL + sSimpleName));
                     }
                 }
-            else
+            catch (Exception ee)
                 {
-                JOptionPane.showMessageDialog(null, Localization.getLocalText("HELP_none", dataModel.getClass().getSimpleName()));
+                JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_unable_to_open"));
                 }
             }
         }
@@ -444,9 +439,6 @@ public class ExportableJTable
         }
 
     // ----- constants ------------------------------------------------------
-
-    private static final Set<Class> SET_HELP =
-            new HashSet<>(Arrays.asList(MachineTableModel.class, MemberTableModel.class));
 
     private static final String BASE_URL = "https://github.com/oracle/coherence-visualvm/blob/jdk17-test/help.adoc#";
 

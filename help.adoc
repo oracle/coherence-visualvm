@@ -35,7 +35,9 @@ For the main Coherence VisualVM Plugin documentation please see https://github.c
 * <<MachineTableModel, Machines Table>>
 * <<MemberTableModel, Members Table>>
 * <<ServiceTableModel, Services Table>>
-
+* <<ServiceMemberTableModel, Services Detail Table>>
+* <<CacheTableModel, Cache Summary Table>>
+* <<CacheDetailTableModel, Cache Details Tables>>
 
 Please see the https://www.oracle.com/pls/topic/lookup?ctx=en/middleware/standalone/coherence/14.1.1.2206&id=COHMG5442[Coherence MBeans Reference] for detailed information on all the Coherence MBeans and attributes.
 
@@ -102,4 +104,93 @@ All attributes are summarized from `ServiceMBean` (`Coherence:type=Service,name=
 !===
 
 See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-0C5A3074-50D1-4B15-A4C2-E014E5F4827B[ServiceMBean] documentation for more information.
+
+[#ServiceMemberTableModel]
+=== Services Detail Table
+
+This table shows service detail information regarding the selected service.
+
+All attributes are from `ServiceMBean` for specific nodes. (`Coherence:type=Service,name=serviceName,nodeId=n`).
+
+!===
+|**Column** | **Source / Comment**
+|Node Id| nodeId (Key)
+|Threads | ThreadCount
+|Idle Threads | ThreadIdleCount
+|Thread Util % | Calculated
+|Task Average (ms) | TaskAverageDuration
+|Task Backlog | TaskBacklog
+|Request Avge (ms) | RequestAverageDuration
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-0C5A3074-50D1-4B15-A4C2-E014E5F4827B[ServiceMBean] documentation for more information.
+
+[#CacheTableModel]
+=== Cache Summary Table
+
+This table shows cache summary for all caches in a Coherence cluster.
+
+All attributes are summarized from `CacheMBean` (`Coherence:type=CacheMBean,tier=back`).
+
+!===
+|**Column** | **Source / Comment**
+|Service / Cache Name| service (Key) + name (key)
+|Size | Size summed by service / cache
+|Memory (bytes) | Unit * UnitFactor summed by service / cache
+|Memory (MB) | Above value via MB
+|Avge Object Size (bytes) | Calculated Memory (bytes) / Size
+|Unit Calculator | If MemoryUnits is true then BINARY otherwise FIXED
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html[CacheMBean] documentation for more information.
+
+[#CacheDetailTableModel]
+=== Cache Details Table
+
+==== Cache Size and Access Details Table
+This table shows cache details regarding the selected cache.
+
+All attributes are from `CacheMBean` (`Coherence:type=CacheMBean,tier=back`).
+
+!===
+|**Column** | **Source / Comment**
+|Node Id| nodeId (Key)
+|Size | Size
+|Memory (bytes) | Unit * UnitFactor 
+|Total Gets | TotalGets
+|Total Puts | TotalPuts
+|Cache Hits | CacheHits
+|Cache Misses | CacheMisses
+|Hit Probability| HitProbability
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html[CacheMBean] documentation for more information.
+
+==== Front Cache Size and Access Details Table
+This table shows cache front details regarding the selected cache.
+
+All attributes are from `CacheMBean` (`Coherence:type=CacheMBean,tier=front`) and are the same as the above table.
+
+[#CacheStorageManagerTableModel]
+=== Cache Storage Details
+
+This table shows cache storage regarding the selected cache.
+
+All attributes are from `StorageManager` (`Coherence:type=StorageManager,service=serviceName,cache=cacheName`).
+
+!===
+|**Column** | **Source / Comment**
+|Node Id| nodeId (Key)
+|Locks Granted | LocksGranted
+|Locks Pending | LocksPending
+|Listener Registrations | ListenerRegistrations
+|Max Query (ms) | MaxQueryDurationMillis
+|Max Query Description | MaxQueryDescription
+|Non Opt Query Avge | NonOptimizedQueryAverageMillis
+|Optimized Query Avge | OptimizedQueryAverageMillis
+|Index Total Units (bytes) | IndexTotalUnits (not available in all Coherence versions)
+|Index Total Millis (ms) | IndexingTotalMillis (not available in all Coherence versions)
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-8F929EB2-2101-4F1C-A7E6-ACB80C67F0F6[StorageManagerMBean] documentation for more information.
 

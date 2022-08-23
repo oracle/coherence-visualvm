@@ -99,7 +99,7 @@ public class CacheStorageManagerData
 
                     String sLocksGranted = getAttributeValueAsString(listAttr, ATTR_LOCKS_GRANTED);
                     String sLocksPending = getAttributeValueAsString(listAttr, ATTR_LOCKS_PENDING);
-                    String sListenerReg  = getAttributeValueAsString(listAttr, ATTR_LOCKS_PENDING);
+                    String sListenerReg  = getAttributeValueAsString(listAttr, ATTR_LISTENER_REG);
 
                     data.setColumn(CacheStorageManagerData.NODE_ID, Integer.valueOf(sNodeId));
                     data.setColumn(CacheStorageManagerData.LOCKS_GRANTED,
