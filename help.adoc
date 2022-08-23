@@ -52,7 +52,7 @@ For the main Coherence VisualVM Plugin documentation please see https://github.c
 * <<ExecutorTableModel, Executors Table>>
 * <<HttpSessionTableModel, Http Session Table>>
 * <<JCacheConfigurationTableModel, JCache Tables>>
-* <<HotCachePerCacheTableModel, Hot Cache Table>>
+* <<HotCacheTableModel, Hot Cache Table>>
 * <<HotCachePerCacheTableModel, Hot Cache Per Cache Table>>
 
 Please see the https://www.oracle.com/pls/topic/lookup?ctx=en/middleware/standalone/coherence/14.1.1.2206&id=COHMG5442[Coherence MBeans Reference] for detailed information on all the Coherence MBeans and attributes.
@@ -276,7 +276,7 @@ See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manag
 [#ProxyTableModel]
 === Proxy Servers Table
 
-This table shows proxy servers summary in a Coherence cluster.
+This table shows summary for proxy servers in a Coherence cluster.
 
 All attributes are summarised from `ConnectionManagerMBean` where `Procotol=tcp` and `ConnectionMBean` (`Coherence:type=ConnectionManager` and  `Coherence:type=Connection`).
 
@@ -299,7 +299,7 @@ or https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage
 [#HttpProxyTableModel]
 === Http Servers Table
 
-This table shows Http servers summary for the Coherence cluster.
+This table shows summary for Http servers running in the Coherence cluster.
 
 All attributes are summarised from `ConnectionManagerMBean` where `Procotol=http` (`Coherence:type=ConnectionManager`).
 
@@ -308,10 +308,10 @@ All attributes are summarised from `ConnectionManagerMBean` where `Procotol=http
 |Service Name | name (key)
 |Http Server Type | HttpServerType
 |Members | Sum of members running this service
-|Total Requests | Sum of TotalRequestCount for all service members
-|Total Errors | Sum of TotalErrorCount for all service members
-|Avge Req / Sec | Average of RequestsPerSecond for all service members
-|Avge Request Time (ms) | Average of AverageRequestTime for all service members
+|Total Requests | Sum of TotalRequestCount for all members running this service
+|Total Errors | Sum of TotalErrorCount for all members running this service
+|Avge Req / Sec | Average of RequestsPerSecond for all members running this service
+|Avge Request Time (ms) | Average of AverageRequestTime for all members running this service
 !===
 
 See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-022FB1A1-F377-405A-A424-2CB1781330C1[ConnectionManagerMBean] documentation for more information.
@@ -346,7 +346,7 @@ All attributes are summarized from `ServiceMBean` (`Coherence:type=Service,name=
 !===
 |**Column** | **Source / Comment**
 |Service / Cache Name| service (key) + name (key)
-|Mode |
+|Mode | PersistenceMode
 |Active Space Used on disk (bytes) | Sum of PersistenceActiveSpaceUsed for all members of the service
 |Active Space Used on disk (MB) | Above value in MB
 |Backup Space Used on disk (MB) | Sum of PersistenceBackupSpaceUsed for all members of the service
