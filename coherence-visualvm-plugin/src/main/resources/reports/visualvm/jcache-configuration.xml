@@ -81,7 +81,6 @@
             <column id="StoreByValue">
                 <name>StoreByValue</name>
             </column>
-
         </row>
     </report>
 </report-config>

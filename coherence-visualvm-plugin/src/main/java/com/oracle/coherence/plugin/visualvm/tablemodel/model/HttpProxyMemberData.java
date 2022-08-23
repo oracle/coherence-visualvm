@@ -117,12 +117,19 @@ public class HttpProxyMemberData extends AbstractData
             sDomainPartition          = asServiceDetails[0];
             }
 
-        return sServiceName == null ? sReporterXML :
-               sReporterXML.replaceAll("%SERVICE_NAME%", sServiceName +
+        if (sServiceName != null && sServiceName.contains("$"))
+            {
+            return sReporterXML.replace(SERVICE_NAME, sServiceName);
+            }
+        else
+            {
+            return sServiceName == null ? sReporterXML :
+                   sReporterXML.replaceAll(SERVICE_NAME, sServiceName +
                                                          (sDomainPartition !=
                                                           null ?
                                                           ",domainPartition=" +
-                                                          sDomainPartition : ""));
+                                                sDomainPartition : ""));
+            }
         }
 
     @Override
@@ -178,6 +185,8 @@ public class HttpProxyMemberData extends AbstractData
         }
 
     // ----- constants ------------------------------------------------------
+
+    private static final String SERVICE_NAME = "%SERVICE_NAME%";
 
     private static final long serialVersionUID = 1559872484801825295L;
 

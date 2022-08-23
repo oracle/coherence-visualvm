@@ -43,6 +43,17 @@ For the main Coherence VisualVM Plugin documentation please see https://github.c
 ** <<FederationOutboundTableModel, Federation Outbound Table>>
 ** <<FederationInboundTableModel, Federation Inbound Table>>
 * <<ProxyTableModel, Proxy Servers Table>>
+* <<HttpProxyTableModel, Http Servers Table>>
+** <<HttpProxyMemberTableModel, Http Servers Detail Table>>
+* <<PersistenceTableModel, Persistence Table>>
+* <<ElasticData, Elastic Data Tables>>
+* <<HealthSummaryTableModel, Health Summary Table>>
+* <<GrpcProxyTableModel, Grpc Proxy Table>>
+* <<ExecutorTableModel, Executors Table>>
+* <<HttpSessionTableModel, Http Session Table>>
+* <<JCacheConfigurationTableModel, JCache Tables>>
+* <<HotCachePerCacheTableModel, Hot Cache Table>>
+* <<HotCachePerCacheTableModel, Hot Cache Per Cache Table>>
 
 Please see the https://www.oracle.com/pls/topic/lookup?ctx=en/middleware/standalone/coherence/14.1.1.2206&id=COHMG5442[Coherence MBeans Reference] for detailed information on all the Coherence MBeans and attributes.
 
@@ -265,9 +276,9 @@ See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manag
 [#ProxyTableModel]
 === Proxy Servers Table
 
-This table shows proxy servers in a Coherence cluster.
+This table shows proxy servers summary in a Coherence cluster.
 
-All attributes are summarised from `ConnectionManagerMBean` where `Procotol=tcp` and `ConnectionMBean` (`Coherence:type=ConnectionManager` and  `Coherence:type=Connection`)
+All attributes are summarised from `ConnectionManagerMBean` where `Procotol=tcp` and `ConnectionMBean` (`Coherence:type=ConnectionManager` and  `Coherence:type=Connection`).
 
 !===
 |**Column** | **Source / Comment**
@@ -284,3 +295,230 @@ All attributes are summarised from `ConnectionManagerMBean` where `Procotol=tcp`
 
 See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-022FB1A1-F377-405A-A424-2CB1781330C1[ConnectionManagerMBean]
 or https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-F247B2A6-85A6-4F87-AD69-C0E184EF25D5[ConnectionMBean] documentation for more information.
+
+[#HttpProxyTableModel]
+=== Http Servers Table
+
+This table shows Http servers summary for the Coherence cluster.
+
+All attributes are summarised from `ConnectionManagerMBean` where `Procotol=http` (`Coherence:type=ConnectionManager`).
+
+!===
+|**Column** | **Source / Comment**
+|Service Name | name (key)
+|Http Server Type | HttpServerType
+|Members | Sum of members running this service
+|Total Requests | Sum of TotalRequestCount for all service members
+|Total Errors | Sum of TotalErrorCount for all service members
+|Avge Req / Sec | Average of RequestsPerSecond for all service members
+|Avge Request Time (ms) | Average of AverageRequestTime for all service members
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-022FB1A1-F377-405A-A424-2CB1781330C1[ConnectionManagerMBean] documentation for more information.
+
+[#HttpProxyMemberTableModel]
+=== Http Servers Detail Table
+
+This table shows Http server details for the selected Http server.
+
+All attributes are from `ConnectionManagerMBean` where `Procotol=http` (`Coherence:type=ConnectionManager`).
+
+!===
+|**Column** | **Source / Comment**
+|Node Id | nodeId (key)
+|IP Address/Port | HostIP
+|Avge Request Time (ms) | AverageRequestTime
+|Avge Req / Sec |  RequestsPerSecond
+|Total Requests | TotalRequestCount
+|Total Errors | TotalErrorCount
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-022FB1A1-F377-405A-A424-2CB1781330C1[ConnectionManagerMBean] documentation for more information.
+
+[#PersistenceTableModel]
+=== Persistence Table
+
+This table shows Persistence summary for the Coherence cluster.
+
+All attributes are summarized from `ServiceMBean` (`Coherence:type=Service,name=serviceName`) except for
+`Snapshot Count` and `Status` which are from `PersistenceMBean` (`Coherence:type=Persistence)`.
+
+!===
+|**Column** | **Source / Comment**
+|Service / Cache Name| service (key) + name (key)
+|Mode |
+|Active Space Used on disk (bytes) | Sum of PersistenceActiveSpaceUsed for all members of the service
+|Active Space Used on disk (MB) | Above value in MB
+|Backup Space Used on disk (MB) | Sum of PersistenceBackupSpaceUsed for all members of the service
+|Average Additional Latency (ms) | Average of PersistenceLatencyAverage for all members of the service
+|Maximum Additional Latency (ms) | Max of PersistenceLatencyAverage for all members of the services
+|Snapshot Count | Snapshots array length
+|Status | OperationStatus
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-0C5A3074-50D1-4B15-A4C2-E014E5F4827B[ServiceMBean] or
+https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-5B207607-9C4E-4F44-AE00-AC869369AF5A[PersistenceManagerMBean] documentation for more information.
+
+[#ElasticData]
+=== Elastic Data Tables
+
+These tables show Elastic data summary for the Coherence cluster for either RAM or Flash Journal.
+
+All attributes are from `RamJournalRM` or `FlashJournalRM` (`Coherence:type=Journal,name=FlashJournalRM` or `Coherence:type=Journal,name=RamJournalRM`).
+
+!===
+|**Column** | **Source / Comment**
+|Node Id | nodeId (key)
+|Journal Files | FileCount + "/" +  MaxJournalFilesNumber
+|Total Data Size | TotalDataSize
+|Committed | FileCount * MaxFileSize
+|Compactions | ExhaustiveCompactionCount
+|Current Collector Load Factor| CurrentCollectorLoadFactor
+|Max File Size| MaxFileSize
+!===
+
+[#HealthSummaryTableModel]
+=== Health Summary Table
+
+This table shows health summary data for the Coherence cluster.
+
+All attributes are summarised from `HeatlhMBean` (`Coherence:type=Health`).
+
+!===
+|**Column** | **Source / Comment**
+|Name | name (key) + subType (key)
+|Members | Count of members with this health check
+|Started | Count of number of member where Started is true
+|Live | Count of number of member where Live is true
+|Ready | Count of number of member where Ready is true
+|Safe | Count of number of member where Safe is true
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-F6B749CD-74C1-4A50-AF6A-96E8638021B1[HealthMBean] documentation for more information.
+
+[#GrpcProxyTableModel]
+=== Grpc Proxy Table
+
+This table shows summarised data from the gRPC requests and responses.
+
+All attributes are summarised from `Coherence:type=GrpcNamedCacheProxy` MBean.
+
+!===
+|**Column** | **Source / Comment**
+|Node Id | nodeId (key)
+|Successful Requests | Sum of SuccessfulRequestCount across all members running the service
+|Error Requests | Sum of ErrorRequestCount across all members running the service
+|Responses Sent | Sum of ResponsesSentCount across all members running the service
+|Messages Received | Sum of MessagesReceivedCount across all members running the service
+|Mean Req Duration (ms) | Average of RequestDurationMean across all members running the service
+|Mean Msg Duration (ms) | Average of MessageDurationMean across all members running the service
+!===
+
+[#ExecutorTableModel]
+=== Executors Table
+
+This table shows executor data for the Coherence cluster.
+
+All attributes are summarised from `ExecutorMBean` (`Coherence:type=Executor`).
+
+!===
+|**Column** | **Source / Comment**
+|Executor Name | name (key)
+|Executor Count | Count of members running this executor
+|Tasks in Progress | Sum of TasksInProgressCount across all members running this executor
+|Tasks Completed | Sum of TasksCompletedCount across all members running this executor
+|Tasks Rejected | Sum of TasksRejectedCount across all members running this executor
+|Executor Description | Description
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-7DFDB673-2B2F-4D50-84C4-C3D24F66A591[ExecutorMBean] documentation for more information.
+
+[#HttpSessionTableModel]
+=== Http Session Table
+
+This table shows summarised data from Coherence*Web Http sessions for the Coherence cluster.
+
+All attributes are summarised from `Coherence:type=HttpSessionManager` or `Coherence:type=WebLogicHttpSessionManager`.
+
+!===
+|**Column** | **Source / Comment**
+|Application Id | appId (key)
+|Platform | Either "WebLogic" or "Other"
+|Session Timeout | SessionTimeout
+|Session Cache | SessionCacheName
+|Overflow Cache | OverflowCacheName
+|Avge Session Size | SessionAverageSize
+|Total Reaped Sessions | ReapedSessions
+|Avge Reaped Sessions | AverageReapedSessions
+|Avge Reap Duration | AverageReapDuration
+|Last Reap Duration Max | LastReapDuration
+|Session Updates | SessionUpdates
+!===
+
+[#JCacheConfigurationTableModel]
+=== JCache Tables
+
+These tables show summarised "Management" and "Statistics" MBean information regarding the configured JCache caches for a Coherence cluster.
+
+==== JCache Config Table
+
+All attributes are from `javax.cache:type=CacheConfiguration`.
+
+!===
+|**Column** | **Source / Comment**
+|Configuration / Cache | CacheManager (key) + "/ " + Cache (key)
+|Key Type | KeyType
+|Value Type | ValueType
+|Statistics Enabled | StatisticsEnabled
+|Read Through | ReadThrough
+|Write Through | WriteThrough
+|Store By Value | StoreByValue
+!===
+
+==== JCache Statistics Table
+
+!===
+|**Column** | **Source / Comment**
+|Configuration / Cache | CacheManager (key) + "/ " + Cache (key)
+|Total Puts | CachePuts
+|Total Gets | TotalGets
+|Total Removals | CacheRemovals
+|Cache Hits | CacheHits
+|Cache Misses | CacheMisses
+|Total Evictions | CacheEvictions
+|Average Get Time | AverageGetTime
+|Average Put Time | AveragePutTime
+|Average Remove Time | AverageRemoveTime
+|Cache Hit % | CacheHitPercentage
+|Cache Miss % | CacheMissPercentage
+!===
+
+[#HotCacheTableModel]
+=== Hot Cache Table
+
+These tables show summaries data from HotCache for a Coherence cluster.
+
+All attributes are from `Coherence:type=CoherenceAdapter`.
+
+!===
+|**Column** | **Source / Comment**
+|Member | member (key)
+|Number Of Operations Processed | NumberOfOperationsProcessed
+|StartTime | StartTime
+|Trail File Name | TrailFileName
+|Trail File Position| TrailFilePosition
+!===
+
+[#HotCachePerCacheTableModel]
+=== Hot Cache Per Cache Table
+
+All attributes are from `Coherence:type=CoherenceAdapter,name=hotcache,member=member`.
+
+!===
+|**Column** | **Source / Comment**
+|Cachename/Operation | key
+|Count | PerCacheStatistics.Count
+| Max value | PerCacheStatistics.Max
+| Min value | PerCacheStatistics.Min
+| Mean value | PerCacheStatistics.Mean
+!===
