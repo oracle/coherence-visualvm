@@ -41,8 +41,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import java.util.Date;
@@ -54,7 +52,6 @@ import javax.swing.*;
 
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
-import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
 
 /**
  * An implementation of an {@link AbstractCoherencePanel} to

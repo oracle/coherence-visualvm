@@ -43,6 +43,7 @@ import com.oracle.bedrock.runtime.coherence.CoherenceClusterMember;
 import com.oracle.bedrock.runtime.coherence.JMXManagementMode;
 import com.oracle.bedrock.runtime.coherence.options.CacheConfig;
 import com.oracle.bedrock.runtime.coherence.options.ClusterName;
+import com.oracle.bedrock.runtime.coherence.options.ClusterPort;
 import com.oracle.bedrock.runtime.coherence.options.LocalHost;
 import com.oracle.bedrock.runtime.coherence.options.LocalStorage;
 import com.oracle.bedrock.runtime.coherence.options.Logging;
@@ -109,25 +110,19 @@ public abstract class AbstractVisualVMTest
             s_fileTrashDirA = FileHelper.createTempDir();
 
             s_availablePortIteratorWKA = LocalPlatform.get().getAvailablePorts();
-            int nLocalPortA1 = s_availablePortIteratorWKA.next();
 
             // Iterate to next port and waste this as sometimes the second port will
             // already be used up before the realize()
             s_availablePortIteratorWKA.next();
 
-            int nLocalPortA2 = s_availablePortIteratorWKA.next();
-            int nLocalPortB1 = s_availablePortIteratorWKA.next();
-            int nLocalPortB2 = s_availablePortIteratorWKA.next();
-
-            // Iterate to next port and waste this as sometimes the second port will
-            // already be used up before the realize()
-            s_availablePortIteratorWKA.next();
+            int nClusterAPort = s_availablePortIteratorWKA.next();
+            int nClusterBPort = s_availablePortIteratorWKA.next();
 
             LocalPlatform platform        = LocalPlatform.get();
-            OptionsByType optionsByTypeA1 = createCacheServerOptions(CLUSTER_NAME, nLocalPortA1, s_fileActiveDirA,
-                    s_fileSnapshotDirA, s_fileTrashDirA, nLocalPortA1, nLocalPortB1);
-            OptionsByType optionsByTypeA2 = createCacheServerOptions(CLUSTER_NAME, nLocalPortA2, s_fileActiveDirA,
-                    s_fileSnapshotDirA, s_fileTrashDirA, nLocalPortA1, nLocalPortB1);
+            OptionsByType optionsByTypeA1 = createCacheServerOptions(CLUSTER_NAME, s_fileActiveDirA,
+                    s_fileSnapshotDirA, s_fileTrashDirA);
+            OptionsByType optionsByTypeA2 = createCacheServerOptions(CLUSTER_NAME, s_fileActiveDirA,
+                    s_fileSnapshotDirA, s_fileTrashDirA);
 
             OptionsByType optionsByTypeMemberA1 = OptionsByType.of(optionsByTypeA1).add(DisplayName.of("memberA1"));
             OptionsByType optionsByTypeMemberA2 = OptionsByType.of(optionsByTypeA2).add(DisplayName.of("memberA2"));
@@ -158,10 +153,10 @@ public abstract class AbstractVisualVMTest
                 s_fileSnapshotDirB = FileHelper.createTempDir();
                 s_fileTrashDirB = FileHelper.createTempDir();
 
-                OptionsByType optionsByTypeB1 = createCacheServerOptions(CLUSTER_B_NAME, nLocalPortB1, s_fileActiveDirB,
-                        s_fileSnapshotDirB, s_fileTrashDirB, nLocalPortA1, nLocalPortB1);
-                OptionsByType optionsByTypeB2 = createCacheServerOptions(CLUSTER_B_NAME, nLocalPortB2, s_fileActiveDirB,
-                        s_fileSnapshotDirB, s_fileTrashDirB, nLocalPortA1, nLocalPortB1);
+                OptionsByType optionsByTypeB1 = createCacheServerOptions(CLUSTER_B_NAME, s_fileActiveDirB,
+                        s_fileSnapshotDirB, s_fileTrashDirB);
+                OptionsByType optionsByTypeB2 = createCacheServerOptions(CLUSTER_B_NAME, s_fileActiveDirB,
+                        s_fileSnapshotDirB, s_fileTrashDirB);
 
                 OptionsByType optionsByTypeMemberB1 = OptionsByType.of(optionsByTypeB1).add(DisplayName.of("memberB1"));
                 OptionsByType optionsByTypeMemberB2 = OptionsByType.of(optionsByTypeB2).add(DisplayName.of("memberB2"));
@@ -252,18 +247,14 @@ public abstract class AbstractVisualVMTest
      * Establish {@link OptionsByType} to use launching cache servers.
      *
      * @param sClusterName      the cluster name
-     * @param nWKAPort          the wka port
      * @param fileActiveDir     active persistence directory
      * @param fileSnapshotDir   snapshot persistence directory
      * @param fileTrashDir      trash persistence directory
-     * @param nFederationPortA  the port for ClusterB
-     * @param nFederationPortB  the port for ClusterB
      *
      * @return an {@link OptionsByType}
      */
-    protected static OptionsByType createCacheServerOptions(String sClusterName, int nWKAPort, File fileActiveDir,
-                                                            File fileSnapshotDir, File fileTrashDir,
-                                                            int nFederationPortA, int nFederationPortB)
+    protected static OptionsByType createCacheServerOptions(String sClusterName, File fileActiveDir,
+                                                            File fileSnapshotDir, File fileTrashDir)
         {
         String        hostName      = "127.0.0.1";
         OptionsByType optionsByType = OptionsByType.empty();
@@ -271,13 +262,12 @@ public abstract class AbstractVisualVMTest
         optionsByType.addAll(JMXManagementMode.ALL,
                              JmxProfile.enabled(),
                              LocalStorage.enabled(),
-                             LocalHost.of(hostName, nWKAPort),
-                             WellKnownAddress.of(hostName, nWKAPort),
+                             LocalHost.of(hostName),
+                             WellKnownAddress.of(hostName),
                              Multicast.ttl(0),
                              CacheConfig.of(System.getProperty("tangosol.coherence.cacheconfig")),
                              Logging.at(9),
                              ClusterName.of(sClusterName),
-                             SystemProperty.of("test.multicast.port", Integer.toString(nWKAPort)),
                              SystemProperty.of("partition.count", Integer.toString(PARTITION_COUNT)),
                              SystemProperty.of("tangosol.coherence.management.refresh.expiry", "1s"),
                              SystemProperty.of("active.dir", fileActiveDir.getAbsolutePath()),
@@ -287,8 +277,6 @@ public abstract class AbstractVisualVMTest
                              SystemProperty.of("java.rmi.server.hostname", hostName),
                              SystemProperty.of("coherence.distribution.2server", "false"),
                              SystemProperty.of("loopbackhost", hostName),
-                             SystemProperty.of("test.federation.port.clusterA", Integer.toString(nFederationPortA)),
-                             SystemProperty.of("test.federation.port.clusterB", Integer.toString(nFederationPortB)),
                              RoleName.of(ROLE_NAME),
                              s_logs.builder());
 

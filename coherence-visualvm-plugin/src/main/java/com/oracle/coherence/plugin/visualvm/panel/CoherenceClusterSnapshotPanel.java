@@ -315,7 +315,7 @@ public class CoherenceClusterSnapshotPanel
                     .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.PARTITIONS_ENDANGERED))))
                     .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.PARTITIONS_VULNERABLE))))
                     .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.PARTITIONS_UNBALANCED))))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.PARTITIONS_PENDING))))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(ServiceData.REQUESTS_PENDING))))
                     .append("</tr>");
             }
 

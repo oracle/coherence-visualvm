@@ -112,7 +112,7 @@ public class CoherenceServicePanel
         RenderHelper.setIntegerRenderer(table, ServiceData.PARTITIONS_ENDANGERED);
         RenderHelper.setIntegerRenderer(table, ServiceData.PARTITIONS_VULNERABLE);
         RenderHelper.setIntegerRenderer(table, ServiceData.PARTITIONS_UNBALANCED);
-        RenderHelper.setIntegerRenderer(table, ServiceData.PARTITIONS_PENDING);
+        RenderHelper.setIntegerRenderer(table, ServiceData.REQUESTS_PENDING);
 
         RenderHelper.setColumnRenderer(f_tableDetail, ServiceMemberData.REQUEST_AVERAGE_DURATION,
                                        new RenderHelper.DecimalRenderer());
@@ -357,7 +357,7 @@ public class CoherenceServicePanel
                                 (Integer)entry.getValue().getColumn(ServiceData.PARTITIONS_ENDANGERED),
                                 (Integer)entry.getValue().getColumn(ServiceData.PARTITIONS_VULNERABLE),
                                 (Integer)entry.getValue().getColumn(ServiceData.PARTITIONS_UNBALANCED),
-                                (Integer)entry.getValue().getColumn(ServiceData.PARTITIONS_PENDING));
+                                (Integer)entry.getValue().getColumn(ServiceData.REQUESTS_PENDING));
                         break;
                         }
                     }

@@ -37,7 +37,7 @@ import com.oracle.coherence.plugin.visualvm.panel.util.ExportableJTable;
 import com.oracle.coherence.plugin.visualvm.tablemodel.GrpcProxyTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.GrpcProxyData;
-import javax.swing.JLabel;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;

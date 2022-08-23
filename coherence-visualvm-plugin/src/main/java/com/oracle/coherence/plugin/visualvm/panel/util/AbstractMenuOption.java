@@ -25,7 +25,6 @@
 
 package com.oracle.coherence.plugin.visualvm.panel.util;
 
-import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 
@@ -43,7 +42,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.logging.Level;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -55,8 +53,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableColumnModel;
 
 import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
 
