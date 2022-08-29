@@ -465,14 +465,20 @@ public class ExportableJTable
     // list of help files for each version
     private static final Map<String, String> HELP_MAPPING = new HashMap<>();
 
+    private static final String HELP_12213 ="help_12214.adoc";
+
+    private static final String PREFIX_1221 = "12.2.1";
+
     // Note: the + ".3" etc. are used as to stop sonarcloud raising false positive
     // for hard coded IP addresses
     static {
-        HELP_MAPPING.put("12.2.1" + ".4", "help_12214.adoc");
-        HELP_MAPPING.put("12.2.1" + ".3", "help_12213.adoc");
-        HELP_MAPPING.put("12.1.3",        "help_1213.adoc");
-        HELP_MAPPING.put("12.1.2",        "help_1212.adoc");
-        HELP_MAPPING.put("14.1.1" + ".0", "help_14110.adoc");
+        HELP_MAPPING.put(PREFIX_1221 + ".4", HELP_12213);
+        HELP_MAPPING.put(PREFIX_1221 + ".3", HELP_12213);
+        HELP_MAPPING.put(PREFIX_1221 + ".2", HELP_12213);
+        HELP_MAPPING.put(PREFIX_1221 + ".1", HELP_12213);
+        HELP_MAPPING.put("12.1.3",           "help_1213.adoc");
+        HELP_MAPPING.put("12.1.2",           "help_1212.adoc");
+        HELP_MAPPING.put("14.1.1" + ".0",    "help_14110.adoc");
     }
 
     // base URL for help files
