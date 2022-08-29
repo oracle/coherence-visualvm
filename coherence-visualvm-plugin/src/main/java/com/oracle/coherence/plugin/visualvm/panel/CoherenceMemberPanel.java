@@ -159,7 +159,7 @@ public class CoherenceMemberPanel
         // create the table
         f_tmodel = new MemberTableModel(VisualVMModel.DataType.MEMBER.getMetadata());
 
-        f_table = new ExportableJTable(f_tmodel);
+        f_table = new ExportableJTable(f_tmodel, model);
 
         f_table.setPreferredScrollableViewportSize(new Dimension(500, f_table.getRowHeight() * 4));
 

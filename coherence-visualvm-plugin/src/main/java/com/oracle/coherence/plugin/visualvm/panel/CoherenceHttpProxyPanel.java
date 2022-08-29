@@ -80,8 +80,8 @@ public class CoherenceHttpProxyPanel
         f_tmodel = new HttpProxyTableModel(VisualVMModel.DataType.HTTP_PROXY.getMetadata());
         f_tmodelDetail = new HttpProxyMemberTableModel(VisualVMModel.DataType.HTTP_PROXY_DETAIL.getMetadata());
 
-        f_table = new ExportableJTable(f_tmodel);
-        f_tableDetail = new ExportableJTable(f_tmodelDetail);
+        f_table = new ExportableJTable(f_tmodel, model);
+        f_tableDetail = new ExportableJTable(f_tmodelDetail, model);
 
         // set renderers
         RenderHelper.setIntegerRenderer(f_table, HttpProxyData.MEMBER_COUNT);

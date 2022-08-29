@@ -80,7 +80,7 @@ public class CoherenceHotCachePanel
 
         f_tmodel = new HotCacheTableModel(VisualVMModel.DataType.HOTCACHE.getMetadata());
 
-        final ExportableJTable table = new ExportableJTable(f_tmodel);
+        final ExportableJTable table = new ExportableJTable(f_tmodel, model);
         table.setPreferredScrollableViewportSize(new Dimension(500, table.getRowHeight() * 5));
 
         table.setIntercellSpacing(new Dimension(6,3));
@@ -99,7 +99,7 @@ public class CoherenceHotCachePanel
         pneSplit2.add(pneSplit);
 
         f_tpercacheModel = new HotCachePerCacheTableModel(VisualVMModel.DataType.HOTCACHE_PERCACHE.getMetadata());
-        f_percachetable = new ExportableJTable(f_tpercacheModel);
+        f_percachetable = new ExportableJTable(f_tpercacheModel, model);
         f_percachetable.setPreferredScrollableViewportSize(new Dimension(700, f_percachetable.getRowHeight() * 5));
 
         // define renderers for the columns

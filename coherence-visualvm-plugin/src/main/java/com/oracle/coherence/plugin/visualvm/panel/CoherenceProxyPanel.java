@@ -112,7 +112,7 @@ public class CoherenceProxyPanel
         // create the table
         f_tmodel = new ProxyTableModel(VisualVMModel.DataType.PROXY.getMetadata());
 
-        f_table = new ExportableJTable(f_tmodel);
+        f_table = new ExportableJTable(f_tmodel, model);
 
         f_table.setPreferredScrollableViewportSize(new Dimension(500, 150));
 

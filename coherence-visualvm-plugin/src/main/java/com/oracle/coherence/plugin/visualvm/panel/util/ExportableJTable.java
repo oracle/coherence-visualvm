@@ -39,9 +39,12 @@ import java.io.PrintStream;
 
 import java.net.URI;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
@@ -76,10 +79,12 @@ public class ExportableJTable
      * Create the table.
      *
      * @param model the {@link TableModel} to base this {@link JTable} on
+     * @param visualVMModel the {@link VisualVMModel} used by this plugin
      */
-    public ExportableJTable(TableModel model)
+    public ExportableJTable(TableModel model, VisualVMModel visualVMModel)
         {
         super(model);
+        f_visualVMModel = visualVMModel;
 
         setAutoCreateRowSorter(true);
 
@@ -179,7 +184,8 @@ public class ExportableJTable
                 {
                 if (Desktop.isDesktopSupported())
                     {
-                    Desktop.getDesktop().browse(new URI(BASE_URL + sSimpleName));
+                    // determine the Coherence version
+                    Desktop.getDesktop().browse(new URI(BASE_URL + getHelpFile(f_visualVMModel) + "#" + sSimpleName));
                     }
                 }
             catch (Exception ee)
@@ -431,9 +437,41 @@ public class ExportableJTable
         private JTable m_table;
         }
 
+
+    /**
+     * Returns the help file for the specific Coherence version.
+     * @param model {@link VisualVMModel}
+     * @return the help file
+     */
+    private String getHelpFile(VisualVMModel model)
+        {
+        String sVersion  = model.getClusterVersion();
+        String sHelpFile = "help.adoc"; // default for latest
+
+        for (Map.Entry<String, String> entry : HELP_MAPPING.entrySet())
+            {
+            if (sVersion.contains(entry.getKey()))
+                {
+                sHelpFile = entry.getValue();;
+                break;
+                }
+            }
+
+        return sHelpFile;
+        }
+
     // ----- constants ------------------------------------------------------
 
-    private static final String BASE_URL = "https://github.com/oracle/coherence-visualvm/blob/main/help.adoc#";
+    // list of help files for each version
+    private static final Map<String, String> HELP_MAPPING = new HashMap<String, String>() {{
+         put("12.2.1.4", "help_12214.adoc");
+         put("12.2.1.3", "help_12213.adoc");
+         put("12.1.3",   "help_1213.adoc");
+         put("12.1.2",   "help_1212.adoc");
+         put("14.1.1.0", "help_14110.adoc");
+    }};
+
+    private static final String BASE_URL = "https://github.com/oracle/coherence-visualvm/blob/main/help/";
 
     private static final long serialVersionUID = 5999795232769091368L;
 
@@ -462,6 +500,8 @@ public class ExportableJTable
         }
 
     // ----- data members ---------------------------------------------------
+
+    private final VisualVMModel f_visualVMModel;
 
     private MenuOption[] m_menuOption = null;
 

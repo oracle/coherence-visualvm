@@ -89,8 +89,8 @@ public class CoherenceServicePanel
         f_tmodel = new ServiceTableModel(VisualVMModel.DataType.SERVICE.getMetadata());
         f_tmodelDetail = new ServiceMemberTableModel(VisualVMModel.DataType.SERVICE_DETAIL.getMetadata());
 
-        final ExportableJTable table = new ExportableJTable(f_tmodel);
-        f_tableDetail = new ExportableJTable(f_tmodelDetail);
+        final ExportableJTable table = new ExportableJTable(f_tmodel, model);
+        f_tableDetail = new ExportableJTable(f_tmodelDetail, model);
 
         if (model.getClusterVersionAsInt() >= 122100)
             {

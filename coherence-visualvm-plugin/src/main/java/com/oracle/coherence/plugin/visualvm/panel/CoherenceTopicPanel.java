@@ -93,7 +93,7 @@ public class CoherenceTopicPanel
 
         // create any table models required
         f_tmodel = new TopicTableModel(VisualVMModel.DataType.TOPICS_DETAIL.getMetadata());
-        f_table = new ExportableJTable(f_tmodel);
+        f_table = new ExportableJTable(f_tmodel, model);
 
         f_table.setPreferredScrollableViewportSize(new Dimension(500, f_table.getRowHeight() * 5));
 
