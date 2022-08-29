@@ -475,6 +475,7 @@ public class ExportableJTable
         HELP_MAPPING.put("14.1.1" + ".0", "help_14110.adoc");
     }
 
+    // base URL for help files
     private static final String BASE_URL = "https://github.com/oracle/coherence-visualvm/blob/main/help/";
 
     private static final long serialVersionUID = 5999795232769091368L;
