@@ -470,6 +470,8 @@ public class ExportableJTable
     static {
         HELP_MAPPING.put("12.2.1" + ".4", "help_12214.adoc");
         HELP_MAPPING.put("12.2.1" + ".3", "help_12213.adoc");
+        HELP_MAPPING.put("12.2.1" + ".2", "help_12213.adoc");
+        HELP_MAPPING.put("12.2.1" + ".1", "help_12213.adoc");
         HELP_MAPPING.put("12.1.3",        "help_1213.adoc");
         HELP_MAPPING.put("12.1.2",        "help_1212.adoc");
         HELP_MAPPING.put("14.1.1" + ".0", "help_14110.adoc");
