@@ -82,7 +82,7 @@ public class CoherenceJCachePanel
 
         f_tmodel = new JCacheConfigurationTableModel(VisualVMModel.DataType.JCACHE_CONFIG.getMetadata());
 
-        final ExportableJTable table = new ExportableJTable(f_tmodel);
+        final ExportableJTable table = new ExportableJTable(f_tmodel, model);
 
         RenderHelper.setColumnRenderer(table, JCacheConfigurationData.CACHE_MANAGER,
                                        new RenderHelper.ToolTipRenderer());

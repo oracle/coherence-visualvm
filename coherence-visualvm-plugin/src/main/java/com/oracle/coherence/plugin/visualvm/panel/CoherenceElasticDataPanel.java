@@ -288,7 +288,7 @@ public class CoherenceElasticDataPanel
                         return false;
                         }
                     };
-            f_table = new ExportableJTable(f_tmodel);
+            f_table = new ExportableJTable(f_tmodel, f_model);
 
             RenderHelper.setIntegerRenderer(f_table, 0);                                      // node id
             setColumnRenderer(f_table, 1, Localization.getLocalText("TTIP_used_maximum"));    // Journal files

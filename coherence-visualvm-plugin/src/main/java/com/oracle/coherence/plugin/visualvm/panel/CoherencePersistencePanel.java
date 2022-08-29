@@ -144,7 +144,7 @@ public class CoherencePersistencePanel
         // create the table
         f_tmodel = new PersistenceTableModel(VisualVMModel.DataType.PERSISTENCE.getMetadata());
 
-        f_table = new ExportableJTable(f_tmodel);
+        f_table = new ExportableJTable(f_tmodel, model);
 
         f_table.setPreferredScrollableViewportSize(new Dimension(500, 150));
 
@@ -226,7 +226,7 @@ public class CoherencePersistencePanel
         // add the notifications model
         f_tmodelNotifications = new PersistenceNotificationsTableModel(
                 VisualVMModel.DataType.PERSISTENCE_NOTIFICATIONS.getMetadata());
-        f_tableNotifications = new ExportableJTable(f_tmodelNotifications);
+        f_tableNotifications = new ExportableJTable(f_tmodelNotifications, model);
 
         f_tableNotifications.setPreferredScrollableViewportSize(new Dimension(500, 150));
         RenderHelper.setColumnRenderer(f_tableNotifications, PersistenceNotificationsData.SEQUENCE,

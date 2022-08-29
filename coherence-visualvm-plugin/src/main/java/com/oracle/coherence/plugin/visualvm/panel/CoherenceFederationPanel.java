@@ -119,9 +119,9 @@ public class CoherenceFederationPanel
         m_tmodelOutbound = new FederationOutboundTableModel(VisualVMModel.DataType.FEDERATION_DESTINATION_DETAILS.getMetadata());
 
         // create exportable JTables for each table models
-        final ExportableJTable tableFed      = new ExportableJTable(m_tmodelFed);
-        final ExportableJTable tableInbound  = new ExportableJTable(m_tmodelInbound);
-        final ExportableJTable tableOutbound = new ExportableJTable(m_tmodelOutbound);
+        final ExportableJTable tableFed      = new ExportableJTable(m_tmodelFed, model);
+        final ExportableJTable tableInbound  = new ExportableJTable(m_tmodelInbound, model);
+        final ExportableJTable tableOutbound = new ExportableJTable(m_tmodelOutbound, model);
 
         // create the scroll pane and add the table to it.
         JScrollPane pneScrollFed      = new JScrollPane(tableFed);

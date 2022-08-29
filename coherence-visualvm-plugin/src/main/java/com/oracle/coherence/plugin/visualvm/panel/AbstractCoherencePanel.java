@@ -317,7 +317,7 @@ public abstract class AbstractCoherencePanel
                     return false;
                     }
                 };
-            m_table = new ExportableJTable(m_tmodel);
+            m_table = new ExportableJTable(m_tmodel, f_model);
             RenderHelper.setHeaderAlignment(m_table, SwingConstants.CENTER);
 
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

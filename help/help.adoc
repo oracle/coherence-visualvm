@@ -377,6 +377,9 @@ All attributes are from `RamJournalRM` or `FlashJournalRM` (`Coherence:type=Jour
 |Max File Size| MaxFileSize
 !===
 
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-9237DE7B-7819-4A50-8814-B66B389F5761[FlashJournalRM] or
+https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-132FD1B7-973B-43C8-8D48-709450ECF13B[RamJournalRM] documentation for more information.
+
 [#HealthSummaryTableModel]
 === Health Summary Table
 

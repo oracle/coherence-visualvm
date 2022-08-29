@@ -139,10 +139,10 @@ public class CoherenceCachePanel
         f_tmodelFrontDetail = new CacheDetailTableModel(VisualVMModel.DataType.CACHE_FRONT_DETAIL.getMetadata());
         f_tmodelStorage = new CacheStorageManagerTableModel(VisualVMModel.DataType.CACHE_STORAGE_MANAGER.getMetadata());
 
-        final ExportableJTable table = new ExportableJTable(f_tmodel);
-        f_tableDetail = new ExportableJTable(f_tmodelDetail);
-        f_tableFrontDetail = new ExportableJTable(f_tmodelFrontDetail);
-        f_tableStorage = new ExportableJTable(f_tmodelStorage);
+        final ExportableJTable table = new ExportableJTable(f_tmodel, model);
+        f_tableDetail = new ExportableJTable(f_tmodelDetail, model);
+        f_tableFrontDetail = new ExportableJTable(f_tmodelFrontDetail, model);
+        f_tableStorage = new ExportableJTable(f_tmodelStorage, model);
 
         table.setPreferredScrollableViewportSize(new Dimension(500, table.getRowHeight() * 5));
         f_tableDetail.setPreferredScrollableViewportSize(new Dimension(500, f_tableDetail.getRowHeight() * 3));

@@ -1,0 +1,466 @@
+///////////////////////////////////////////////////////////////////////////////
+Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+
+This code is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License version 2 only, as
+published by the Free Software Foundation.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the LICENSE file that accompanied this code.
+
+This code is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+version 2 for more details (a copy is included in the LICENSE file that
+accompanied this code).
+
+You should have received a copy of the GNU General Public License version
+2 along with this work; if not, write to the Free Software Foundation,
+Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+or visit www.oracle.com if you need additional information or have any
+questions.
+///////////////////////////////////////////////////////////////////////////////
+= Table Help for VisualVM Plugin - Coherence 14.1.1.0.x
+
+This page shows help for the various tables in the Coherence VisualVM Plugin for Coherence versions 14.1.1.0.x.
+
+For the main Coherence VisualVM Plugin documentation please see https://github.com/oracle/coherence-visualvm/[here].
+
+== Contents
+
+* <<MachineTableModel, Machines Table>>
+* <<MemberTableModel, Members Table>>
+* <<ServiceTableModel, Services Table>>
+** <<ServiceMemberTableModel, Services Detail Table>>
+* <<CacheTableModel, Cache Summary Table>>
+** <<CacheDetailTableModel, Cache Details Tables>>
+** <<CacheStorageManagerTableModel, Cache Storage Table>>
+* <<FederationTableModel, Federation Summary Table>>
+** <<FederationOutboundTableModel, Federation Outbound Table>>
+** <<FederationInboundTableModel, Federation Inbound Table>>
+* <<ProxyTableModel, Proxy Servers Table>>
+* <<HttpProxyTableModel, Http Servers Table>>
+** <<HttpProxyMemberTableModel, Http Servers Detail Table>>
+* <<PersistenceTableModel, Persistence Table>>
+* <<ElasticData, Elastic Data Tables>>
+* <<HttpSessionTableModel, Http Session Table>>
+* <<JCacheConfigurationTableModel, JCache Tables>>
+* <<HotCacheTableModel, Hot Cache Table>>
+* <<HotCachePerCacheTableModel, Hot Cache Per Cache Table>>
+
+Please see the https://www.oracle.com/pls/topic/lookup?ctx=en/middleware/standalone/coherence/14.1.1.0&id=COHMG5442[Coherence MBeans Reference] for detailed information on all the Coherence MBeans and attributes.
+
+[#MachineTableModel]
+=== Machines Table
+
+This table shows information regarding the machines that are part of a Coherence Cluster.
+
+All attributes are from `Coherence:type=Platform,Domain=java.lang,subType=OperatingSystem` except for `Machine Name` which is from `NodeMBean` (`Coherence:type=Node`).
+
+!===
+|**Column** | **Source / Comment**
+|Machine Name| UnicastAddress
+|Core Count | AvailableProcessors
+|Load Average | SystemLoadAverage or SystemCpuLoad (Windows)
+|Total Physical Memory (bytes) | TotalPhysicalMemorySize
+|Free Physical Memory (bytes) | FreePhysicalMemorySize
+|Percentage Free Memory | Calculated
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-0AB8710B-2A1D-432D-AFBF-8E73B8230D51[ClusterNodeMBean] documentation for more information.
+
+[#MemberTableModel]
+=== Members Table
+
+This table shows information regarding all the members in a Coherence cluster.
+
+All attributes are from `NodeMBean` (`Coherence:type=Node,nodeId=n`).
+
+!===
+|**Column** | **Source / Comment**
+|Node Id| nodeId (key)
+|Unicast Address | UnicastAddress
+|Port | UnicastPort
+|Publisher Success Rate | PublisherSuccessRate
+|Receiver Success Rate | ReceiverSuccessRate
+|Send Q Size | SendQueueSize
+|Max Heap (MB) | MemoryMaxMB
+|Used Heap (MB) | MemoryMaxMB - MemoryAvailableMB
+|Free Heap (MB) | MemoryAvailableMB
+|Storage Enabled | true if any services are storage enabled on this member
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-0AB8710B-2A1D-432D-AFBF-8E73B8230D51[ClusterNodeMBean] documentation for more information.
+
+[#ServiceTableModel]
+=== Services Table
+
+This table shows service summary information regarding all the services in a Coherence cluster.
+
+All attributes are summarized from `ServiceMBean` (`Coherence:type=Service,name=serviceName`).
+
+!===
+|**Column** | **Source / Comment**
+|Service Name| name (key)
+|StatusHA | StatusHA - only applicable to partitioned services
+|Members | MemberCount
+|Storage Enabled | Count of members where StorageEnabled attribute is true
+|Partitions | PartitionsAll
+|Endangered | PartitionsEndangered
+|Vulnerable | PartitionsVulnerable
+|Unbalanced | PartitionsUnbalanced
+|Pending | RequestPendingCount
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-0C5A3074-50D1-4B15-A4C2-E014E5F4827B[ServiceMBean] documentation for more information.
+
+[#ServiceMemberTableModel]
+=== Services Detail Table
+
+This table shows service detail information regarding the selected service.
+
+All attributes are from `ServiceMBean` for specific nodes. (`Coherence:type=Service,name=serviceName,nodeId=n`).
+
+!===
+|**Column** | **Source / Comment**
+|Node Id| nodeId (key)
+|Threads | ThreadCount
+|Idle Threads | ThreadIdleCount
+|Thread Util % | Calculated
+|Task Average (ms) | TaskAverageDuration
+|Task Backlog | TaskBacklog
+|Request Avge (ms) | RequestAverageDuration
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-0C5A3074-50D1-4B15-A4C2-E014E5F4827B[ServiceMBean] documentation for more information.
+
+[#CacheTableModel]
+=== Cache Summary Table
+
+This table shows cache summary for all caches in a Coherence cluster.
+
+All attributes are summarized from `CacheMBean` (`Coherence:type=CacheMBean,tier=back`).
+
+!===
+|**Column** | **Source / Comment**
+|Service / Cache Name| service (key) + name (key)
+|Size | Size summed by service / cache
+|Memory (bytes) | Unit * UnitFactor summed by service / cache
+|Memory (MB) | Above value via MB
+|Avge Object Size (bytes) | Calculated Memory (bytes) / Size
+|Unit Calculator | If MemoryUnits is true then BINARY otherwise FIXED
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html[CacheMBean] documentation for more information.
+
+[#CacheDetailTableModel]
+=== Cache Details Table
+
+==== Cache Size and Access Details Table
+This table shows cache details regarding the selected cache.
+
+All attributes are from `CacheMBean` (`Coherence:type=CacheMBean,tier=back`).
+
+!===
+|**Column** | **Source / Comment**
+|Node Id| nodeId (key)
+|Size | Size
+|Memory (bytes) | Unit * UnitFactor 
+|Total Gets | TotalGets
+|Total Puts | TotalPuts
+|Cache Hits | CacheHits
+|Cache Misses | CacheMisses
+|Hit Probability| HitProbability
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html[CacheMBean] documentation for more information.
+
+==== Front Cache Size and Access Details Table
+This table shows cache front details regarding the selected cache.
+
+All attributes are from `CacheMBean` (`Coherence:type=CacheMBean,tier=front`) and are the same as the above table.
+
+[#CacheStorageManagerTableModel]
+=== Cache Storage Details
+
+This table shows cache storage regarding the selected cache.
+
+All attributes are from `StorageManager` (`Coherence:type=StorageManager,service=serviceName,cache=cacheName`).
+
+!===
+|**Column** | **Source / Comment**
+|Node Id| nodeId (key)
+|Locks Granted | LocksGranted
+|Locks Pending | LocksPending
+|Listener Registrations | ListenerRegistrations
+|Max Query (ms) | MaxQueryDurationMillis
+|Max Query Description | MaxQueryDescription
+|Non Opt Query Avge | NonOptimizedQueryAverageMillis
+|Optimized Query Avge | OptimizedQueryAverageMillis
+|Index Total Units (bytes) | IndexTotalUnits (not available in all Coherence versions)
+|Index Total Millis (ms) | IndexingTotalMillis (not available in all Coherence versions)
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-8F929EB2-2101-4F1C-A7E6-ACB80C67F0F6[StorageManagerMBean] documentation for more information.
+
+[#FederationTableModel]
+=== Federation Summary Table
+
+This table shows federation summary details in a Coherence cluster.
+
+All attributes are summarised from `DestinationMBean` and `OriginMBean` (Coherence:type=Federation,subType=Destination` and `Coherence:type=Federation,subType=Origin`).
+
+!===
+|**Column** | **Source / Comment**
+|Service Name | service (key)
+|Participant Name | name (key)
+|Status | State
+|Current Bytes Sent /sec | BytesSentSecs summed by service / participant from DestinationMBean
+|Current Msgs Sent /sec | MsgsSentSecs summed by service / participant from DestinationMBean
+|Current Bytes Rec /sec | BytesRecSecs summed by service / participant from DestinationMBean
+|Current Msgs Rec /sec | MsgsRecSecs summed by service / participant from DestinationMBean
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-858AA9C4-A756-4E64-8ACC-61AAE94C9387[OriginMBean] and
+https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-E936E914-6967-4E44-B8B6-FEBDF10CBE67[DestinationMBean] documentation for more information.
+
+[#FederationOutboundTableModel]
+=== Federation Outbound Table
+
+This table shows federation outbound details for the selected service.
+
+All attributes are from `DestinationMBean` (Coherence:type=Federation,subType=Destination`).
+
+!===
+|**Column** | **Source / Comment**
+|Node Id | nodeId (key)
+|State | State
+|Current Throughput (Mbps) | CurrentBandwidth
+|Total Bytes Sent | TotalBytesSent
+|Total Entries Sent | TotalEntriesSent
+|Total Records Sent | TotalRecordsSent
+|Total Msgs Sent | TotalMsgSent
+|Total Msgs Unacked | TotalMsgUnacked
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-E936E914-6967-4E44-B8B6-FEBDF10CBE67[DestinationMBean] documentation for more information.
+
+[#FederationInboundTableModel]
+=== Federation Inbound Table
+
+This table shows federation inbound details for the selected service.
+
+All attributes are from `OriginMBean` (Coherence:type=Federation,subType=Origin`).
+
+!===
+|**Column** | **Source / Comment**
+|Node Id | nodeId (key)
+|State | State
+|Current Throughput (Mbps) | CurrentBandwidth
+|Total Bytes Received | TotalBytesRec
+|Total Records Received | TotalRecordsRec
+|Total Entries Received | TotalEntriesRec
+|Total Msgs Received | TotalMsgRec
+|Total Msgs Unacked | TotalMsgUnacked
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-858AA9C4-A756-4E64-8ACC-61AAE94C9387[OriginMBean] documentation for more information.
+
+[#ProxyTableModel]
+=== Proxy Servers Table
+
+This table shows summary for proxy servers in a Coherence cluster.
+
+All attributes are summarised from `ConnectionManagerMBean` where `Procotol=tcp` and `ConnectionMBean` (`Coherence:type=ConnectionManager` and  `Coherence:type=Connection`).
+
+!===
+|**Column** | **Source / Comment**
+|IP Address/Port | HostIP
+|Service Name | name (key)
+|Node Id | ndoeId (key)
+|Connection Count | ConnectionCount
+|Outgoing Msg Backlog | OutgoingMessageBacklog
+|Total Bytes Rcv | TotalBytesReceived
+|Total Bytes Sent | TotalBytesSent
+|Total Msgs Rcv | TotalMessagesReceived
+|Total Msgs Sent | TotalMessagesSent
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-022FB1A1-F377-405A-A424-2CB1781330C1[ConnectionManagerMBean]
+or https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-F247B2A6-85A6-4F87-AD69-C0E184EF25D5[ConnectionMBean] documentation for more information.
+
+[#HttpProxyTableModel]
+=== Http Servers Table
+
+This table shows summary for Http servers running in the Coherence cluster.
+
+All attributes are summarised from `ConnectionManagerMBean` where `Procotol=http` (`Coherence:type=ConnectionManager`).
+
+!===
+|**Column** | **Source / Comment**
+|Service Name | name (key)
+|Http Server Type | HttpServerType
+|Members | Sum of members running this service
+|Total Requests | Sum of TotalRequestCount for all members running this service
+|Total Errors | Sum of TotalErrorCount for all members running this service
+|Avge Req / Sec | Average of RequestsPerSecond for all members running this service
+|Avge Request Time (ms) | Average of AverageRequestTime for all members running this service
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-022FB1A1-F377-405A-A424-2CB1781330C1[ConnectionManagerMBean] documentation for more information.
+
+[#HttpProxyMemberTableModel]
+=== Http Servers Detail Table
+
+This table shows Http server details for the selected Http server.
+
+All attributes are from `ConnectionManagerMBean` where `Procotol=http` (`Coherence:type=ConnectionManager`).
+
+!===
+|**Column** | **Source / Comment**
+|Node Id | nodeId (key)
+|IP Address/Port | HostIP
+|Avge Request Time (ms) | AverageRequestTime
+|Avge Req / Sec |  RequestsPerSecond
+|Total Requests | TotalRequestCount
+|Total Errors | TotalErrorCount
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-022FB1A1-F377-405A-A424-2CB1781330C1[ConnectionManagerMBean] documentation for more information.
+
+[#PersistenceTableModel]
+=== Persistence Table
+
+This table shows Persistence summary for the Coherence cluster.
+
+All attributes are summarized from `ServiceMBean` (`Coherence:type=Service,name=serviceName`) except for
+`Snapshot Count` and `Status` which are from `PersistenceMBean` (`Coherence:type=Persistence)`.
+
+!===
+|**Column** | **Source / Comment**
+|Service / Cache Name| service (key) + name (key)
+|Mode | PersistenceMode
+|Active Space Used on disk (bytes) | Sum of PersistenceActiveSpaceUsed for all members of the service
+|Active Space Used on disk (MB) | Above value in MB
+|Backup Space Used on disk (MB) | Sum of PersistenceBackupSpaceUsed for all members of the service
+|Average Additional Latency (ms) | Average of PersistenceLatencyAverage for all members of the service
+|Maximum Additional Latency (ms) | Max of PersistenceLatencyAverage for all members of the services
+|Snapshot Count | Snapshots array length
+|Status | OperationStatus
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-0C5A3074-50D1-4B15-A4C2-E014E5F4827BServiceMBean] or
+https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-5B207607-9C4E-4F44-AE00-AC869369AF5A[PersistenceManagerMBean] documentation for more information.
+
+[#ElasticData]
+=== Elastic Data Tables
+
+These tables show Elastic data summary for the Coherence cluster for either RAM or Flash Journal.
+
+All attributes are from `RamJournalRM` or `FlashJournalRM` (`Coherence:type=Journal,name=FlashJournalRM` or `Coherence:type=Journal,name=RamJournalRM`).
+
+!===
+|**Column** | **Source / Comment**
+|Node Id | nodeId (key)
+|Journal Files | FileCount + "/" +  MaxJournalFilesNumber
+|Total Data Size | TotalDataSize
+|Committed | FileCount * MaxFileSize
+|Compactions | ExhaustiveCompactionCount
+|Current Collector Load Factor| CurrentCollectorLoadFactor
+|Max File Size| MaxFileSize
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-9237DE7B-7819-4A50-8814-B66B389F5761[FlashJournalRM] or
+https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-132FD1B7-973B-43C8-8D48-709450ECF13B[RamJournalRM] documentation for more information.
+
+[#HttpSessionTableModel]
+=== Http Session Table
+
+This table shows summarised data from Coherence*Web Http sessions for the Coherence cluster.
+
+All attributes are summarised from `Coherence:type=HttpSessionManager` or `Coherence:type=WebLogicHttpSessionManager`.
+
+!===
+|**Column** | **Source / Comment**
+|Application Id | appId (key)
+|Platform | Either "WebLogic" or "Other"
+|Session Timeout | SessionTimeout
+|Session Cache | SessionCacheName
+|Overflow Cache | OverflowCacheName
+|Avge Session Size | SessionAverageSize
+|Total Reaped Sessions | ReapedSessions
+|Avge Reaped Sessions | AverageReapedSessions
+|Avge Reap Duration | AverageReapDuration
+|Last Reap Duration Max | LastReapDuration
+|Session Updates | SessionUpdates
+!===
+
+[#JCacheConfigurationTableModel]
+=== JCache Tables
+
+These tables show summarised "Management" and "Statistics" MBean information regarding the configured JCache caches for a Coherence cluster.
+
+==== JCache Config Table
+
+All attributes are from `javax.cache:type=CacheConfiguration`.
+
+!===
+|**Column** | **Source / Comment**
+|Configuration / Cache | CacheManager (key) + "/ " + Cache (key)
+|Key Type | KeyType
+|Value Type | ValueType
+|Statistics Enabled | StatisticsEnabled
+|Read Through | ReadThrough
+|Write Through | WriteThrough
+|Store By Value | StoreByValue
+!===
+
+==== JCache Statistics Table
+
+!===
+|**Column** | **Source / Comment**
+|Configuration / Cache | CacheManager (key) + "/ " + Cache (key)
+|Total Puts | CachePuts
+|Total Gets | TotalGets
+|Total Removals | CacheRemovals
+|Cache Hits | CacheHits
+|Cache Misses | CacheMisses
+|Total Evictions | CacheEvictions
+|Average Get Time | AverageGetTime
+|Average Put Time | AveragePutTime
+|Average Remove Time | AverageRemoveTime
+|Cache Hit % | CacheHitPercentage
+|Cache Miss % | CacheMissPercentage
+!===
+
+[#HotCacheTableModel]
+=== Hot Cache Table
+
+These tables show summaries data from HotCache for a Coherence cluster.
+
+All attributes are from `Coherence:type=CoherenceAdapter`.
+
+!===
+|**Column** | **Source / Comment**
+|Member | member (key)
+|Number Of Operations Processed | NumberOfOperationsProcessed
+|StartTime | StartTime
+|Trail File Name | TrailFileName
+|Trail File Position| TrailFilePosition
+!===
+
+[#HotCachePerCacheTableModel]
+=== Hot Cache Per Cache Table
+
+All attributes are from `Coherence:type=CoherenceAdapter,name=hotcache,member=member`.
+
+!===
+|**Column** | **Source / Comment**
+|Cachename/Operation | key
+|Count | PerCacheStatistics.Count
+| Max value | PerCacheStatistics.Max
+| Min value | PerCacheStatistics.Min
+| Mean value | PerCacheStatistics.Mean
+!===
