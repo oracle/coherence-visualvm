@@ -397,7 +397,7 @@ All attributes are summarised from `HeatlhMBean` (`Coherence:type=Health`).
 |Safe | Count of number of member where Safe is true
 !===
 
-See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-F6B749CD-74C1-4A50-AF6A-96E8638021B1[HealthMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/oracle-coherence-mbeans-reference.html#GUID-C6AAF4D7-476B-4D99-8539-0E9C9950EA50[HealthMBean] documentation for more information.
 
 [#GrpcProxyTableModel]
 === Grpc Proxy Table
