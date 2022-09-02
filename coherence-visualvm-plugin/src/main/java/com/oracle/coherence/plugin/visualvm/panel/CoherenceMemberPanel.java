@@ -271,31 +271,34 @@ public class CoherenceMemberPanel
     @Override
     public void updateData()
         {
-        List<Entry<Object, Data>> tempList = new ArrayList<>();
+        List<Entry<Object, Data>> tempList   = new ArrayList<>();
+        List<Entry<Object, Data>> memberData = f_model.getData(VisualVMModel.DataType.MEMBER);
 
-        // go through and set storage enabled column
-        for (Entry<Object, Data> entry : f_model.getData(VisualVMModel.DataType.MEMBER))
+        // ensure we have member data to process
+        if (memberData != null)
             {
-            Data data = entry.getValue();
-            int nodeId = (Integer) entry.getKey();
-            if (!isNodeStorageEnabled(nodeId))
+            // go through and set storage enabled column
+            for (Entry<Object, Data> entry : memberData)
                 {
-                data.setColumn(MemberData.STORAGE_ENABLED, "false");
+                Data data = entry.getValue();
+                int nodeId = (Integer) entry.getKey();
+                if (!isNodeStorageEnabled(nodeId))
+                    {
+                    data.setColumn(MemberData.STORAGE_ENABLED, "false");
+                    }
+
+                tempList.add(entry);
                 }
 
-            tempList.add(entry);
+            m_memberData = tempList;
+            m_clusterData = f_model.getData(VisualVMModel.DataType.CLUSTER);
+
+            if (m_memberData != null)
+                {
+                f_tmodel.setDataList(m_memberData);
+                }
             }
-
-        m_memberData = tempList;
-        m_clusterData = f_model.getData(VisualVMModel.DataType.CLUSTER);
-
-        if (m_memberData != null)
-            {
-            f_tmodel.setDataList(m_memberData);
-            }
-
         }
-
 
     // ----- inner classes ReportEnvironmentMenuOption ----------------------
 

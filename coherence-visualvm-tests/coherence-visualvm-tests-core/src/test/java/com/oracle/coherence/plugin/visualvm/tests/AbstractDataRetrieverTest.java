@@ -640,7 +640,8 @@ public abstract class AbstractDataRetrieverTest
             {
             String sServiceName = (String) entry.getValue().getColumn(ProxyData.SERVICE_NAME);
 
-            assertThat(sServiceName, is(PROXY_SERVICE));
+            assertTrue("Proxy service=" + sServiceName + " should be " + PROXY_SERVICE + " or " + PROXY_SERVICE2,
+                    PROXY_SERVICE.equals(sServiceName) || PROXY_SERVICE2.equals(sServiceName));
             }
         }
 
@@ -810,6 +811,7 @@ public abstract class AbstractDataRetrieverTest
     private static final String DIST1_SERVICE      = "DistributedScheme1";
     private static final String DIST2_SERVICE      = "DistributedScheme2";
     private static final String PROXY_SERVICE      = "ExtendTcpProxyService";
+    private static final String PROXY_SERVICE2     = "\"$SYS:SystemProxy\"";
     private static final String REPLICATED_SERVICE = "ReplicatedScheme";
     private static final String FEDERATED_SERVICE  = "FederatedPartitionedPofCache";
     private static final String NAME_SERVICE       = "NameService";

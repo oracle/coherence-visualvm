@@ -278,11 +278,16 @@ public abstract class AbstractCoherencePanel
      */
     protected boolean isNodeStorageEnabled(int nodeId)
         {
-        for (Map.Entry<Object, Data> entry : f_model.getData(VisualVMModel.DataType.NODE_STORAGE))
+        List<Map.Entry<Object, Data>> nodeStorageData = f_model.getData(VisualVMModel.DataType.NODE_STORAGE);
+
+        if (nodeStorageData != null)
             {
-            if ((Integer) entry.getValue().getColumn(NodeStorageData.NODE_ID) == nodeId)
+            for (Map.Entry<Object, Data> entry : nodeStorageData)
                 {
-                return (Boolean) entry.getValue().getColumn(NodeStorageData.STORAGE_ENABLED);
+                if ((Integer) entry.getValue().getColumn(NodeStorageData.NODE_ID) == nodeId)
+                    {
+                    return (Boolean) entry.getValue().getColumn(NodeStorageData.STORAGE_ENABLED);
+                    }
                 }
             }
 
