@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -169,6 +169,12 @@ public abstract class AbstractData
                     // now that we have output from the reporter, call the
                     // appropriate method in the class to populate
                     mapCollectedData = getReporterData(reportData, model);
+                    }
+                else
+                    {
+                    // report data is null - this can occur when the reporter has not been correctly started
+                    // due to a configuration error. ensure we raise and exception to fall back tp JMX
+                    throw new RuntimeException("Report returned null and may not have been started correctly");
                     }
                 }
             catch (Exception e)

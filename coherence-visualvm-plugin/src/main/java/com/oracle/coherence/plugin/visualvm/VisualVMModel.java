@@ -1635,11 +1635,6 @@ public class VisualVMModel
     public static final String PROP_REPORTER_DISABLED = "coherence.plugin.visualvm.reporter.disabled";
 
     /**
-     * Property to enable experimental heat map for caches.
-     */
-    public static final String PROP_HEATMAP_ENABLED = "coherence.plugin.visualvm.heatmap.enabled";
-
-    /**
      * Property to enable dropdown list of snapshots when performing snapshot operations.
      */
     public static final String PROP_PERSISTENCE_LIST_ENABLED = "coherence.plugin.visualvm.persistence.list";
