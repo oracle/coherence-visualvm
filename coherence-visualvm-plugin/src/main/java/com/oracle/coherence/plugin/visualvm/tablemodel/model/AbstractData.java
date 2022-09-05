@@ -140,7 +140,7 @@ public abstract class AbstractData
     @Override
     public SortedMap<Object, Data> getAggregatedDataUsingReport(VisualVMModel model,
                                                                 RequestSender requestSender,
-                                                                String        sReportXML) throws Exception
+                                                                String        sReportXML)
         {
         SortedMap<Object, Data> mapCollectedData = null;
 
