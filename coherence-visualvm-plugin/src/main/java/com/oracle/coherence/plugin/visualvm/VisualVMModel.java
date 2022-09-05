@@ -429,7 +429,7 @@ public class VisualVMModel
                 catch (Exception e)
                     {
                     // we received an error running the report, so mark as
-                    // a fall back so it will be immediately run
+                    // a fall back, so it will be immediately run
                     LOGGER.log(Level.WARNING, Localization.getLocalText("ERR_Failed_to_run_report", clazz.toString()), e);
                     fFallBack = true;
                     }
@@ -440,15 +440,15 @@ public class VisualVMModel
         // 1. If we need to fall-back as the reporter is being used but no report yet available
         // 2. The reporter is not available
         // 3. We have not yet decided is the reporter is available
-        // 4. Bug 22132359 - We are connecting to pre 12.2.1.1.0 cluster from 12.2.1.1.0 or above and we
-        //                   are collecting ProxyStats,  we need to force to use JMX rather than report
+        // 4. Bug 22132359 - We are connecting to pre 12.2.1.1.0 cluster from 12.2.1.1.0 or above, and we
+        //                   are collecting ProxyStats, we need to force to use JMX rather than report
         if (fFallBack || isReporterAvailable() == null || !isReporterAvailable() ||
             (clazz.equals(ProxyData.class) && getClusterVersionAsInt() < 122110))
             {
             try
                 {
-                // get data the old fashioned way via JMX queries
-                // ClusterData is a a special case as its used to determine if
+                // get data the old-fashioned way via JMX queries
+                // ClusterData is a special case as it's used to determine if
                 // we may be able to use the reporter
                 if (clazz.equals(ClusterData.class))
                     {
@@ -1633,11 +1633,6 @@ public class VisualVMModel
      * Property to disable use of the Coherence Reporter.
      */
     public static final String PROP_REPORTER_DISABLED = "coherence.plugin.visualvm.reporter.disabled";
-
-    /**
-     * Property to enable experimental heat map for caches.
-     */
-    public static final String PROP_HEATMAP_ENABLED = "coherence.plugin.visualvm.heatmap.enabled";
 
     /**
      * Property to enable dropdown list of snapshots when performing snapshot operations.

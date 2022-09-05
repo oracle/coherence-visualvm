@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -140,7 +140,7 @@ public abstract class AbstractData
     @Override
     public SortedMap<Object, Data> getAggregatedDataUsingReport(VisualVMModel model,
                                                                 RequestSender requestSender,
-                                                                String        sReportXML) throws Exception
+                                                                String        sReportXML)
         {
         SortedMap<Object, Data> mapCollectedData = null;
 
@@ -170,6 +170,12 @@ public abstract class AbstractData
                     // appropriate method in the class to populate
                     mapCollectedData = getReporterData(reportData, model);
                     }
+                else
+                    {
+                    // report data is null - this can occur when the reporter has not been correctly started
+                    // due to a configuration error. ensure we raise and exception to fall back tp JMX
+                    throw new ReporterException("Report returned null and may not have been started correctly");
+                    }
                 }
             catch (Exception e)
                 {
@@ -180,9 +186,9 @@ public abstract class AbstractData
 
                 model.setReporterAvailable(false);
 
-                // this exception is thrown so we can catch above and re-run the report
+                // this exception is thrown, so we can catch above and re-run the report
                 // using the standard way
-                throw new RuntimeException("Error running report", e);
+                throw new ReporterException("Error running report", e);
                 }
             }
         return mapCollectedData;
@@ -344,6 +350,24 @@ public abstract class AbstractData
         return null;
         }
 
+
+    // ----- inner classes --------------------------------------------------
+
+    /**
+     * Indicates there was a reporter exception.
+     */
+    public static class ReporterException extends RuntimeException
+        {
+        public ReporterException(String sMessage)
+            {
+            super(sMessage);
+            }
+
+        public ReporterException(String sMessage, Throwable t)
+            {
+            super(sMessage, t);
+            }
+        }
 
     // ----- constants ------------------------------------------------------
 
