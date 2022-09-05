@@ -1,0 +1,17 @@
+.gitignore
+tools/copyright/glassfish-copyright-maven-plugin-2.4-SNAPSHOT.jar
+THIRD_PARTY_LICENSES.txt
+CONTRIBUTING.md
+SECURITY.md
+LICENSE.txt
+coherence-visualvm-plugin/src/main/resources/com/oracle/coherence/plugin/visualvm/Bundle.properties
+coherence-visualvm-plugin/src/main/nbm/manifest.mf
+etc/copyright-exclude.txt
+etc/header-2.txt
+etc/header-3.txt
+etc/header.txt
+.png
+.iml
+.log
+coherence-visualvm-plugin/license.txt
+help/README.md

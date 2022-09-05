@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-  Copyright (c) 2020, 2021 Oracle and/or its affiliates. All rights reserved.
+  Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
   This code is free software; you can redistribute it and/or modify it
@@ -54,11 +54,13 @@
 
     <!-- default coherence versions -->
     <default.coherence.ce.version>22.06.1</default.coherence.ce.version>
-    <default.coherence.commercial.version>14.1.2-0-0-SNAPSHOT</default.coherence.commercial.version>
+    <default.coherence.commercial.version>14.1.2-0-0-SNAPSHOT
+    </default.coherence.commercial.version>
 
     <failsafe.argLine>-Xmx1g -XX:+HeapDumpOnOutOfMemoryError
       -XX:HeapDumpPath=${project.build.directory} -XX:+ExitOnOutOfMemoryError
-      -Dfile.encoding=UTF-8 --illegal-access=permit --add-opens=java.base/java.net=ALL-UNNAMED
+      -Dfile.encoding=UTF-8 --illegal-access=permit
+      --add-opens=java.base/java.net=ALL-UNNAMED
     </failsafe.argLine>
     <groovy.version>3.0.12</groovy.version>
     <jackson.version>2.13.3</jackson.version>
@@ -79,6 +81,8 @@
     <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
     <maven.bundle.plugin.version>4.2.1</maven.bundle.plugin.version>
 
+    <maven.directory.plugin.version>0.1</maven.directory.plugin.version>
+    <maven.exec.plugin.version>1.4.0</maven.exec.plugin.version>
     <maven.failsafe.plugin.version>3.0.0-M5</maven.failsafe.plugin.version>
     <maven.enforcer.plugin.version>3.0.0-M3</maven.enforcer.plugin.version>
     <maven.flatten.plugin.version>1.2.2</maven.flatten.plugin.version>
@@ -90,6 +94,8 @@
     <maven.replacer.plugin.version>1.5.2</maven.replacer.plugin.version>
     <maven.resources.plugin.version>2.7</maven.resources.plugin.version>
     <maven.surefire.plugin.version>3.0.0-M5</maven.surefire.plugin.version>
+
+    <copyright.exclude.files>${top.parent.basedir}/etc/copyright-exclude.txt</copyright.exclude.files>
   </properties>
 
   <dependencyManagement>
@@ -185,7 +191,7 @@
           </exclusion>
         </exclusions>
       </dependency>
-      
+
       <dependency>
         <groupId>org.hamcrest</groupId>
         <artifactId>hamcrest</artifactId>
@@ -280,5 +286,71 @@
         </plugin>
       </plugins>
     </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.commonjava.maven.plugins</groupId>
+        <artifactId>directory-maven-plugin</artifactId>
+        <version>${maven.directory.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>generate-top-parent-basedir</id>
+            <goals>
+              <goal>highest-basedir</goal>
+            </goals>
+            <phase>validate</phase>
+            <configuration>
+              <property>top.parent.basedir</property>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>copyright</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>${maven.exec.plugin.version}</version>
+            <!-- inherited = false - we do not want/need this copyright check to execute in sub-modules -->
+            <inherited>false</inherited>
+            <executions>
+              <execution>
+                <id>copyright-check</id>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <phase>validate</phase>
+                <configuration>
+                  <mainClass>org.glassfish.copyright.Copyright</mainClass>
+                  <additionalClasspathElements>
+                    ${top.parent.basedir}/tools/copyright/glassfish-copyright-maven-plugin-2.4-SNAPSHOT.jar
+                  </additionalClasspathElements>
+                  <addOutputToClasspath>false</addOutputToClasspath>
+                  <addResourcesToClasspath>false</addResourcesToClasspath>
+                  <arguments>
+                    <argument>-c</argument>
+                    <argument>-X</argument>
+                    <argument>@${copyright.exclude.files}</argument>
+                    <argument>-C</argument>
+                    <argument>${top.parent.basedir}/etc/header.txt</argument>
+                    <argument>-A</argument>
+                    <argument>${top.parent.basedir}/etc/header-2.txt</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
