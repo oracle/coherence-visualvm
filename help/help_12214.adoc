@@ -44,6 +44,7 @@ For the main Coherence VisualVM Plugin documentation please see https://github.c
 * <<HttpProxyTableModel, Http Servers Table>>
 ** <<HttpProxyMemberTableModel, Http Servers Detail Table>>
 * <<PersistenceTableModel, Persistence Table>>
+* <<PersistenceNotificationsTableModel, Persistence Notifications>>
 * <<ElasticData, Elastic Data Tables>>
 * <<HttpSessionTableModel, Http Session Table>>
 * <<JCacheConfigurationTableModel, JCache Tables>>
@@ -464,3 +465,21 @@ All attributes are from `Coherence:type=CoherenceAdapter,name=hotcache,member=me
 | Min value | PerCacheStatistics.Min
 | Mean value | PerCacheStatistics.Mean
 !===
+
+[#PersistenceNotificationsTableModel]
+=== Persistence Notifications
+
+All attributes are calculated from begin / end JMX notifications from `Coherence:type=Persistence,service=service-name,responsibility=PersistenceCoordinator`.
+
+!===
+|**Column** | **Source / Comment**
+|Sequence| Auto-generated
+|Service Name | Service Name
+|Operation| The operation carried out
+|Start Time| The start time of the operation
+|End Time| The end time of the operation
+|Duration (ms)| The duration of the operation in millis
+|Message| Description of the operation
+!===
+
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-5B207607-9C4E-4F44-AE00-AC869369AF5A[PersistenceManagerMBean] documentation for more information.
