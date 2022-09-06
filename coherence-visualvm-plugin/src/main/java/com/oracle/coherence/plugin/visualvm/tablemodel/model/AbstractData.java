@@ -148,7 +148,6 @@ public abstract class AbstractData
         // carry out any parameter substitution or pre-processing of reporter XML
         sReportXML = preProcessReporterXML(model, sReportXML);
 
-
         if (m_sReporterLocation == null)
             {
             // reporter location has not been defined, so lets find it
@@ -173,9 +172,16 @@ public abstract class AbstractData
                 else
                     {
                     // report data is null - this can occur when the reporter has not been correctly started
-                    // due to a configuration error. ensure we raise and exception to fall back tp JMX
-                    throw new ReporterException("Report returned null and may not have been started correctly");
+                    // due to a configuration error. Check that the reporter state == "Error" and
+                    // ensure we raise and exception to fall back tp JMX if it is
+                    String sState = jmxRequestSender.getAttribute(new ObjectName(m_sReporterLocation), "State");
+                    if ("Error".equalsIgnoreCase(sState))
+                        {
+                        throw new ReporterException("Reporter returned null and may not have been started correctly. Class=" +
+                                                    this.getClass());
+                        }
                     }
+                    // reporter state != "Error", so this may be a valid null result
                 }
             catch (Exception e)
                 {
