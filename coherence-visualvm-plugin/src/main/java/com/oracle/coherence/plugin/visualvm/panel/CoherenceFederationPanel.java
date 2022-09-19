@@ -54,6 +54,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.swing.GroupLayout;
@@ -142,10 +143,10 @@ public class CoherenceFederationPanel
             setMenuOptions.add(new StartMenuOption(model, m_requestSender, tableFed, StartMenuOption.START_WITH_NO_BACKLOG));
             }
 
-        setMenuOptions.add(new StopMenuOption(model, m_requestSender, tableFed));
-        setMenuOptions.add(new PauseMenuOption(model, m_requestSender, tableFed));
+        setMenuOptions.add(new StopMenuOption(model, m_requestSender, tableFed, "LBL_stop_menu", "stop"));
+        setMenuOptions.add(new PauseMenuOption(model, m_requestSender, tableFed, "LBL_pause_menu", "pause"));
         setMenuOptions.add(new SeparatorMenuOption(model, m_requestSender, tableFed));
-        setMenuOptions.add(new ReplicateAllMenuOption(model, m_requestSender, tableFed));
+        setMenuOptions.add(new ReplicateAllMenuOption(model, m_requestSender, tableFed, "LBL_replicate_all_menu", "replicateAll"));
         setMenuOptions.add(new RetrievePendingIncomingMessagesMenuOption(model, m_requestSender, tableFed));
         setMenuOptions.add(new RetrievePendingOutgoingMessagesMenuOption(model, m_requestSender, tableFed));
 
@@ -597,9 +598,9 @@ public class CoherenceFederationPanel
         }
 
     /**
-     * MenuOption for stop jmx operation in FederationManager.
+     * MenuOption for various generic options.
      */
-    private class StopMenuOption
+    private class GenericOperationMenuOption
         extends AbstractMenuOption
         {
         // ----- constructors -----------------------------------------------
@@ -607,10 +608,13 @@ public class CoherenceFederationPanel
         /**
          * {@inheritDoc}
          */
-        public StopMenuOption(VisualVMModel model, RequestSender requestSender,
-            ExportableJTable jtable)
+        public GenericOperationMenuOption(VisualVMModel model, RequestSender requestSender,
+            ExportableJTable jtable, String sLabel, String sOperation)
             {
             super(model, requestSender, jtable);
+
+            f_sOperation = sOperation;
+            f_sLabel     = sLabel;
             }
 
         /**
@@ -619,7 +623,7 @@ public class CoherenceFederationPanel
         @Override
         public String getMenuItem()
             {
-            return getLocalizedText("LBL_stop_menu");
+            return getLocalizedText(f_sLabel);
             }
 
         /**
@@ -644,10 +648,10 @@ public class CoherenceFederationPanel
 
                     if (confirmOperation("STOP", sParticipant))
                         {
-                        m_requestSender.invokeFederationOperation(sService, "stop", sParticipant);
+                        m_requestSender.invokeFederationOperation(sService, f_sOperation, sParticipant);
 
                         showMessageDialog(Localization.getLocalText("LBL_details_service", sService),
-                                          Localization.getLocalText("LBL_operation_result_done", "STOP", sParticipant),
+                                          Localization.getLocalText("LBL_operation_result_done", f_sOperation, sParticipant),
                                           JOptionPane.INFORMATION_MESSAGE, 400, 50);
                         }
                     }
@@ -658,135 +662,42 @@ public class CoherenceFederationPanel
                     }
                 }
             }
+
+            private final String f_sOperation;
+            private final String f_sLabel;
         }
 
-    /**
-     * MenuOption for pasue jmx operation in FederationManager.
-     */
-    private class PauseMenuOption
-        extends AbstractMenuOption
+    public class StopMenuOption extends GenericOperationMenuOption
         {
         // ----- constructors -----------------------------------------------
 
-        /**
-         * {@inheritDoc}
-         */
-        public PauseMenuOption(VisualVMModel model, RequestSender requestSender,
-            ExportableJTable jtable)
+        public StopMenuOption(VisualVMModel model, RequestSender requestSender, ExportableJTable jtable, String sOperation, String sLabel)
             {
-            super(model, requestSender, jtable);
-            }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String getMenuItem()
-            {
-            return getLocalizedText("LBL_pause_menu");
-            }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void actionPerformed(ActionEvent e)
-            {
-            int nRow = getSelectedRow();
-            String sService = null;
-
-            if (nRow == -1)
-                {
-                JOptionPane.showMessageDialog(null, getLocalizedText("LBL_must_select_row"));
-                }
-            else
-                {
-                try
-                    {
-                    sService            = (String) getJTable().getModel().getValueAt(nRow, 0);
-                    String sParticipant = (String) getJTable().getModel().getValueAt(nRow, 1);
-
-                    if (confirmOperation("PAUSE", sParticipant))
-                        {
-                        m_requestSender.invokeFederationOperation(sService, "pause", sParticipant);
-
-                        showMessageDialog(Localization.getLocalText("LBL_details_service", sService),
-                                          Localization.getLocalText("LBL_operation_result_done", "PAUSE", sParticipant),
-                                          JOptionPane.INFORMATION_MESSAGE, 400, 50);
-                        }
-                    }
-                catch (Exception ee)
-                    {
-                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", sService),
-                                      ee.getMessage() + "\n" + ee.getCause(), JOptionPane.ERROR_MESSAGE);
-                    }
-                }
+            super(model, requestSender, jtable, sOperation, sLabel);
             }
         }
 
-    /**
-     * MenuOption for replicateAll jmx operation in FederationManager.
-     */
-    private class ReplicateAllMenuOption
-        extends AbstractMenuOption
+    public class PauseMenuOption extends GenericOperationMenuOption
         {
         // ----- constructors -----------------------------------------------
 
-        /**
-         * {@inheritDoc}
-         */
-        public ReplicateAllMenuOption(VisualVMModel model, RequestSender requestSender,
-            ExportableJTable jtable)
+        public PauseMenuOption(VisualVMModel model, RequestSender requestSender, ExportableJTable jtable, String sOperation, String sLabel)
             {
-            super(model, requestSender, jtable);
-            }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String getMenuItem()
-            {
-            return getLocalizedText("LBL_replicate_all_menu");
-            }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void actionPerformed(ActionEvent e)
-            {
-            int nRow = getSelectedRow();
-            String sService = null;
-
-            if (nRow == -1)
-                {
-                JOptionPane.showMessageDialog(null, getLocalizedText("LBL_must_select_row"));
-                }
-            else
-                {
-                try
-                    {
-                    sService            = (String) getJTable().getModel().getValueAt(nRow, 0);
-                    String sParticipant = (String) getJTable().getModel().getValueAt(nRow, 1);
-
-                    if (confirmOperation("REPLICATE ALL", sParticipant))
-                        {
-                        m_requestSender.invokeFederationOperation(sService, "replicateAll", sParticipant);
-
-                        showMessageDialog(Localization.getLocalText("LBL_details_service", sService),
-                                          Localization.getLocalText("LBL_operation_result_done", "REPLICATE ALL", sParticipant),
-                                          JOptionPane.INFORMATION_MESSAGE, 400, 50);
-                        }
-                    }
-                catch (Exception ee)
-                    {
-                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", sService),
-                                      ee.getMessage() + "\n" + ee.getCause(), JOptionPane.ERROR_MESSAGE);
-                    }
-                }
+            super(model, requestSender, jtable, sOperation, sLabel);
             }
         }
+
+    public class ReplicateAllMenuOption extends GenericOperationMenuOption
+        {
+        // ----- constructors -----------------------------------------------
+
+        public ReplicateAllMenuOption(VisualVMModel model, RequestSender requestSender, ExportableJTable jtable, String sOperation, String sLabel)
+            {
+            super(model, requestSender, jtable, sOperation, sLabel);
+            }
+        }
+
+
 
     /**
      * MenuOption for retrievePendingIncomingMessages jmx operation in FederationManager.
@@ -905,12 +816,6 @@ public class CoherenceFederationPanel
                         {
 
                         Integer cResult =  m_requestSender.retrievePendingOutgoingMessages(sService);
-
-/*
-String sObjName = getFederationManagerObjectName(sService);
-Integer cResult = (Integer) requestSender.invoke(new ObjectName(sObjName),
-                                                                  "retrievePendingOutgoingMessages",
-                                                                  new Object[]{}, new String[]{});*/
 
                         showMessageDialog(Localization.getLocalText("LBL_details_service", sService),
                                           Localization.getLocalText("LBL_result_is", cResult.toString()),
