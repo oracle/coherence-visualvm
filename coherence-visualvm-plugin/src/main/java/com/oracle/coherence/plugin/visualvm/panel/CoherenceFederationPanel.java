@@ -558,15 +558,15 @@ public class CoherenceFederationPanel
                         {
 
                         m_requestSender.invokeFederationOperation(sService, sOperation, sParticipant);
-                        showMessageDialog(Localization.getLocalText("LBL_details_service", new String[] {sService}),
-                                          Localization.getLocalText("LBL_operation_result_done", new String[] {sOperation.toUpperCase(), sParticipant}),
+                        showMessageDialog(Localization.getLocalText("LBL_details_service", sService),
+                                          Localization.getLocalText("LBL_operation_result_done", sOperation.toUpperCase(), sParticipant),
                                           JOptionPane.INFORMATION_MESSAGE, 400, 50);
                         }
                     }
                 catch (Exception ee)
                     {
-                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", new String[] {sService}),
-                                      ee.getMessage(), JOptionPane.ERROR_MESSAGE);
+                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", sService),
+                                      ee.getMessage() + "\n" + ee.getCause(), JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
