@@ -646,15 +646,15 @@ public class CoherenceFederationPanel
                         {
                         m_requestSender.invokeFederationOperation(sService, "stop", sParticipant);
 
-                        showMessageDialog(Localization.getLocalText("LBL_details_service", new String[] {sService}),
-                                          Localization.getLocalText("LBL_operation_result_done", new String[] {"STOP", sParticipant}),
+                        showMessageDialog(Localization.getLocalText("LBL_details_service", sService),
+                                          Localization.getLocalText("LBL_operation_result_done", "STOP", sParticipant),
                                           JOptionPane.INFORMATION_MESSAGE, 400, 50);
                         }
                     }
                 catch (Exception ee)
                     {
-                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", new String[] {sService}),
-                                      ee.getMessage(), JOptionPane.ERROR_MESSAGE);
+                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", sService),
+                                      ee.getMessage() + "\n" + ee.getCause(), JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -710,15 +710,15 @@ public class CoherenceFederationPanel
                         {
                         m_requestSender.invokeFederationOperation(sService, "pause", sParticipant);
 
-                        showMessageDialog(Localization.getLocalText("LBL_details_service", new String[] {sService}),
-                                          Localization.getLocalText("LBL_operation_result_done", new String[] {"PAUSE", sParticipant}),
+                        showMessageDialog(Localization.getLocalText("LBL_details_service", sService),
+                                          Localization.getLocalText("LBL_operation_result_done", "PAUSE", sParticipant),
                                           JOptionPane.INFORMATION_MESSAGE, 400, 50);
                         }
                     }
                 catch (Exception ee)
                     {
-                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", new String[] {sService}),
-                                      ee.getMessage(), JOptionPane.ERROR_MESSAGE);
+                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", sService),
+                                      ee.getMessage() + "\n" + ee.getCause(), JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -774,15 +774,15 @@ public class CoherenceFederationPanel
                         {
                         m_requestSender.invokeFederationOperation(sService, "replicateAll", sParticipant);
 
-                        showMessageDialog(Localization.getLocalText("LBL_details_service", new String[]{sService}),
-                                          Localization.getLocalText("LBL_operation_result_done", new String[] {"REPLICATE ALL", sParticipant}),
+                        showMessageDialog(Localization.getLocalText("LBL_details_service", sService),
+                                          Localization.getLocalText("LBL_operation_result_done", "REPLICATE ALL", sParticipant),
                                           JOptionPane.INFORMATION_MESSAGE, 400, 50);
                         }
                     }
                 catch (Exception ee)
                     {
-                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", new String[] {sService}),
-                                      ee.getMessage(), JOptionPane.ERROR_MESSAGE);
+                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", sService),
+                                      ee.getMessage() + "\n" + ee.getCause(), JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -834,21 +834,21 @@ public class CoherenceFederationPanel
                     sService        = (String) getJTable().getModel().getValueAt(nRow, 0);
 
                     if (JOptionPane.showConfirmDialog(null,
-                        Localization.getLocalText("LBL_incoming_msg_result_menu", new String[] {sService}),
+                        Localization.getLocalText("LBL_incoming_msg_result_menu", sService),
                         Localization.getLocalText("LBL_confirm_operation"),
                         JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
                         {
                         Integer cResult =  m_requestSender.retrievePendingIncomingMessages(sService);
 
-                        showMessageDialog(Localization.getLocalText("LBL_details_service", new String[]{sService}),
-                                          Localization.getLocalText("LBL_result_is", new String[] {cResult.toString()}),
+                        showMessageDialog(Localization.getLocalText("LBL_details_service", sService),
+                                          Localization.getLocalText("LBL_result_is", cResult.toString()),
                                           JOptionPane.INFORMATION_MESSAGE, 400, 50);
                         }
                     }
                 catch (Exception ee)
                     {
-                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", new String[] {sService}),
-                                      ee.getMessage(), JOptionPane.ERROR_MESSAGE);
+                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", sService),
+                                      ee.getMessage() + "\n" + ee.getCause(), JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -899,7 +899,7 @@ public class CoherenceFederationPanel
                     {
                     sService        = (String) getJTable().getModel().getValueAt(nRow, 0);
                     if (JOptionPane.showConfirmDialog(null,
-                        Localization.getLocalText("LBL_outgoing_msg_result_menu", new String[] {sService}),
+                        Localization.getLocalText("LBL_outgoing_msg_result_menu", sService),
                         Localization.getLocalText("LBL_confirm_operation"),
                         JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
                         {
@@ -912,15 +912,15 @@ Integer cResult = (Integer) requestSender.invoke(new ObjectName(sObjName),
                                                                   "retrievePendingOutgoingMessages",
                                                                   new Object[]{}, new String[]{});*/
 
-                        showMessageDialog(Localization.getLocalText("LBL_details_service", new String[]{sService}),
-                                          Localization.getLocalText("LBL_result_is", new String[]{cResult.toString()}),
+                        showMessageDialog(Localization.getLocalText("LBL_details_service", sService),
+                                          Localization.getLocalText("LBL_result_is", cResult.toString()),
                                           JOptionPane.INFORMATION_MESSAGE, 400, 50);
                         }
                     }
                 catch (Exception ee)
                     {
-                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", new String[] {sService}),
-                                      ee.getMessage(), JOptionPane.ERROR_MESSAGE);
+                    showMessageDialog(Localization.getLocalText("ERR_cannot_run", sService),
+                                      ee.getMessage() + "\n" + ee.getCause(), JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
