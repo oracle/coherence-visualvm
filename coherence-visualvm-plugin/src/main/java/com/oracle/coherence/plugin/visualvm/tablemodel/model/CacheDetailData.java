@@ -269,7 +269,7 @@ public class CacheDetailData
                     data.setColumn(CacheDetailData.SIZE,
                             Integer.valueOf(nodeCacheMember.get("size").asText()));
                     data.setColumn(CacheDetailData.MEMORY_BYTES,
-                            nodeCacheMember.get("units").intValue() * nodeCacheMember.get("unitFactor").intValue());
+                            nodeCacheMember.get("units").longValue() * nodeCacheMember.get("unitFactor").longValue());
                     data.setColumn(CacheDetailData.TOTAL_GETS,
                             Long.valueOf(nodeCacheMember.get("totalGets").asText()));
                     data.setColumn(CacheDetailData.TOTAL_PUTS,
