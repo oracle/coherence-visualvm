@@ -643,8 +643,13 @@ public class CoherenceMemberPanel
     private String getSanitizedMessage(Exception e)
         {
         String sError = e.getMessage();
-        return sError == null ? Localization.getLocalText("LBL_operation_not_available") :
-               sError.contains("name cannot be null") ? Localization.getLocalText("LBL_node_not_available") : sError;
+
+        if (sError == null)
+            {
+            return Localization.getLocalText("LBL_operation_not_available");
+            }
+
+        return sError.contains("name cannot be null") ? Localization.getLocalText("LBL_node_not_available") : sError;
         }
 
     // ----- constants ------------------------------------------------------
