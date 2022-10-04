@@ -26,6 +26,7 @@
 package com.oracle.coherence.plugin.visualvm.panel;
 
 
+import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
@@ -636,12 +637,19 @@ public class CoherenceMemberPanel
     /**
      * Return a sanitized message to make common errors more meaningful.
      * @param e {@link Exception} to get message from
+     *
      * @return final message
      */
     private String getSanitizedMessage(Exception e)
         {
         String sError = e.getMessage();
-        return sError.contains("name cannot be null") ? "Node no longer available." : sError;
+
+        if (sError == null)
+            {
+            return Localization.getLocalText("LBL_operation_not_available");
+            }
+
+        return sError.contains("name cannot be null") ? Localization.getLocalText("LBL_node_not_available") : sError;
         }
 
     // ----- constants ------------------------------------------------------

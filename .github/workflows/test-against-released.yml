@@ -1,5 +1,5 @@
 #
-#  Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+#  Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
 #  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 #
 #  This code is free software; you can redistribute it and/or modify it
@@ -44,10 +44,8 @@ jobs:
         version:
           - 14.1.1-0-10
           - 14.1.1-0-9
-          - 21.06.1
-          - 21.12.4
-          - 22.06.1
           - 22.06.2
+          - 22.09
 
     steps:
     - name: Checkout
@@ -63,7 +61,7 @@ jobs:
     - name: Set up JDK 11 for Build
       uses: actions/setup-java@v1
       with:
-        java-version: '11'
+        java-version: '17'
 
     - name: Print Versions
       run: mvn -version && ant -version
