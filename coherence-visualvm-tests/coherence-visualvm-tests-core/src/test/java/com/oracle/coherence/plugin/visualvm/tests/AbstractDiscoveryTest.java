@@ -40,6 +40,7 @@ import com.oracle.bedrock.runtime.coherence.options.WellKnownAddress;
 import com.oracle.bedrock.runtime.java.options.SystemProperty;
 import com.oracle.bedrock.runtime.java.profiles.JmxProfile;
 import com.oracle.bedrock.runtime.network.AvailablePortIterator;
+import com.oracle.bedrock.runtime.options.DisplayName;
 import com.oracle.bedrock.testsupport.deferred.Eventually;
 import com.oracle.bedrock.testsupport.junit.TestLogs;
 import com.oracle.coherence.plugin.visualvm.discovery.DiscoveryUtils;
@@ -83,6 +84,7 @@ public abstract class AbstractDiscoveryTest
         // start one member and ensure we can discover this cluster
         s_cluster1Member = platform.launch(CoherenceCacheServer.class, optionsByTypeCluster1.asArray());
         Eventually.assertThat(invoking(s_cluster1Member).getClusterSize(), is(1));
+        Base.sleep(10_000L);
 
         mapUrls = DiscoveryUtils.discoverManagementURLS(LOCALHOST, DEFAULT_NS_PORT);
         assertEquals(mapUrls.size(), 1);
@@ -134,11 +136,13 @@ public abstract class AbstractDiscoveryTest
                              WellKnownAddress.of(LOCALHOST),
                              Multicast.ttl(0),
                              Logging.at(9),
+                             DisplayName.of(sClusterName),
                              ClusterName.of(sClusterName),
                              SystemProperty.of("partition.count", Integer.toString(17)),
                              SystemProperty.of("coherence.management.http", "all"),
+                             SystemProperty.of("coherence.management", "dynamic"),
+                             SystemProperty.of("coherence.management.http.host", LOCALHOST),
                              SystemProperty.of("coherence.management.http.port", nManagementPort),
-                             SystemProperty.of("loopbackhost", LOCALHOST),
                              s_logs.builder());
 
         return optionsByType;
