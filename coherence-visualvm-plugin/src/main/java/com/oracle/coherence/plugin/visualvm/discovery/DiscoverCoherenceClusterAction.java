@@ -102,7 +102,7 @@ public class DiscoverCoherenceClusterAction
             f_host = host;
             }
 
-        // ----- Runnable methods -------------------------------------------
+        // ----- SwingWorker methods -----------------------------------------
 
         @Override
         protected Object doInBackground() throws Exception
@@ -132,8 +132,6 @@ public class DiscoverCoherenceClusterAction
                    }
 
                 mapClusters.forEach((k,v) -> CoherenceClusterProvider.createCoherenceClusterDataSource(v, k));
-
-                JOptionPane.showMessageDialog(null, Localization.getLocalText("Lbl_added_clusters", Integer.toString(mapClusters.size())));
                 }
             catch (Exception e)
                 {
