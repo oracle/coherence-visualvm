@@ -102,7 +102,6 @@ public class CoherenceClusterProvider
         catch (MalformedURLException e)
             {
             LOGGER.log(Level.SEVERE, "Error creating coherence cluster data source", e);
-            return;
             }
         }
 

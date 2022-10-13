@@ -79,6 +79,10 @@
       <artifactId>org-graalvm-visualvm-tools</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.graalvm.visualvm.api</groupId>
+      <artifactId>org-graalvm-visualvm-host</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.netbeans.api</groupId>
       <artifactId>org-openide-modules</artifactId>
     </dependency>
@@ -114,6 +118,11 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.oracle.coherence.ce</groupId>
+      <artifactId>coherence-discovery</artifactId>
     </dependency>
 
     <dependency>
