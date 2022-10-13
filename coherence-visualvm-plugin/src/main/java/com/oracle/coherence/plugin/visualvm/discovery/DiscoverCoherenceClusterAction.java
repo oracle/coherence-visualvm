@@ -34,10 +34,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import javax.swing.SwingWorker;
 import org.graalvm.visualvm.core.ui.actions.SingleDataSourceAction;
 import org.graalvm.visualvm.host.Host;
 import org.openide.awt.StatusDisplayer;
-
 
 import java.awt.event.ActionEvent;
 
@@ -75,50 +75,60 @@ public class DiscoverCoherenceClusterAction
     @Override
     protected void actionPerformed(Host host, ActionEvent actionEvent)
         {
-        SwingUtilities.invokeLater(new DiscoverClusters(host));
+        String sHostName = host.getHostName();
+
+        status[0] = StatusDisplayer.getDefault().setStatusText(Localization.getLocalText("LBL_discovering_clusters", sHostName),5);
+
+        try
+            {
+            new DiscoverClusters(host).execute();
+            }
+        catch (Exception e)
+           {
+           LOGGER.log(Level.WARNING, "Error running discover clusters", e);
+           }
         }
 
     /**
      * Inner class to discover clusters.
      */
-    private static class DiscoverClusters implements Runnable
+    private class DiscoverClusters
+            extends SwingWorker<Object, Object>
         {
         // ----- constructors -----------------------------------------------
 
         protected DiscoverClusters(Host host)
             {
-            f_host =host;
+            f_host = host;
             }
 
         // ----- Runnable methods -------------------------------------------
 
         @Override
-        public void run()
+        protected Object doInBackground() throws Exception
             {
             String                          sHostName = f_host.getHostName();
-            final StatusDisplayer.Message[] status    = new StatusDisplayer.Message[1];
 
             try
                 {
-                status[0] = StatusDisplayer.getDefault().setStatusText(Localization.getLocalText("LBL_discovering_clusters", sHostName),5);
-                
+
                 Map<String, String> mapClusters = DiscoveryUtils.discoverManagementURLS(sHostName, DEFAULT_NS_PORT);
 
                 if (mapClusters.isEmpty())
                     {
                     JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_no_clusters", sHostName));
-                    return;
+                    return null;
                     }
 
                 StringBuilder sb = new StringBuilder(Localization.getLocalText("LBL_confirm_add_clusters"));
                 mapClusters.forEach((k,v) -> sb.append("- ").append(k).append(": ").append(v).append("\n"));
-
+                status[0].clear(20);
 
                 if (JOptionPane.showConfirmDialog(null, sb.toString(),
                                                                   Localization.getLocalText("LBL_confirm_operation"),
                                                                   JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
                    {
-                   return;
+                   return null;
                    }
 
                 mapClusters.forEach((k,v) -> CoherenceClusterProvider.createCoherenceClusterDataSource(v, k));
@@ -130,10 +140,7 @@ public class DiscoverCoherenceClusterAction
                 JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_error_discovering", sHostName), "Warning", WARNING_MESSAGE);
                 LOGGER.log(Level.WARNING, "Unable to discover clusters", e);
                 }
-            finally
-                {
-                status[0].clear(20);
-                }
+            return null;
             }
 
         // ----- data members ---------------------------------------------------
@@ -189,6 +196,8 @@ public class DiscoverCoherenceClusterAction
      * Default NS port.
      */
     private static final int DEFAULT_NS_PORT = 7574;
+
+    private StatusDisplayer.Message[] status = new StatusDisplayer.Message[1];
 
     // ----- data members ---------------------------------------------------
 
