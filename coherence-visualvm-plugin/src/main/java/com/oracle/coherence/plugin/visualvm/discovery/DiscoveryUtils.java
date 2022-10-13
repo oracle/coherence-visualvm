@@ -103,7 +103,7 @@ public class DiscoveryUtils
                 Collection<URL> colHttpUrls = NSLookup.lookupHTTPManagementURL(sClusterName, new InetSocketAddress(sHost, nNSPort));
                 if (colHttpUrls.isEmpty())
                     {
-                    LOGGER.log(Level.INFO, "No management over REST endpoints found for cluster {0", sClusterName);
+                    LOGGER.log(Level.INFO, "No management over REST endpoints found for cluster {0}", sClusterName);
                     }
                 else
                     {
