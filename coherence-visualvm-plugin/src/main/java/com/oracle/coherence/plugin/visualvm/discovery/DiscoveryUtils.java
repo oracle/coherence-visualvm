@@ -101,9 +101,9 @@ public class DiscoveryUtils
                 Integer nNSPort = entry.getValue();
 
                 Collection<URL> colHttpUrls = NSLookup.lookupHTTPManagementURL(sClusterName, new InetSocketAddress(sHost, nNSPort));
-                if (colHttpUrls.size() == 0)
+                if (colHttpUrls.isEmpty())
                     {
-                    LOGGER.log(Level.INFO, "No management over REST endpoints found for cluster " + sClusterName);
+                    LOGGER.log(Level.INFO, "No management over REST endpoints found for cluster {0", sClusterName);
                     }
                 else
                     {
