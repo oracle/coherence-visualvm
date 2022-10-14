@@ -543,7 +543,7 @@ public class CoherenceFederationPanel
 
             if (nRow == -1)
                 {
-                DialogHelper.showInfoDialog(getLocalizedText("LBL_must_select_row"));
+                DialogHelper.showInfoDialog(getLocalizedText(MUST_SELECT_ROW));
                 }
             else
                 {
@@ -636,7 +636,7 @@ public class CoherenceFederationPanel
 
             if (nRow == -1)
                 {
-                DialogHelper.showInfoDialog(getLocalizedText("LBL_must_select_row"));
+                DialogHelper.showInfoDialog(getLocalizedText(MUST_SELECT_ROW));
                 }
             else
                 {
@@ -738,7 +738,7 @@ public class CoherenceFederationPanel
 
             if (nRow == -1)
                 {
-                DialogHelper.showInfoDialog(getLocalizedText("LBL_must_select_row"));
+                DialogHelper.showInfoDialog(getLocalizedText(MUST_SELECT_ROW));
                 }
             else
                 {
@@ -1023,6 +1023,7 @@ public class CoherenceFederationPanel
 
     private static final String INCOMING_LABEL = "LBL_retrieve_incoming_menu";
     private static final String OUTGOING_LABEL = "LBL_retrieve_outgoing_menu";
+    private static final String MUST_SELECT_ROW = "LBL_must_select_row";
 
     // ----- data members ---------------------------------------------------
 

@@ -49,7 +49,6 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.Pair;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 

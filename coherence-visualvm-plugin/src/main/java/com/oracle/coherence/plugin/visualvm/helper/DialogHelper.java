@@ -25,13 +25,6 @@
 
 package com.oracle.coherence.plugin.visualvm.helper;
 
-import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
-import com.oracle.coherence.plugin.visualvm.Localization;
-import com.oracle.coherence.plugin.visualvm.VisualVMModel;
-import org.graalvm.visualvm.charts.ChartFactory;
-import org.graalvm.visualvm.charts.SimpleXYChartDescriptor;
-import org.graalvm.visualvm.charts.SimpleXYChartSupport;
-import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 
