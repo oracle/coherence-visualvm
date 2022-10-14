@@ -53,7 +53,7 @@
     <com.sun.xml.bind.version>2.3.0</com.sun.xml.bind.version>
 
     <!-- default coherence versions -->
-    <default.coherence.ce.version>22.06.1</default.coherence.ce.version>
+    <default.coherence.ce.version>22.06.2</default.coherence.ce.version>
     <default.coherence.commercial.version>14.1.2-0-0-SNAPSHOT
     </default.coherence.commercial.version>
 
@@ -132,6 +132,11 @@
         <version>${visualvm.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.graalvm.visualvm.api</groupId>
+        <artifactId>org-graalvm-visualvm-host</artifactId>
+        <version>${visualvm.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.netbeans.api</groupId>
         <artifactId>org-openide-modules</artifactId>
         <version>${netbeans.version}</version>
@@ -190,6 +195,13 @@
             <artifactId>jackson-annotations</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <!-- Coherence discovery class -->
+      <dependency>
+        <groupId>com.oracle.coherence.ce</groupId>
+        <artifactId>coherence-discovery</artifactId>
+        <version>${default.coherence.ce.version}</version>
       </dependency>
 
       <dependency>

@@ -28,6 +28,7 @@ package com.oracle.coherence.plugin.visualvm.panel;
 
 import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.Localization;
+import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.JMXRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
@@ -396,7 +397,7 @@ public class CoherencePersistencePanel
 
             if (nRow == -1)
                 {
-                JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_must_select_row"));
+                DialogHelper.showInfoDialog(Localization.getLocalText("LBL_must_select_row"));
                 }
             else
                 {
@@ -437,8 +438,7 @@ public class CoherencePersistencePanel
                             // check to see if there is empty list of snapshots or archived snapshots
                             if (asSnapshotList == null || asSnapshotList.length == 0)
                                 {
-                                JOptionPane.showMessageDialog(null,
-                                                              Localization.getLocalText("LBL_no_snapshots", fGetArchived
+                                DialogHelper.showInfoDialog( Localization.getLocalText("LBL_no_snapshots", fGetArchived
                                                                                         ? "archived "
                                                                                         : ""));
                                 return;
@@ -447,7 +447,7 @@ public class CoherencePersistencePanel
                             Arrays.sort(asSnapshotList);
 
                             // request the user to choose from an existing list
-                            JList<String> listSnapshots = new JList(asSnapshotList);
+                            JList<String> listSnapshots = new JList<>(asSnapshotList);
                             listSnapshots.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
                             sSnapshotName = (String) JOptionPane.showInputDialog(
@@ -474,9 +474,7 @@ public class CoherencePersistencePanel
                                                : Localization.getLocalText("LBL_confirm_snapshot",
                                                                            f_sOperation, sSnapshotName);
 
-                            if (JOptionPane.showConfirmDialog(null, sQuestion,
-                                                              Localization.getLocalText("LBL_confirm_operation"),
-                                                              JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
+                            if (!DialogHelper.showConfirmDialog(sQuestion))
                                 {
                                 return;
                                 }
@@ -632,8 +630,7 @@ public class CoherencePersistencePanel
         @Override
         public void actionPerformed(ActionEvent event)
             {
-            if (JOptionPane.showConfirmDialog(null, getLocalizedText("LBL_clear_confirmation"),
-                                              getLocalizedText("LBL_confirmation"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+            if (DialogHelper.showConfirmDialog(getLocalizedText("LBL_clear_confirmation")))
                 {
                 mapNotificationsData.clear();
                 f_mapNotifications.clear();

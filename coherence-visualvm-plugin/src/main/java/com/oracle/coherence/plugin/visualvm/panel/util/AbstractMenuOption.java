@@ -25,6 +25,7 @@
 
 package com.oracle.coherence.plugin.visualvm.panel.util;
 
+import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 
@@ -197,8 +198,7 @@ public abstract class AbstractMenuOption
             }
         catch (IOException ioe)
             {
-            JOptionPane.showMessageDialog(null, getLocalText("LBL_unable_to_save", file.getAbsolutePath(), ioe.getMessage()),
-                    getLocalText("LBL_result"), JOptionPane.ERROR_MESSAGE);
+            DialogHelper.showWarningDialog(getLocalText("LBL_unable_to_save", file.getAbsolutePath(), ioe.getMessage()));
             return false;
             }
         finally

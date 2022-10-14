@@ -27,6 +27,7 @@ package com.oracle.coherence.plugin.visualvm.panel;
 
 import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.Localization;
+import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
@@ -159,18 +160,16 @@ public class CoherenceClusterOverviewPanel
         {
         try
             {
-            if (JOptionPane.showConfirmDialog(null, Localization.getLocalText("LBL_heap_dump_question"),
-                                              Localization.getLocalText("LBL_heap_dump_confirm"),
-                                              JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+            if (DialogHelper.showConfirmDialog(Localization.getLocalText("LBL_heap_dump_question")))
                 {
                 m_requestSender.dumpClusterHeap("");
-                JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_heap_dump_completed"));
+                DialogHelper.showInfoDialog(Localization.getLocalText("LBL_heap_dump_completed"));
                 }
             }
         catch (Exception e)
             {
             String sMessage = Localization.getLocalText("LBL_heap_dump_failed", e.toString());
-            JOptionPane.showMessageDialog(null, sMessage);
+            DialogHelper.showWarningDialog(sMessage);
             LOGGER.warning(sMessage);
             }
         }

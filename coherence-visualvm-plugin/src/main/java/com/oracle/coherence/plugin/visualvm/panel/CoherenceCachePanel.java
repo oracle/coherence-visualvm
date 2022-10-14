@@ -27,6 +27,7 @@ package com.oracle.coherence.plugin.visualvm.panel;
 
 import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.Localization;
+import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
@@ -725,7 +726,7 @@ public class CoherenceCachePanel
 
                 if (m_cTotal == 0L)
                     {
-                    JOptionPane.showMessageDialog(null, getLocalizedText("LBL_no_caches"));
+                    DialogHelper.showInfoDialog(getLocalizedText("LBL_no_caches"));
                     }
                 else
                     {
@@ -748,7 +749,7 @@ public class CoherenceCachePanel
                 }
             else
                 {
-                JOptionPane.showMessageDialog(null, getLocalizedText("LBL_no_data"));
+                DialogHelper.showInfoDialog(getLocalizedText("LBL_no_data"));
                 }
             }
 

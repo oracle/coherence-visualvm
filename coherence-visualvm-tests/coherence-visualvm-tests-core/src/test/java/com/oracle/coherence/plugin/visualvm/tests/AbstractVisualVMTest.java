@@ -228,7 +228,7 @@ public abstract class AbstractVisualVMTest
      *
      * @param member the {@link CoherenceClusterMember} to destroy
      */
-    private static void destroyMember(CoherenceClusterMember member)
+    public static void destroyMember(CoherenceClusterMember member)
         {
         try
             {

@@ -47,7 +47,7 @@ public class CoherenceClusterDataSourceViewProvider
     protected boolean supportsViewFor(CoherenceClusterDataSource coherenceClusterDataSource)
         {
         // we don't do the test here as this can cause delays and
-        // confusion if a user clicks on a a URL that doesn't exist
+        // confusion if a user clicks on a URL that doesn't exist
         return true;
         }
 

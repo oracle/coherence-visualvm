@@ -27,6 +27,7 @@ package com.oracle.coherence.plugin.visualvm.panel;
 
 
 import com.oracle.coherence.plugin.visualvm.Localization;
+import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
@@ -359,7 +360,7 @@ public abstract class AbstractCoherencePanel
 
             if (nRow == -1)
                 {
-                JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_must_select_row"));
+                DialogHelper.showInfoDialog( Localization.getLocalText("LBL_must_select_row"));
                 }
             else
                 {
@@ -419,12 +420,10 @@ public abstract class AbstractCoherencePanel
 
                     JOptionPane.showMessageDialog(null, m_pneMessage, Localization.getLocalText("LBL_details"),
                                                   JOptionPane.INFORMATION_MESSAGE);
-
                     }
                 catch (Exception e)
                     {
-                    showMessageDialog(Localization.getLocalText("LBL_error"), e.getMessage(),
-                                      JOptionPane.ERROR_MESSAGE);
+                    DialogHelper.showWarningDialog(e.getMessage());
                     LOGGER.log(Level.WARNING, Localization.getLocalText("LBL_error"), e);
                     }
                 }

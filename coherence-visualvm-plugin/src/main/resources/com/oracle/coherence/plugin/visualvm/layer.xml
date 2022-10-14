@@ -30,8 +30,8 @@
     <folder name="Toolbars">
         <folder name="DataSource">
             <file name="com-oracle-coherence-plugin-visualvm-AddCoherenceClusterAction-alwaysEnabled.shadow">
-                <attr name="originalFile" stringvalue="Actions/Other/om-sun-tools-visualvm-modules-coherence-impl-AddCoherenceClusterAction-alwaysEnabled.instance"/>
-                <attr name="position" intvalue="300"/>
+                <attr name="originalFile" stringvalue="Actions/Other/com-oracle-coherence-plugin-visualvms-impl-AddCoherenceClusterAction-alwaysEnabled.instance"/>
+                <attr name="position" intvalue="301"/>
             </file>
         </folder>
     </folder>
@@ -56,7 +56,21 @@
         <folder name="ExplorerPopupNoSelection">
             <file name="com-oracle-coherence-plugin-visualvm-AddCoherenceCoherenceAction-alwaysEnabled.shadow">
                 <attr name="originalFile" stringvalue="Actions/Other/com-oracle-coherence-plugin-visualvm-AddCoherenceClusterAction-alwaysEnabled.instance"/>
-                <attr name="position" intvalue="300"/>
+                <attr name="position" intvalue="301"/>
+            </file>
+        </folder>
+
+        <folder name="ExplorerPopupSelection">
+            <file name="com-oracle-coherence-plugin-visualvm-discovery-DiscoverCoherenceClusterAction-selectionAware.instance">
+                <attr name="instanceCreate" methodvalue="com.oracle.coherence.plugin.visualvm.discovery.DiscoverCoherenceClusterAction.selectionAware"/>
+                <attr name="position" intvalue="704"/>
+            </file>
+        </folder>
+
+        <folder name="ExplorerPopupNoSelection">
+            <file name="com-oracle-coherence-plugin-visualvm-discovery-alwaysEnabled.shadow">
+                <attr name="originalFile" stringvalue="Actions/Other/com-oracle-coherence-plugin-visualvm-discovery-DiscoverCoherenceClusterAction-alwaysEnabled.instance"/>
+                <attr name="position" intvalue="705"/>
             </file>
         </folder>
     </folder>
