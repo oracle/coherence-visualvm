@@ -60,13 +60,13 @@ import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import javax.swing.JOptionPane;
 
 import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
 
@@ -1718,8 +1718,7 @@ public class HttpRequestSender
             LOGGER.warning(sText);
             m_sslContext.init(null, TRUST_ALL_CERTS, new java.security.SecureRandom());
             HttpsURLConnection.setDefaultHostnameVerifier(TRUST_ALL_HOSTS);
-            JOptionPane.showMessageDialog(null, getLocalText("LBL_ssl_validation_disabled"), getLocalText("LBL_warning"),
-                    JOptionPane.WARNING_MESSAGE);
+            DialogHelper.showWarningDialog( getLocalText("LBL_ssl_validation_disabled"));
             }
         else
             {

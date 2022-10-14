@@ -30,7 +30,7 @@
     <folder name="Toolbars">
         <folder name="DataSource">
             <file name="com-oracle-coherence-plugin-visualvm-AddCoherenceClusterAction-alwaysEnabled.shadow">
-                <attr name="originalFile" stringvalue="Actions/Other/com-sun-tools-visualvm-modules-coherence-impl-AddCoherenceClusterAction-alwaysEnabled.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Other/com-oracle-coherence-plugin-visualvms-impl-AddCoherenceClusterAction-alwaysEnabled.instance"/>
                 <attr name="position" intvalue="301"/>
             </file>
         </folder>

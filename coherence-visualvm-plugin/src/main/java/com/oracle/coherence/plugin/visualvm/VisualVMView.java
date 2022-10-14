@@ -28,6 +28,7 @@ package com.oracle.coherence.plugin.visualvm;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import com.oracle.coherence.plugin.visualvm.datasource.CoherenceClusterDataSource;
+import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.JMXRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
@@ -66,7 +67,6 @@ import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
-import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import org.graalvm.visualvm.application.Application;
@@ -358,7 +358,7 @@ public class VisualVMView
         // using JMX queries rather than the reporter.
         if (model.getDomainPartitions().size() > 1)
             {
-            JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_mt_warning"));
+            DialogHelper.showWarningDialog(Localization.getLocalText("LBL_mt_warning"));
             }
 
         m_dvc.selectDetailsView(clusterOverview);

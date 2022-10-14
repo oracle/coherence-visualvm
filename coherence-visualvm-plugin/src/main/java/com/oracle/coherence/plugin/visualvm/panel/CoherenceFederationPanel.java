@@ -27,6 +27,7 @@
 package com.oracle.coherence.plugin.visualvm.panel;
 
 import com.oracle.coherence.plugin.visualvm.Localization;
+import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
@@ -542,7 +543,7 @@ public class CoherenceFederationPanel
 
             if (nRow == -1)
                 {
-                JOptionPane.showMessageDialog(null, getLocalizedText("LBL_must_select_row"));
+                DialogHelper.showInfoDialog(getLocalizedText("LBL_must_select_row"));
                 }
             else
                 {
@@ -635,7 +636,7 @@ public class CoherenceFederationPanel
 
             if (nRow == -1)
                 {
-                JOptionPane.showMessageDialog(null, getLocalizedText("LBL_must_select_row"));
+                DialogHelper.showInfoDialog(getLocalizedText("LBL_must_select_row"));
                 }
             else
                 {
@@ -737,7 +738,7 @@ public class CoherenceFederationPanel
 
             if (nRow == -1)
                 {
-                JOptionPane.showMessageDialog(null, getLocalizedText("LBL_must_select_row"));
+                DialogHelper.showInfoDialog(getLocalizedText("LBL_must_select_row"));
                 }
             else
                 {
@@ -747,10 +748,7 @@ public class CoherenceFederationPanel
                     boolean fIncoming = f_sLabel.equals(INCOMING_LABEL);
                     String  sMessage = fIncoming ? "incoming" : "outgoing";
 
-                    if (JOptionPane.showConfirmDialog(null,
-                        Localization.getLocalText(f_sLabel, sService) + "?",
-                        Localization.getLocalText("LBL_confirm_operation"),
-                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+                    if (DialogHelper.showConfirmDialog(Localization.getLocalText(f_sLabel, sService) + "?"))
                         {
                         Integer cResult;
 
@@ -1015,10 +1013,8 @@ public class CoherenceFederationPanel
      */
     private boolean confirmOperation(String sOperation, String sParticipant)
         {
-        return JOptionPane.showConfirmDialog(null,
-                Localization.getLocalText("LBL_operation_result_menu", sOperation, sParticipant),
-                Localization.getLocalText("LBL_confirm_operation"),
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+        return DialogHelper.showConfirmDialog(
+                Localization.getLocalText("LBL_operation_result_menu", sOperation, sParticipant));
         }
 
     // ----- constants ------------------------------------------------------

@@ -43,6 +43,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.panel.util.AbstractMenuOption;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -273,10 +274,7 @@ public class CoherenceOptionsPanel
                 {
                 File file = fc.getSelectedFile();
 
-                boolean fVerbose = JOptionPane.showConfirmDialog(null,
-                        Localization.getLocalText("LBL_verbose"),
-                        Localization.getLocalText("LBL_confirm_operation"),
-                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+                boolean fVerbose = DialogHelper.showConfirmDialog(Localization.getLocalText("LBL_verbose"));
 
                 // analyze the file
                 UnavailabilityTimeAnalyzer analyzer = new UnavailabilityTimeAnalyzer(file);

@@ -28,15 +28,15 @@ package com.oracle.coherence.plugin.visualvm.discovery;
 import com.oracle.coherence.plugin.visualvm.Localization;
 
 import com.oracle.coherence.plugin.visualvm.VisualVMView;
+import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.impl.CoherenceClusterProvider;
 
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import javax.swing.SwingWorker;
 import org.graalvm.visualvm.core.ui.actions.SingleDataSourceAction;
 import org.graalvm.visualvm.host.Host;
+
 import org.openide.awt.StatusDisplayer;
 
 import java.awt.event.ActionEvent;
@@ -45,8 +45,6 @@ import java.util.Map;
 import java.util.Set;;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static javax.swing.JOptionPane.WARNING_MESSAGE;
 
 /**
  * Class to add a right-click option on a Host in VisualVM to discover Coherence clusters via name service.
@@ -75,10 +73,6 @@ public class DiscoverCoherenceClusterAction
     @Override
     protected void actionPerformed(Host host, ActionEvent actionEvent)
         {
-        String sHostName = host.getHostName();
-
-        status[0] = StatusDisplayer.getDefault().setStatusText(Localization.getLocalText("LBL_discovering_clusters", sHostName),5);
-
         try
             {
             new DiscoverClusters(host).execute();
@@ -92,7 +86,7 @@ public class DiscoverCoherenceClusterAction
     /**
      * Inner class to discover clusters.
      */
-    private class DiscoverClusters
+    private static class DiscoverClusters
             extends SwingWorker<Object, Object>
         {
         // ----- constructors -----------------------------------------------
@@ -105,28 +99,26 @@ public class DiscoverCoherenceClusterAction
         // ----- SwingWorker methods -----------------------------------------
 
         @Override
-        protected Object doInBackground() throws Exception
+        protected Object doInBackground()
             {
-            String                          sHostName = f_host.getHostName();
+            String sHostName = f_host.getHostName();
 
+            StatusDisplayer.Message status = StatusDisplayer.getDefault().setStatusText(Localization.getLocalText("LBL_discovering_clusters", sHostName),5);
             try
                 {
-
                 Map<String, String> mapClusters = DiscoveryUtils.discoverManagementURLS(sHostName, DEFAULT_NS_PORT);
 
                 if (mapClusters.isEmpty())
                     {
-                    JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_no_clusters", sHostName));
+                    DialogHelper.showInfoDialog(Localization.getLocalText("LBL_no_clusters", sHostName));
                     return null;
                     }
 
                 StringBuilder sb = new StringBuilder(Localization.getLocalText("LBL_confirm_add_clusters"));
                 mapClusters.forEach((k,v) -> sb.append("- ").append(k).append(": ").append(v).append("\n"));
-                status[0].clear(20);
+                status.clear(20);
 
-                if (JOptionPane.showConfirmDialog(null, sb.toString(),
-                                                                  Localization.getLocalText("LBL_confirm_operation"),
-                                                                  JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
+                if (!DialogHelper.showConfirmDialog(sb.toString()))
                    {
                    return null;
                    }
@@ -135,7 +127,7 @@ public class DiscoverCoherenceClusterAction
                 }
             catch (Exception e)
                 {
-                JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_error_discovering", sHostName), "Warning", WARNING_MESSAGE);
+                DialogHelper.showWarningDialog(Localization.getLocalText("LBL_error_discovering", sHostName));
                 LOGGER.log(Level.WARNING, "Unable to discover clusters", e);
                 }
             return null;
@@ -194,8 +186,6 @@ public class DiscoverCoherenceClusterAction
      * Default NS port.
      */
     private static final int DEFAULT_NS_PORT = 7574;
-
-    private StatusDisplayer.Message[] status = new StatusDisplayer.Message[1];
 
     // ----- data members ---------------------------------------------------
 

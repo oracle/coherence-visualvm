@@ -26,6 +26,7 @@
 package com.oracle.coherence.plugin.visualvm.panel;
 
 import com.oracle.coherence.plugin.visualvm.Localization;
+import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
@@ -442,7 +443,7 @@ public class CoherenceServicePanel
 
             if (nRow == -1)
                 {
-                JOptionPane.showMessageDialog(null, getLocalizedText("LBL_must_select_row"));
+                DialogHelper.showInfoDialog(getLocalizedText("LBL_must_select_row"));
                 }
             else
                 {

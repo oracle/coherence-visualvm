@@ -45,10 +45,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
+import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -190,7 +190,7 @@ public class ExportableJTable
                 }
             catch (Exception ee)
                 {
-                JOptionPane.showMessageDialog(null, Localization.getLocalText("LBL_unable_to_open"));
+                DialogHelper.showInfoDialog(Localization.getLocalText("LBL_unable_to_open"));
                 }
             }
         }
@@ -336,13 +336,7 @@ public class ExportableJTable
                 {
                 String sQuestion = Localization.getLocalText("LBL_file_already_exists", file.getAbsolutePath());
 
-                if (JOptionPane.showConfirmDialog(null, sQuestion, Localization.getLocalText("LBL_confirm"),
-                                                  JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
-                    {
-                    return true;
-                    }
-
-                return false;
+                return DialogHelper.showConfirmDialog(sQuestion);
                 }
 
             return true;

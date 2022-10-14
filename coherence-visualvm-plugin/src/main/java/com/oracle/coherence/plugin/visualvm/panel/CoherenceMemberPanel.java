@@ -27,6 +27,7 @@ package com.oracle.coherence.plugin.visualvm.panel;
 
 
 import com.oracle.coherence.plugin.visualvm.Localization;
+import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
@@ -336,7 +337,7 @@ public class CoherenceMemberPanel
 
             if (nRow == -1)
                 {
-                JOptionPane.showMessageDialog(null, getLocalizedText("LBL_must_select_row"));
+                DialogHelper.showInfoDialog(getLocalizedText("LBL_must_select_row"));
                 }
             else
                 {
@@ -394,7 +395,7 @@ public class CoherenceMemberPanel
 
             if (nRow == -1)
                 {
-                JOptionPane.showMessageDialog(null, getLocalizedText("LBL_must_select_row"));
+                DialogHelper.showInfoDialog(getLocalizedText("LBL_must_select_row"));
                 }
             else
                 {
@@ -458,7 +459,7 @@ public class CoherenceMemberPanel
                             LOGGER.info(sMessage);
                             status[0] = StatusDisplayer.getDefault().setStatusText(sMessage,5);
 
-                            JOptionPane.showMessageDialog(null, getLocalText("LBL_thread_dump_confirmation"));
+                            DialogHelper.showInfoDialog(getLocalText("LBL_thread_dump_confirmation"));
 
                             StringBuilder sb = new StringBuilder(sMessage).append("\n").append(generateHeader(nNode));
 
