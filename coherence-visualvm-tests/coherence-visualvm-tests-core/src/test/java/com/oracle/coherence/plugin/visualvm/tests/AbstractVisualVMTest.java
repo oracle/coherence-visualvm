@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.oracle.bedrock.deferred.DeferredHelper.invoking;
 import static org.hamcrest.CoreMatchers.is;
@@ -114,9 +115,6 @@ public abstract class AbstractVisualVMTest
             // Iterate to next port and waste this as sometimes the second port will
             // already be used up before the realize()
             s_availablePortIteratorWKA.next();
-
-            int nClusterAPort = s_availablePortIteratorWKA.next();
-            int nClusterBPort = s_availablePortIteratorWKA.next();
 
             LocalPlatform platform        = LocalPlatform.get();
             OptionsByType optionsByTypeA1 = createCacheServerOptions(CLUSTER_NAME, s_fileActiveDirA,
@@ -279,6 +277,12 @@ public abstract class AbstractVisualVMTest
                              SystemProperty.of("loopbackhost", hostName),
                              RoleName.of(ROLE_NAME),
                              s_logs.builder());
+
+        if (s_fMetricsEnabled)
+           {
+           optionsByType.addAll(SystemProperty.of("coherence.metrics.http.enabled", "true"),
+                                SystemProperty.of("coherence.metrics.http.port", s_metricsPort.getAndIncrement()));
+           }
 
         // check if HealthCheck class is available, then use Coherence to start
         if (isHealthCheckAvailable())
@@ -640,4 +644,14 @@ public abstract class AbstractVisualVMTest
      * The model used to store the collected stats.
      */
     private VisualVMModel m_model = null;
+
+    /**
+     * Metrics port.
+     */
+    private static AtomicInteger s_metricsPort = new AtomicInteger(9612);
+
+    /**
+     * Indicates if metrics should be enabled.
+     */
+    private final static boolean s_fMetricsEnabled = "true".equals(System.getProperty("enable.metrics", "false"));
     }
