@@ -33,7 +33,7 @@
   <parent>
     <groupId>com.oracle.coherence.plugin.visualvm</groupId>
     <artifactId>coherence-visualvm-tests</artifactId>
-    <version>1.5.1-SNAPSHOT</version>
+    <version>1.6.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 

@@ -53,13 +53,6 @@
 				<name>name</name>
 			</column>
 
-            <column id="DomainPartition">
-                <type>key</type>
-                <name>domainPartition</name>
-                <header>Domain Partition</header>
-                <!-- <group-by>true</group-by> -->
-            </column>
-
 			<column id="nodeId">
 				<type>key</type>
 				<name>nodeId</name>

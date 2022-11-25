@@ -517,6 +517,7 @@ public abstract class AbstractDataRetrieverTest
 
         if ("true".equals(System.getProperty("pause.federation")))
             {
+            System.out.println("Pausing test");
             Base.sleep(Long.MAX_VALUE);
             }
         }
