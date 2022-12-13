@@ -1015,6 +1015,61 @@ public class HttpRequestSender
         }
 
     /**
+     * Get the data for all the topics in the cluster.
+     *
+     * @return the data for all the cluster members
+     * @throws Exception in case of errors
+     */
+    public JsonNode getDataForTopics() throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(TOPICS).addQueryParameter(LINKS, "");
+
+        return getResponseJson(sendGetRequest(urlBuilder));
+        }
+
+    /**
+     * Get the data for all the topic subscribers in the cluster.
+     *
+     * @param sServiceName  service name
+     * @param sTopicName    topic name
+     *
+     * @return the data for all the cluster members
+     * @throws Exception in case of errors
+     */
+    public JsonNode getDataForTopicSubscribers(String sServiceName, String sTopicName) throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                                             .addPathSegment(encodeServiceName(sServiceName))
+                                             .addPathSegment(TOPICS)
+                                             .addPathSegment(encodeServiceName(sTopicName))
+                                             .addPathSegment(SUBSCRIBERS)
+                                             .addQueryParameter(LINKS, "");
+
+        return getResponseJson(sendGetRequest(urlBuilder));
+        }
+
+    /**
+     * Get the data for all the topic subscriber groups in the cluster.
+     *
+     * @param sServiceName  service name
+     * @param sTopicName    topic name
+     *
+     * @return the data for all the cluster members
+     * @throws Exception in case of errors
+     */
+    public JsonNode getDataForTopicSubscriberGroups(String sServiceName, String sTopicName) throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                                             .addPathSegment(encodeServiceName(sServiceName))
+                                             .addPathSegment(TOPICS)
+                                             .addPathSegment(encodeServiceName(sTopicName))
+                                             .addPathSegment(SUBGROUPS)
+                                             .addQueryParameter(LINKS, "");
+
+        return getResponseJson(sendGetRequest(urlBuilder));
+        }
+
+    /**
      * Get the data for all the service members in the cluster.
      *
      * @return the data for all service members
@@ -1451,6 +1506,23 @@ public class HttpRequestSender
                         .addPathSegment(PROXY);
             case "Cluster":
                 return urlBuilder;
+            case "PagedTopicSubscriber":
+                return urlBuilder.addPathSegment(SERVICES)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "service")))
+                         .addPathSegment(TOPICS)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "topic")))
+                         .addPathSegment(SUBSCRIBERS)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "id")))
+                         .addQueryParameter(LINKS, "");
+            case "PagedTopicSubscriberGroup":
+                 return urlBuilder.addPathSegment(SERVICES)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "service")))
+                         .addPathSegment(TOPICS)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "topic")))
+                         .addPathSegment(SUBGROUPS)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))
+                         .addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID))
+                         .addQueryParameter(LINKS, "");
             case "Persistence":
                 return urlBuilder.addPathSegment(SERVICES)
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
@@ -1771,6 +1843,9 @@ public class HttpRequestSender
     private static final String FIELDS       = "fields";
     private static final String LINKS        = "links";
     private static final String SERVICES     = "services";
+    private static final String TOPICS       = "topics";
+    private static final String SUBSCRIBERS  = "subscribers";
+    private static final String SUBGROUPS    = "subscriberGroups";
     private static final String SERVICE      = "service";
     private static final String MEMBERS      = "members";
     private static final String CACHES       = "caches";

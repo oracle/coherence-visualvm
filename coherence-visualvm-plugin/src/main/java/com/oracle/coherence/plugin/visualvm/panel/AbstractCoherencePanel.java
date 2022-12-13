@@ -62,6 +62,8 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberGroupsData;
 import javax.management.Attribute;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
@@ -221,6 +223,15 @@ public abstract class AbstractCoherencePanel
         return textField;
         }
 
+    /**
+     * Set table padding.
+     * @param table {@link ExportableJTable} to set padding for
+     */
+    protected void setTablePadding(ExportableJTable table)
+        {
+        table.setIntercellSpacing(new Dimension(6, 3));
+        table.setRowHeight(table.getRowHeight() + 4);
+        }
 
     /**
      * Fire a tableDataChanged but save and re-apply any selection.
@@ -410,6 +421,22 @@ public abstract class AbstractCoherencePanel
                         sQuery = "Coherence:type=Cache,service=" + getServiceName(selectedCache.getX()) + ",name=" + selectedCache.getY() +
                                  ",tier=front,nodeId=" + oValue + getDomainPartitionKey(selectedCache.getX()) + ",*";
                         }
+                    else if (f_nSelectedItem == SELECTED_SUBSCRIBER)
+                        {
+                        oValue = getJTable().getModel().getValueAt(nRow, TopicSubscriberData.NODE_ID);
+                        Object oSubscriberId = getJTable().getModel().getValueAt(nRow, TopicSubscriberData.SUBSCRIBER);
+                        Pair<String, String> selectedTopic = AbstractCoherencePanel.this.f_model.getSelectedTopic();
+                        sQuery = "Coherence:type=PagedTopicSubscriber,service=" + getServiceName(selectedTopic.getX()) + ",topic=" + selectedTopic.getY() +
+                                 ",nodeId=" + oValue + ",id=" + oSubscriberId + ",*";
+                        }
+                    else if (f_nSelectedItem == SELECTED_SUBSCRIBER_GROUP)
+                        {
+                        oValue = getJTable().getModel().getValueAt(nRow, TopicSubscriberGroupsData.NODE_ID);
+                        Object oSubscriberGroup = getJTable().getModel().getValueAt(nRow, TopicSubscriberGroupsData.SUBSCRIBER_GROUP);
+                        Pair<String, String> selectedTopic = AbstractCoherencePanel.this.f_model.getSelectedTopic();
+                        sQuery = "Coherence:type=PagedTopicSubscriberGroup,service=" + getServiceName(selectedTopic.getX()) + ",topic=" + selectedTopic.getY() +
+                                 ",nodeId=" + oValue + ",name=" + oSubscriberGroup + ",*";
+                        }
 
                     // remove any existing rows
                     m_tmodel.getDataVector().removeAllElements();
@@ -432,7 +459,7 @@ public abstract class AbstractCoherencePanel
         // ----- helpers --------------------------------------------------------
 
         /**
-         * Populate all of the attributes for the given query.
+         * Populate all the attributes for the given query.
          *
          * @param sQuery the query to run
          * @throws Exception if any relevant error
@@ -821,7 +848,7 @@ public abstract class AbstractCoherencePanel
     protected static final String FILLER = "   ";
 
     /**
-     * Indicates to select selected service.
+     * Indicates to select selected node.
      */
     public static final int SELECTED_NODE = 0;
 
@@ -849,6 +876,16 @@ public abstract class AbstractCoherencePanel
      * Indicates to select selected front cache.
      */
     public static final int SELECTED_FRONT_CACHE = 5;
+
+    /**
+     * Indicates to select selected subscriber.
+     */
+    public static final int SELECTED_SUBSCRIBER = 6;
+
+    /**
+     * Indicates to select selected subscriber group.
+     */
+    public static final int SELECTED_SUBSCRIBER_GROUP = 7;
 
     /**
      * Text value of statusHA.

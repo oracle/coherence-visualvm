@@ -215,16 +215,13 @@ public class CoherenceCachePanel
                                     ShowHeatMapMenuOption.TYPE_MEMORY)});
             }
 
-        f_tableDetail.setIntercellSpacing(new Dimension(6, 3));
-        f_tableDetail.setRowHeight(table.getRowHeight() + 4);
+        setTablePadding(f_tableDetail);
         f_tableDetail.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableDetail, SELECTED_CACHE)});
 
-        f_tableFrontDetail.setIntercellSpacing(new Dimension(6, 3));
-        f_tableFrontDetail.setRowHeight(table.getRowHeight() + 4);
+        setTablePadding(f_tableFrontDetail);
         f_tableFrontDetail.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableFrontDetail, SELECTED_FRONT_CACHE)});
 
-        f_tableStorage.setIntercellSpacing(new Dimension(6, 3));
-        f_tableStorage.setRowHeight(table.getRowHeight() + 4);
+        setTablePadding(f_tableStorage);
         f_tableStorage.setMenuOptions(new MenuOption[] {
                 new ShowDetailMenuOption(model, f_tableStorage, SELECTED_STORAGE),
                 new ShowIndexInfoMenuOption(model, m_requestSender, f_tableStorage)
@@ -442,7 +439,7 @@ public class CoherenceCachePanel
     // ---- inner classes ---------------------------------------------------
 
     /**
-     * Inner class to change the the information displayed on the detailModel
+     * Inner class to change the information displayed on the detailModel
      * table when the master changes.
      */
     private class SelectRowListSelectionListener

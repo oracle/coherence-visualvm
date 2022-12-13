@@ -106,6 +106,9 @@ jobs:
 
         echo "Running verify against $COH_VERSION"
         mvn --file coherence-visualvm-tests/coherence-visualvm-tests-ce/pom.xml --batch-mode -nsu -e -Dcoherence.version=$COH_VERSION clean install
+        
+        echo "Running Topics tests"
+        mvn --file coherence-visualvm-tests/coherence-visualvm-tests-topics/pom.xml -P topics --batch-mode -nsu -e -Dcoherence.version=$COH_VERSION clean install
 
         echo "Removing Coherence cloned directory"
         CLONE_DIR=coherence-$COH_BRANCH

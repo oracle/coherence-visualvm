@@ -32,6 +32,8 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
@@ -54,7 +56,7 @@ public class TopicData
      */
     public TopicData()
         {
-        super(SUBSCRIBER_RECEIVES + 1);
+        super(RETAIN_CONSUMED + 1);
         }
 
     // ----- DataRetriever methods ------------------------------------------
@@ -80,26 +82,17 @@ public class TopicData
         {
         Data data = new TopicData();
 
-        // the identifier for this row is the service name and cache name
-        Pair<String, String> key = new Pair<>(aoColumns[2].toString(),
-                aoColumns[3].toString().replaceAll("\\$topic\\$", ""));
+        // the identifier for this row is the service name and topic name
+        Pair<String, String> key = new Pair<>(aoColumns[2].toString(), aoColumns[3].toString());
 
         data.setColumn(TopicData.TOPIC_NAME, key);
-        data.setColumn(TopicData.SIZE, Integer.valueOf(getNumberValue(aoColumns[4].toString())));
-        data.setColumn(TopicData.MEMORY_USAGE_BYTES, Long.valueOf(getNumberValue(aoColumns[5].toString())));
-        data.setColumn(TopicData.MEMORY_USAGE_MB, Integer.valueOf(getNumberValue(aoColumns[6].toString())) / 1024 / 1024);
-
-        if (aoColumns[7] != null)
-            {
-            data.setColumn(TopicData.AVG_OBJECT_SIZE, Integer.valueOf(getNumberValue(aoColumns[7].toString())));
-            }
-        else
-            {
-            data.setColumn(TopicData.AVG_OBJECT_SIZE, 0);
-            }
-
-        data.setColumn(TopicData.PUBLISHER_SENDS, Long.valueOf(getNumberValue(aoColumns[8].toString())));
-        data.setColumn(TopicData.SUBSCRIBER_RECEIVES, Long.valueOf(getNumberValue(aoColumns[9].toString())));
+        data.setColumn(TopicData.PUBLISHED_TOTAL, Long.valueOf(getNumberValue(aoColumns[4].toString())));
+        data.setColumn(TopicData.CHANNELS, Integer.valueOf(getNumberValue(aoColumns[5].toString())));
+        data.setColumn(TopicData.PAGE_CAPACITY, Integer.valueOf(getNumberValue(aoColumns[6].toString())));
+        data.setColumn(TopicData.RECONNECT_RETRY, Integer.valueOf(getNumberValue(aoColumns[7].toString())));
+        data.setColumn(TopicData.RECONNECT_TIMEOUT, Integer.valueOf(getNumberValue(aoColumns[8].toString())));
+        data.setColumn(TopicData.RECONNECT_WAIT, Integer.valueOf(getNumberValue(aoColumns[9].toString())));
+        data.setColumn(TopicData.RETAIN_CONSUMED, aoColumns[11].toString());
 
         return data;
         }
@@ -108,53 +101,35 @@ public class TopicData
     public SortedMap<Object, Data> getAggregatedDataFromHttpQuerying(VisualVMModel model, HttpRequestSender requestSender)
             throws Exception
         {
-        final SortedMap<Object, Data> mapData    = new TreeMap<>();
-        CacheDetailData               detailData = new CacheDetailData();
+        JsonNode                rootNode  = requestSender.getDataForTopics();
+        SortedMap<Object, Data> mapData   = new TreeMap<>();
+        JsonNode                nodeItems = rootNode.get("items");
 
-        // When using HTTP we just rely on the already collected cache data from the model
-        // except we also need total puts/gets across all caches
-        List<Map.Entry<Object, Data>> cacheData = model.getData(VisualVMModel.DataType.CACHE);
-        for (Map.Entry<Object, Data> entry : cacheData)
+        if (nodeItems != null && nodeItems.isArray())
             {
-            long cPublisherSends     = 0L;
-            long cSubscriberReceives = 0L;
-
-            Pair<String, String> cache = (Pair<String, String>) entry.getKey();
-
-            if (cache.getY().contains("$topic$"))
+            for (int k = 0; k < (nodeItems).size(); k++)
                 {
-                // found a topic cache
-                Data data = new TopicData();
-                Pair<String, String> key = new Pair<>(cache.getX(), cache.getY().replaceAll("\\$topic\\$", ""));
+                JsonNode node = nodeItems.get(k);
+
+                String sServiceName = node.get("service").asText();
+                String sTopicName   = node.get("name").asText();
+
+                TopicData data = new TopicData();
+                Pair<String, String> key = new Pair<>(sServiceName, sTopicName);
+
                 data.setColumn(TopicData.TOPIC_NAME, key);
-                data.setColumn(TopicData.AVG_OBJECT_SIZE, 0);
-                data.setColumn(TopicData.SIZE, entry.getValue().getColumn(CacheData.SIZE));
-                data.setColumn(TopicData.MEMORY_USAGE_BYTES, entry.getValue().getColumn(CacheData.MEMORY_USAGE_BYTES));
-                data.setColumn(TopicData.MEMORY_USAGE_MB, entry.getValue().getColumn(CacheData.MEMORY_USAGE_MB));
-                Object avgObjectSize = entry.getValue().getColumn(CacheData.AVG_OBJECT_SIZE);
-                data.setColumn(TopicData.AVG_OBJECT_SIZE, avgObjectSize == null ? 0 : getNumberValue(avgObjectSize.toString()));
 
-                // get the cache detail data
-                SortedMap<Object, Data> cacheDetails = detailData.getAggregatedDataFromHttpQueryingInternal(requestSender, cache);
+                data.setColumn(TopicData.CHANNELS, Integer.valueOf(getNumberValue(getChildValue("average", "channelCount", node))));
+                data.setColumn(TopicData.PUBLISHED_TOTAL, Long.valueOf(getNumberValue(getChildValue("sum", "publishedCount", node))));
+                data.setColumn(TopicData.PAGE_CAPACITY, Long.valueOf(getNumberValue(getChildValue("average", "pageCapacity", node))));
+                data.setColumn(TopicData.RECONNECT_RETRY, Long.valueOf(getNumberValue(getChildValue("average", "reconnectRetry", node))));
+                data.setColumn(TopicData.RECONNECT_TIMEOUT, Long.valueOf(getNumberValue(getChildValue("average", "reconnectTimeout", node))));
+                data.setColumn(TopicData.RECONNECT_WAIT, Long.valueOf(getNumberValue(getChildValue("average", "reconnectWait", node))));
+                data.setColumn(TopicData.RETAIN_CONSUMED, getFirstMemberOfArray(node, "retainConsumed"));
 
-                for (Data detail : cacheDetails.values())
-                    {
-                    cPublisherSends += (Long) detail.getColumn(CacheDetailData.TOTAL_PUTS);
-                    cSubscriberReceives += (Long) detail.getColumn(CacheDetailData.TOTAL_GETS);
-                    }
-
-                data.setColumn(TopicData.PUBLISHER_SENDS, cPublisherSends);
-                data.setColumn(TopicData.SUBSCRIBER_RECEIVES, cSubscriberReceives);
-                mapData.put(cache, data);
+                mapData.put(data.getColumn(0), data);
                 }
             }
-
-        return mapData;
-        }
-
-    @Override
-    protected SortedMap<Object, Data> postProcessReporterData(SortedMap<Object, Data> mapData, VisualVMModel model)
-        {
         return mapData;
         }
 
@@ -165,7 +140,7 @@ public class TopicData
     /**
      * Report for topics data.
      */
-    public static final String REPORT_TOPICS = "reports/visualvm/topics-size-stats.xml";
+    public static final String REPORT_TOPICS = "reports/visualvm/topics-summary.xml";
 
     /**
      * Array index for topic name.
@@ -173,42 +148,42 @@ public class TopicData
     public static final int TOPIC_NAME = 0;
 
     /**
-     * Array index for topic size.
+     * Array index for channels.
      */
-    public static final int SIZE = 1;
+    public static final int CHANNELS = 1;
 
     /**
-     * Array index for memory usage in bytes.
+     * Array index for published total.
      */
-    public static final int MEMORY_USAGE_BYTES = 2;
+    public static final int PUBLISHED_TOTAL = 2;
 
     /**
-     * Array index for memory usage in MB.
+     * Array index for page capacity.
      */
-    public static final int MEMORY_USAGE_MB = 3;
+    public static final int PAGE_CAPACITY = 3;
 
     /**
-     * Array index for average object size.
+     * Array index for reconnect retry.
      */
-    public static final int AVG_OBJECT_SIZE = 4;
+    public static final int RECONNECT_RETRY = 4;
 
     /**
-     * Array index for publisher sends.
+     * Array index for reconnect timeout.
      */
-    public static final int PUBLISHER_SENDS = 5;
+    public static final int RECONNECT_TIMEOUT = 5;
 
     /**
-     * Array index for subscriber receives.
+     * Array index for reconnect wait.
      */
-    public static final int SUBSCRIBER_RECEIVES = 6;
+    public static final int RECONNECT_WAIT = 6;
+
+    /**
+     * Array index for retain consumed.
+     */
+    public static final int RETAIN_CONSUMED = 7;
     
     /**
      * The logger object to use.
      */
     private static final Logger LOGGER = Logger.getLogger(TopicData.class.getName());
-
-    /**
-     * Attribute for "MemoryUnits".
-     */
-    private static final String MEMORY_UNITS = "MemoryUnits";
     }

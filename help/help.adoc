@@ -55,6 +55,9 @@ For the main Coherence VisualVM Plugin documentation please see https://github.c
 * <<JCacheConfigurationTableModel, JCache Tables>>
 * <<HotCacheTableModel, Hot Cache Table>>
 * <<HotCachePerCacheTableModel, Hot Cache Per Cache Table>>
+* <<TopicTableModel, Topic Table>>
+** <<TopicSubscriberTableModel, Topic Subscribers Table>>
+** <<TopicSubscriberGroupTableModel, Topic Subscriber Groups Table>>
 
 Please see the https://www.oracle.com/pls/topic/lookup?ctx=en/middleware/standalone/coherence/14.1.1.2206&id=COHMG5442[Coherence MBeans Reference] for detailed information on all the Coherence MBeans and attributes.
 
@@ -522,9 +525,62 @@ All attributes are from `Coherence:type=CoherenceAdapter,name=hotcache,member=me
 |**Column** | **Source / Comment**
 |Cachename/Operation | key
 |Count | PerCacheStatistics.Count
-| Max value | PerCacheStatistics.Max
-| Min value | PerCacheStatistics.Min
-| Mean value | PerCacheStatistics.Mean
+|Max value | PerCacheStatistics.Max
+|Min value | PerCacheStatistics.Min
+|Mean value | PerCacheStatistics.Mean
+!===
+
+[#TopcTableModel]
+=== Topic Table
+
+All attributes are from `Coherence:type=PagedTopic`.
+
+!===
+|**Column** | **Source / Comment**
+|Service/Topic | key
+|Channels | ChannelCount
+|Published | PublishedCount
+| MPage Capacity | PageCapacity
+| Reconnect Retry | ReconnectRetry
+| Reconnect Timeout | ReconnectTimeout
+| Reconnect Wait | ReconnectWait
+| Retain Consumed | RetainConsumed
+!===
+
+[#TopicSubscriberTableModel]
+=== Topic Subscribers Table
+
+All attributes are from `Coherence:type=PagedTopicSubscriber`.
+
+!===
+|**Column** | **Source / Comment**
+|Node Id | key
+|Subscriber Group | key - id
+|State | StateName
+|Channels | ChannelCount
+|Subscriber Group | SubscriberGroup
+|Received | ReceivedCount
+|Errors | ReceiveErrors
+|Backlog | Backlog
+|Type | key - subType
+!===
+
+[#TopicSubscriberGroupTableModel]
+=== Topic Subscriber Group Table
+
+All attributes are from `Coherence:type=PagedTopicSubscriberGroup`.
+
+!===
+|**Column** | **Source / Comment**
+|Subscriber Group | key - name
+|Node Id | key
+|Channels | ChannelCount
+|Subscriber Group | SubscriberGroup
+|Polled | PolledCount
+|Mean Rate | PolledMeanRate
+|1 Min Rate | PolledOneMinuteRate
+|5 Min Rate | PolledFiveMinuteRate
+|15 Min Rate | PolledFifteenMinuteRate
 !===
 
 [#PersistenceNotificationsTableModel]

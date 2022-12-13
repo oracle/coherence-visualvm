@@ -788,7 +788,7 @@ public class CoherenceClusterSnapshotPanel
         m_configData           = f_model.getData(VisualVMModel.DataType.JCACHE_CONFIG);
         m_statsData            = f_model.getData(VisualVMModel.DataType.JCACHE_STATS);
         m_persistenceData      = f_model.getData(VisualVMModel.DataType.PERSISTENCE);
-        m_topicData            = f_model.getData(VisualVMModel.DataType.TOPICS_DETAIL);
+        m_topicData            = f_model.getData(VisualVMModel.DataType.TOPICS);
         m_executorData         = f_model.getData(VisualVMModel.DataType.EXECUTOR);
         m_grpcData             = f_model.getData(VisualVMModel.DataType.GRPC_PROXY);
         }

@@ -108,8 +108,7 @@ public class CoherenceHttpSessionPanel
         RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
         // Add some space
-        f_table.setIntercellSpacing(new Dimension(6, 3));
-        f_table.setRowHeight(f_table.getRowHeight() + 4);
+        setTablePadding(f_table);
 
         // Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JScrollPane(f_table);

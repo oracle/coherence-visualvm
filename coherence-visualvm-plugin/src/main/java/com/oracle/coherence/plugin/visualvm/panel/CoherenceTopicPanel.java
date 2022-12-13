@@ -36,17 +36,31 @@ import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.panel.util.ExportableJTable;
+import com.oracle.coherence.plugin.visualvm.panel.util.MenuOption;
+import com.oracle.coherence.plugin.visualvm.tablemodel.TopicSubscriberGroupTableModel;
+import com.oracle.coherence.plugin.visualvm.tablemodel.TopicSubscriberTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.TopicTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.Pair;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
 
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberGroupsData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.Tuple;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
+
+import static com.oracle.coherence.plugin.visualvm.helper.RenderHelper.INTEGER_FORMAT;
+import static com.oracle.coherence.plugin.visualvm.helper.RenderHelper.RATE_FORMAT;
 
 /**
  * An implementation of an {@link AbstractCoherencePanel} to view summarized topics
@@ -84,30 +98,58 @@ public class CoherenceTopicPanel
         pnlHeader.add(getLocalizedLabel("LBL_total_topics", f_txtTotalTopics));
         pnlHeader.add(f_txtTotalTopics);
 
-        f_txtTotalMemory = getTextField(10);
-        pnlHeader.add(getLocalizedLabel("LBL_total_data", f_txtTotalMemory));
-        pnlHeader.add(f_txtTotalMemory);
+        f_txtTotalPublishedCount = getTextField(10);
+        pnlHeader.add(getLocalizedLabel("LBL_total_published_count", f_txtTotalPublishedCount));
+        pnlHeader.add(f_txtTotalPublishedCount);
 
         pnlTop.add(pnlHeader, BorderLayout.PAGE_START);
         pnlTop.setOpaque(false);
 
         // create any table models required
-        f_tmodel = new TopicTableModel(VisualVMModel.DataType.TOPICS_DETAIL.getMetadata());
+        f_tmodel = new TopicTableModel(VisualVMModel.DataType.TOPICS.getMetadata());
         f_table = new ExportableJTable(f_tmodel, model);
+        
+        f_tmodelSubscribers = new TopicSubscriberTableModel(VisualVMModel.DataType.TOPIC_SUBSCRIBERS.getMetadata());
+        f_tmodelSubscriberGroups = new TopicSubscriberGroupTableModel(VisualVMModel.DataType.TOPIC_SUBSCRIBER_GROUPS.getMetadata());
+
+        f_tableSubscribers = new ExportableJTable(f_tmodelSubscribers, model);
+        f_tableSubscriberGroups = new ExportableJTable(f_tmodelSubscriberGroups, model);
 
         f_table.setPreferredScrollableViewportSize(new Dimension(500, f_table.getRowHeight() * 5));
+        f_tableSubscribers.setPreferredScrollableViewportSize(new Dimension(500, f_table.getRowHeight() * 5));
+        f_tableSubscriberGroups.setPreferredScrollableViewportSize(new Dimension(500, f_table.getRowHeight() * 5));
 
         // define renderers for the columns
-        RenderHelper.setColumnRenderer(f_table, TopicData.SIZE, new RenderHelper.IntegerRenderer());
-        RenderHelper.setColumnRenderer(f_table, TopicData.AVG_OBJECT_SIZE, new RenderHelper.IntegerRenderer());
-        RenderHelper.setColumnRenderer(f_table, TopicData.MEMORY_USAGE_MB, new RenderHelper.IntegerRenderer());
-        RenderHelper.setColumnRenderer(f_table, TopicData.MEMORY_USAGE_BYTES, new RenderHelper.IntegerRenderer());
-        RenderHelper.setColumnRenderer(f_table, TopicData.PUBLISHER_SENDS, new RenderHelper.IntegerRenderer());
-        RenderHelper.setColumnRenderer(f_table, TopicData.SUBSCRIBER_RECEIVES, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_table, TopicData.PUBLISHED_TOTAL, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_table, TopicData.PAGE_CAPACITY, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_table, TopicData.RECONNECT_RETRY, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_table, TopicData.CHANNELS, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_table, TopicData.RECONNECT_TIMEOUT, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_table, TopicData.RECONNECT_WAIT, new RenderHelper.IntegerRenderer());
         RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
-        f_table.setIntercellSpacing(new Dimension(6, 3));
-        f_table.setRowHeight(f_table.getRowHeight() + 4);
+        setTablePadding(f_table);
+        setTablePadding(f_tableSubscribers);
+        setTablePadding(f_tableSubscriberGroups);
+
+        RenderHelper.setColumnRenderer(f_tableSubscribers, TopicSubscriberData.NODE_ID, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableSubscribers, TopicSubscriberData.CHANNELS, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableSubscribers, TopicSubscriberData.RECEIVED, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableSubscribers, TopicSubscriberData.ERRORS, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableSubscribers, TopicSubscriberData.BACKLOG, new RenderHelper.IntegerRenderer());
+        RenderHelper.setHeaderAlignment(f_tableSubscribers, SwingConstants.CENTER);
+
+        RenderHelper.setColumnRenderer(f_tableSubscriberGroups, TopicSubscriberGroupsData.NODE_ID, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableSubscriberGroups, TopicSubscriberGroupsData.CHANNELS, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableSubscriberGroups, TopicSubscriberGroupsData.POLLED, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableSubscriberGroups, TopicSubscriberGroupsData.MEAN, new RenderHelper.DecimalRenderer(RATE_FORMAT));
+        RenderHelper.setColumnRenderer(f_tableSubscriberGroups, TopicSubscriberGroupsData.ONE_MIN, new RenderHelper.DecimalRenderer(RATE_FORMAT));
+        RenderHelper.setColumnRenderer(f_tableSubscriberGroups, TopicSubscriberGroupsData.FIVE_MIN, new RenderHelper.DecimalRenderer(RATE_FORMAT));
+        RenderHelper.setColumnRenderer(f_tableSubscriberGroups, TopicSubscriberGroupsData.FIFTEEN_MIN, new RenderHelper.DecimalRenderer(RATE_FORMAT));
+        RenderHelper.setHeaderAlignment(f_tableSubscriberGroups, SwingConstants.CENTER);
+
+        f_tableSubscribers.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableSubscribers, SELECTED_SUBSCRIBER) });
+        f_tableSubscriberGroups.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableSubscriberGroups, SELECTED_SUBSCRIBER_GROUP) });
 
         // Create the scroll pane and add the table to it.
         JScrollPane pneScroll = new JScrollPane(f_table);
@@ -116,16 +158,52 @@ public class CoherenceTopicPanel
 
         pnlTop.add(pnlHeader, BorderLayout.PAGE_START);
         pnlTop.add(pneScroll, BorderLayout.CENTER);
+
+        // split pane for graph and then detail for selected topic
+        final JSplitPane pneSplitDetail = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        pneSplitDetail.setOpaque(false);
+        pneSplitDetail.setResizeWeight(0.6);
         
-        f_unconsumedGraph = GraphHelper.createTotalUnconsumedMessagesGraph();
         f_topicsRatesGraph = GraphHelper.createTopicsRateGraph();
         JPanel pnlPlotter = new JPanel(new GridLayout(1, 1));
 
         pnlPlotter.add(f_topicsRatesGraph.getChart());
+        pneSplitDetail.add(pnlPlotter);
+
+        // create the panel for the selected topic and details
+        JPanel bottomPanel       = new JPanel(new BorderLayout());
+        JPanel detailHeaderPanel = new JPanel();
+        bottomPanel.setOpaque(false);
+        detailHeaderPanel.setOpaque(false);
+
+        f_txtSelectedTopic = getTextField(25, SwingConstants.LEFT);
+        detailHeaderPanel.add(getLocalizedLabel("LBL_selected_service_topic", f_txtSelectedTopic));
+        detailHeaderPanel.add(f_txtSelectedTopic);
+
+        bottomPanel.add(detailHeaderPanel, BorderLayout.PAGE_START);
+        bottomPanel.setOpaque(false);
+
+        f_pneTab = new JTabbedPane();
+        f_pneTab.setOpaque(false);
+
+        JScrollPane scrollPaneSubscribers  = new JScrollPane(f_tableSubscribers);
+        JScrollPane scrollPaneSubscriberGroups = new JScrollPane(f_tableSubscriberGroups);
+
+        f_pneTab.addTab(getLocalizedText("TAB_subscribers"), scrollPaneSubscribers);
+        f_pneTab.addTab(getLocalizedText("TAB_subscriber_groups"), scrollPaneSubscriberGroups);
+
+        bottomPanel.add(f_pneTab, BorderLayout.CENTER);
+
+        pneSplitDetail.add(bottomPanel);
 
         pneSplit.add(pnlTop);
-        pneSplit.add(pnlPlotter);
+        pneSplit.add(pneSplitDetail);
         add(pneSplit);
+
+        // add a listener for the selected row
+        ListSelectionModel rowSelectionModel = f_table.getSelectionModel();
+        f_listener = new SelectRowListSelectionListener(f_table);
+        rowSelectionModel.addListSelectionListener(f_listener);
         }
 
     // ---- AbstractCoherencePanel methods ----------------------------------
@@ -133,65 +211,159 @@ public class CoherenceTopicPanel
     @Override
     public void updateData()
         {
-        m_topicData = f_model.getData(VisualVMModel.DataType.TOPICS_DETAIL);
+        m_topicData = f_model.getData(VisualVMModel.DataType.TOPICS);
         f_tmodel.setDataList(m_topicData);
+
+        m_topicSubscriberData = f_model.getData(VisualVMModel.DataType.TOPIC_SUBSCRIBERS);
+        f_tmodelSubscribers.setDataList(m_topicSubscriberData);
+
+        m_topicSubscriberGroupData = f_model.getData(VisualVMModel.DataType.TOPIC_SUBSCRIBER_GROUPS);
+        f_tmodelSubscriberGroups.setDataList(m_topicSubscriberGroupData);
+
+        if (f_model.getSelectedTopic() != null)
+            {
+            f_listener.updateRowSelection();
+            }
         }
 
     @Override
     public void updateGUI()
         {
-        long nSendCount = 0;
-        long nRecCount = 0;
-        long  cTotalUnconsumed = 0;
+        long  cTotalPublished = 0;
 
         if (m_topicData != null)
             {
             f_txtTotalTopics.setText(String.format("%5d", m_topicData.size()));
 
-            float cTotalTopicsSize = 0.0f;
-
             for (Entry<Object, Data> entry : m_topicData)
                 {
-                cTotalTopicsSize += Float.valueOf((Long) entry.getValue().getColumn(TopicData.MEMORY_USAGE_BYTES));
-                cTotalUnconsumed += Float.valueOf((Integer) entry.getValue().getColumn(TopicData.SIZE));
-                nSendCount += (Long) entry.getValue().getColumn(TopicData.PUBLISHER_SENDS);
-                nRecCount += (Long) entry.getValue().getColumn(TopicData.SUBSCRIBER_RECEIVES);
+                cTotalPublished += (Long) entry.getValue().getColumn(TopicData.PUBLISHED_TOTAL);
                 }
 
-            f_txtTotalMemory.setText(String.format("%,10.2f", cTotalTopicsSize / 1024 / 1024));
+            f_txtTotalPublishedCount.setText(INTEGER_FORMAT.format(cTotalPublished));
             }
         else
             {
             f_txtTotalTopics.setText("0");
-            f_txtTotalMemory.setText(String.format("%,10.2f", 0.0));
+            f_txtTotalPublishedCount.setText(String.format("%,10.2f", 0.0));
             }
-
-        GraphHelper.addValuesToTotalUnconsumedTopicsGraph(f_unconsumedGraph, cTotalUnconsumed);
         
         fireTableDataChangedWithSelection(f_table, f_tmodel);
 
         long ldtLastUpdate = f_model.getLastUpdate();
         if (ldtLastUpdate > m_cLastUpdateTime)
             {
-            if (m_cLastRecCount == -1L)
+            if (m_cLastPublishCount == -1L)
                 {
-                m_cLastRecCount  = nRecCount;
-                m_cLastSendCount = nSendCount;
+                m_cLastPublishCount = cTotalPublished;
                 }
             // get delta values
-            long nDeltaRecCount  = nRecCount - m_cLastRecCount;
-            long nDeltaSendCount = nSendCount - m_cLastSendCount;
+            long nDeltaPublishedCount = cTotalPublished - m_cLastPublishCount;
 
-            GraphHelper.addValuesToTopicsRateGraph(f_topicsRatesGraph,
-                    nDeltaSendCount < 0 ? 0 : nDeltaSendCount,
-                    nDeltaRecCount  < 0 ? 0 : nDeltaRecCount);
+            GraphHelper.addValuesToTopicsRateGraph(f_topicsRatesGraph, nDeltaPublishedCount < 0 ? 0 : nDeltaPublishedCount);
 
             // set the last values to calculate deltas
-            m_cLastRecCount   = nRecCount;
-            m_cLastSendCount  = nSendCount;
+            m_cLastPublishCount = cTotalPublished;
             m_cLastUpdateTime = ldtLastUpdate;
             }
+
+        Tuple selectedTopic = f_model.getSelectedTopic();
+
+        if (selectedTopic == null)
+            {
+            f_txtSelectedTopic.setText("");
+            }
+        else
+            {
+            f_txtSelectedTopic.setText(selectedTopic.toString());
+            }
+
+        fireTableDataChangedWithSelection(f_tableSubscribers, f_tmodelSubscribers);
+        fireTableDataChangedWithSelection(f_tableSubscriberGroups, f_tmodelSubscriberGroups);
         }
+
+    // ---- inner classes ---------------------------------------------------
+
+    /**
+     * Inner class to change the information displayed on the detailModel
+     * table when the master changes.
+     */
+    private class SelectRowListSelectionListener
+            implements ListSelectionListener
+        {
+
+        // ----- constructors -----------------------------------------------
+
+        /**
+         * Create a new listener to changes the detail table.
+         *
+         * @param table  the table that is to be selected
+         */
+        public SelectRowListSelectionListener(ExportableJTable table)
+            {
+            this.table = table;
+            }
+
+
+        // ----- ListSelectionListener methods ------------------------------
+
+        /**
+         * Change and clear the detailModel on selection of a cache.
+         *
+         * @param e  the {@link ListSelectionEvent} to respond to
+         */
+        @SuppressWarnings("unchecked")
+        public void valueChanged(ListSelectionEvent e)
+            {
+            if (e.getValueIsAdjusting())
+                {
+                return;
+                }
+
+            ListSelectionModel selectionModel = (ListSelectionModel) e.getSource();
+
+            if (!selectionModel.isSelectionEmpty())
+                {
+                nSelectedRow = selectionModel.getMinSelectionIndex();
+
+                // get the service at the selected row, which is the first column
+                Pair<String, String> selectedTopic = (Pair<String, String>) table.getValueAt(nSelectedRow, 0);
+
+                if (!selectedTopic.equals(f_model.getSelectedTopic()))
+                    {
+                    String sSelectedTopic = selectedTopic.toString();
+                    f_model.setSelectedTopic(selectedTopic);
+
+                    f_txtSelectedTopic.setText(sSelectedTopic);
+                    f_txtSelectedTopic.setToolTipText(sSelectedTopic);
+
+                    f_tmodelSubscribers.setDataList(null);
+                    f_tmodelSubscribers.fireTableDataChanged();
+
+                    f_tmodelSubscriberGroups.setDataList(null);
+                    f_tmodelSubscriberGroups.fireTableDataChanged();
+
+                    m_topicData = null;
+                    }
+                }
+            }
+
+        /**
+         * Re-select the last selected row.
+         */
+        public void updateRowSelection()
+            {
+            table.addRowSelectionInterval(nSelectedRow, nSelectedRow);
+            }
+
+        private ExportableJTable table;
+
+        /**
+         * The currently selected row.
+         */
+        private int nSelectedRow;
+        }
+
 
     // ---- constants -------------------------------------------------------
 
@@ -205,24 +377,40 @@ public class CoherenceTopicPanel
     private final JTextField f_txtTotalTopics;
 
     /**
-     * Total primary copy memory used by topics.
+     * Total published count
      */
-    private final JTextField f_txtTotalMemory;
+    private final JTextField f_txtTotalPublishedCount;
 
     /**
      * The {@link TopicTableModel} to display topic data.
      */
     protected final TopicTableModel f_tmodel;
-    
+
+    /**
+     * The {@link TopicSubscriberTableModel} to display subscribers.
+     */
+    protected final TopicSubscriberTableModel f_tmodelSubscribers;
+
+    /**
+     * The {@link TopicSubscriberGroupTableModel} to display subscriber groups.
+     */
+    protected final TopicSubscriberGroupTableModel f_tmodelSubscriberGroups;
+
     /**
      * The topic data retrieved from the {@link VisualVMModel}.
      */
     private List<Entry<Object, Data>> m_topicData = null;
 
     /**
-     * The graph of unconsumed messages.
+     * The topic subscriber data retrieved from the {@link VisualVMModel}.
      */
-    private final transient SimpleXYChartSupport f_unconsumedGraph;
+    private List<Entry<Object, Data>> m_topicSubscriberData = null;
+
+    /**
+    /**
+     * The topic subscriber group data retrieved from the {@link VisualVMModel}.
+     */
+    private List<Entry<Object, Data>> m_topicSubscriberGroupData = null;
 
     /**
      * The graph of topics rates.
@@ -233,6 +421,16 @@ public class CoherenceTopicPanel
      * the {@link ExportableJTable} to use to display data.
      */
     protected final ExportableJTable f_table;
+
+    /**
+     * The {@link ExportableJTable} to use to display subscribers.
+     */
+    private final ExportableJTable f_tableSubscribers;
+
+    /**
+     * The {@link ExportableJTable} to use to display subscriber groups.
+     */
+    private final ExportableJTable f_tableSubscriberGroups;
 
     /**
      * Last update time for stats.
@@ -247,5 +445,21 @@ public class CoherenceTopicPanel
     /**
      * Last subscriber receive count.
      */
-    private long m_cLastRecCount = -1L;
+    private long m_cLastPublishCount = -1L;
+
+    /**
+     * Selected Topic.
+     */
+    private final JTextField f_txtSelectedTopic;
+    
+    /**
+     * The tabbed panel.
+     */
+    private final JTabbedPane f_pneTab;
+
+    /**
+     * The row selection listener.
+     */
+    private final SelectRowListSelectionListener f_listener;
+
     }

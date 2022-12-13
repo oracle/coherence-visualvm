@@ -59,6 +59,8 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.RamJournalData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceMemberData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberGroupsData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Tuple;
 
 import java.io.BufferedReader;
@@ -129,7 +131,7 @@ public class VisualVMModel
         m_ldtLastUpdate = System.currentTimeMillis() - m_nRefreshTime - 1L;
 
         // populate mapCollectedData which contains an entry for each type
-        m_mapCollectedData = new EnumMap<DataType, List<Entry<Object, Data>>>(DataType.class);
+        m_mapCollectedData = new EnumMap<>(DataType.class);
 
         for (DataType type : DataType.values())
             {
@@ -147,6 +149,8 @@ public class VisualVMModel
         f_mapDataRetrievers.put(CacheDetailData.class, new CacheDetailData());
         f_mapDataRetrievers.put(CacheFrontDetailData.class, new CacheFrontDetailData());
         f_mapDataRetrievers.put(TopicData.class, new TopicData());
+        f_mapDataRetrievers.put(TopicSubscriberData.class, new TopicSubscriberData());
+        f_mapDataRetrievers.put(TopicSubscriberGroupsData.class, new TopicSubscriberGroupsData());
         f_mapDataRetrievers.put(PersistenceData.class, new PersistenceData());
         f_mapDataRetrievers.put(PersistenceNotificationsData.class, new PersistenceNotificationsData());
         f_mapDataRetrievers.put(CacheStorageManagerData.class, new CacheStorageManagerData());
@@ -419,7 +423,7 @@ public class VisualVMModel
 
                     if (mapCollectedData != null)
                         {
-                        return new ArrayList<Map.Entry<Object, Data>>(mapCollectedData.entrySet());
+                        return new ArrayList<>(mapCollectedData.entrySet());
                         }
                     else
                         {
@@ -862,6 +866,19 @@ public class VisualVMModel
         }
 
     /**
+     * Sets the currently selected topic.
+     *
+     * @param selectedTopic  the currently selected cache (service/cache name {@link Tuple}
+     */
+    public void setSelectedTopic(Pair<String, String> selectedTopic)
+        {
+        this.m_selectedTopic = selectedTopic;
+        m_mapCollectedData.remove(DataType.TOPIC_SUBSCRIBERS);
+//        m_mapCollectedData.remove(DataType.CACHE_FRONT_DETAIL);
+//        m_mapCollectedData.remove(DataType.CACHE_STORAGE_MANAGER);
+        }
+
+    /**
      * Sets the value for is first refresh.
      *
      * @param fIsFirstRefresh the value for is first refresh
@@ -879,6 +896,16 @@ public class VisualVMModel
     public Pair<String, String> getSelectedCache()
         {
         return this.m_selectedCache;
+        }
+
+    /**
+     * Returns the currently selected topic.
+     *
+     * @return the currently selected topic
+     */
+    public Pair<String, String> getSelectedTopic()
+        {
+        return this.m_selectedTopic;
         }
 
     /**
@@ -989,8 +1016,8 @@ public class VisualVMModel
      */
     public boolean isTopicsConfigured()
         {
-        return m_mapCollectedData.get(DataType.TOPICS_DETAIL) != null
-               && !m_mapCollectedData.get(DataType.TOPICS_DETAIL).isEmpty();
+        return m_mapCollectedData.get(DataType.TOPICS) != null
+               && !m_mapCollectedData.get(DataType.TOPICS).isEmpty();
        }
 
     /**
@@ -1246,7 +1273,9 @@ public class VisualVMModel
         CACHE_DETAIL(CacheDetailData.class, CACHE_DETAIL_LABELS),
         CACHE_FRONT_DETAIL(CacheFrontDetailData.class, CACHE_FRONT_DETAIL_LABELS),
         CACHE_STORAGE_MANAGER(CacheStorageManagerData.class, CACHE_STORAGE_MANAGER_LABELS),
-        TOPICS_DETAIL(TopicData.class, TOPICS_LABELS),
+        TOPICS(TopicData.class, TOPICS_LABELS),
+        TOPIC_SUBSCRIBERS(TopicSubscriberData.class, TOPIC_SUBSCRIBER_LABELS),
+        TOPIC_SUBSCRIBER_GROUPS(TopicSubscriberGroupsData.class, TOPIC_SUBSCRIBER_GROUPS_LABELS),
         MEMBER(MemberData.class, MEMBER_LABELS),
         NODE_STORAGE(NodeStorageData.class, new String[] {}),
         MACHINE(MachineData.class, MACHINE_LABELS),
@@ -1346,12 +1375,33 @@ public class VisualVMModel
         };
 
     /**
-     * Labels for cache table.
+     * Labels for topics table.
      */
     private static final String[] TOPICS_LABELS = new String[] {Localization.getLocalText("LBL_topic_name"),
-        Localization.getLocalText("LBL_topic_size"), Localization.getLocalText(LBL_MEMORY_BYTES),
-        Localization.getLocalText("LBL_memory_mb"), Localization.getLocalText("LBL_average_object_size"),
-        Localization.getLocalText("LBL_publisher_sends"), Localization.getLocalText("LBL_subscriber_receives")
+        Localization.getLocalText("LBL_channels"), Localization.getLocalText("LBL_published"),
+        Localization.getLocalText("LBL_page_capacity"), Localization.getLocalText("LBL_reconnect_retry"),
+        Localization.getLocalText("LBL_reconnect_timeout"), Localization.getLocalText("LBL_reconnect_wait"),
+        Localization.getLocalText("LBL_retain_consumed")
+    };
+
+    /**
+     * Labels for topic subscribers table.
+     */
+    private static final String[] TOPIC_SUBSCRIBER_LABELS = new String[] {Localization.getLocalText(LBL_NODE_ID),
+        Localization.getLocalText("LBL_subscriber_id"), Localization.getLocalText("LBL_state"),
+        Localization.getLocalText("LBL_channels"), Localization.getLocalText("LBL_subscriber_group"),
+        Localization.getLocalText("LBL_received"), Localization.getLocalText("LBL_errors"),
+        Localization.getLocalText("LBL_backlog"), Localization.getLocalText("LBL_type")
+    };
+
+    /**
+     * Labels for topic subscriber groups table.
+     */
+    private static final String[] TOPIC_SUBSCRIBER_GROUPS_LABELS = new String[] {
+        Localization.getLocalText("LBL_subscriber_group"), Localization.getLocalText(LBL_NODE_ID),
+        Localization.getLocalText("LBL_channels"), Localization.getLocalText("LBL_polled"),
+        Localization.getLocalText("LBL_mean_rate"), Localization.getLocalText("LBL_1min"),
+        Localization.getLocalText("LBL_5min"), Localization.getLocalText("LBL_15min")
     };
 
     /**
@@ -1725,6 +1775,11 @@ public class VisualVMModel
      * The selected cache for detailed cache data.
      */
     private Pair<String, String> m_selectedCache = null;
+
+    /**
+     * The selected topic for detailed cache data.
+     */
+    private Pair<String, String> m_selectedTopic = null;
 
     /**
      * The selected JCache cache for detailed JCache information.

@@ -66,6 +66,19 @@
         <module>coherence-visualvm-tests-ce</module>
       </modules>
     </profile>
+
+    <profile>
+      <id>topics</id>
+<!--      <activation>-->
+<!--        &lt;!&ndash; TODO: This should be removed before SUBMIT&ndash;&gt;-->
+<!--        <file>-->
+<!--          <exists>.</exists>-->
+<!--        </file>-->
+<!--      </activation>-->
+      <modules>
+        <module>coherence-visualvm-tests-topics</module>
+      </modules>
+    </profile>
   </profiles>
 
   <dependencyManagement>

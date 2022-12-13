@@ -27,12 +27,12 @@ package com.oracle.coherence.plugin.visualvm.tablemodel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 
 /**
- * A model for holding topic data.
+ * A model for holding topic subscriber data.
  *
  * @author tam  2020.02.08
  * @since  1.6.0
  */
-public class TopicTableModel
+public class TopicSubscriberTableModel
         extends AbstractCoherenceTableModel<Object, Data>
     {
     // ----- constructors ---------------------------------------------------
@@ -42,12 +42,12 @@ public class TopicTableModel
      *
      * @param asColumns the columns for this table model
      */
-    public TopicTableModel(String[] asColumns)
+    public TopicSubscriberTableModel(String[] asColumns)
         {
         super(asColumns);
         }
 
     // ----- constants ------------------------------------------------------
 
-    private static final long serialVersionUID = 889285758431509048L;
+    private static final long serialVersionUID = 8892855832931509048L;
     }

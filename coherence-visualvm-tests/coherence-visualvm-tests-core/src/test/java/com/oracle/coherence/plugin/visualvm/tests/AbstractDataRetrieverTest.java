@@ -765,15 +765,6 @@ public abstract class AbstractDataRetrieverTest
         }
 
     /**
-     * Wait for a certain amount of time to ensure the JMX management
-     * refresh has completed.
-     */
-    private void waitForRefresh()
-        {
-        wait("Sleeping to ensure JMX stats updated for next refresh", 15000L);
-        }
-
-    /**
      * Retrieve a {@link ExtensibleConfigurableCacheFactory} instance using the
      * tangosol.coherence.cacheconfig system property.
      *
