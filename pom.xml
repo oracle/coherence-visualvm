@@ -53,7 +53,7 @@
     <com.sun.xml.bind.version>2.3.0</com.sun.xml.bind.version>
 
     <!-- default coherence versions -->
-    <default.coherence.ce.version>23.03-SNAPSHOT</default.coherence.ce.version>
+    <default.coherence.ce.version>22.06.2</default.coherence.ce.version>
     <default.coherence.commercial.version>14.1.2-0-0-SNAPSHOT
     </default.coherence.commercial.version>
 
