@@ -868,14 +868,13 @@ public class VisualVMModel
     /**
      * Sets the currently selected topic.
      *
-     * @param selectedTopic  the currently selected cache (service/cache name {@link Tuple}
+     * @param selectedTopic  the currently selected topic (service/topic name {@link Tuple}
      */
     public void setSelectedTopic(Pair<String, String> selectedTopic)
         {
         this.m_selectedTopic = selectedTopic;
         m_mapCollectedData.remove(DataType.TOPIC_SUBSCRIBERS);
-//        m_mapCollectedData.remove(DataType.CACHE_FRONT_DETAIL);
-//        m_mapCollectedData.remove(DataType.CACHE_STORAGE_MANAGER);
+        m_mapCollectedData.remove(DataType.TOPIC_SUBSCRIBER_GROUPS);
         }
 
     /**
@@ -1346,6 +1345,7 @@ public class VisualVMModel
     private static final String LBL_NAME         = "LBL_service_name";
     private static final String LBL_MEMBERS      = "LBL_members";
     private static final String LBL_NODE_ID      = "LBL_node_id";
+    private static final String LBL_CHANNELS     = "LBL_channels";
     private static final String LBL_MEMORY_BYTES = "LBL_memory_bytes";
     private static final String LBL_SIZE         = "LBL_size";
     private static final String LBL_CACHE_HITS   = "LBL_cache_hits";
@@ -1378,7 +1378,7 @@ public class VisualVMModel
      * Labels for topics table.
      */
     private static final String[] TOPICS_LABELS = new String[] {Localization.getLocalText("LBL_topic_name"),
-        Localization.getLocalText("LBL_channels"), Localization.getLocalText("LBL_published"),
+        Localization.getLocalText(LBL_CHANNELS), Localization.getLocalText("LBL_published"),
         Localization.getLocalText("LBL_page_capacity"), Localization.getLocalText("LBL_reconnect_retry"),
         Localization.getLocalText("LBL_reconnect_timeout"), Localization.getLocalText("LBL_reconnect_wait"),
         Localization.getLocalText("LBL_retain_consumed")
@@ -1389,7 +1389,7 @@ public class VisualVMModel
      */
     private static final String[] TOPIC_SUBSCRIBER_LABELS = new String[] {Localization.getLocalText(LBL_NODE_ID),
         Localization.getLocalText("LBL_subscriber_id"), Localization.getLocalText("LBL_state"),
-        Localization.getLocalText("LBL_channels"), Localization.getLocalText("LBL_subscriber_group"),
+        Localization.getLocalText(LBL_CHANNELS), Localization.getLocalText("LBL_subscriber_group"),
         Localization.getLocalText("LBL_received"), Localization.getLocalText("LBL_errors"),
         Localization.getLocalText("LBL_backlog"), Localization.getLocalText("LBL_type")
     };
@@ -1399,7 +1399,7 @@ public class VisualVMModel
      */
     private static final String[] TOPIC_SUBSCRIBER_GROUPS_LABELS = new String[] {
         Localization.getLocalText("LBL_subscriber_group"), Localization.getLocalText(LBL_NODE_ID),
-        Localization.getLocalText("LBL_channels"), Localization.getLocalText("LBL_polled"),
+        Localization.getLocalText(LBL_CHANNELS), Localization.getLocalText("LBL_polled"),
         Localization.getLocalText("LBL_mean_rate"), Localization.getLocalText("LBL_1min"),
         Localization.getLocalText("LBL_5min"), Localization.getLocalText("LBL_15min")
     };

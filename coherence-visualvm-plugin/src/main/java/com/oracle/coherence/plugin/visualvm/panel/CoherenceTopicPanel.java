@@ -29,24 +29,44 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
+import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
+import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
+import com.oracle.coherence.plugin.visualvm.panel.util.AbstractMenuOption;
 import com.oracle.coherence.plugin.visualvm.panel.util.ExportableJTable;
 import com.oracle.coherence.plugin.visualvm.panel.util.MenuOption;
+import com.oracle.coherence.plugin.visualvm.panel.util.SeparatorMenuOption;
 import com.oracle.coherence.plugin.visualvm.tablemodel.TopicSubscriberGroupTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.TopicSubscriberTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.TopicTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Pair;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.PersistenceData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
 
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberGroupsData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Tuple;
+import javax.management.MBeanServerConnection;
+import javax.management.ObjectName;
+import javax.management.openmbean.CompositeData;
+import javax.management.openmbean.CompositeDataSupport;
+import javax.management.openmbean.TabularDataSupport;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -148,9 +168,21 @@ public class CoherenceTopicPanel
         RenderHelper.setColumnRenderer(f_tableSubscriberGroups, TopicSubscriberGroupsData.FIFTEEN_MIN, new RenderHelper.DecimalRenderer(RATE_FORMAT));
         RenderHelper.setHeaderAlignment(f_tableSubscriberGroups, SwingConstants.CENTER);
 
-        f_tableSubscribers.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableSubscribers, SELECTED_SUBSCRIBER) });
         f_tableSubscriberGroups.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableSubscriberGroups, SELECTED_SUBSCRIBER_GROUP) });
 
+        MenuOption separator = new SeparatorMenuOption(model, m_requestSender, f_table);
+
+        MenuOption menuOptionConnect     = new SubscriberInvokeMenuOption(model, m_requestSender, f_tableSubscribers, "LBL_connect_subscriber", CONNECT);
+        MenuOption menuOptionDisconnect  = new SubscriberInvokeMenuOption(model, m_requestSender, f_tableSubscribers, "LBL_disconnect_subscriber", DISCONNECT);
+        MenuOption menuRetrieveHeads     = new SubscriberInvokeMenuOption(model, m_requestSender, f_tableSubscribers, "LBL_retrieve_heads", RETRIEVE_HEADS);
+        MenuOption menuRetrieveRemaining = new SubscriberInvokeMenuOption(model, m_requestSender, f_tableSubscribers, "LBL_retrieve_remaining", RETRIEVE_REMAINING);
+        MenuOption menuReNotifyPopulated = new SubscriberInvokeMenuOption(model, m_requestSender, f_tableSubscribers, "LBL_notify_populated", NOTIFY_POPULATED);
+
+          f_tableSubscribers.setMenuOptions(new MenuOption[] {
+                  new ShowDetailMenuOption(model, f_tableSubscribers, SELECTED_SUBSCRIBER),
+                  separator,
+                  menuOptionConnect, menuOptionDisconnect, menuRetrieveHeads, menuRetrieveRemaining, menuReNotifyPopulated});
+          
         // Create the scroll pane and add the table to it.
         JScrollPane pneScroll = new JScrollPane(f_table);
         configureScrollPane(pneScroll, f_table);
@@ -301,7 +333,7 @@ public class CoherenceTopicPanel
          */
         public SelectRowListSelectionListener(ExportableJTable table)
             {
-            this.table = table;
+            this.m_table = table;
             }
 
 
@@ -324,10 +356,10 @@ public class CoherenceTopicPanel
 
             if (!selectionModel.isSelectionEmpty())
                 {
-                nSelectedRow = selectionModel.getMinSelectionIndex();
+                m_nSelectedRow = selectionModel.getMinSelectionIndex();
 
                 // get the service at the selected row, which is the first column
-                Pair<String, String> selectedTopic = (Pair<String, String>) table.getValueAt(nSelectedRow, 0);
+                Pair<String, String> selectedTopic = (Pair<String, String>) m_table.getValueAt(m_nSelectedRow, 0);
 
                 if (!selectedTopic.equals(f_model.getSelectedTopic()))
                     {
@@ -353,21 +385,249 @@ public class CoherenceTopicPanel
          */
         public void updateRowSelection()
             {
-            table.addRowSelectionInterval(nSelectedRow, nSelectedRow);
+            m_table.addRowSelectionInterval(m_nSelectedRow, m_nSelectedRow);
             }
 
-        private ExportableJTable table;
+        private ExportableJTable m_table;
 
         /**
          * The currently selected row.
          */
-        private int nSelectedRow;
+        private int m_nSelectedRow;
         }
+
+
+    /**
+     * An implementation of a {@link MenuOption} providing default functionality
+     * to call a JMX operation for subscriber options.
+     *
+     * @author tam  2022.12.13
+     * @since 11.6.0
+     */
+    private class SubscriberInvokeMenuOption
+            extends AbstractMenuOption
+        {
+        // ---- constructors ------------------------------------------------
+
+        /**
+         * Construct a new implementation of a {@link MenuOption} providing
+         * default functionality.
+         *
+         * @param model         the {@link VisualVMModel} to get collected data
+         *                      from
+         * @param requestSender the {@link RequestSender} to perform
+         *                      additional queries
+         * @param jtable        the {@link ExportableJTable} that this applies
+         *                      to
+         * @param sLabel        the label key for the menu option from
+         *                      Bundle.properties
+         * @param sOperation    the JMX operation to call
+         */
+        public SubscriberInvokeMenuOption(VisualVMModel model, RequestSender requestSender, ExportableJTable jtable,
+                                          String sLabel, String sOperation)
+            {
+            super(model, requestSender, jtable);
+            f_sLabel = sLabel;
+            f_sOperation = sOperation;
+            }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String getMenuItem()
+            {
+            return Localization.getLocalText(f_sLabel);
+            }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void actionPerformed(ActionEvent e)
+            {
+            int nRow = getSelectedRow();
+            String sQuery = null;
+            String sResult = null;
+
+            if (nRow == -1)
+                {
+                DialogHelper.showInfoDialog(Localization.getLocalText("LBL_must_select_row"));
+                }
+            else
+                {
+                try
+                    {
+                    Pair<String, String> selectedTopic = f_model.getSelectedTopic();
+                    long nSubscriber = (Long) getJTable().getModel().getValueAt(nRow, TopicSubscriberData.SUBSCRIBER);
+                    String sType = (String) getJTable().getModel().getValueAt(nRow, TopicSubscriberData.TYPE);
+                    String sQuestion = Localization.getLocalText("LBL_confirm_topic", f_sOperation, Long.toString(nSubscriber));
+                    int nChannel = -1;
+
+                    if (NOTIFY_POPULATED.equals(f_sOperation))
+                       {
+                       int nNumChannels = (Integer) getJTable().getModel().getValueAt(nRow, TopicSubscriberData.CHANNELS);
+                       String sChannel = JOptionPane.showInputDialog(
+                                Localization.getLocalText("LBL_enter_channel"));
+                       if (sChannel == null || sChannel.equals(""))
+                           {
+                           return;
+                           }
+
+                       try
+                           {
+                           nChannel = Integer.parseInt(sChannel);
+                           }
+                       catch (Exception ee)
+                           {
+                           // ignore
+                           }
+                       if (nChannel < 0 || nChannel > nNumChannels -1)
+                           {
+                           DialogHelper.showInfoDialog(Localization.getLocalText("LBL_invalid_channel", Integer.toString(nNumChannels -1)));
+                           return;
+                           }
+                           sQuestion += " and channel " + nChannel;
+                       }
+
+                    sQuestion += "?";
+
+                    if (!DialogHelper.showConfirmDialog(sQuestion))
+                       {
+                       return;
+                       }
+
+                    final String OK = "Operation completed OK";
+                    Object oResult = m_requestSender.executeSubscriberOperation(selectedTopic, nSubscriber, f_sOperation, sType, nChannel);
+                    if (oResult == null)
+                        {
+                        sResult = OK;
+                        }
+                    else
+                        {
+                        if (oResult instanceof TabularDataSupport)
+                            {
+                            TabularDataSupport data = (TabularDataSupport) oResult;
+                            StringBuilder      sb   = new StringBuilder();
+                            data.values().forEach(o ->
+                                {
+                                if (o instanceof CompositeDataSupport)
+                                    {
+                                    CompositeDataSupport cds = (CompositeDataSupport) o;
+                                    cds.getCompositeType().keySet().forEach(k -> sb.append(k).append(": ").append(cds.get(k)).append(" "));
+                                    sb.append("\n");
+                                    }
+                                });
+                            sResult = sb.toString();
+                            }
+                        else
+                            {
+                            sResult = oResult.toString();
+                            if ("{}".equals(sResult))
+                                {
+                                sResult = OK;
+                                }
+                            else if (sResult.startsWith("{"))
+                                {
+                                // JSON so format it
+                                ObjectMapper mapper = new ObjectMapper();
+                                mapper.enable(SerializationFeature.INDENT_OUTPUT);
+                                Object jsonData = mapper.readValue(sResult, Object.class);
+                                sResult = mapper.writeValueAsString(jsonData);
+                                }
+                            }
+                        }
+           
+                    showMessageDialog(Localization.getLocalText("LBL_operation_completed"), sResult,
+                                      JOptionPane.INFORMATION_MESSAGE);
+                    }
+                catch (Exception ee)
+                    {
+                    showMessageDialog(Localization.getLocalText("ERR_error_invoking",
+                                                                f_sOperation + " " + sQuery), ee.getMessage() +
+                                                                "\n" + ee.getCause(), JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+
+        // ----- helpers ----------------------------------------------------
+
+        /**
+         * Sanitize or clean a snapshot name by removing anything other than alpha, numbers, '-' and '_'.
+         *
+         * @param sSnapshotName the snapshot name
+         * @return sanitized snapshot
+         */
+        private String sanitizeSnapshot(String sSnapshotName)
+            {
+            if (sSnapshotName == null)
+                {
+                return null;
+                }
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < sSnapshotName.length() ; i++)
+                {
+                char c = sSnapshotName.charAt(i);
+                if (Character.isAlphabetic(c) || Character.isDigit(c) || c == '_' || c == '-')
+                    {
+                    sb.append(c);
+                    }
+                else
+                    {
+                    // invalid character, replace with '-'
+                    sb.append('-');
+                    }
+                }
+            return sb.toString();
+            }
+
+        /**
+         * Return a formatted list of snapshots.
+         *
+         * @param sTitle the title to display on first line
+         * @param asList the {@link String}[] of snapshots
+         *
+         * @return the formatted list
+         */
+        private String getSnapshotList(String sTitle, String[] asList)
+            {
+            StringBuilder sb = new StringBuilder(sTitle + "\n");
+            if (asList != null)
+                {
+                Arrays.sort(asList);
+                for (int i = 0; i < asList.length; i++)
+                    {
+                    sb.append((i + 1) + ": " + asList[i] + "\n");
+                    }
+                }
+            return sb.toString();
+            }
+
+        // ----- data members -----------------------------------------------
+
+        /**
+         * The label key for the menu option.
+         */
+        private final String f_sLabel;
+
+        /**
+         * The JMX Operation to call.
+         */
+        private final String f_sOperation;
+        }
+
 
 
     // ---- constants -------------------------------------------------------
 
     private static final long serialVersionUID = -761256904492412496L;
+
+    // various subscriber operations
+    public static final String CONNECT            = "Connect";
+    public static final String DISCONNECT         = "Disconnect";
+    public static final String RETRIEVE_HEADS     = "Heads";
+    public static final String RETRIEVE_REMAINING = "RemainingMessages";
+    public static final String NOTIFY_POPULATED   = "NotifyPopulated";
 
     // ----- data members ---------------------------------------------------
 
@@ -404,13 +664,13 @@ public class CoherenceTopicPanel
     /**
      * The topic subscriber data retrieved from the {@link VisualVMModel}.
      */
-    private List<Entry<Object, Data>> m_topicSubscriberData = null;
+    private transient List<Entry<Object, Data>> m_topicSubscriberData = null;
 
     /**
     /**
      * The topic subscriber group data retrieved from the {@link VisualVMModel}.
      */
-    private List<Entry<Object, Data>> m_topicSubscriberGroupData = null;
+    private transient List<Entry<Object, Data>> m_topicSubscriberGroupData = null;
 
     /**
      * The graph of topics rates.
@@ -460,6 +720,5 @@ public class CoherenceTopicPanel
     /**
      * The row selection listener.
      */
-    private final SelectRowListSelectionListener f_listener;
-
+    private final transient SelectRowListSelectionListener f_listener;
     }

@@ -62,12 +62,8 @@ public class TopicData
     // ----- DataRetriever methods ------------------------------------------
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender sender, VisualVMModel model)
         {
-        SortedMap<Object, Data> mapData = new TreeMap<Object, Data>();
-        Data                    data;
-
         return null;
         }
 
@@ -101,6 +97,7 @@ public class TopicData
     public SortedMap<Object, Data> getAggregatedDataFromHttpQuerying(VisualVMModel model, HttpRequestSender requestSender)
             throws Exception
         {
+        final String            AVERAGE = "average";
         JsonNode                rootNode  = requestSender.getDataForTopics();
         SortedMap<Object, Data> mapData   = new TreeMap<>();
         JsonNode                nodeItems = rootNode.get("items");
@@ -119,12 +116,12 @@ public class TopicData
 
                 data.setColumn(TopicData.TOPIC_NAME, key);
 
-                data.setColumn(TopicData.CHANNELS, Integer.valueOf(getNumberValue(getChildValue("average", "channelCount", node))));
+                data.setColumn(TopicData.CHANNELS, Integer.valueOf(getNumberValue(getChildValue(AVERAGE, "channelCount", node))));
                 data.setColumn(TopicData.PUBLISHED_TOTAL, Long.valueOf(getNumberValue(getChildValue("sum", "publishedCount", node))));
-                data.setColumn(TopicData.PAGE_CAPACITY, Long.valueOf(getNumberValue(getChildValue("average", "pageCapacity", node))));
-                data.setColumn(TopicData.RECONNECT_RETRY, Long.valueOf(getNumberValue(getChildValue("average", "reconnectRetry", node))));
-                data.setColumn(TopicData.RECONNECT_TIMEOUT, Long.valueOf(getNumberValue(getChildValue("average", "reconnectTimeout", node))));
-                data.setColumn(TopicData.RECONNECT_WAIT, Long.valueOf(getNumberValue(getChildValue("average", "reconnectWait", node))));
+                data.setColumn(TopicData.PAGE_CAPACITY, Long.valueOf(getNumberValue(getChildValue(AVERAGE, "pageCapacity", node))));
+                data.setColumn(TopicData.RECONNECT_RETRY, Long.valueOf(getNumberValue(getChildValue(AVERAGE, "reconnectRetry", node))));
+                data.setColumn(TopicData.RECONNECT_TIMEOUT, Long.valueOf(getNumberValue(getChildValue(AVERAGE, "reconnectTimeout", node))));
+                data.setColumn(TopicData.RECONNECT_WAIT, Long.valueOf(getNumberValue(getChildValue(AVERAGE, "reconnectWait", node))));
                 data.setColumn(TopicData.RETAIN_CONSUMED, getFirstMemberOfArray(node, "retainConsumed"));
 
                 mapData.put(data.getColumn(0), data);

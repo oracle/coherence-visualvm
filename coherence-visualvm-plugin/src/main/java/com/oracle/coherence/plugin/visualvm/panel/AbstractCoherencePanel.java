@@ -396,19 +396,19 @@ public abstract class AbstractCoherencePanel
                         sQuery = "Coherence:type=Service,name=" + sSelectedService +
                                  (sDomainPartition != null
                                   ? ",domainPartition=" + sDomainPartition
-                                  : "") + ",nodeId=" + oValue + ",*";
+                                  : "") + NODE_ID + oValue + ",*";
                         }
                     else if (f_nSelectedItem == SELECTED_CACHE)
                         {
                         Pair<String, String> selectedCache = AbstractCoherencePanel.this.f_model.getSelectedCache();
-                        sQuery = "Coherence:type=Cache,service=" + getServiceName(selectedCache.getX()) + ",name=" + selectedCache.getY() +
+                        sQuery = "Coherence:type=Cache,service=" + getServiceName(selectedCache.getX()) + NAME + selectedCache.getY() +
                                  ",tier=back,nodeId=" + oValue + getDomainPartitionKey(selectedCache.getX()) + ",*";
                         }
                     else if (f_nSelectedItem == SELECTED_STORAGE)
                         {
                         Pair<String, String> selectedCache = AbstractCoherencePanel.this.f_model.getSelectedCache();
                         sQuery = "Coherence:type=StorageManager,service=" + getServiceName(selectedCache.getX()) + ",cache=" + selectedCache.getY() +
-                                 ",nodeId=" + oValue + getDomainPartitionKey(selectedCache.getX()) + ",*";
+                                 NODE_ID + oValue + getDomainPartitionKey(selectedCache.getX()) + ",*";
                         }
                     else if (f_nSelectedItem == SELECTED_JCACHE)
                         {
@@ -418,7 +418,7 @@ public abstract class AbstractCoherencePanel
                     else if (f_nSelectedItem == SELECTED_FRONT_CACHE)
                         {
                         Pair<String, String> selectedCache = AbstractCoherencePanel.this.f_model.getSelectedCache();
-                        sQuery = "Coherence:type=Cache,service=" + getServiceName(selectedCache.getX()) + ",name=" + selectedCache.getY() +
+                        sQuery = "Coherence:type=Cache,service=" + getServiceName(selectedCache.getX()) + NAME + selectedCache.getY() +
                                  ",tier=front,nodeId=" + oValue + getDomainPartitionKey(selectedCache.getX()) + ",*";
                         }
                     else if (f_nSelectedItem == SELECTED_SUBSCRIBER)
@@ -427,7 +427,7 @@ public abstract class AbstractCoherencePanel
                         Object oSubscriberId = getJTable().getModel().getValueAt(nRow, TopicSubscriberData.SUBSCRIBER);
                         Pair<String, String> selectedTopic = AbstractCoherencePanel.this.f_model.getSelectedTopic();
                         sQuery = "Coherence:type=PagedTopicSubscriber,service=" + getServiceName(selectedTopic.getX()) + ",topic=" + selectedTopic.getY() +
-                                 ",nodeId=" + oValue + ",id=" + oSubscriberId + ",*";
+                                 NODE_ID + oValue + ",id=" + oSubscriberId + ",*";
                         }
                     else if (f_nSelectedItem == SELECTED_SUBSCRIBER_GROUP)
                         {
@@ -435,7 +435,7 @@ public abstract class AbstractCoherencePanel
                         Object oSubscriberGroup = getJTable().getModel().getValueAt(nRow, TopicSubscriberGroupsData.SUBSCRIBER_GROUP);
                         Pair<String, String> selectedTopic = AbstractCoherencePanel.this.f_model.getSelectedTopic();
                         sQuery = "Coherence:type=PagedTopicSubscriberGroup,service=" + getServiceName(selectedTopic.getX()) + ",topic=" + selectedTopic.getY() +
-                                 ",nodeId=" + oValue + ",name=" + oSubscriberGroup + ",*";
+                                 NODE_ID + oValue + NAME + oSubscriberGroup + ",*";
                         }
 
                     // remove any existing rows
@@ -894,6 +894,8 @@ public abstract class AbstractCoherencePanel
                                                                     "RACK-SAFE", "SITE-SAFE"};
 
     protected static final String MEM_FORMAT = "%,d";
+    protected static final String NODE_ID    = ",nodeId=";
+    protected static final String NAME       = ",name=";
 
     // ----- data members ---------------------------------------------------
 

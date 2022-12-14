@@ -59,12 +59,8 @@ public class TopicSubscriberGroupsData
     // ----- DataRetriever methods ------------------------------------------
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender sender, VisualVMModel model)
         {
-        SortedMap<Object, Data> mapData = new TreeMap<Object, Data>();
-        Data                    data;
-
         return null;
         }
 

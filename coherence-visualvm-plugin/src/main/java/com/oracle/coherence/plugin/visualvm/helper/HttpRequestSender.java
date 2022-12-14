@@ -56,6 +56,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.oracle.coherence.plugin.visualvm.panel.CoherenceTopicPanel;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.Pair;
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.MalformedObjectNameException;
@@ -727,6 +729,49 @@ public class HttpRequestSender
 
             }
         }
+
+
+    @Override
+    public Object executeSubscriberOperation(Pair<String, String> topic, long nSubscriber, String sOperationName, String sType, int nChannel)
+            throws Exception
+       {
+       String sRealOperation = sOperationName;
+       String sKey = "";
+       String sValue = "";
+       switch (sOperationName)
+           {
+           case CoherenceTopicPanel.RETRIEVE_HEADS:
+               sRealOperation = "heads";
+               sKey           = "links";
+               break;
+           case CoherenceTopicPanel.NOTIFY_POPULATED:
+               sRealOperation = "notifyPopulated";
+               sKey           = "channel";
+               sValue         = String.format("%d", nChannel);
+               break;
+           case CoherenceTopicPanel.RETRIEVE_REMAINING:
+               sRealOperation = "remainingMessages";
+               break;
+           default:
+               sRealOperation = sOperationName.toLowerCase();
+           }
+       
+       URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(topic.getX()))
+                .addPathSegment(TOPICS)
+                .addPathSegment(encodeServiceName(topic.getY()))
+                .addPathSegment(SUBSCRIBERS)
+                .addPathSegment(String.format("%d", nSubscriber))
+                .addPathSegment(sRealOperation);
+
+       if (!"".equals(sKey))
+          {
+           urlBuilder = urlBuilder.addQueryParameter(sKey, sValue);
+           }
+
+       return getResponseJson(sendPostRequest(urlBuilder));
+       }
+
 
     /**
      * Get the members of a service.
@@ -1853,7 +1898,7 @@ public class HttpRequestSender
     private static final String SNAPSHOTS    = "snapshots";
     private static final String ITEMS        = "items";
     private static final String COHERENCE    = "Coherence";
-    private static final String JOURNAL      =  "journal";
+    private static final String JOURNAL      = "journal";
     private static final String NODE_ID      = "nodeId";
     private static final String HOTCACHE     = "hotcache";
     private static final String PROXY        = "proxy";

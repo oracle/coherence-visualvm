@@ -43,6 +43,8 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.ClusterData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Pair;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberGroupsData;
 import com.oracle.coherence.plugin.visualvm.tests.AbstractVisualVMTest;
 import com.tangosol.coherence.component.application.console.Coherence;
 import com.tangosol.net.CacheFactory;
@@ -160,6 +162,8 @@ public abstract class AbstractTopicsDataRetrieverTest
     private void runTestTopicsData()
         {
         List<Map.Entry<Object, Data>> topicsData;
+        List<Map.Entry<Object, Data>> topicSubscribersData;
+        List<Map.Entry<Object, Data>> topicSubscriberGroupsData;
 
         VisualVMModel model = getModel();
         assertClusterReady();
@@ -177,8 +181,35 @@ public abstract class AbstractTopicsDataRetrieverTest
         for (Map.Entry<Object, Data> entry : topicsData)
             {
             Pair<String, String> key = (Pair<String, String>) getColumn(TopicData.TOPIC_NAME, entry);
-            assertEquals("Service must be PartitionedTopic", "PartitionedTopic", key.getX());
+            assertEquals("Service must be PartitionedTopic", TOPIC_SERVICE, key.getX());
+            }
+
+        Pair<String, String> topic = new Pair<>(TOPIC_SERVICE, TOPIC_NAME);
+
+        // select a topic
+        model.setSelectedTopic(topic);
+        waitForRefresh();
+        model.refreshStatistics(getRequestSender());
+
+        topicSubscribersData = model.getData(VisualVMModel.DataType.TOPIC_SUBSCRIBERS);
+        topicSubscriberGroupsData = model.getData(VisualVMModel.DataType.TOPIC_SUBSCRIBER_GROUPS);
+
+        validateData(VisualVMModel.DataType.TOPIC_SUBSCRIBERS, topicSubscribersData, 1);
+        validateData(VisualVMModel.DataType.TOPIC_SUBSCRIBER_GROUPS, topicSubscriberGroupsData, 1);
+
+       for (Map.Entry<Object, Data> entry : topicSubscribersData)
+            {
+            int nChannels = (Integer) getColumn(TopicSubscriberData.CHANNELS, entry);
+            assertEquals(nChannels, 17);
+            }
+
+       for (Map.Entry<Object, Data> entry : topicSubscriberGroupsData)
+            {
+            int nChannels = (Integer) getColumn(TopicSubscriberGroupsData.CHANNELS, entry);
+            assertEquals(nChannels, 17);
             }
         }
         
+    private static final String TOPIC_SERVICE = "PartitionedTopic";
+    private static final String TOPIC_NAME = "private-messages";
     }
