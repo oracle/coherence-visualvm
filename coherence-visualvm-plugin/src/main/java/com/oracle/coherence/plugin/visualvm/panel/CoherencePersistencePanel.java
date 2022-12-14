@@ -206,12 +206,10 @@ public class CoherencePersistencePanel
                                        new RenderHelper.IntegerRenderer());
         RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
-        // Add some space
-        setTablePadding(f_table);
-
         // Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JScrollPane(f_table);
         configureScrollPane(scrollPane, f_table);
+        setTablePadding(f_table);
 
         JPanel pnlTop = new JPanel();
 

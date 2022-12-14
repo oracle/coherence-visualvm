@@ -474,14 +474,7 @@ public class CoherenceTopicPanel
                            return;
                            }
 
-                       try
-                           {
-                           nChannel = Integer.parseInt(sChannel);
-                           }
-                       catch (Exception ee)
-                           {
-                           // ignore
-                           }
+                       nChannel = parseChannel(sChannel);
                        if (nChannel < 0 || nChannel > nNumChannels -1)
                            {
                            DialogHelper.showInfoDialog(Localization.getLocalText("LBL_invalid_channel", Integer.toString(nNumChannels -1)));
@@ -553,54 +546,20 @@ public class CoherenceTopicPanel
         // ----- helpers ----------------------------------------------------
 
         /**
-         * Sanitize or clean a snapshot name by removing anything other than alpha, numbers, '-' and '_'.
-         *
-         * @param sSnapshotName the snapshot name
-         * @return sanitized snapshot
+         * Parse a string and return the value or -1 if it is invalid.
+         * @param sChannel channel to parse
+         * @return parsed value or -1 if invalid
          */
-        private String sanitizeSnapshot(String sSnapshotName)
+        private int parseChannel(String sChannel)
             {
-            if (sSnapshotName == null)
+            try
                 {
-                return null;
+                return Integer.parseInt(sChannel);
                 }
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < sSnapshotName.length() ; i++)
+            catch (Exception e)
                 {
-                char c = sSnapshotName.charAt(i);
-                if (Character.isAlphabetic(c) || Character.isDigit(c) || c == '_' || c == '-')
-                    {
-                    sb.append(c);
-                    }
-                else
-                    {
-                    // invalid character, replace with '-'
-                    sb.append('-');
-                    }
+                return -1;
                 }
-            return sb.toString();
-            }
-
-        /**
-         * Return a formatted list of snapshots.
-         *
-         * @param sTitle the title to display on first line
-         * @param asList the {@link String}[] of snapshots
-         *
-         * @return the formatted list
-         */
-        private String getSnapshotList(String sTitle, String[] asList)
-            {
-            StringBuilder sb = new StringBuilder(sTitle + "\n");
-            if (asList != null)
-                {
-                Arrays.sort(asList);
-                for (int i = 0; i < asList.length; i++)
-                    {
-                    sb.append((i + 1) + ": " + asList[i] + "\n");
-                    }
-                }
-            return sb.toString();
             }
 
         // ----- data members -----------------------------------------------
