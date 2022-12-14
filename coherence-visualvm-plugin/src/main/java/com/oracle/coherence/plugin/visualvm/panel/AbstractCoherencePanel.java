@@ -450,7 +450,7 @@ public abstract class AbstractCoherencePanel
                         {
                         oValue = getJTable().getModel().getValueAt(nRow, TopicDetailData.NODE_ID);
                         Pair<String, String> selectedTopic = AbstractCoherencePanel.this.f_model.getSelectedTopic();
-                        sQuery = "Coherence:type=PagedTopic,service=" + getServiceName(selectedTopic.getX()) + ",name=" + selectedTopic.getY() +
+                        sQuery = "Coherence:type=PagedTopic,service=" + getServiceName(selectedTopic.getX()) + NAME + selectedTopic.getY() +
                                  NODE_ID + oValue + ",*";
                         fAllAttributes = f_nSelectedItem != SELECTED_TOPIC_CHANNELS;
                         }
@@ -557,13 +557,46 @@ public abstract class AbstractCoherencePanel
                             }
                         else if (m_requestSender instanceof HttpRequestSender)
                             {
+                            // decode the channel JSON
                             Map<String, Object> mapResults = processJSON(oValue.toString());
                             mapResults.forEach((k,v) -> m_tmodel.insertRow(row.getAndIncrement(), new Object[] {k, v}));
-                            // decode the JSON
                             }
                         }
                     }
                 }
+            }
+
+        /**
+         * proces channel JSON and return in a sorted map.
+         * @param sJson JSON to process
+         * @return results
+         */
+        @SuppressWarnings({"unchecked", "raw"})
+        private Map<String, Object> processJSON(String sJson)
+            {
+            final Map<String, Object> mapResults = new TreeMap<>();
+            ObjectMapper              mapper     = new ObjectMapper();
+            try
+                {
+                Object jsonData = mapper.readValue(sJson, Object.class);
+                if (jsonData instanceof Map)
+                    {
+                    Map mapData = (Map) jsonData;
+                    int nMaxChannels = mapData.size() - 1;
+                    for (int i = 0; i <= nMaxChannels; i++)
+                        {
+                        // get the entries in order
+                        Map<String, Object> values = (Map<String, Object>) mapData.get("[" + i + "]");
+                        int nChannel = (int) values.get("Channel");
+                        values.forEach((k1, v1) -> mapResults.put(String.format("%02d:%s", nChannel, k1), v1));
+                        }
+                    }
+                }
+            catch (Exception eIgnore)
+                {
+                // ignore
+                }
+            return mapResults;
             }
 
         // ----- data members ---------------------------------------------------
@@ -911,39 +944,6 @@ public abstract class AbstractCoherencePanel
         {
         return oValue instanceof Float || oValue instanceof String || oValue instanceof Number
                ? String.format("%7.3f", Float.parseFloat(oValue.toString())) : "";
-        }
-
-    /**
-     * proces channel JSON and return in a sorted map.
-     * @param sJson JSON to process
-     * @return results
-     */
-    @SuppressWarnings({"unchecked", "raw"})
-    private Map<String, Object> processJSON(String sJson)
-        {
-        final Map<String, Object> mapResults = new TreeMap<>();
-        ObjectMapper              mapper     = new ObjectMapper();
-        try
-            {
-            Object jsonData = mapper.readValue(sJson, Object.class);
-            if (jsonData instanceof Map)
-                {
-                Map mapData = (Map) jsonData;
-                int nMaxChannels = mapData.size() - 1;
-                for (int i = 0; i <= nMaxChannels; i++)
-                    {
-                    // get the entries in order
-                    Map<String, Object> values = (Map<String, Object>) mapData.get("[" + i + "]");
-                    int nChannel = (int) values.get("Channel");
-                    values.forEach((k1, v1) -> mapResults.put(String.format("%02d:%s", nChannel, k1), v1));
-                    }
-                }
-            }
-        catch (Exception eIgnore)
-            {
-            // ignore
-            }
-        return mapResults;
         }
 
 

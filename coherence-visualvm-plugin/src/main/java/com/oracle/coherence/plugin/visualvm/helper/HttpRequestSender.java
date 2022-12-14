@@ -1578,7 +1578,7 @@ public class HttpRequestSender
                 return urlBuilder;
             case "PagedTopic":
                 return urlBuilder.addPathSegment(SERVICES)
-                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "service")))
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
                          .addPathSegment(TOPICS)
                          .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))
                          .addPathSegment(MEMBERS)
@@ -1586,17 +1586,17 @@ public class HttpRequestSender
                          .addQueryParameter(LINKS, "");
             case "PagedTopicSubscriber":
                 return urlBuilder.addPathSegment(SERVICES)
-                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "service")))
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
                          .addPathSegment(TOPICS)
-                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "topic")))
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, TOPIC)))
                          .addPathSegment(SUBSCRIBERS)
                          .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "id")))
                          .addQueryParameter(LINKS, "");
             case "PagedTopicSubscriberGroup":
                  return urlBuilder.addPathSegment(SERVICES)
-                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "service")))
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
                          .addPathSegment(TOPICS)
-                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "topic")))
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, TOPIC)))
                          .addPathSegment(SUBGROUPS)
                          .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))
                          .addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID))
@@ -1922,6 +1922,7 @@ public class HttpRequestSender
     private static final String LINKS        = "links";
     private static final String SERVICES     = "services";
     private static final String TOPICS       = "topics";
+    private static final String TOPIC        = "topic";
     private static final String SUBSCRIBERS  = "subscribers";
     private static final String SUBGROUPS    = "subscriberGroups";
     private static final String SERVICE      = "service";
