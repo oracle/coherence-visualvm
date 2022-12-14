@@ -59,6 +59,7 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.RamJournalData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceMemberData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicDetailData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberGroupsData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Tuple;
@@ -149,6 +150,7 @@ public class VisualVMModel
         f_mapDataRetrievers.put(CacheDetailData.class, new CacheDetailData());
         f_mapDataRetrievers.put(CacheFrontDetailData.class, new CacheFrontDetailData());
         f_mapDataRetrievers.put(TopicData.class, new TopicData());
+        f_mapDataRetrievers.put(TopicDetailData.class, new TopicDetailData());
         f_mapDataRetrievers.put(TopicSubscriberData.class, new TopicSubscriberData());
         f_mapDataRetrievers.put(TopicSubscriberGroupsData.class, new TopicSubscriberGroupsData());
         f_mapDataRetrievers.put(PersistenceData.class, new PersistenceData());
@@ -874,6 +876,7 @@ public class VisualVMModel
         {
         this.m_selectedTopic = selectedTopic;
         m_mapCollectedData.remove(DataType.TOPIC_SUBSCRIBERS);
+        m_mapCollectedData.remove(DataType.TOPIC_DETAIL);
         m_mapCollectedData.remove(DataType.TOPIC_SUBSCRIBER_GROUPS);
         }
 
@@ -1273,6 +1276,7 @@ public class VisualVMModel
         CACHE_FRONT_DETAIL(CacheFrontDetailData.class, CACHE_FRONT_DETAIL_LABELS),
         CACHE_STORAGE_MANAGER(CacheStorageManagerData.class, CACHE_STORAGE_MANAGER_LABELS),
         TOPICS(TopicData.class, TOPICS_LABELS),
+        TOPIC_DETAIL(TopicDetailData.class, TOPIC_DETAIL_LABELS),
         TOPIC_SUBSCRIBERS(TopicSubscriberData.class, TOPIC_SUBSCRIBER_LABELS),
         TOPIC_SUBSCRIBER_GROUPS(TopicSubscriberGroupsData.class, TOPIC_SUBSCRIBER_GROUPS_LABELS),
         MEMBER(MemberData.class, MEMBER_LABELS),
@@ -1385,6 +1389,16 @@ public class VisualVMModel
     };
 
     /**
+     * Labels for topics detail table.
+     */
+    private static final String[] TOPIC_DETAIL_LABELS = new String[] {Localization.getLocalText(LBL_NODE_ID),
+        Localization.getLocalText(LBL_CHANNELS), Localization.getLocalText("LBL_published"),
+        Localization.getLocalText("LBL_page_capacity"), Localization.getLocalText("LBL_reconnect_retry"),
+        Localization.getLocalText("LBL_reconnect_timeout"), Localization.getLocalText("LBL_reconnect_wait"),
+        Localization.getLocalText("LBL_retain_consumed")
+    };
+
+    /**
      * Labels for topic subscribers table.
      */
     private static final String[] TOPIC_SUBSCRIBER_LABELS = new String[] {Localization.getLocalText(LBL_NODE_ID),
@@ -1405,7 +1419,7 @@ public class VisualVMModel
     };
 
     /**
-     * Labels for topics table.
+     * Labels for cache table.
      */
     private static final String[] CACHE_LABELS = new String[] {Localization.getLocalText("LBL_service_cache_name"),
         Localization.getLocalText(LBL_SIZE), Localization.getLocalText(LBL_MEMORY_BYTES),

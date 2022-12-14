@@ -48,6 +48,7 @@ import com.oracle.coherence.plugin.visualvm.panel.util.AbstractMenuOption;
 import com.oracle.coherence.plugin.visualvm.panel.util.ExportableJTable;
 import com.oracle.coherence.plugin.visualvm.panel.util.MenuOption;
 import com.oracle.coherence.plugin.visualvm.panel.util.SeparatorMenuOption;
+import com.oracle.coherence.plugin.visualvm.tablemodel.TopicDetailTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.TopicSubscriberGroupTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.TopicSubscriberTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.TopicTableModel;
@@ -57,6 +58,7 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.PersistenceData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
 
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicDetailData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberGroupsData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Tuple;
@@ -128,6 +130,9 @@ public class CoherenceTopicPanel
         // create any table models required
         f_tmodel = new TopicTableModel(VisualVMModel.DataType.TOPICS.getMetadata());
         f_table = new ExportableJTable(f_tmodel, model);
+
+        f_tmodelDetail = new TopicDetailTableModel(VisualVMModel.DataType.TOPIC_DETAIL.getMetadata());
+        f_tableDetail = new ExportableJTable(f_tmodelDetail, model);
         
         f_tmodelSubscribers = new TopicSubscriberTableModel(VisualVMModel.DataType.TOPIC_SUBSCRIBERS.getMetadata());
         f_tmodelSubscriberGroups = new TopicSubscriberGroupTableModel(VisualVMModel.DataType.TOPIC_SUBSCRIBER_GROUPS.getMetadata());
@@ -147,10 +152,15 @@ public class CoherenceTopicPanel
         RenderHelper.setColumnRenderer(f_table, TopicData.RECONNECT_TIMEOUT, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, TopicData.RECONNECT_WAIT, new RenderHelper.IntegerRenderer());
         RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
-
-        setTablePadding(f_table);
-        setTablePadding(f_tableSubscribers);
-        setTablePadding(f_tableSubscriberGroups);
+        
+        RenderHelper.setColumnRenderer(f_tableDetail, TopicDetailData.NODE_ID, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableDetail, TopicDetailData.PUBLISHED_TOTAL, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableDetail, TopicDetailData.PAGE_CAPACITY, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableDetail, TopicDetailData.RECONNECT_RETRY, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableDetail, TopicData.CHANNELS, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableDetail, TopicDetailData.RECONNECT_TIMEOUT, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableDetail, TopicDetailData.RECONNECT_WAIT, new RenderHelper.IntegerRenderer());
+        RenderHelper.setHeaderAlignment(f_tableDetail, SwingConstants.CENTER);
 
         RenderHelper.setColumnRenderer(f_tableSubscribers, TopicSubscriberData.NODE_ID, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_tableSubscribers, TopicSubscriberData.CHANNELS, new RenderHelper.IntegerRenderer());
@@ -168,7 +178,23 @@ public class CoherenceTopicPanel
         RenderHelper.setColumnRenderer(f_tableSubscriberGroups, TopicSubscriberGroupsData.FIFTEEN_MIN, new RenderHelper.DecimalRenderer(RATE_FORMAT));
         RenderHelper.setHeaderAlignment(f_tableSubscriberGroups, SwingConstants.CENTER);
 
-        f_tableSubscriberGroups.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableSubscriberGroups, SELECTED_SUBSCRIBER_GROUP) });
+        setTablePadding(f_table);
+        setTablePadding(f_tableDetail);
+        setTablePadding(f_tableSubscribers);
+        setTablePadding(f_tableSubscriberGroups);
+
+        // channel menu options
+        MenuOption menuOptionDetailCh = new ShowDetailMenuOption(model, f_tableDetail, SELECTED_TOPIC_CHANNELS);
+        menuOptionDetailCh.setMenuLabel(getLocalizedText(SHOW_CHANNELS));
+
+        MenuOption menuOptionSubscriberCh = new ShowDetailMenuOption(model, f_tableSubscribers, SELECTED_SUBSCRIBER_CHANNELS);
+        menuOptionSubscriberCh.setMenuLabel(getLocalizedText(SHOW_CHANNELS));
+
+        MenuOption menuOptionSubscriberGroupCh = new ShowDetailMenuOption(model, f_tableSubscriberGroups, SELECTED_SUB_GRP_CHANNELS);
+        menuOptionSubscriberGroupCh.setMenuLabel(getLocalizedText(SHOW_CHANNELS));
+
+        f_tableSubscriberGroups.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableSubscriberGroups, SELECTED_SUBSCRIBER_GROUP), menuOptionSubscriberGroupCh });
+        f_tableDetail.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableDetail, SELECTED_TOPIC_DETAIL), menuOptionDetailCh});
 
         MenuOption separator = new SeparatorMenuOption(model, m_requestSender, f_table);
 
@@ -178,8 +204,8 @@ public class CoherenceTopicPanel
         MenuOption menuRetrieveRemaining = new SubscriberInvokeMenuOption(model, m_requestSender, f_tableSubscribers, "LBL_retrieve_remaining", RETRIEVE_REMAINING);
         MenuOption menuReNotifyPopulated = new SubscriberInvokeMenuOption(model, m_requestSender, f_tableSubscribers, "LBL_notify_populated", NOTIFY_POPULATED);
 
-          f_tableSubscribers.setMenuOptions(new MenuOption[] {
-                  new ShowDetailMenuOption(model, f_tableSubscribers, SELECTED_SUBSCRIBER),
+        f_tableSubscribers.setMenuOptions(new MenuOption[] {
+                  new ShowDetailMenuOption(model, f_tableSubscribers, SELECTED_SUBSCRIBER), menuOptionSubscriberCh,
                   separator,
                   menuOptionConnect, menuOptionDisconnect, menuRetrieveHeads, menuRetrieveRemaining, menuReNotifyPopulated});
           
@@ -218,9 +244,11 @@ public class CoherenceTopicPanel
         f_pneTab = new JTabbedPane();
         f_pneTab.setOpaque(false);
 
+        JScrollPane scrollPaneDetails  = new JScrollPane(f_tableDetail);
         JScrollPane scrollPaneSubscribers  = new JScrollPane(f_tableSubscribers);
         JScrollPane scrollPaneSubscriberGroups = new JScrollPane(f_tableSubscriberGroups);
 
+        f_pneTab.addTab(getLocalizedText("TAB_topic_members"), scrollPaneDetails);
         f_pneTab.addTab(getLocalizedText("TAB_subscribers"), scrollPaneSubscribers);
         f_pneTab.addTab(getLocalizedText("TAB_subscriber_groups"), scrollPaneSubscriberGroups);
 
@@ -245,6 +273,9 @@ public class CoherenceTopicPanel
         {
         m_topicData = f_model.getData(VisualVMModel.DataType.TOPICS);
         f_tmodel.setDataList(m_topicData);
+
+        m_topicDetailData = f_model.getData(VisualVMModel.DataType.TOPIC_DETAIL);
+        f_tmodelDetail.setDataList(m_topicDetailData);
 
         m_topicSubscriberData = f_model.getData(VisualVMModel.DataType.TOPIC_SUBSCRIBERS);
         f_tmodelSubscribers.setDataList(m_topicSubscriberData);
@@ -310,6 +341,7 @@ public class CoherenceTopicPanel
             f_txtSelectedTopic.setText(selectedTopic.toString());
             }
 
+        fireTableDataChangedWithSelection(f_tableDetail, f_tmodelDetail);
         fireTableDataChangedWithSelection(f_tableSubscribers, f_tmodelSubscribers);
         fireTableDataChangedWithSelection(f_tableSubscriberGroups, f_tmodelSubscriberGroups);
         }
@@ -587,6 +619,7 @@ public class CoherenceTopicPanel
     public static final String RETRIEVE_HEADS     = "Heads";
     public static final String RETRIEVE_REMAINING = "RemainingMessages";
     public static final String NOTIFY_POPULATED   = "NotifyPopulated";
+    private static final String SHOW_CHANNELS     = "LBL_show_channels";
 
     // ----- data members ---------------------------------------------------
 
@@ -606,6 +639,11 @@ public class CoherenceTopicPanel
     protected final TopicTableModel f_tmodel;
 
     /**
+     * The {@link TopicTableModel} to display topic data.
+     */
+    protected final TopicDetailTableModel f_tmodelDetail;
+
+    /**
      * The {@link TopicSubscriberTableModel} to display subscribers.
      */
     protected final TopicSubscriberTableModel f_tmodelSubscribers;
@@ -621,11 +659,15 @@ public class CoherenceTopicPanel
     private List<Entry<Object, Data>> m_topicData = null;
 
     /**
+     * The topic detail data retrieved from the {@link VisualVMModel}.
+     */
+    private List<Entry<Object, Data>> m_topicDetailData = null;
+
+    /**
      * The topic subscriber data retrieved from the {@link VisualVMModel}.
      */
     private transient List<Entry<Object, Data>> m_topicSubscriberData = null;
 
-    /**
     /**
      * The topic subscriber group data retrieved from the {@link VisualVMModel}.
      */
@@ -650,6 +692,11 @@ public class CoherenceTopicPanel
      * The {@link ExportableJTable} to use to display subscriber groups.
      */
     private final ExportableJTable f_tableSubscriberGroups;
+
+    /**
+     * The {@link ExportableJTable} to use to display topic detail.
+     */
+    private final ExportableJTable f_tableDetail;
 
     /**
      * Last update time for stats.

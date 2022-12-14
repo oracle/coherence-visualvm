@@ -150,6 +150,11 @@ public class HttpRequestSender
                     value.forEach(s -> sb.append(s).append('\n'));
                     sValue = sb.toString();
                     }
+                else if (value instanceof ObjectNode)
+                    {
+                    ObjectNode on = (ObjectNode) value;
+                    sValue = on.toString();
+                    }
 
                 attributes.add(new Attribute(e.getKey(), sValue));
                });
@@ -1073,6 +1078,26 @@ public class HttpRequestSender
         }
 
     /**
+     * Get the data for all the topics members in the cluster.
+     *
+     * @param selectedTopic selected topic
+     *
+     * @return the data for all the cluster members
+     * @throws Exception in case of errors
+     */
+    public JsonNode getDataForTopicsMembers(Pair<String, String> selectedTopic) throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                                             .addPathSegment(encodeServiceName(selectedTopic.getX()))
+                                             .addPathSegment(TOPICS)
+                                             .addPathSegment(encodeServiceName(selectedTopic.getY()))
+                                             .addPathSegment(MEMBERS)
+                                             .addQueryParameter(LINKS, "");
+
+        return getResponseJson(sendGetRequest(urlBuilder));
+        }
+
+    /**
      * Get the data for all the topic subscribers in the cluster.
      *
      * @param sServiceName  service name
@@ -1551,6 +1576,14 @@ public class HttpRequestSender
                         .addPathSegment(PROXY);
             case "Cluster":
                 return urlBuilder;
+            case "PagedTopic":
+                return urlBuilder.addPathSegment(SERVICES)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "service")))
+                         .addPathSegment(TOPICS)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))
+                         .addPathSegment(MEMBERS)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "nodeId")))
+                         .addQueryParameter(LINKS, "");
             case "PagedTopicSubscriber":
                 return urlBuilder.addPathSegment(SERVICES)
                          .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "service")))

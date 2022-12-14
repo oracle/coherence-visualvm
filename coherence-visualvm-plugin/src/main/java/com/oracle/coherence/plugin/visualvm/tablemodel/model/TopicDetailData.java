@@ -27,32 +27,34 @@ package com.oracle.coherence.plugin.visualvm.tablemodel.model;
 
 import java.util.List;
 import java.util.Map;
-
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 
+import static com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberData.preProcessReporterXMLCommon;
+
 
 /**
- * A class to hold basic topic data.
+ * A class to hold topic detail data.
  *
- * @author tam  2020.02.08
- * @since  1.0.1
+ * @author tam  2022.12.14
+ * @since  1.6.0
  */
-public class TopicData
+public class TopicDetailData
         extends AbstractData
     {
     // ----- constructors ---------------------------------------------------
 
     /**
-     * Create TopicData passing in the number of columns.
+     * Create TopicDTopicSubscriberData passing in the number of columns.
      *
      */
-    public TopicData()
+    public TopicDetailData()
         {
         super(RETAIN_CONSUMED + 1);
         }
@@ -68,37 +70,47 @@ public class TopicData
     @Override
     public String getReporterReport()
         {
-        return REPORT_TOPICS;
+        return REPORT_TOPIC_SUBSCRIBERS;
         }
 
     @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
-        Data data = new TopicData();
+        Data data = new TopicDetailData();
 
-        // the identifier for this row is the service name and topic name
-        Pair<String, String> key = new Pair<>(aoColumns[2].toString(), aoColumns[3].toString());
-
-        data.setColumn(TopicData.TOPIC_NAME, key);
-        data.setColumn(TopicData.PUBLISHED_TOTAL, Long.valueOf(getNumberValue(aoColumns[4].toString())));
-        data.setColumn(TopicData.CHANNELS, Integer.valueOf(getNumberValue(aoColumns[5].toString())));
-        data.setColumn(TopicData.PAGE_CAPACITY, Integer.valueOf(getNumberValue(aoColumns[6].toString())));
-        data.setColumn(TopicData.RECONNECT_RETRY, Integer.valueOf(getNumberValue(aoColumns[7].toString())));
-        data.setColumn(TopicData.RECONNECT_TIMEOUT, Integer.valueOf(getNumberValue(aoColumns[8].toString())));
-        data.setColumn(TopicData.RECONNECT_WAIT, Integer.valueOf(getNumberValue(aoColumns[9].toString())));
-        data.setColumn(TopicData.RETAIN_CONSUMED, aoColumns[11].toString());
+        data.setColumn(TopicDetailData.NODE_ID, Integer.valueOf(getNumberValue(aoColumns[2].toString())));
+        data.setColumn(TopicDetailData.PUBLISHED_TOTAL, Long.valueOf(getNumberValue(aoColumns[3].toString())));
+        data.setColumn(TopicDetailData.CHANNELS, Integer.valueOf(getNumberValue(aoColumns[4].toString())));
+        data.setColumn(TopicDetailData.PAGE_CAPACITY, Integer.valueOf(getNumberValue(aoColumns[5].toString())));
+        data.setColumn(TopicDetailData.RECONNECT_RETRY, Integer.valueOf(getNumberValue(aoColumns[6].toString())));
+        data.setColumn(TopicDetailData.RECONNECT_TIMEOUT, Integer.valueOf(getNumberValue(aoColumns[7].toString())));
+        data.setColumn(TopicDetailData.RECONNECT_WAIT, Integer.valueOf(getNumberValue(aoColumns[8].toString())));
+        data.setColumn(TopicDetailData.RETAIN_CONSUMED, aoColumns[9].toString());
 
         return data;
+        }
+
+    @Override
+    public String preProcessReporterXML(VisualVMModel model, String sReporterXML)
+        {
+        return preProcessReporterXMLCommon(model, sReporterXML);
         }
 
     @Override
     public SortedMap<Object, Data> getAggregatedDataFromHttpQuerying(VisualVMModel model, HttpRequestSender requestSender)
             throws Exception
         {
-        final String            AVERAGE = "average";
-        JsonNode                rootNode  = requestSender.getDataForTopics();
-        SortedMap<Object, Data> mapData   = new TreeMap<>();
-        JsonNode                nodeItems = rootNode.get("items");
+        SortedMap<Object, Data> mapData = new TreeMap<>();
+
+        Pair<String, String> selectedTopic = model.getSelectedTopic();
+
+        if (selectedTopic == null)
+            {
+            return mapData;
+            }
+
+        JsonNode rootNode  = requestSender.getDataForTopicsMembers(selectedTopic);
+        JsonNode nodeItems = rootNode.get("items");
 
         if (nodeItems != null && nodeItems.isArray())
             {
@@ -106,21 +118,16 @@ public class TopicData
                 {
                 JsonNode node = nodeItems.get(k);
 
-                String sServiceName = node.get("service").asText();
-                String sTopicName   = node.get("name").asText();
-
-                TopicData data = new TopicData();
-                Pair<String, String> key = new Pair<>(sServiceName, sTopicName);
-
-                data.setColumn(TopicData.TOPIC_NAME, key);
-
-                data.setColumn(TopicData.CHANNELS, Integer.valueOf(getNumberValue(getChildValue(AVERAGE, "channelCount", node))));
-                data.setColumn(TopicData.PUBLISHED_TOTAL, Long.valueOf(getNumberValue(getChildValue("sum", "publishedCount", node))));
-                data.setColumn(TopicData.PAGE_CAPACITY, Long.valueOf(getNumberValue(getChildValue(AVERAGE, "pageCapacity", node))));
-                data.setColumn(TopicData.RECONNECT_RETRY, Long.valueOf(getNumberValue(getChildValue(AVERAGE, "reconnectRetry", node))));
-                data.setColumn(TopicData.RECONNECT_TIMEOUT, Long.valueOf(getNumberValue(getChildValue(AVERAGE, "reconnectTimeout", node))));
-                data.setColumn(TopicData.RECONNECT_WAIT, Long.valueOf(getNumberValue(getChildValue(AVERAGE, "reconnectWait", node))));
-                data.setColumn(TopicData.RETAIN_CONSUMED, getFirstMemberOfArray(node, "retainConsumed"));
+                TopicDetailData data = new TopicDetailData();
+                
+                data.setColumn(TopicDetailData.NODE_ID, node.get("nodeId").asInt());
+                data.setColumn(TopicDetailData.CHANNELS, node.get("channelCount").asInt());
+                data.setColumn(TopicDetailData.PUBLISHED_TOTAL, node.get("publishedCount").asLong());
+                data.setColumn(TopicDetailData.PAGE_CAPACITY, node.get("pageCapacity").asInt());
+                data.setColumn(TopicDetailData.RECONNECT_RETRY, node.get("reconnectRetry").asLong());
+                data.setColumn(TopicDetailData.RECONNECT_TIMEOUT, node.get("reconnectTimeout").asLong());
+                data.setColumn(TopicDetailData.RECONNECT_WAIT, node.get("reconnectWait").asLong());
+                data.setColumn(TopicDetailData.RETAIN_CONSUMED, node.get("retainConsumed").asText());
 
                 mapData.put(data.getColumn(0), data);
                 }
@@ -135,13 +142,13 @@ public class TopicData
     /**
      * Report for topics data.
      */
-    public static final String REPORT_TOPICS = "reports/visualvm/topic-summary.xml";
+    public static final String REPORT_TOPIC_SUBSCRIBERS = "reports/visualvm/topic-detail.xml";
 
     /**
-     * Array index for topic name.
+     * Array index for node id.
      */
-    public static final int TOPIC_NAME = 0;
-
+    public static final int NODE_ID = 0;
+    
     /**
      * Array index for channels.
      */

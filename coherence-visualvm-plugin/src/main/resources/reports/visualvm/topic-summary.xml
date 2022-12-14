@@ -34,7 +34,7 @@
   -->
 
   <report>
-    <file-name>{date}-cache-size.txt</file-name>
+    <file-name>{date}-topic-summary.txt</file-name>
     <delim>{tab}</delim>
 
     <filters>

@@ -34,14 +34,14 @@
   -->
 
   <report>
-    <file-name>{date}-topic-subscriber-groups.txt</file-name>
+    <file-name>{date}-topic-detail.txt</file-name>
     <delim>{tab}</delim>
 
     <filters>
     </filters>
 
     <query>
-      <pattern>Coherence:type=PagedTopicSubscriberGroup,service=%SERVICE_NAME%,topic=%TOPIC_NAME%,*</pattern>
+      <pattern>Coherence:type=PagedTopic,service=%SERVICE_NAME%,name=%TOPIC_NAME%,*</pattern>
     </query>
 
     <row>
@@ -51,48 +51,45 @@
         <header>Batch Counter</header>
       </column>
 
-      <column id="SubscriberGroup">
-        <type>key</type>
-        <name>name</name>
-        <header>Subscriber Group</header>
-      </column>
-
       <column id="NodeId">
         <type>key</type>
         <name>nodeId</name>
-        <header>Node Id</header>
       </column>
-      
+
+      <column id="PublishedCount">
+        <name>PublishedCount</name>
+      </column>
+
       <column id="ChannelCount">
         <name>ChannelCount</name>
       </column>
-
-      <column id="PolledCount">
-        <name>PolledCount</name>
+      
+      <column id="PageCapacity">
+        <name>PageCapacity</name>
       </column>
       
-      <column id="PolledMeanRate">
-        <name>PolledMeanRate</name>
+      <column id="ReconnectRetry">
+        <name>ReconnectRetry</name>
       </column>
 
-      <column id="PolledOneMinuteRate">
-        <name>PolledOneMinuteRate</name>
+      <column id="ReconnectTimeout">
+        <name>ReconnectTimeout</name>
       </column>
 
-      <column id="PolledFiveMinuteRate">
-        <name>PolledFiveMinuteRate</name>
-      </column>
-      
-      <column id="PolledFifteenMinuteRate">
-        <name>PolledFifteenMinuteRate</name>
+      <column id="ReconnectWait">
+        <name>ReconnectWait</name>
       </column>
 
-      <column id="Filter">
-        <name>Filter</name>
+      <column id="SubscriberTimeout">
+        <name>SubscriberTimeout</name>
       </column>
 
-      <column id="Transformer">
-        <name>Transformer</name>
+      <column id="RetainConsumed">
+        <name>RetainConsumed</name>
+      </column>
+
+      <column id="AllowUnownedCommits">
+        <name>AllowUnownedCommits</name>
       </column>
     </row>
   </report>
