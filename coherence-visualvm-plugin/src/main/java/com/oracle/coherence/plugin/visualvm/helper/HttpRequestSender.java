@@ -1582,7 +1582,7 @@ public class HttpRequestSender
                          .addPathSegment(TOPICS)
                          .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))
                          .addPathSegment(MEMBERS)
-                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "nodeId")))
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, NODE_ID)))
                          .addQueryParameter(LINKS, "");
             case "PagedTopicSubscriber":
                 return urlBuilder.addPathSegment(SERVICES)

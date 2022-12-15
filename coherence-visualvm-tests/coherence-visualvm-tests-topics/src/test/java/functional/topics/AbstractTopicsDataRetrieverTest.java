@@ -200,13 +200,13 @@ public abstract class AbstractTopicsDataRetrieverTest
        for (Map.Entry<Object, Data> entry : topicSubscribersData)
             {
             int nChannels = (Integer) getColumn(TopicSubscriberData.CHANNELS, entry);
-            assertEquals(nChannels, 17);
+            assertEquals(17, nChannels);
             }
 
        for (Map.Entry<Object, Data> entry : topicSubscriberGroupsData)
             {
             int nChannels = (Integer) getColumn(TopicSubscriberGroupsData.CHANNELS, entry);
-            assertEquals(nChannels, 17);
+            assertEquals(17, nChannels);
             }
         }
         

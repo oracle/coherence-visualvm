@@ -661,7 +661,7 @@ public class CoherenceTopicPanel
     /**
      * The topic detail data retrieved from the {@link VisualVMModel}.
      */
-    private List<Entry<Object, Data>> m_topicDetailData = null;
+    private transient List<Entry<Object, Data>> m_topicDetailData = null;
 
     /**
      * The topic subscriber data retrieved from the {@link VisualVMModel}.

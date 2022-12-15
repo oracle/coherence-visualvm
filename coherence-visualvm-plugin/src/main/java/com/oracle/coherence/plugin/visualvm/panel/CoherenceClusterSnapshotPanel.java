@@ -145,7 +145,7 @@ public class CoherenceClusterSnapshotPanel
                 }
             if (f_model.isTopicsConfigured())
                 {
-                sb.append(TopicsOverview()).append(HR);
+                sb.append(topicsOverview()).append(HR);
                 }
             if (f_model.isGrpcProxyConfigured())
                 {
@@ -518,7 +518,7 @@ public class CoherenceClusterSnapshotPanel
      *
      * @return a topics overview
      */
-    private String TopicsOverview()
+    private String topicsOverview()
         {
         StringBuilder sb = new StringBuilder(title(getLabel("LBL_topics")));
 
