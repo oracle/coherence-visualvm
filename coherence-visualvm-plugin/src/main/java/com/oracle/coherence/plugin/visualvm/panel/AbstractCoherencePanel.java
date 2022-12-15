@@ -26,9 +26,11 @@
 package com.oracle.coherence.plugin.visualvm.panel;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
+import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
@@ -62,10 +64,15 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicDetailData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberGroupsData;
 import javax.management.Attribute;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
+import javax.management.openmbean.CompositeDataSupport;
+import javax.management.openmbean.TabularDataSupport;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -221,6 +228,15 @@ public abstract class AbstractCoherencePanel
         return textField;
         }
 
+    /**
+     * Set table padding.
+     * @param table {@link ExportableJTable} to set padding for
+     */
+    protected void setTablePadding(ExportableJTable table)
+        {
+        table.setIntercellSpacing(new Dimension(6, 3));
+        table.setRowHeight(table.getRowHeight() + 4);
+        }
 
     /**
      * Fire a tableDataChanged but save and re-apply any selection.
@@ -357,6 +373,8 @@ public abstract class AbstractCoherencePanel
             int nRow = getSelectedRow();
             Object oValue = null;
             String sQuery = null;
+            String sExtra = "";
+            boolean fAllAttributes = true;
 
             if (nRow == -1)
                 {
@@ -385,19 +403,19 @@ public abstract class AbstractCoherencePanel
                         sQuery = "Coherence:type=Service,name=" + sSelectedService +
                                  (sDomainPartition != null
                                   ? ",domainPartition=" + sDomainPartition
-                                  : "") + ",nodeId=" + oValue + ",*";
+                                  : "") + NODE_ID + oValue + ",*";
                         }
                     else if (f_nSelectedItem == SELECTED_CACHE)
                         {
                         Pair<String, String> selectedCache = AbstractCoherencePanel.this.f_model.getSelectedCache();
-                        sQuery = "Coherence:type=Cache,service=" + getServiceName(selectedCache.getX()) + ",name=" + selectedCache.getY() +
+                        sQuery = "Coherence:type=Cache,service=" + getServiceName(selectedCache.getX()) + NAME + selectedCache.getY() +
                                  ",tier=back,nodeId=" + oValue + getDomainPartitionKey(selectedCache.getX()) + ",*";
                         }
                     else if (f_nSelectedItem == SELECTED_STORAGE)
                         {
                         Pair<String, String> selectedCache = AbstractCoherencePanel.this.f_model.getSelectedCache();
                         sQuery = "Coherence:type=StorageManager,service=" + getServiceName(selectedCache.getX()) + ",cache=" + selectedCache.getY() +
-                                 ",nodeId=" + oValue + getDomainPartitionKey(selectedCache.getX()) + ",*";
+                                 NODE_ID + oValue + getDomainPartitionKey(selectedCache.getX()) + ",*";
                         }
                     else if (f_nSelectedItem == SELECTED_JCACHE)
                         {
@@ -407,19 +425,55 @@ public abstract class AbstractCoherencePanel
                     else if (f_nSelectedItem == SELECTED_FRONT_CACHE)
                         {
                         Pair<String, String> selectedCache = AbstractCoherencePanel.this.f_model.getSelectedCache();
-                        sQuery = "Coherence:type=Cache,service=" + getServiceName(selectedCache.getX()) + ",name=" + selectedCache.getY() +
+                        sQuery = "Coherence:type=Cache,service=" + getServiceName(selectedCache.getX()) + NAME + selectedCache.getY() +
                                  ",tier=front,nodeId=" + oValue + getDomainPartitionKey(selectedCache.getX()) + ",*";
+                        }
+                    else if (f_nSelectedItem == SELECTED_SUBSCRIBER || f_nSelectedItem == SELECTED_SUBSCRIBER_CHANNELS)
+                        {
+                        oValue = getJTable().getModel().getValueAt(nRow, TopicSubscriberData.NODE_ID);
+                        Object oSubscriberId = getJTable().getModel().getValueAt(nRow, TopicSubscriberData.SUBSCRIBER);
+                        Pair<String, String> selectedTopic = AbstractCoherencePanel.this.f_model.getSelectedTopic();
+                        sQuery = "Coherence:type=PagedTopicSubscriber,service=" + getServiceName(selectedTopic.getX()) + ",topic=" + selectedTopic.getY() +
+                                 NODE_ID + oValue + ",id=" + oSubscriberId + ",*";
+                        fAllAttributes = f_nSelectedItem != SELECTED_SUBSCRIBER_CHANNELS;
+                        }
+                    else if (f_nSelectedItem == SELECTED_SUBSCRIBER_GROUP || f_nSelectedItem == SELECTED_SUB_GRP_CHANNELS)
+                        {
+                        oValue = getJTable().getModel().getValueAt(nRow, TopicSubscriberGroupsData.NODE_ID);
+                        Object oSubscriberGroup = getJTable().getModel().getValueAt(nRow, TopicSubscriberGroupsData.SUBSCRIBER_GROUP);
+                        Pair<String, String> selectedTopic = AbstractCoherencePanel.this.f_model.getSelectedTopic();
+                        sQuery = "Coherence:type=PagedTopicSubscriberGroup,service=" + getServiceName(selectedTopic.getX()) + ",topic=" + selectedTopic.getY() +
+                                 NODE_ID + oValue + NAME + oSubscriberGroup + ",*";
+                        fAllAttributes = f_nSelectedItem != SELECTED_SUB_GRP_CHANNELS;
+                        }
+                    else if (f_nSelectedItem == SELECTED_TOPIC_DETAIL || f_nSelectedItem == SELECTED_TOPIC_CHANNELS)
+                        {
+                        oValue = getJTable().getModel().getValueAt(nRow, TopicDetailData.NODE_ID);
+                        Pair<String, String> selectedTopic = AbstractCoherencePanel.this.f_model.getSelectedTopic();
+                        sQuery = "Coherence:type=PagedTopic,service=" + getServiceName(selectedTopic.getX()) + NAME + selectedTopic.getY() +
+                                 NODE_ID + oValue + ",*";
+                        fAllAttributes = f_nSelectedItem != SELECTED_TOPIC_CHANNELS;
                         }
 
                     // remove any existing rows
                     m_tmodel.getDataVector().removeAllElements();
                     m_tmodel.fireTableDataChanged();
-                    populateAllAttributes(sQuery);
+                    if (fAllAttributes)
+                        {
+                        populateAllAttributes(sQuery);
+                        }
+                    else {
+                        populateChannelAttributes(sQuery);
+                        }
+
                     m_pneMessage.getVerticalScrollBar().setValue(0);
                     m_tmodel.fireTableDataChanged();
 
-                    JOptionPane.showMessageDialog(null, m_pneMessage, Localization.getLocalText("LBL_details"),
-                                                  JOptionPane.INFORMATION_MESSAGE);
+                    String sTitle = fAllAttributes ? Localization.getLocalText("LBL_details") :
+                                    Localization.getLocalText("LBL_channel_details") + sExtra;
+
+
+                    JOptionPane.showMessageDialog(null, m_pneMessage, sTitle, JOptionPane.INFORMATION_MESSAGE);
                     }
                 catch (Exception e)
                     {
@@ -432,7 +486,7 @@ public abstract class AbstractCoherencePanel
         // ----- helpers --------------------------------------------------------
 
         /**
-         * Populate all of the attributes for the given query.
+         * Populate all the attributes for the given query.
          *
          * @param sQuery the query to run
          * @throws Exception if any relevant error
@@ -461,7 +515,88 @@ public abstract class AbstractCoherencePanel
                     m_tmodel.insertRow(row++, new Object[] {attr.getName(), oValue});
                     }
                 }
+            }
 
+        /**
+         * Populate only the channel attributes for the given query.
+         *
+         * @param sQuery the query to run
+         * @throws Exception if any relevant error
+         */
+        protected void populateChannelAttributes(String sQuery)
+                throws Exception
+            {
+            final AtomicInteger row = new AtomicInteger(0);
+
+            Set<ObjectName> setObjects = m_requestSender.getCompleteObjectName(new ObjectName(sQuery));
+
+            for (Iterator<ObjectName> iter = setObjects.iterator(); iter.hasNext(); )
+                {
+                ObjectName objName = iter.next();
+                m_tmodel.insertRow(row.getAndIncrement(), new Object[] {"JMX Key", objName.toString()});
+
+                List<Attribute> lstAttr = m_requestSender.getAllAttributes(objName);
+
+                for (Attribute attr : lstAttr)
+                    {
+                    if (attr.getName().equalsIgnoreCase("Channels"))
+                        {
+                        Object oValue = attr.getValue();
+                        if (oValue instanceof TabularDataSupport)
+                            {
+                            TabularDataSupport data = (TabularDataSupport) oValue;
+                            data.values().forEach(o ->
+                                {
+                                if (o instanceof CompositeDataSupport)
+                                    {
+                                    CompositeDataSupport cds = (CompositeDataSupport) o;
+                                    cds.getCompositeType().keySet().forEach(k ->
+                                         m_tmodel.insertRow(row.getAndIncrement(), new Object[] {k, cds.get(k)}));
+                                    }
+                                });
+                            }
+                        else if (m_requestSender instanceof HttpRequestSender)
+                            {
+                            // decode the channel JSON
+                            Map<String, Object> mapResults = processJSON(oValue.toString());
+                            mapResults.forEach((k,v) -> m_tmodel.insertRow(row.getAndIncrement(), new Object[] {k, v}));
+                            }
+                        }
+                    }
+                }
+            }
+
+        /**
+         * proces channel JSON and return in a sorted map.
+         * @param sJson JSON to process
+         * @return results
+         */
+        @SuppressWarnings({"unchecked", "raw"})
+        private Map<String, Object> processJSON(String sJson)
+            {
+            final Map<String, Object> mapResults = new TreeMap<>();
+            ObjectMapper              mapper     = new ObjectMapper();
+            try
+                {
+                Object jsonData = mapper.readValue(sJson, Object.class);
+                if (jsonData instanceof Map)
+                    {
+                    Map mapData = (Map) jsonData;
+                    int nMaxChannels = mapData.size() - 1;
+                    for (int i = 0; i <= nMaxChannels; i++)
+                        {
+                        // get the entries in order
+                        Map<String, Object> values = (Map<String, Object>) mapData.get("[" + i + "]");
+                        int nChannel = (int) values.get("Channel");
+                        values.forEach((k1, v1) -> mapResults.put(String.format("%02d:%s", nChannel, k1), v1));
+                        }
+                    }
+                }
+            catch (Exception eIgnore)
+                {
+                // ignore
+                }
+            return mapResults;
             }
 
         // ----- data members ---------------------------------------------------
@@ -811,6 +946,7 @@ public abstract class AbstractCoherencePanel
                ? String.format("%7.3f", Float.parseFloat(oValue.toString())) : "";
         }
 
+
     // ----- constants ------------------------------------------------------
 
     private static final long serialVersionUID = -7607701492285533521L;
@@ -821,34 +957,64 @@ public abstract class AbstractCoherencePanel
     protected static final String FILLER = "   ";
 
     /**
-     * Indicates to select selected service.
+     * Indicates to show selected node.
      */
     public static final int SELECTED_NODE = 0;
 
     /**
-     * Indicates to select selected service.
+     * Indicates to show selected service.
      */
     public static final int SELECTED_SERVICE = 1;
 
     /**
-     * Indicates to select selected cache.
+     * Indicates to show selected cache.
      */
     public static final int SELECTED_CACHE = 2;
 
     /**
-     * Indicates to select selected storage.
+     * Indicates to show selected storage.
      */
     public static final int SELECTED_STORAGE = 3;
 
     /**
-     * Indicates to select JCache.
+     * Indicates to show select JCache.
      */
     public static final int SELECTED_JCACHE = 4;
 
     /**
-     * Indicates to select selected front cache.
+     * Indicates to show selected front cache.
      */
     public static final int SELECTED_FRONT_CACHE = 5;
+
+    /**
+     * Indicates to show selected subscriber.
+     */
+    public static final int SELECTED_SUBSCRIBER = 6;
+
+    /**
+     * Indicates to show selected subscriber group.
+     */
+    public static final int SELECTED_SUBSCRIBER_GROUP = 7;
+
+    /**
+     * Indicates to show selected topic detail.
+     */
+    public static final int SELECTED_TOPIC_DETAIL = 8;
+
+    /**
+     * Indicates to show selected topic channels.
+     */
+    public static final int SELECTED_TOPIC_CHANNELS = 9;
+
+    /**
+     * Indicates to show selected subscriber channels.
+     */
+    public static final int SELECTED_SUBSCRIBER_CHANNELS = 10;
+
+    /**
+     * Indicates to show selected subscriber grp channels.
+     */
+    public static final int SELECTED_SUB_GRP_CHANNELS = 11;
 
     /**
      * Text value of statusHA.
@@ -857,6 +1023,8 @@ public abstract class AbstractCoherencePanel
                                                                     "RACK-SAFE", "SITE-SAFE"};
 
     protected static final String MEM_FORMAT = "%,d";
+    protected static final String NODE_ID    = ",nodeId=";
+    protected static final String NAME       = ",name=";
 
     // ----- data members ---------------------------------------------------
 

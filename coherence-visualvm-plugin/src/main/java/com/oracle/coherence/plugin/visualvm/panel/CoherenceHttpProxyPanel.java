@@ -104,11 +104,8 @@ public class CoherenceHttpProxyPanel
         f_tableDetail.setPreferredScrollableViewportSize(new Dimension(500, 125));
 
         // Add some space
-        f_table.setIntercellSpacing(new Dimension(6, 3));
-        f_table.setRowHeight(f_table.getRowHeight() + 4);
-
-        f_tableDetail.setIntercellSpacing(new Dimension(6, 3));
-        f_tableDetail.setRowHeight(f_table.getRowHeight() + 4);
+        setTablePadding(f_table);
+        setTablePadding(f_tableDetail);
 
         // Create the scroll pane and add the table to it.
         JScrollPane pneScroll       = new JScrollPane(f_table);

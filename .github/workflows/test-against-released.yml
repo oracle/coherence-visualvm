@@ -1,4 +1,4 @@
-#
+  #
 #  Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
 #  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 #
@@ -85,13 +85,13 @@ jobs:
         path: coherence-visualvm-tests/**/target/test-output/**/*
 
     - name: Coherence VisualVM Plugin NBM
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: coherence-visualvm-plugin-nbm
         path: coherence-visualvm-plugin/target/coherence-visualvm-plugin*.nbm
 
     - name: Coherence VisualVM Plugin Javadoc
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: coherence-visualvm-plugin-javadoc
         path: coherence-visualvm-plugin/target/coherence-visualvm-plugin*javadoc.jar

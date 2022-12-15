@@ -28,6 +28,7 @@ package com.oracle.coherence.plugin.visualvm.helper;
 import java.util.List;
 import java.util.Set;
 
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.Pair;
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.ObjectName;
@@ -419,5 +420,21 @@ public interface RequestSender
                                      String sDomainPartition,
                                      String sOperationName,
                                      String sSnapshotName)
+            throws Exception;
+
+    /**
+     * Execute operation against subscriber.
+     *
+     * @param topic           the topic to execute against
+     * @param nSubscriber     the subscriber
+     * @param sOperationName  the name of the operation
+     * @param sType           the type of the subscriber
+     * @param nChannel        the channel if required
+     *
+     * @throws Exception in case of errors
+     *
+     * @return any results if required by the operation
+     */
+    Object executeSubscriberOperation(Pair<String, String> topic, long nSubscriber, String sOperationName, String sType, int nChannel)
             throws Exception;
     }

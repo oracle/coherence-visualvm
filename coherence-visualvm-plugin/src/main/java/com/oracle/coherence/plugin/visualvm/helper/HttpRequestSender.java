@@ -56,6 +56,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.oracle.coherence.plugin.visualvm.panel.CoherenceTopicPanel;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.Pair;
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.MalformedObjectNameException;
@@ -147,6 +149,11 @@ public class HttpRequestSender
                     StringBuilder sb = new StringBuilder();
                     value.forEach(s -> sb.append(s).append('\n'));
                     sValue = sb.toString();
+                    }
+                else if (value instanceof ObjectNode)
+                    {
+                    ObjectNode on = (ObjectNode) value;
+                    sValue = on.toString();
                     }
 
                 attributes.add(new Attribute(e.getKey(), sValue));
@@ -728,6 +735,49 @@ public class HttpRequestSender
             }
         }
 
+
+    @Override
+    public Object executeSubscriberOperation(Pair<String, String> topic, long nSubscriber, String sOperationName, String sType, int nChannel)
+            throws Exception
+       {
+       String sRealOperation = sOperationName;
+       String sKey = "";
+       String sValue = "";
+       switch (sOperationName)
+           {
+           case CoherenceTopicPanel.RETRIEVE_HEADS:
+               sRealOperation = "heads";
+               sKey           = "links";
+               break;
+           case CoherenceTopicPanel.NOTIFY_POPULATED:
+               sRealOperation = "notifyPopulated";
+               sKey           = "channel";
+               sValue         = String.format("%d", nChannel);
+               break;
+           case CoherenceTopicPanel.RETRIEVE_REMAINING:
+               sRealOperation = "remainingMessages";
+               break;
+           default:
+               sRealOperation = sOperationName.toLowerCase();
+           }
+       
+       URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(topic.getX()))
+                .addPathSegment(TOPICS)
+                .addPathSegment(encodeServiceName(topic.getY()))
+                .addPathSegment(SUBSCRIBERS)
+                .addPathSegment(String.format("%d", nSubscriber))
+                .addPathSegment(sRealOperation);
+
+       if (!"".equals(sKey))
+          {
+           urlBuilder = urlBuilder.addQueryParameter(sKey, sValue);
+           }
+
+       return getResponseJson(sendPostRequest(urlBuilder));
+       }
+
+
     /**
      * Get the members of a service.
      *
@@ -1010,6 +1060,81 @@ public class HttpRequestSender
                                                                                                "domainPartition,httpServerType,totalRequestCount," +
                                                                                                "totalErrorCount,requestsPerSecond,averageRequestTime," +
                                                                                                "responseCount1xx,responseCount2xx,responseCount3xx,responseCount4xx,responseCount5xx");
+
+        return getResponseJson(sendGetRequest(urlBuilder));
+        }
+
+    /**
+     * Get the data for all the topics in the cluster.
+     *
+     * @return the data for all the cluster members
+     * @throws Exception in case of errors
+     */
+    public JsonNode getDataForTopics() throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(TOPICS).addQueryParameter(LINKS, "");
+
+        return getResponseJson(sendGetRequest(urlBuilder));
+        }
+
+    /**
+     * Get the data for all the topics members in the cluster.
+     *
+     * @param selectedTopic selected topic
+     *
+     * @return the data for all the cluster members
+     * @throws Exception in case of errors
+     */
+    public JsonNode getDataForTopicsMembers(Pair<String, String> selectedTopic) throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                                             .addPathSegment(encodeServiceName(selectedTopic.getX()))
+                                             .addPathSegment(TOPICS)
+                                             .addPathSegment(encodeServiceName(selectedTopic.getY()))
+                                             .addPathSegment(MEMBERS)
+                                             .addQueryParameter(LINKS, "");
+
+        return getResponseJson(sendGetRequest(urlBuilder));
+        }
+
+    /**
+     * Get the data for all the topic subscribers in the cluster.
+     *
+     * @param sServiceName  service name
+     * @param sTopicName    topic name
+     *
+     * @return the data for all the cluster members
+     * @throws Exception in case of errors
+     */
+    public JsonNode getDataForTopicSubscribers(String sServiceName, String sTopicName) throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                                             .addPathSegment(encodeServiceName(sServiceName))
+                                             .addPathSegment(TOPICS)
+                                             .addPathSegment(encodeServiceName(sTopicName))
+                                             .addPathSegment(SUBSCRIBERS)
+                                             .addQueryParameter(LINKS, "");
+
+        return getResponseJson(sendGetRequest(urlBuilder));
+        }
+
+    /**
+     * Get the data for all the topic subscriber groups in the cluster.
+     *
+     * @param sServiceName  service name
+     * @param sTopicName    topic name
+     *
+     * @return the data for all the cluster members
+     * @throws Exception in case of errors
+     */
+    public JsonNode getDataForTopicSubscriberGroups(String sServiceName, String sTopicName) throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                                             .addPathSegment(encodeServiceName(sServiceName))
+                                             .addPathSegment(TOPICS)
+                                             .addPathSegment(encodeServiceName(sTopicName))
+                                             .addPathSegment(SUBGROUPS)
+                                             .addQueryParameter(LINKS, "");
 
         return getResponseJson(sendGetRequest(urlBuilder));
         }
@@ -1451,6 +1576,31 @@ public class HttpRequestSender
                         .addPathSegment(PROXY);
             case "Cluster":
                 return urlBuilder;
+            case "PagedTopic":
+                return urlBuilder.addPathSegment(SERVICES)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
+                         .addPathSegment(TOPICS)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))
+                         .addPathSegment(MEMBERS)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, NODE_ID)))
+                         .addQueryParameter(LINKS, "");
+            case "PagedTopicSubscriber":
+                return urlBuilder.addPathSegment(SERVICES)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
+                         .addPathSegment(TOPICS)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, TOPIC)))
+                         .addPathSegment(SUBSCRIBERS)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "id")))
+                         .addQueryParameter(LINKS, "");
+            case "PagedTopicSubscriberGroup":
+                 return urlBuilder.addPathSegment(SERVICES)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
+                         .addPathSegment(TOPICS)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, TOPIC)))
+                         .addPathSegment(SUBGROUPS)
+                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))
+                         .addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID))
+                         .addQueryParameter(LINKS, "");
             case "Persistence":
                 return urlBuilder.addPathSegment(SERVICES)
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
@@ -1771,6 +1921,10 @@ public class HttpRequestSender
     private static final String FIELDS       = "fields";
     private static final String LINKS        = "links";
     private static final String SERVICES     = "services";
+    private static final String TOPICS       = "topics";
+    private static final String TOPIC        = "topic";
+    private static final String SUBSCRIBERS  = "subscribers";
+    private static final String SUBGROUPS    = "subscriberGroups";
     private static final String SERVICE      = "service";
     private static final String MEMBERS      = "members";
     private static final String CACHES       = "caches";
@@ -1778,7 +1932,7 @@ public class HttpRequestSender
     private static final String SNAPSHOTS    = "snapshots";
     private static final String ITEMS        = "items";
     private static final String COHERENCE    = "Coherence";
-    private static final String JOURNAL      =  "journal";
+    private static final String JOURNAL      = "journal";
     private static final String NODE_ID      = "nodeId";
     private static final String HOTCACHE     = "hotcache";
     private static final String PROXY        = "proxy";

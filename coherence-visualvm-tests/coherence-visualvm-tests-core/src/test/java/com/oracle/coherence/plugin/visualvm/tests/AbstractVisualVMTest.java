@@ -363,6 +363,15 @@ public abstract class AbstractVisualVMTest
         }
 
     /**
+     * Wait for a certain amount of time to ensure the JMX management
+     * refresh has completed.
+     */
+    protected void waitForRefresh()
+        {
+        wait("Sleeping to ensure JMX stats updated for next refresh", 15000L);
+        }
+
+    /**
      * Populate a given {@link NamedCache} with data.
      *
      * @param nc        {@link NamedCache} to populate

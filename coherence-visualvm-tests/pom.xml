@@ -66,6 +66,13 @@
         <module>coherence-visualvm-tests-ce</module>
       </modules>
     </profile>
+
+    <profile>
+      <id>topics</id>
+      <modules>
+        <module>coherence-visualvm-tests-topics</module>
+      </modules>
+    </profile>
   </profiles>
 
   <dependencyManagement>

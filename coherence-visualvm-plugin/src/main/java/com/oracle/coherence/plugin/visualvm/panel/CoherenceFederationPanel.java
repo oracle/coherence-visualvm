@@ -292,14 +292,9 @@ public class CoherenceFederationPanel
         tableInbound.setPreferredScrollableViewportSize(new Dimension(500, tableInbound.getRowHeight() * 5));
         tableOutbound.setPreferredScrollableViewportSize(new Dimension(500, tableOutbound.getRowHeight() * 5));
 
-        tableFed.setIntercellSpacing(new Dimension(6, 3));
-        tableFed.setRowHeight(tableFed.getRowHeight() + 4);
-
-        tableInbound.setIntercellSpacing(new Dimension(6, 3));
-        tableInbound.setRowHeight(tableFed.getRowHeight() + 4);
-
-        tableOutbound.setIntercellSpacing(new Dimension(6, 3));
-        tableOutbound.setRowHeight(tableFed.getRowHeight() + 4);
+        setTablePadding(tableFed);
+        setTablePadding(tableInbound);
+        setTablePadding(tableOutbound);
 
         // adding and nesting
         pneSplitOutboundDetail.add(txtPanelOutboundDetailTotal);

@@ -22,32 +22,30 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package com.oracle.coherence.plugin.visualvm.tablemodel;
+package functional.topics;
 
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
+import com.oracle.coherence.plugin.visualvm.VisualVMModel;
+import com.oracle.coherence.plugin.visualvm.tests.AbstractDataRetrieverTest;
+import org.junit.BeforeClass;
+
 
 /**
- * A model for holding topic data.
- *
- * @author tam  2020.02.08
- * @since  1.6.0
+ * Run DataRetriever tests using Reporter API where available.
  */
-public class TopicTableModel
-        extends AbstractCoherenceTableModel<Object, Data>
+public class ReporterDataRetrieverIT
+        extends AbstractTopicsDataRetrieverTest
     {
-    // ----- constructors ---------------------------------------------------
+    // ----- tests ----------------------------------------------------------
 
     /**
-     * Creates a table model with the given columns.
-     *
-     * @param asColumns the columns for this table model
+     * Set properties to specifically use the reporter.
      */
-    public TopicTableModel(String[] asColumns)
+    @BeforeClass
+    public static void _startup()
         {
-        super(asColumns);
+        System.setProperty("tangosol.coherence.override", "test-cluster-coherence-override.xml");
+        System.setProperty("tangosol.coherence.cacheconfig", "test-cluster-cache-config.xml");
+        System.setProperty(VisualVMModel.PROP_REFRESH_TIME, "1");
+        startupCacheServers(false);
         }
-
-    // ----- constants ------------------------------------------------------
-
-    private static final long serialVersionUID = 889285758431509048L;
     }

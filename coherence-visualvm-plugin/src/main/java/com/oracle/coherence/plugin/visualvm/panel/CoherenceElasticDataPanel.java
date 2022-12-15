@@ -305,8 +305,7 @@ public class CoherenceElasticDataPanel
             f_table.setPreferredScrollableViewportSize(new Dimension((int) (Math.max((int) (screenSize.getWidth() * 0.5),
                 800)), f_table.getRowHeight() * 10));
 
-            f_table.setIntercellSpacing(new Dimension(6, 3));
-            f_table.setRowHeight(f_table.getRowHeight() + 4);
+            setTablePadding(f_table);
 
             f_pneMessage = new JScrollPane(f_table);
             configureScrollPane(f_pneMessage, f_table);

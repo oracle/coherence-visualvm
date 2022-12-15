@@ -763,6 +763,11 @@ public class RenderHelper
     public static final NumberFormat LOAD_AVERAGE_FORMAT = new DecimalFormat("#,##0.00");
 
     /**
+     * Format for rate renderer.
+     */
+    public static final NumberFormat RATE_FORMAT = new DecimalFormat("###,##0.0000");
+
+    /**
      * Format for % renderer.
      */
     public static final NumberFormat PERCENT_FORMAT = new DecimalFormat("##0%");

@@ -26,6 +26,7 @@
 package com.oracle.coherence.plugin.visualvm.helper;
 
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.AbstractData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.Pair;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.PersistenceData;
 import com.oracle.coherence.plugin.visualvm.Localization;
 
@@ -44,6 +45,8 @@ import javax.management.MBeanServerConnection;
 import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
+
+import static com.oracle.coherence.plugin.visualvm.panel.CoherenceTopicPanel.NOTIFY_POPULATED;
 
 /**
  * The {@link RequestSender} based on JMX.
@@ -383,6 +386,28 @@ public class JMXRequestSender
         invoke(new ObjectName(sFQN), sOperationName, new Object[]{sSnapshotName},
                 new String[]{String.class.getName()});
         }
+
+
+    @Override
+    public Object executeSubscriberOperation(Pair<String, String> topic, long sSubscriber, String sOperationName, String sType, int nChannel)
+            throws Exception
+       {
+       ObjectName objectName = new ObjectName("Coherence:type=PagedTopicSubscriber,service=" + topic.getX() + ",topic=" + topic.getY() +
+                                              ",subType=" + sType + ",id=" + sSubscriber + ",*");
+       Set<ObjectName> setResult = getCompleteObjectName(objectName);
+       String sFQN = getFirstResult(setResult);
+
+       Object[] aoArgs      = new Object[0];
+       String[] asSignature = new String[0];
+       if (sOperationName.equals(NOTIFY_POPULATED))
+           {
+           aoArgs = new Object[]{nChannel};
+           asSignature = new String[]{Integer.class.getName()};
+           }
+
+       return invoke(new ObjectName(sFQN), sOperationName, aoArgs, asSignature);
+       }
+
 
     // ------ JMXRequestSender methods --------------------------------------
 

@@ -123,13 +123,10 @@ public class CoherenceProxyPanel
         RenderHelper.setColumnRenderer(f_table, ProxyData.TOTAL_MSG_SENT, new RenderHelper.IntegerRenderer());
         RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
-        // Add some space
-        f_table.setIntercellSpacing(new Dimension(6, 3));
-        f_table.setRowHeight(f_table.getRowHeight() + 4);
-
         // Create the scroll pane and add the table to it.
         JScrollPane pneScroll = new JScrollPane(f_table);
         configureScrollPane(pneScroll, f_table);
+        setTablePadding(f_table);
         pneScroll.setOpaque(false);
 
         JPanel pnlTop = new JPanel(new BorderLayout());

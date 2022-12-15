@@ -90,8 +90,7 @@ public class CoherenceJCachePanel
         table.setPreferredScrollableViewportSize(new Dimension(300, table.getRowHeight() * 5));
 
         // Add some space
-        table.setIntercellSpacing(new Dimension(6, 3));
-        table.setRowHeight(table.getRowHeight() + 4);
+        setTablePadding(table);
 
         MenuOption optionShowDetails = new ShowDetailMenuOption(model, table, SELECTED_JCACHE);
 

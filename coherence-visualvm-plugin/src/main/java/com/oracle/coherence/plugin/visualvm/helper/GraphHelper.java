@@ -1154,8 +1154,7 @@ public class GraphHelper
         SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(Localization.getLocalText("GRPH_topics_stats"));
-        sxycd.addLineItems(getLocalText("LBL_publisher_sends"),
-                           getLocalText("LBL_subscriber_receives"));
+        sxycd.addLineFillItems(getLocalText("LBL_published"));
         return createChart(sxycd);
         }
 
@@ -1175,12 +1174,11 @@ public class GraphHelper
      * Add values to the topics rate graph.
      *
      * @param graph       {@link SimpleXYChartSupport} to add values to
-     * @param cBytesSent  number of publisher sends for time period
-     * @param cBytesRec   number of subscriber receives for time period
+     * @param cPublished  number of publisher sends for time period
      */
-    public static void addValuesToTopicsRateGraph(SimpleXYChartSupport graph, long cBytesSent, long cBytesRec)
+    public static void addValuesToTopicsRateGraph(SimpleXYChartSupport graph, long cPublished)
         {
-        graph.addValues(System.currentTimeMillis(), new long[] { cBytesSent, cBytesRec });
+        graph.addValues(System.currentTimeMillis(), new long[] { cPublished });
         }
 
     // ----- helpers --------------------------------------------------------

@@ -52,6 +52,7 @@ import java.util.List;
 import java.util.Map;
 
 import java.util.logging.Logger;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import javax.swing.BorderFactory;
@@ -106,45 +107,49 @@ public class CoherenceClusterSnapshotPanel
             StringBuilder sb =
                     new StringBuilder(htmlHead())
                             .append(clusterOverview())
-                            .append("<hr>")
+                            .append(HR)
                             .append(machinesOverview())
-                            .append("<hr>")
+                            .append(HR)
                             .append(membersOverview())
-                            .append("<hr>")
+                            .append(HR)
                             .append(servicesOverview())
-                            .append("<hr>")
+                            .append(HR)
                             .append(cachesOverview())
-                            .append("<hr>");
+                            .append(HR);
 
             if (f_model.isCoherenceExtendConfigured())
                 {
-                sb.append(proxyServerOverview()).append("<hr>");
+                sb.append(proxyServerOverview()).append(HR);
                 }
             if (f_model.isPersistenceConfigured())
                 {
-                sb.append(persistenceOverview()).append("<hr>");
+                sb.append(persistenceOverview()).append(HR);
                 }
             if (f_model.isHttpProxyConfigured())
                 {
-                sb.append(httpProxyOverview()).append("<hr>");
+                sb.append(httpProxyOverview()).append(HR);
                 }
             if (f_model.isFederationCongfigured())
                 {
-                sb.append(federationOverview()).append("<hr>");
+                sb.append(federationOverview()).append(HR);
                 }
             if (f_model.isElasticDataConfigured())
                 {
                 sb.append(elasticDataOverview("RAM"))
                   .append(elasticDataOverview("FLASH"))
-                  .append("<hr>");
+                  .append(HR);
                 }
             if (f_model.isExecutorConfigured())
                 {
-                sb.append(executorOverview()).append("<hr>");
+                sb.append(executorOverview()).append(HR);
+                }
+            if (f_model.isTopicsConfigured())
+                {
+                sb.append(topicsOverview()).append(HR);
                 }
             if (f_model.isGrpcProxyConfigured())
                 {
-                sb.append(grpcOverview()).append("<hr>");
+                sb.append(grpcOverview()).append(HR);
                 }
 
             String sCurrent = sb.append("</body></html>").toString();
@@ -509,6 +514,36 @@ public class CoherenceClusterSnapshotPanel
         }
 
     /**
+     * Returns a topics overview.
+     *
+     * @return a topics overview
+     */
+    private String topicsOverview()
+        {
+        StringBuilder sb = new StringBuilder(title(getLabel("LBL_topics")));
+
+        sb.append(tableStart());
+
+        sb.append(columnHeaders(VisualVMModel.DataType.TOPICS));
+
+        for (Map.Entry<Object, Data> entry : m_topicData)
+            {
+            sb.append("<tr>")
+                    .append(td(entry.getValue().getColumn(TopicData.TOPIC_NAME).toString()))
+                    .append(td(entry.getValue().getColumn(TopicData.CHANNELS).toString()))
+                    .append(td(entry.getValue().getColumn(TopicData.PUBLISHED_TOTAL).toString()))
+                    .append(td(entry.getValue().getColumn(TopicData.PAGE_CAPACITY).toString()))
+                    .append(td(entry.getValue().getColumn(TopicData.RECONNECT_RETRY).toString()))
+                    .append(td(entry.getValue().getColumn(TopicData.RECONNECT_TIMEOUT).toString()))
+                    .append(td(entry.getValue().getColumn(TopicData.RECONNECT_WAIT).toString()))
+                    .append(td(entry.getValue().getColumn(TopicData.RETAIN_CONSUMED).toString()))
+                    .append("</tr>");
+            }
+
+        return sb.append(tableEnd()).toString();
+        }
+
+    /**
      * Returns a gRPC overview.
      *
      * @return a gRPC overview
@@ -788,7 +823,7 @@ public class CoherenceClusterSnapshotPanel
         m_configData           = f_model.getData(VisualVMModel.DataType.JCACHE_CONFIG);
         m_statsData            = f_model.getData(VisualVMModel.DataType.JCACHE_STATS);
         m_persistenceData      = f_model.getData(VisualVMModel.DataType.PERSISTENCE);
-        m_topicData            = f_model.getData(VisualVMModel.DataType.TOPICS_DETAIL);
+        m_topicData            = f_model.getData(VisualVMModel.DataType.TOPICS);
         m_executorData         = f_model.getData(VisualVMModel.DataType.EXECUTOR);
         m_grpcData             = f_model.getData(VisualVMModel.DataType.GRPC_PROXY);
         }
@@ -801,6 +836,8 @@ public class CoherenceClusterSnapshotPanel
      * The logger object to use.
      */
     private static final Logger LOGGER = Logger.getLogger(CoherenceClusterSnapshotPanel.class.getName());
+
+    private static final String HR = "<hr>";
 
     // ----- data members ---------------------------------------------------
 

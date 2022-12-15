@@ -74,7 +74,7 @@ public class ClusterData
     @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
-        return new ArrayList<Map.Entry<Object, Data>>(getJMXDataMap(requestSender, model).entrySet());
+        return new ArrayList<>(getJMXDataMap(requestSender, model).entrySet());
         }
 
     @Override

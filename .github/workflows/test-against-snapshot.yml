@@ -106,26 +106,29 @@ jobs:
 
         echo "Running verify against $COH_VERSION"
         mvn --file coherence-visualvm-tests/coherence-visualvm-tests-ce/pom.xml --batch-mode -nsu -e -Dcoherence.version=$COH_VERSION clean install
+        
+        echo "Running Topics tests"
+        mvn --file coherence-visualvm-tests/coherence-visualvm-tests-topics/pom.xml -P topics --batch-mode -nsu -e -Dcoherence.version=$COH_VERSION clean install
 
         echo "Removing Coherence cloned directory"
         CLONE_DIR=coherence-$COH_BRANCH
         rm -rf /tmp/${CLONE_DIR}
 
     - name: Build Artifacts test logs
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       if: failure()
       with:
         name: test-output
         path: coherence-visualvm-tests/**/target/test-output/**/*
 
     - name: Coherence VisualVM Plugin NBM
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: coherence-visualvm-plugin-nbm
         path: coherence-visualvm-plugin/target/coherence-visualvm-plugin*.nbm
 
     - name: Coherence VisualVM Plugin Javadoc
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: coherence-visualvm-plugin-javadoc
         path: coherence-visualvm-plugin/target/coherence-visualvm-plugin*javadoc.jar

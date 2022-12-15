@@ -173,8 +173,7 @@ public class CoherenceMemberPanel
         RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
         // Add some space
-        f_table.setIntercellSpacing(new Dimension(6, 3));
-        f_table.setRowHeight(f_table.getRowHeight() + 4);
+        setTablePadding(f_table);
 
         MenuOption menuDetail = new ShowDetailMenuOption(model, f_table, SELECTED_NODE);
 

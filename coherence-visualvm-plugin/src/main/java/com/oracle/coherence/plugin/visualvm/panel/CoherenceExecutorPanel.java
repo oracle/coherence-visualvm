@@ -103,15 +103,12 @@ public class CoherenceExecutorPanel
         RenderHelper.setColumnRenderer(f_table, ExecutorData.TASKS_REJECTED, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, ExecutorData.TASKS_IN_PROGRESS, new RenderHelper.IntegerRenderer());
         RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
-
-        // Add some space
-        f_table.setIntercellSpacing(new Dimension(6, 3));
-        f_table.setRowHeight(f_table.getRowHeight() + 4);
-
+        
         // Create the scroll pane and add the table to it.
         JScrollPane pneScroll = new JScrollPane(f_table);
         configureScrollPane(pneScroll, f_table);
         pneScroll.setOpaque(false);
+        setTablePadding(f_table);
 
         JPanel pnlTop = new JPanel(new BorderLayout());
         pnlTop.setOpaque(false);
