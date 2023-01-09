@@ -82,11 +82,6 @@ jobs:
         make all
         cd $DIR
 
-    - name: Copyright
-      shell: bash
-      run: |
-        mvn --file pom.xml clean install -DskipTests -P copyright        
-
     - name: Build Plugin
       shell: bash
       run: |
