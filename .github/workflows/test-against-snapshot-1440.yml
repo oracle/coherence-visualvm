@@ -58,10 +58,10 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2-snapshots
 
-    - name: Set up JDK 11 for Build
+    - name: Set up JDK 8 for Build
       uses: actions/setup-java@v3
       with:
-        java-version: 1.8
+        java-version: 8
         distribution: 'zulu'
 
     - name: Print Versions
