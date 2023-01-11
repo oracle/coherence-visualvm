@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -186,7 +186,9 @@ public class CoherenceCachePanel
                                        new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_tableStorage, CacheStorageManagerData.LOCKS_PENDING,
                                        new RenderHelper.IntegerRenderer());
-        RenderHelper.setColumnRenderer(f_tableStorage, CacheStorageManagerData.LISTENER_REGISTRATIONS,
+        RenderHelper.setColumnRenderer(f_tableStorage, CacheStorageManagerData.LISTENER_KEY_COUNT,
+                                       new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableStorage, CacheStorageManagerData.LISTENER_FILTER_COUNT,
                                        new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_tableStorage, CacheStorageManagerData.MAX_QUERY_DURATION,
                                        new RenderHelper.IntegerRenderer());
