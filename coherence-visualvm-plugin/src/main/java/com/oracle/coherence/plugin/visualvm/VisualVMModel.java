@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -1455,10 +1455,11 @@ public class VisualVMModel
     private static final String[] CACHE_STORAGE_MANAGER_LABELS = new String[]
         {
         Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText("LBL_locks_granted"),
-        Localization.getLocalText("LBL_locks_pending"), Localization.getLocalText("LBL_listener_reg"),
-        Localization.getLocalText("LBL_max_query_millis"), Localization.getLocalText("LBL_max_query_desc"),
-        Localization.getLocalText("LBL_non_opt_avge"), Localization.getLocalText("LBL_opt_avge"),
-        Localization.getLocalText("LBL_index_units"), Localization.getLocalText("LBL_indexing_total_millis")
+        Localization.getLocalText("LBL_locks_pending"), Localization.getLocalText("LBL_listener_key_count"),
+        Localization.getLocalText("LBL_listener_filter_count"), Localization.getLocalText("LBL_max_query_millis"),
+        Localization.getLocalText("LBL_max_query_desc"), Localization.getLocalText("LBL_non_opt_avge"),
+        Localization.getLocalText("LBL_opt_avge"), Localization.getLocalText("LBL_index_units"),
+        Localization.getLocalText("LBL_indexing_total_millis")
         };
 
     /**

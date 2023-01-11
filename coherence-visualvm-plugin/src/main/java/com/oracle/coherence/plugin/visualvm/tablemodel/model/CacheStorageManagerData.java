@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -95,11 +95,12 @@ public class CacheStorageManagerData
                     data = new CacheStorageManagerData();
 
                     AttributeList listAttr = requestSender.getAttributes(objName,
-                        new String[]{ ATTR_LOCKS_GRANTED, ATTR_LOCKS_PENDING, ATTR_LISTENER_REG });
+                        new String[]{ ATTR_LOCKS_GRANTED, ATTR_LOCKS_PENDING, ATTR_LISTENER_KEY_COUNT, ATTR_LISTENER_FILTER_COUNT });
 
-                    String sLocksGranted = getAttributeValueAsString(listAttr, ATTR_LOCKS_GRANTED);
-                    String sLocksPending = getAttributeValueAsString(listAttr, ATTR_LOCKS_PENDING);
-                    String sListenerReg  = getAttributeValueAsString(listAttr, ATTR_LISTENER_REG);
+                    String sLocksGranted    = getAttributeValueAsString(listAttr, ATTR_LOCKS_GRANTED);
+                    String sLocksPending    = getAttributeValueAsString(listAttr, ATTR_LOCKS_PENDING);
+                    String sKeyListeners    = getAttributeValueAsString(listAttr, ATTR_LISTENER_KEY_COUNT);
+                    String sFilterListeners = getAttributeValueAsString(listAttr, ATTR_LISTENER_FILTER_COUNT);
 
                     data.setColumn(CacheStorageManagerData.NODE_ID, Integer.valueOf(sNodeId));
                     data.setColumn(CacheStorageManagerData.LOCKS_GRANTED,
@@ -107,8 +108,10 @@ public class CacheStorageManagerData
                     // locks pending may be returns as null over REST
                     data.setColumn(CacheStorageManagerData.LOCKS_PENDING,
                             Integer.parseInt(sLocksPending == null ? "0" : sLocksPending));
-                    data.setColumn(CacheStorageManagerData.LISTENER_REGISTRATIONS,
-                            Long.parseLong(sListenerReg == null ? "0" : sListenerReg));
+                    data.setColumn(CacheStorageManagerData.LISTENER_KEY_COUNT,
+                            Long.parseLong(sKeyListeners == null ? "0" : sKeyListeners));
+                    data.setColumn(CacheStorageManagerData.LISTENER_FILTER_COUNT,
+                            Long.parseLong(sFilterListeners == null ? "0" : sFilterListeners));
                     try {
                         data.setColumn(CacheStorageManagerData.MAX_QUERY_DURATION,
                                    Long.parseLong(requestSender.getAttribute(objName, "MaxQueryDurationMillis")));
@@ -125,8 +128,13 @@ public class CacheStorageManagerData
                         }
                     catch (Exception eIgnore)
                        {
-                       // ignore errors as these attributes are not available until 3.7.
-                       // Refer: COH-11034
+                       // Default values when we have potential NPE as this can happen for a front-tier via REST
+                       data.setColumn(CacheStorageManagerData.MAX_QUERY_DURATION,0L);
+                       data.setColumn(CacheStorageManagerData.MAX_QUERY_DESCRIPTION,"null");
+                       data.setColumn(CacheStorageManagerData.NON_OPTIMIZED_QUERY_AVG,0L);
+                       data.setColumn(CacheStorageManagerData.OPTIMIZED_QUERY_AVG,0L);
+                       data.setColumn(CacheStorageManagerData.INDEX_TOTAL_UNITS,0L);
+                       data.setColumn(CacheStorageManagerData.INDEXING_TOTAL_MILLIS,0L);
                        }
 
                     mapData.put(data.getColumn(0), data);
@@ -191,28 +199,30 @@ public class CacheStorageManagerData
                        Integer.valueOf(getNumberValue(aoColumns[3].toString())));
         data.setColumn(CacheStorageManagerData.LOCKS_PENDING,
                        Integer.valueOf(getNumberValue(aoColumns[4].toString())));
-        data.setColumn(CacheStorageManagerData.LISTENER_REGISTRATIONS,
+        data.setColumn(CacheStorageManagerData.LISTENER_KEY_COUNT,
                        Long.valueOf(getNumberValue(aoColumns[5].toString())));
-        data.setColumn(CacheStorageManagerData.MAX_QUERY_DURATION,
+        data.setColumn(CacheStorageManagerData.LISTENER_FILTER_COUNT,
                        Long.valueOf(getNumberValue(aoColumns[6].toString())));
+        data.setColumn(CacheStorageManagerData.MAX_QUERY_DURATION,
+                       Long.valueOf(getNumberValue(aoColumns[7].toString())));
         data.setColumn(CacheStorageManagerData.MAX_QUERY_DESCRIPTION,
-                       new String(aoColumns[7] == null ? "" : aoColumns[7].toString()));
+                       new String(aoColumns[7] == null ? "" : aoColumns[8].toString()));
         data.setColumn(CacheStorageManagerData.NON_OPTIMIZED_QUERY_AVG,
-                       Long.valueOf(getNumberValue(aoColumns[8].toString())));
-        data.setColumn(CacheStorageManagerData.OPTIMIZED_QUERY_AVG,
                        Long.valueOf(getNumberValue(aoColumns[9].toString())));
+        data.setColumn(CacheStorageManagerData.OPTIMIZED_QUERY_AVG,
+                       Long.valueOf(getNumberValue(aoColumns[10].toString())));
 
         try
             {
             data.setColumn(CacheStorageManagerData.INDEX_TOTAL_UNITS,
-                       Long.valueOf(getNumberValue(aoColumns[10].toString())));
-            data.setColumn(CacheStorageManagerData.INDEXING_TOTAL_MILLIS,
                        Long.valueOf(getNumberValue(aoColumns[11].toString())));
+            data.setColumn(CacheStorageManagerData.INDEXING_TOTAL_MILLIS,
+                       Long.valueOf(getNumberValue(aoColumns[12].toString())));
             }
         catch (Exception e)
             {
             // if we connect to a coherence version 12.1.3.X then this
-            // attribute was not included in MBean and reports so we must
+            // attribute was not included in MBean and reports, so we must
             // protect against NPE
             }
 
@@ -278,7 +288,8 @@ public class CacheStorageManagerData
                 data.setColumn(CacheStorageManagerData.NODE_ID, nodeCacheStorage.get("nodeId").asInt());
                 data.setColumn(CacheStorageManagerData.LOCKS_GRANTED, locksGranted.asInt());
                 data.setColumn(CacheStorageManagerData.LOCKS_PENDING, nodeCacheStorage.get("locksPending").asInt());
-                data.setColumn(CacheStorageManagerData.LISTENER_REGISTRATIONS,nodeCacheStorage.get("listenerRegistrations").asInt());
+                data.setColumn(CacheStorageManagerData.LISTENER_KEY_COUNT,nodeCacheStorage.get("listenerKeyCount").asInt());
+                data.setColumn(CacheStorageManagerData.LISTENER_FILTER_COUNT,nodeCacheStorage.get("listenerFilterCount").asInt());
                 data.setColumn(CacheStorageManagerData.MAX_QUERY_DURATION, nodeCacheStorage.get("maxQueryDurationMillis").asLong());
                 data.setColumn(CacheStorageManagerData.MAX_QUERY_DESCRIPTION, nodeCacheStorage.get("maxQueryDescription").asText());
                 data.setColumn(CacheStorageManagerData.NON_OPTIMIZED_QUERY_AVG, nodeCacheStorage.get("nonOptimizedQueryAverageMillis").asLong());
@@ -320,39 +331,44 @@ public class CacheStorageManagerData
     public static final int LOCKS_PENDING = 2;
 
     /**
-     * Array index for listener registrations.
+     * Array index for listener key count.
      */
-    public static final int LISTENER_REGISTRATIONS = 3;
+    public static final int LISTENER_KEY_COUNT = 3;
+
+    /**
+     * Array index for listener filter count.
+     */
+    public static final int LISTENER_FILTER_COUNT = 4;
 
     /**
      * Array index for max query duration.
      */
-    public static final int MAX_QUERY_DURATION = 4;
+    public static final int MAX_QUERY_DURATION = 5;
 
     /**
      * Array index for max query descriptions.
      */
-    public static final int MAX_QUERY_DESCRIPTION = 5;
+    public static final int MAX_QUERY_DESCRIPTION = 6;
 
     /**
      * Array index for non-optimized query avg.
      */
-    public static final int NON_OPTIMIZED_QUERY_AVG = 6;
+    public static final int NON_OPTIMIZED_QUERY_AVG = 7;
 
     /**
      * Array index for optimized query avg.
      */
-    public static final int OPTIMIZED_QUERY_AVG = 7;
+    public static final int OPTIMIZED_QUERY_AVG = 8;
 
     /**
      * Array index for index total units avg.
      */
-    public static final int INDEX_TOTAL_UNITS = 8;
+    public static final int INDEX_TOTAL_UNITS = 9;
     
     /**
      * Array index for indexing total millis.
      */
-    public static final int INDEXING_TOTAL_MILLIS = 9;
+    public static final int INDEXING_TOTAL_MILLIS = 10;
 
     /**
      * The logger object to use.
@@ -375,7 +391,12 @@ public class CacheStorageManagerData
     protected static final String ATTR_LOCKS_PENDING = "LocksPending";
 
     /**
-     * JMX attribute name for Listener Registrations.
+     * JMX attribute name for Listener Key Count.
      */
-    protected static final String ATTR_LISTENER_REG = "ListenerRegistrations";
+    protected static final String ATTR_LISTENER_KEY_COUNT = "ListenerKeyCount";
+
+    /**
+     * JMX attribute name for Listener Filter Count.
+     */
+    protected static final String ATTR_LISTENER_FILTER_COUNT = "ListenerFilterCount";
     }
