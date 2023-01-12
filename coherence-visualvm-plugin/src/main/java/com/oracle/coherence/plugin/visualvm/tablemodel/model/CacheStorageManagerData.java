@@ -206,7 +206,7 @@ public class CacheStorageManagerData
         data.setColumn(CacheStorageManagerData.MAX_QUERY_DURATION,
                        Long.valueOf(getNumberValue(aoColumns[7].toString())));
         data.setColumn(CacheStorageManagerData.MAX_QUERY_DESCRIPTION,
-                       new String(aoColumns[7] == null ? "" : aoColumns[8].toString()));
+                       new String(aoColumns[8] == null ? "" : aoColumns[8].toString()));
         data.setColumn(CacheStorageManagerData.NON_OPTIMIZED_QUERY_AVG,
                        Long.valueOf(getNumberValue(aoColumns[9].toString())));
         data.setColumn(CacheStorageManagerData.OPTIMIZED_QUERY_AVG,
