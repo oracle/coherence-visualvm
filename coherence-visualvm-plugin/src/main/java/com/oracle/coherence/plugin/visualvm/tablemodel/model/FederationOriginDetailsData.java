@@ -40,6 +40,8 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationDestinationDetailsData.preProcessReporterXMLInternal;
+
 /**
  * A class to hold Federated Origin data.
  *
@@ -78,16 +80,7 @@ public class FederationOriginDetailsData
     @Override
     public String preProcessReporterXML(VisualVMModel model, String sReporterXML)
         {
-        // the report XML contains the following tokens that require substitution:
-        // %SERVICE_NAME%
-        // %PARTICIPANT_NAME%
-        Pair<String, String> serviceParticipant = model.getSelectedServiceParticipant();
-
-        String query = serviceParticipant == null ? sReporterXML :
-               sReporterXML.replaceAll("%SERVICE_NAME%", escape(serviceParticipant.getX()))
-                           .replaceAll("%PARTICIPANT_NAME%", escape(serviceParticipant.getY()));
-
-        return query;
+        return preProcessReporterXMLInternal(model, sReporterXML);
         }
 
     @Override

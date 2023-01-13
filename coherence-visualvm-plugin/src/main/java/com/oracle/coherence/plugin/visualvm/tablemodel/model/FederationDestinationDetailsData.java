@@ -77,6 +77,11 @@ public class FederationDestinationDetailsData
     @Override
     public String preProcessReporterXML(VisualVMModel model, String sReporterXML)
         {
+        return preProcessReporterXMLInternal(model, sReporterXML);
+        }
+
+    protected static String preProcessReporterXMLInternal(VisualVMModel model, String sReporterXML)
+        {
         // the report XML contains the following tokens that require substitution:
         // %SERVICE_NAME%
         // %PARTICIPANT_NAME%
