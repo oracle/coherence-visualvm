@@ -151,14 +151,11 @@ public class ServiceMemberData
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
         Data data = null;
-        boolean fMT  = aoColumns[3] != null;
-        int  nStart = 4;
+        int  nStart = 3;
 
-        String  sServiceName = fMT ?
-                               getFullServiceName(aoColumns[3].toString(), aoColumns[2].toString()) :
-                               aoColumns[2].toString();
+        String  sServiceName = aoColumns[2].toString();
 
-        // Service member data are only collected when the a service is selected.
+        // Service member data are only collected when the service is selected.
         // we need to only include rows where the service matches
         if (model.getSelectedService() != null && model.getSelectedService().equals(sServiceName))
             {

@@ -88,9 +88,6 @@ public class HttpProxyMemberData extends AbstractData
         data.setColumn(HttpProxyMemberData.REQ_PER_SECOND, Float.valueOf(aoColumns[nStart++].toString()));
         data.setColumn(HttpProxyMemberData.TOTAL_ERROR_COUNT, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
         data.setColumn(HttpProxyMemberData.TOTAL_REQUEST_COUNT, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
-        // skip domainPartition
-        nStart++;
-
         data.setColumn(HttpProxyMemberData.RESPONSE_COUNT_1, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
         data.setColumn(HttpProxyMemberData.RESPONSE_COUNT_2, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
         data.setColumn(HttpProxyMemberData.RESPONSE_COUNT_3, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
@@ -106,30 +103,14 @@ public class HttpProxyMemberData extends AbstractData
         // the report XML contains the following tokens that require substitution:
         // %SERVICE_NAME%
 
-        // see if we have domainPartition key
-        String sServiceName     = model.getSelectedHttpProxyService();
-        String sDomainPartition = null;
+        String sServiceName  = model.getSelectedHttpProxyService();
 
         if (sServiceName != null)
             {
-            String[] asServiceDetails = getDomainAndService(sServiceName);
-            sServiceName              = asServiceDetails[1];
-            sDomainPartition          = asServiceDetails[0];
+            return sReporterXML.replaceAll(SERVICE_NAME, escape(sServiceName));
             }
 
-        if (sServiceName != null && sServiceName.contains("$"))
-            {
-            return sReporterXML.replace(SERVICE_NAME, sServiceName);
-            }
-        else
-            {
-            return sServiceName == null ? sReporterXML :
-                   sReporterXML.replaceAll(SERVICE_NAME, sServiceName +
-                                                         (sDomainPartition !=
-                                                          null ?
-                                                          ",domainPartition=" +
-                                                sDomainPartition : ""));
-            }
+        return sReporterXML;
         }
 
     @Override

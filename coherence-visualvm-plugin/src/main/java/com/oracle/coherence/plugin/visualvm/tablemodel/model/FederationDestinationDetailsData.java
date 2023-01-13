@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -83,8 +83,8 @@ public class FederationDestinationDetailsData
         Pair<String, String> serviceParticipant = model.getSelectedServiceParticipant();
 
         String query = serviceParticipant == null ? sReporterXML :
-               sReporterXML.replaceAll("%SERVICE_NAME%", serviceParticipant.getX())
-                           .replaceAll("%PARTICIPANT_NAME%", serviceParticipant.getY());
+               sReporterXML.replaceAll("%SERVICE_NAME%", escape(serviceParticipant.getX()))
+                           .replaceAll("%PARTICIPANT_NAME%", escape(serviceParticipant.getY()));
 
         return query;
         }

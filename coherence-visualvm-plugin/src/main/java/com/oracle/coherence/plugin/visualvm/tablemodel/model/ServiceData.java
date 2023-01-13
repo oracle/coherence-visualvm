@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -182,19 +182,10 @@ public class ServiceData
     @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
-        Data    data = new ServiceData();
-        boolean fMT  = aoColumns[3] != null;
-        int  nStart = 4;
+        Data data = new ServiceData();
+        int  nStart = 3;
 
-        if (fMT)
-            {
-            data.setColumn(ServiceData.SERVICE_NAME, getFullServiceName(aoColumns[3].toString(),aoColumns[2].toString()));
-            }
-        else
-            {
-            data.setColumn(ServiceData.SERVICE_NAME, aoColumns[2]);
-            }
-
+        data.setColumn(ServiceData.SERVICE_NAME, aoColumns[2]);
         data.setColumn(ServiceData.STATUS_HA, aoColumns[nStart++]);
         data.setColumn(ServiceData.PARTITION_COUNT, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
         data.setColumn(ServiceData.PARTITIONS_ENDANGERED, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));

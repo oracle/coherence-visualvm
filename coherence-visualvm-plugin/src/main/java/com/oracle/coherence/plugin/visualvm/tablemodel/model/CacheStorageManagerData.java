@@ -177,9 +177,9 @@ public class CacheStorageManagerData
             }
 
         return sServiceName == null ? sReporterXML :
-                     sReporterXML.replaceAll("%SERVICE_NAME%", sServiceName +
+                     sReporterXML.replaceAll("%SERVICE_NAME%", escape(sServiceName) +
                                              (sDomainPartition != null ? ",domainPartition=" + sDomainPartition : "") )
-                                 .replaceAll("%CACHE_NAME%",   selectedCache.getY());
+                                 .replaceAll("%CACHE_NAME%",   escape(selectedCache.getY()));
         }
 
     @Override

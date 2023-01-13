@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -213,9 +213,9 @@ public class CacheDetailData
             }
 
         return sServiceName == null ? sReporterXML :
-                sReporterXML.replaceAll("%SERVICE_NAME%", sServiceName +
+                sReporterXML.replaceAll("%SERVICE_NAME%", escape(sServiceName) +
                                         (sDomainPartition != null ? ",domainPartition=" + sDomainPartition : "") )
-                            .replaceAll("%CACHE_NAME%", selectedCache.getY())
+                            .replaceAll("%CACHE_NAME%", escape(selectedCache.getY()))
                             .replaceAll("%TIER_TYPE%", m_type.getValue());
         }
 

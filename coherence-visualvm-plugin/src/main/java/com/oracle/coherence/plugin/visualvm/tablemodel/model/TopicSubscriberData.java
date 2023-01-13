@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -106,8 +106,8 @@ public class TopicSubscriberData
 
         if (selectedTopic != null)
             {
-            return sReporterXML.replaceAll("%SERVICE_NAME%", selectedTopic.getX())
-                               .replaceAll("%TOPIC_NAME%", selectedTopic.getY());
+            return sReporterXML.replaceAll("%SERVICE_NAME%", escape(selectedTopic.getX()))
+                               .replaceAll("%TOPIC_NAME%", escape(selectedTopic.getY()));
             }
 
         return sReporterXML;
