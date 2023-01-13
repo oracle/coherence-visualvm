@@ -40,8 +40,6 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationDestinationDetailsData.preProcessReporterXMLInternal;
-
 /**
  * A class to hold Federated Origin data.
  *
@@ -65,6 +63,12 @@ public class FederationOriginDetailsData
     // ----- DataRetriever methods ------------------------------------------
 
     @Override
+    public String getReporterReport()
+        {
+        return REPORT_DESTINATION_DETAILS;
+        }
+
+    @Override
     @SuppressWarnings("rawtypes")
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
@@ -72,15 +76,9 @@ public class FederationOriginDetailsData
         }
 
     @Override
-    public String getReporterReport()
-        {
-        return REPORT_DESTINATION_DETAILS;
-        }
-
-    @Override
     public String preProcessReporterXML(VisualVMModel model, String sReporterXML)
         {
-        return preProcessReporterXMLInternal(model, sReporterXML);
+        return FederationDestinationDetailsData.preProcessReporterXMLInternal(model, sReporterXML);
         }
 
     @Override
