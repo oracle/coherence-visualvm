@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -76,17 +76,9 @@ public class HttpProxyData extends AbstractData
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
         Data    data = new HttpProxyData();
-        boolean fMT  = aoColumns[2] != null;
-        int  nStart = 3;
+        int  nStart = 2;
 
-        if (fMT)
-            {
-            data.setColumn(HttpProxyData.SERVICE_NAME, getFullServiceName(aoColumns[2].toString(),aoColumns[1].toString()));
-            }
-        else
-            {
-            data.setColumn(HttpProxyData.SERVICE_NAME, aoColumns[1]);
-            }
+        data.setColumn(HttpProxyData.SERVICE_NAME, aoColumns[1]);
 
         String        sHttpServer = (String) aoColumns[nStart++];
         sHttpServer = sHttpServer == null ? "unknown"

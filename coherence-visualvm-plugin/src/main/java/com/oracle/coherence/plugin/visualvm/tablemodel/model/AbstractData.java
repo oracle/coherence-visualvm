@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -314,11 +314,7 @@ public abstract class AbstractData
      */
     public static String[] getDomainAndService(String sRawServiceName)
         {
-        String[] asParts          = getServiceParts(sRawServiceName);
-        String   sDomainPartition = asParts.length == 1 ? null : asParts[0];
-        String   sServiceName     = sDomainPartition == null ? sRawServiceName : asParts[1];
-
-        return new String[] {sDomainPartition, sServiceName};
+        return new String[]{null, sRawServiceName}; // Domain partition no longer supported so will always be null
         }
 
     /**
@@ -356,6 +352,22 @@ public abstract class AbstractData
         return null;
         }
 
+    /**
+     * Escape a string, by replacing $ with \$, so it can be used in replaceAll without
+     * causing an Illegal group reference.
+     *
+     * @param sValue value to escape
+     * @return escaped value
+     */
+    protected static String escape(String sValue)
+        {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < sValue.length() ; i++)
+            {
+            sb.append(sValue.charAt(i) == '$' ? "\\$" : sValue.charAt(i));
+             }
+        return sb.toString();
+        }
 
     // ----- inner classes --------------------------------------------------
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -63,6 +63,12 @@ public class FederationOriginDetailsData
     // ----- DataRetriever methods ------------------------------------------
 
     @Override
+    public String getReporterReport()
+        {
+        return REPORT_DESTINATION_DETAILS;
+        }
+
+    @Override
     @SuppressWarnings("rawtypes")
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
@@ -70,24 +76,9 @@ public class FederationOriginDetailsData
         }
 
     @Override
-    public String getReporterReport()
-        {
-        return REPORT_DESTINATION_DETAILS;
-        }
-
-    @Override
     public String preProcessReporterXML(VisualVMModel model, String sReporterXML)
         {
-        // the report XML contains the following tokens that require substitution:
-        // %SERVICE_NAME%
-        // %PARTICIPANT_NAME%
-        Pair<String, String> serviceParticipant = model.getSelectedServiceParticipant();
-
-        String query = serviceParticipant == null ? sReporterXML :
-               sReporterXML.replaceAll("%SERVICE_NAME%", serviceParticipant.getX())
-                           .replaceAll("%PARTICIPANT_NAME%", serviceParticipant.getY());
-
-        return query;
+        return FederationDestinationDetailsData.preProcessReporterXMLInternal(model, sReporterXML);
         }
 
     @Override

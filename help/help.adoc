@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
 DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
 This code is free software; you can redistribute it and/or modify it
@@ -55,7 +55,7 @@ For the main Coherence VisualVM Plugin documentation please see https://github.c
 * <<JCacheConfigurationTableModel, JCache Tables>>
 * <<HotCacheTableModel, Hot Cache Table>>
 * <<HotCachePerCacheTableModel, Hot Cache Per Cache Table>>
-* <<TopicTableModel, Topic Table>>
+* <<TopcTableModel, Topic Table>>
 ** <<TopicSubscriberTableModel, Topic Subscribers Table>>
 ** <<TopicSubscriberGroupTableModel, Topic Subscriber Groups Table>>
 
@@ -203,7 +203,8 @@ All attributes are from `StorageManager` (`Coherence:type=StorageManager,service
 |Node Id| nodeId (key)
 |Locks Granted | LocksGranted
 |Locks Pending | LocksPending
-|Listener Registrations | ListenerRegistrations
+|Key Listeners  | KeyListenerCount
+|Filter Listeners  | FilterListenerCount
 |Max Query (ms) | MaxQueryDurationMillis
 |Max Query Description | MaxQueryDescription
 |Non Opt Query Avge | NonOptimizedQueryAverageMillis

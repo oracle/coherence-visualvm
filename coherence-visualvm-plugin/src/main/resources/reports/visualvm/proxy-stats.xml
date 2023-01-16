@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-  Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+  Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
   This code is free software; you can redistribute it and/or modify it
@@ -102,26 +102,18 @@
 				<name>TotalMessagesSent</name>
 			</column>
 
-            <column id="DomainPartition">
-              <type>key</type>
-              <name>domainPartition</name>
-              <header>Domain Partition</header>
-              <!-- <hidden>{non-MT}</hidden> -->
-              <group-by>true</group-by>
-            </column>
-
-            <column id="Protocol">
+			<column id="Protocol">
 				<name>Protocol</name>
 				<hidden>true</hidden>
 			</column>
 
-            <column id="ConstTCP">
-              <type>constant</type>
-              <name>ConstTCP</name>
-              <hidden>true</hidden>
-             <data-type>string</data-type>
-             <value>tcp</value>
-           </column>
+			<column id="ConstTCP">
+				<type>constant</type>
+				<name>ConstTCP</name>
+				<hidden>true</hidden>
+			 <data-type>string</data-type>
+			 <value>tcp</value>
+		 </column>
 		</row>
 	</report>
 </report-config>

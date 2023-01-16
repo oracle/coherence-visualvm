@@ -62,14 +62,6 @@
                 <group-by>true</group-by>
             </column>
 
-            <column id="DomainPartition">
-                <type>key</type>
-                <name>domainPartition</name>
-                <header>Domain Partition</header>
-                <!-- <hidden>{non-MT}</hidden> -->
-                <group-by>true</group-by>
-            </column>
-
             <column id="HttpServerType">
                 <name>HttpServerType</name>
                 <header>Http Server Type</header>
