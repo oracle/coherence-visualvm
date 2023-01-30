@@ -574,6 +574,26 @@ public class HttpRequestSender
         }
 
     @Override
+    public void invokeDisconnectAll(String sService, String sTopic, String sSubscriberGroup)
+        throws Exception
+        {
+         URLBuilder urlBuilder = getBasePath()
+                 .addPathSegment(SERVICES)
+                 .addPathSegment(encodeServiceName(sService))
+                 .addPathSegment(TOPICS)
+                 .addPathSegment(encodeServiceName(sTopic));
+
+         if (sSubscriberGroup != null)
+             {
+             urlBuilder = urlBuilder.addPathSegment(SUBGROUPS).addPathSegment(sSubscriberGroup);
+             }
+
+         urlBuilder = urlBuilder.addPathSegment("disconnectAll");
+
+         sendPostRequest(urlBuilder);
+         }
+
+    @Override
     public void invokeFederationOperation(String sService, String sOperation, String sParticipant)
             throws Exception
         {

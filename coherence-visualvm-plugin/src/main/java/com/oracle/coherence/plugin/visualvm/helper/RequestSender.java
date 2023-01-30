@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -322,6 +322,17 @@ public interface RequestSender
      */
     void invokeFederationOperation(String sService, String sOperation, String sParticipant)
             throws Exception;
+
+    /**
+     * Invoke disconnect all topic operation for a topic and optionally a subscriber.
+     *
+     * @param sService   topic service
+     * @param sTopic     topic name
+     * @param sSubscriberGroup subscriber name, can be null
+     * @throws Exception in case of errors
+     */
+    void invokeDisconnectAll(String sService, String sTopic, String sSubscriberGroup)
+        throws Exception;
 
     /**
      * Get the number of pending incoming messages for this federated service.
