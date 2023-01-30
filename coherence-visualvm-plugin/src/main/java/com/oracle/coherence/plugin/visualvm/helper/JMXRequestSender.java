@@ -278,6 +278,30 @@ public class JMXRequestSender
         }
 
     @Override
+    public void invokeDisconnectAll(String sService, String sTopic, String sSubscriberGroup)
+        throws Exception
+        {
+        ObjectName objectName;
+        if (sSubscriberGroup == null)
+            {
+            // topic only
+            objectName = new ObjectName("Coherence:type=PagedTopic,service=" + sService + ",name=" + sTopic + ",*");
+            }
+        else
+           {
+           // subscriber group
+           objectName = new ObjectName("Coherence:type=PagedTopicSubscriberGroup,service=" + sService + ",topic=" + sTopic +
+                                       ",name=" + sSubscriberGroup + ",*");
+           }
+
+
+        Set<ObjectName> setResult = getCompleteObjectName(objectName);
+        String sFQN = getFirstResult(setResult);
+
+        invoke(new ObjectName(sFQN), "disconnectAll",  new Object[]{}, new String[]{});
+        }
+
+    @Override
     public void invokeFederationOperation(String sService, String sOperation, String sParticipant)
             throws Exception
         {
@@ -547,6 +571,8 @@ public class JMXRequestSender
             }
         return null;
         }
+
+
 
     /**
      * Returns the first result from a {@link Set} of {@link ObjectName}s.

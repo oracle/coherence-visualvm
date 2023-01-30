@@ -30,11 +30,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -54,20 +51,16 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.TopicSubscriberTableModel
 import com.oracle.coherence.plugin.visualvm.tablemodel.TopicTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Pair;
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.PersistenceData;
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
 
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicDetailData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberGroupsData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Tuple;
-import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
-import javax.management.openmbean.CompositeData;
+
 import javax.management.openmbean.CompositeDataSupport;
 import javax.management.openmbean.TabularDataSupport;
-import javax.swing.JList;
+
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -131,6 +124,8 @@ public class CoherenceTopicPanel
         f_tmodel = new TopicTableModel(VisualVMModel.DataType.TOPICS.getMetadata());
         f_table = new ExportableJTable(f_tmodel, model);
 
+        f_table.setMenuOptions(new MenuOption[] {new DisconnectInvokeMenuOption(model, m_requestSender, f_table, DISCONNECT_ALL, true)});
+
         f_tmodelDetail = new TopicDetailTableModel(VisualVMModel.DataType.TOPIC_DETAIL.getMetadata());
         f_tableDetail = new ExportableJTable(f_tmodelDetail, model);
         
@@ -191,9 +186,12 @@ public class CoherenceTopicPanel
         menuOptionSubscriberCh.setMenuLabel(getLocalizedText(SHOW_CHANNELS));
 
         MenuOption menuOptionSubscriberGroupCh = new ShowDetailMenuOption(model, f_tableSubscriberGroups, SELECTED_SUB_GRP_CHANNELS);
+        MenuOption menuOptionDisconnectSubGrp  = new DisconnectInvokeMenuOption(model, m_requestSender, f_tableSubscriberGroups, DISCONNECT_ALL, false);
         menuOptionSubscriberGroupCh.setMenuLabel(getLocalizedText(SHOW_CHANNELS));
 
-        f_tableSubscriberGroups.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableSubscriberGroups, SELECTED_SUBSCRIBER_GROUP), menuOptionSubscriberGroupCh });
+        f_tableSubscriberGroups.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableSubscriberGroups, SELECTED_SUBSCRIBER_GROUP),
+                menuOptionSubscriberGroupCh,
+                menuOptionDisconnectSubGrp});
         f_tableDetail.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableDetail, SELECTED_TOPIC_DETAIL), menuOptionDetailCh});
 
         MenuOption separator = new SeparatorMenuOption(model, m_requestSender, f_table);
@@ -434,7 +432,7 @@ public class CoherenceTopicPanel
      * to call a JMX operation for subscriber options.
      *
      * @author tam  2022.12.13
-     * @since 11.6.0
+     * @since 1.6.0
      */
     private class SubscriberInvokeMenuOption
             extends AbstractMenuOption
@@ -607,19 +605,125 @@ public class CoherenceTopicPanel
         private final String f_sOperation;
         }
 
+    /**
+     * An implementation of a {@link MenuOption} providing default functionality
+     * to call a JMX operation to disconnect subscribers for a topic or subscriber group.
+     *
+     * @author tam  2022.12.13
+     * @since 1.6.0
+     */
+    private class DisconnectInvokeMenuOption
+            extends AbstractMenuOption
+        {
+        // ---- constructors ------------------------------------------------
 
+        /**
+         * Construct a new implementation of a {@link MenuOption} providing
+         * default functionality.
+         *
+         * @param model         the {@link VisualVMModel} to get collected data
+         *                      from
+         * @param requestSender the {@link RequestSender} to perform
+         *                      additional queries
+         * @param jtable        the {@link ExportableJTable} that this applies
+         *                      to
+         * @param sLabel        the label key for the menu option from
+         *                      Bundle.properties
+         * @param fTopicOnly    indicates if we are disconnecting for topic
+         */
+        public DisconnectInvokeMenuOption(VisualVMModel model, RequestSender requestSender, ExportableJTable jtable,
+                                          String sLabel, boolean fTopicOnly)
+            {
+            super(model, requestSender, jtable);
+            f_sLabel     = sLabel;
+            f_fTopicOnly = fTopicOnly;
+            }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String getMenuItem()
+            {
+            return Localization.getLocalText(f_sLabel);
+            }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void actionPerformed(ActionEvent e)
+            {
+            int nRow = getSelectedRow();
+            String sQuery = null;
+            String sSubscriberGroup = null;
+
+            if (nRow == -1)
+                {
+                DialogHelper.showInfoDialog(Localization.getLocalText("LBL_must_select_row"));
+                }
+            else
+                {
+                try
+                    {
+                    Pair<String, String> selectedTopic = f_model.getSelectedTopic();
+                    String sQuestion;
+
+                    if (f_fTopicOnly)
+                        {
+                        sQuestion = Localization.getLocalText("LBL_confirm_disconnect_topic", selectedTopic.getY());
+                        }
+                    else
+                        {
+                        sSubscriberGroup = (String) getJTable().getModel().getValueAt(nRow, TopicSubscriberGroupsData.SUBSCRIBER_GROUP);
+                        sQuestion        = Localization.getLocalText("LBL_confirm_disconnect_topic_sub_group", selectedTopic.getY(), sSubscriberGroup);
+                        }
+
+                    if (!DialogHelper.showConfirmDialog(sQuestion))
+                       {
+                       return;
+                       }
+
+                    final String OK = "Operation completed OK";
+
+                    m_requestSender.invokeDisconnectAll(selectedTopic.getX(), selectedTopic.getY(), sSubscriberGroup);
+                    showMessageDialog(Localization.getLocalText("LBL_operation_completed"), OK,
+                                      JOptionPane.INFORMATION_MESSAGE);
+                    }
+                catch (Exception ee)
+                    {
+                    showMessageDialog(Localization.getLocalText("ERR_error_invoking",
+                                                                Localization.getLocalText(DISCONNECT_ALL) + " " + sQuery), ee.getMessage() +
+                                                                "\n" + ee.getCause(), JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+
+        // ----- data members -----------------------------------------------
+
+        /**
+         * The label key for the menu option.
+         */
+        private final String f_sLabel;
+
+        /**
+         * Indicates if the topic has been selected.
+         */
+        private final boolean f_fTopicOnly;
+        }
 
     // ---- constants -------------------------------------------------------
 
     private static final long serialVersionUID = -761256904492412496L;
 
     // various subscriber operations
-    public static final String CONNECT            = "Connect";
-    public static final String DISCONNECT         = "Disconnect";
-    public static final String RETRIEVE_HEADS     = "Heads";
-    public static final String RETRIEVE_REMAINING = "RemainingMessages";
-    public static final String NOTIFY_POPULATED   = "NotifyPopulated";
+    public static  final String CONNECT            = "connect";
+    public static  final String DISCONNECT         = "disconnect";
+    public static  final String RETRIEVE_HEADS     = "heads";
+    public static  final String RETRIEVE_REMAINING = "remainingMessages";
+    public static  final String NOTIFY_POPULATED   = "notifyPopulated";
     private static final String SHOW_CHANNELS     = "LBL_show_channels";
+    private static final String DISCONNECT_ALL    = "LBL_disconnect_all";
 
     // ----- data members ---------------------------------------------------
 
