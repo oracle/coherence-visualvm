@@ -35,6 +35,7 @@ import java.util.Map.Entry;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
@@ -81,8 +82,8 @@ import static com.oracle.coherence.plugin.visualvm.helper.RenderHelper.RATE_FORM
  * An implementation of an {@link AbstractCoherencePanel} to view summarized topics
  * statistics.
  *
- * @author tam  2020.02.08
- * @since  1.0.1
+ * @author tam  2023.01.30
+ * @since  1.6.0
  */
 public class CoherenceTopicPanel
         extends AbstractCoherencePanel
@@ -722,8 +723,10 @@ public class CoherenceTopicPanel
     public static  final String RETRIEVE_HEADS     = "heads";
     public static  final String RETRIEVE_REMAINING = "remainingMessages";
     public static  final String NOTIFY_POPULATED   = "notifyPopulated";
-    private static final String SHOW_CHANNELS     = "LBL_show_channels";
-    private static final String DISCONNECT_ALL    = "LBL_disconnect_all";
+
+    // various labels
+    private static final String SHOW_CHANNELS      = "LBL_show_channels";
+    private static final String DISCONNECT_ALL     = "LBL_disconnect_all";
 
     // ----- data members ---------------------------------------------------
 
@@ -806,11 +809,6 @@ public class CoherenceTopicPanel
      * Last update time for stats.
      */
     private long m_cLastUpdateTime = -1L;
-
-    /**
-     * Last publisher send count.
-     */
-    private long m_cLastSendCount = -1L;
 
     /**
      * Last subscriber receive count.
