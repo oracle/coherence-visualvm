@@ -231,6 +231,13 @@ public class JMXRequestSender
         }
 
     @Override
+    public Set<ObjectName> getProxyConnections(String sServiceName, int nNodeId)
+            throws Exception
+       {
+       return f_connection.queryNames(new ObjectName("Coherence:type=Connection,name=" + sServiceName + ",nodeId=" + nNodeId + ",*"), null);
+       }
+
+    @Override
     public Set<ObjectName> getCompleteObjectName(ObjectName objectName)
             throws Exception
         {

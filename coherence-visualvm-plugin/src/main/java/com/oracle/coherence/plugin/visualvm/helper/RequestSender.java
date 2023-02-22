@@ -261,6 +261,16 @@ public interface RequestSender
     Set<ObjectName> getAllProxyServerMembers()
             throws Exception;
 
+    /**
+     * Get the list of Connection MBeans in the cluster for a service and node.
+     * @param sServiceName service name
+     * @param nNodeId node id
+     *
+     * @return list of proxy server MBeans
+     * @throws Exception in case of errors
+     */
+     Set<ObjectName> getProxyConnections(String sServiceName, int nNodeId)
+            throws Exception;
 
     /**
      * Get the complete ObjectName of the provided MBean.

@@ -517,6 +517,20 @@ public class HttpRequestSender
         }
 
     @Override
+    public Set<ObjectName> getProxyConnections(String sServiceName, int nNodeId)
+            throws Exception
+       {
+       URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(MEMBERS)
+                .addPathSegment(String.valueOf(nNodeId)).addPathSegment(PROXY)
+                .addPathSegment(CONNECTIONS)
+                .addQueryParameter(FIELDS, "remoteAddress,remotePort,clientRole,connectionTimeMillis,totalBytesReceived," +
+                                           "clientAddress,totalBytesSent,clientProcessName,UUID,outgoingByteBacklog,type")
+                .addQueryParameter(LINKS, "");
+       return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
+       }
+
+    @Override
     public Set<ObjectName> getCompleteObjectName(ObjectName objectName)
             throws Exception
         {
@@ -1589,6 +1603,12 @@ public class HttpRequestSender
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))
                         .addPathSegment(MEMBERS).addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID))
                         .addQueryParameter(LINKS, "");
+            case "Connection":
+                return urlBuilder.addPathSegment(SERVICES)
+                        .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name"))).addPathSegment(MEMBERS)
+                        .addPathSegment(getKeyPropertyFromObjName(objectName, "nodeId")).addPathSegment(PROXY)
+                        .addPathSegment(CONNECTIONS)
+                        .addQueryParameter(LINKS, "");
             case "ConnectionManager":
                 return urlBuilder.addPathSegment(SERVICES)
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))
@@ -1956,6 +1976,7 @@ public class HttpRequestSender
     private static final String NODE_ID      = "nodeId";
     private static final String HOTCACHE     = "hotcache";
     private static final String PROXY        = "proxy";
+    private static final String CONNECTIONS  = "connections";
     private static final String FEDERATION   = "federation";
     private static final String PARTICIPANTS = "participants";
     private static final String ARCHIVES     = "archives";
