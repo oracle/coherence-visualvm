@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,6 +27,7 @@ package com.oracle.coherence.plugin.visualvm.panel;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
@@ -47,11 +48,14 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.Pair;
 
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.PersistenceData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicDetailData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberGroupsData;
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
-
 import java.awt.event.ActionEvent;
 
 import java.util.Arrays;
@@ -64,9 +68,7 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicDetailData;
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberData;
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberGroupsData;
+
 import javax.management.Attribute;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
@@ -82,6 +84,7 @@ import javax.swing.JTextField;
 
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -310,6 +313,26 @@ public abstract class AbstractCoherencePanel
 
         // no node id found
         return false;
+        }
+
+    /**
+     * Set a column renderer for right aligned and optionally set tool tip text.
+     *
+     * @param exportableJTable the {@link ExportableJTable} to apply to
+     * @param nColumn          column number to right align
+     * @param sToolTip         tool tip - null if nothing
+     */
+    protected void setColumnRenderer(ExportableJTable exportableJTable, int nColumn, String sToolTip)
+        {
+        DefaultTableCellRenderer rndRightAlign = new DefaultTableCellRenderer();
+
+        if (sToolTip != null)
+            {
+            rndRightAlign.setToolTipText(sToolTip);
+            }
+
+        rndRightAlign.setHorizontalAlignment(SwingConstants.RIGHT);
+        exportableJTable.getColumnModel().getColumn(nColumn).setCellRenderer(rndRightAlign);
         }
 
     // ----- inner classes --------------------------------------------------

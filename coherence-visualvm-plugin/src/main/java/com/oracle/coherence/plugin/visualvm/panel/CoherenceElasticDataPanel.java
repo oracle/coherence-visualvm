@@ -312,26 +312,6 @@ public class CoherenceElasticDataPanel
             AbstractMenuOption.setResizable(f_pneMessage);
             }
 
-        /**
-         * Set a column renderer for right aligned and optionally set tool tip text.
-         *
-         * @param exportableJTable the {@link ExportableJTable} to apply to
-         * @param nColumn          column number to right align
-         * @param sToolTip         tool tip - null if nothing
-         */
-        private void setColumnRenderer(ExportableJTable exportableJTable, int nColumn, String sToolTip)
-            {
-            DefaultTableCellRenderer rndRightAlign = new DefaultTableCellRenderer();
-
-            if (sToolTip != null)
-                {
-                rndRightAlign.setToolTipText(sToolTip);
-                }
-
-            rndRightAlign.setHorizontalAlignment(SwingConstants.RIGHT);
-            exportableJTable.getColumnModel().getColumn(nColumn).setCellRenderer(rndRightAlign);
-            }
-
         // ----- MouseListener methods --------------------------------------
 
         @Override

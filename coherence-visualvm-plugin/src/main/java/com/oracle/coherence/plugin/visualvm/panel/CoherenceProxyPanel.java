@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,10 +26,17 @@
 package com.oracle.coherence.plugin.visualvm.panel;
 
 import com.oracle.coherence.plugin.visualvm.Localization;
+import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
+import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
+import com.oracle.coherence.plugin.visualvm.helper.JMXRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
+import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
+import com.oracle.coherence.plugin.visualvm.panel.util.AbstractMenuOption;
+import com.oracle.coherence.plugin.visualvm.panel.util.MenuOption;
 import com.oracle.coherence.plugin.visualvm.tablemodel.ProxyTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.ProxyConnectionData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ProxyData;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.panel.util.ExportableJTable;
@@ -37,19 +44,37 @@ import com.oracle.coherence.plugin.visualvm.panel.util.ExportableJTable;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
+import javax.management.AttributeList;
+import javax.management.ObjectName;
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
+
+import static com.oracle.coherence.plugin.visualvm.helper.JMXUtils.getAttributeValue;
+import static com.oracle.coherence.plugin.visualvm.helper.JMXUtils.getAttributeValueAsString;
 
 /**
  * An implementation of an {@link AbstractCoherencePanel} to view
@@ -115,6 +140,8 @@ public class CoherenceProxyPanel
         f_table = new ExportableJTable(f_tmodel, model);
 
         f_table.setPreferredScrollableViewportSize(new Dimension(500, 150));
+
+        f_table.setMenuOptions(new MenuOption[] {new RightClickMenuOption(model, m_requestSender, f_table) });
 
         // define renderers for the columns
         RenderHelper.setColumnRenderer(f_table, ProxyData.TOTAL_BYTES_RECEIVED, new RenderHelper.IntegerRenderer());
@@ -218,6 +245,224 @@ public class CoherenceProxyPanel
         m_proxyData = f_model.getData(VisualVMModel.DataType.PROXY);
 
         f_tmodel.setDataList(m_proxyData);
+        }
+
+   // ----- inner classes --------------------------------------------------
+
+    /**
+     * Right-click option to show proxy service connections.
+     */
+    protected class RightClickMenuOption
+            extends AbstractMenuOption
+        {
+        // ----- constructors -----------------------------------------------
+
+        /**
+         * {@inheritDoc}
+         */
+        public RightClickMenuOption(VisualVMModel model, RequestSender requestSender, ExportableJTable jtable)
+            {
+            super(model, requestSender, jtable);
+
+            f_tmodel = new DefaultTableModel(new Object[]
+                    {
+                    Localization.getLocalText("LBL_UUID"),
+                    Localization.getLocalText("LBL_connection_millis"), Localization.getLocalText("LBL_connection_time"),
+                    Localization.getLocalText("LBL_remote_address"), Localization.getLocalText("LBL_data_sent"),
+                    Localization.getLocalText("LBL_data_rec"), Localization.getLocalText("LBL_backlog"),
+                    Localization.getLocalText("LBL_client_process"), Localization.getLocalText("LBL_role")
+                    }, COLUMN_COUNT) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+            f_table = new ExportableJTable(f_tmodel, f_model);
+
+            RenderHelper.setColumnRenderer(f_table, ProxyConnectionData.UUID, new RenderHelper.ToolTipRenderer());
+            RenderHelper.setIntegerRenderer(f_table, 1);    // connection millis
+            setColumnRenderer(f_table, 2, null);     // Connection Time
+            RenderHelper.setColumnRenderer(f_table, 4, new RenderHelper.BytesRenderer());     // bytes sent
+            RenderHelper.setColumnRenderer(f_table, 5, new RenderHelper.BytesRenderer());     // bytes rec
+            setColumnRenderer(f_table, 6, null);     // Client process
+            setColumnRenderer(f_table, 7, null);     // Backlog
+
+            RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
+
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            f_table.setPreferredScrollableViewportSize(new Dimension((Math.max((int) (screenSize.getWidth() * 0.5),
+                800)), f_table.getRowHeight() * 10));
+
+            setTablePadding(f_table);
+
+            f_pneMessage = new JScrollPane(f_table);
+            configureScrollPane(f_pneMessage, f_table);
+            AbstractMenuOption.setResizable(f_pneMessage);
+            }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String getMenuItem()
+            {
+            return Localization.getLocalText("LBL_proxy_connections");
+            }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void actionPerformed(ActionEvent e)
+            {
+            int nRow = getSelectedRow();
+            String sService = null;
+            int    nNodeId;
+
+            if (nRow == -1)
+                {
+                DialogHelper.showInfoDialog(getLocalizedText("LBL_must_select_row"));
+                }
+            else
+                {
+                try
+                    {
+                    sService    = (String) getJTable().getModel().getValueAt(nRow, 1);
+                    nNodeId     = (Integer) getJTable().getModel().getValueAt(nRow, 2);
+                    m_sDescription = sService + " and nodeId " + nNodeId;
+
+                    int row = 0;
+
+                    // remove any existing rows
+                    f_tmodel.getDataVector().removeAllElements();
+                    f_tmodel.fireTableDataChanged();
+
+                    SortedMap<Object, Data> mapData = new TreeMap<>();
+
+                    Set<ObjectName> proxyConnectionsSet = m_requestSender.getProxyConnections(sService, nNodeId);
+
+                    for (Iterator<ObjectName> nodIter = proxyConnectionsSet.iterator(); nodIter.hasNext(); ) {
+                        ObjectName    proxyNameObjName = nodIter.next();
+                        Data          data             = new ProxyConnectionData();
+                        String        sUUID            = proxyNameObjName.getKeyProperty("UUID");
+                        AttributeList listAttr         = null;
+
+                        if (m_requestSender instanceof JMXRequestSender)
+                            {
+                            listAttr = m_requestSender.getAttributes(proxyNameObjName,
+                                new String[] {ATTR_CONNECTION_TIME_MILLIS, ATTR_REMOTE_ADDRESS, ATTR_CLIENT_ROLE, ATTR_BACKLOG,
+                                        ATTR_REMOTE_PORT, ATTR_BYTES_SENT, ATTR_BYTES_REC, ATTR_CLIENT_PROCESS_NAME});
+                            }
+
+                        long cMillis = Long.parseLong(getKeyProperty(listAttr, proxyNameObjName, ATTR_CONNECTION_TIME_MILLIS));
+                        Instant start = Instant.ofEpochMilli(0);
+                        Instant end = Instant.ofEpochMilli(cMillis);
+                        String  sConnTime = Duration.between(start, end).toString().replace("PT", "");
+
+                        data.setColumn(ProxyConnectionData.UUID, sUUID);
+                        data.setColumn(ProxyConnectionData.CONN_MILLIS, cMillis);
+                        data.setColumn(ProxyConnectionData.CONN_TIME, sConnTime);
+                        String sRemoteAddress = getKeyProperty(listAttr, proxyNameObjName, ATTR_REMOTE_ADDRESS);
+                        int    nRemotePort    = Integer.parseInt(getKeyProperty(listAttr, proxyNameObjName, ATTR_REMOTE_PORT));
+
+                        data.setColumn(ProxyConnectionData.REMOTE_ADDRESS_PORT, String.format("%s:%d", sRemoteAddress, nRemotePort));
+                        data.setColumn(ProxyConnectionData.BACKLOG,
+                                Long.parseLong(getKeyProperty(listAttr, proxyNameObjName, ATTR_BACKLOG)));
+                        data.setColumn(ProxyConnectionData.DATA_SENT,
+                                Long.parseLong(getKeyProperty(listAttr, proxyNameObjName, ATTR_BYTES_SENT)));
+                        data.setColumn(ProxyConnectionData.DATA_REC,
+                                Long.parseLong(getKeyProperty(listAttr, proxyNameObjName, ATTR_BYTES_REC)));
+                        data.setColumn(ProxyConnectionData.BACKLOG,
+                                Long.parseLong(getKeyProperty(listAttr, proxyNameObjName, ATTR_BACKLOG)));
+                        data.setColumn(ProxyConnectionData.CLIENT_ROLE, getKeyProperty(listAttr, proxyNameObjName, ATTR_CLIENT_ROLE));
+                        data.setColumn(ProxyConnectionData.CLIENT_PROCESS, getKeyProperty(listAttr, proxyNameObjName, ATTR_CLIENT_PROCESS_NAME));
+                        mapData.put(sUUID, data);
+                    }
+
+                    // loop through the model and format nicely
+                    for (Map.Entry<Object, Data> entry : mapData.entrySet())
+                        {
+                        Data data = entry.getValue();
+
+                        f_tmodel.insertRow(row++, new Object[]
+                            {
+                            data.getColumn(ProxyConnectionData.UUID),
+                            data.getColumn(ProxyConnectionData.CONN_MILLIS),
+                            data.getColumn(ProxyConnectionData.CONN_TIME),
+                            data.getColumn(ProxyConnectionData.REMOTE_ADDRESS_PORT),
+                            data.getColumn(ProxyConnectionData.DATA_SENT),
+                            data.getColumn(ProxyConnectionData.DATA_REC),
+                            data.getColumn(ProxyConnectionData.BACKLOG),
+                            data.getColumn(ProxyConnectionData.CLIENT_PROCESS),
+                            data.getColumn(ProxyConnectionData.CLIENT_ROLE),
+                            });
+                       }
+
+                    f_tmodel.fireTableDataChanged();
+
+                    JOptionPane.showMessageDialog(null, f_pneMessage,
+                            Localization.getLocalText("LBL_details_service", String.format("%s / Node Id: %d", sService, nNodeId)),
+                            JOptionPane.INFORMATION_MESSAGE);
+                    }
+                catch (Exception ee)
+                    {
+                    showMessageDialog(Localization.getLocalText("LBL_error"),
+                                      ee.toString(), JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+
+        private String getKeyProperty(AttributeList listAttr, ObjectName objectName, String sAttribute)
+            {
+            if (m_requestSender instanceof HttpRequestSender)
+                {
+                // change first letter to lower case
+                String sAttr = sAttribute.substring(0,1).toLowerCase() + sAttribute.substring(1);
+                return objectName.getKeyProperty(sAttr);
+                }
+            // use JMX request sender
+            return getAttributeValueAsString(listAttr, sAttribute);
+            }
+
+        // ----- static -----------------------------------------------------
+
+        // various attributes
+        private static final String ATTR_CONNECTION_TIME_MILLIS = "ConnectionTimeMillis";
+        private static final String ATTR_REMOTE_ADDRESS         = "RemoteAddress";
+        private static final String ATTR_REMOTE_PORT            = "RemotePort";
+        private static final String ATTR_BYTES_SENT             = "TotalBytesSent";
+        private static final String ATTR_BYTES_REC              = "TotalBytesReceived";
+        private static final String ATTR_CLIENT_ROLE            = "ClientRole";
+        private static final String ATTR_BACKLOG                = "OutgoingByteBacklog";
+        private static final String ATTR_CLIENT_PROCESS_NAME    = "ClientProcessName";
+
+        /**
+         * Column count.
+         */
+        private static final int COLUMN_COUNT = ProxyConnectionData.CLIENT_ROLE + 1;
+
+        // ----- data members ---------------------------------------------------
+
+        /**
+         * Description for the table.
+         */
+        private String m_sDescription;
+
+        /**
+         * The {@link TableModel} to display detail data.
+         */
+        private final DefaultTableModel f_tmodel;
+
+        /**
+         * the {@link ExportableJTable} to use to display detail data.
+         */
+        private final ExportableJTable f_table;
+
+        /**
+         * The scroll pane to display the table in.
+         */
+        private final JScrollPane f_pneMessage;
+
         }
 
     // ----- constants ------------------------------------------------------
