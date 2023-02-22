@@ -58,7 +58,9 @@ public class ProxyConnectionData
     // ----- DataRetriever methods ------------------------------------------
 
     @Override
-    public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
+    public SortedMap<Object, Data> getAggregatedDataFromHttpQuerying(VisualVMModel     model,
+                                                                     HttpRequestSender requestSender)
+            throws Exception
         {
         return null;
         }
@@ -70,15 +72,13 @@ public class ProxyConnectionData
         }
 
     @Override
-    public Data processReporterData(Object[] aoColumns, VisualVMModel model)
+    public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
         return null;
         }
 
     @Override
-    public SortedMap<Object, Data> getAggregatedDataFromHttpQuerying(VisualVMModel     model,
-                                                                     HttpRequestSender requestSender)
-            throws Exception
+    public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
         return null;
         }
