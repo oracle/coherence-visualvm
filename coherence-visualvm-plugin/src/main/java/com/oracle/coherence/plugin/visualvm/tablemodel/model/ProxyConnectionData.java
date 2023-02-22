@@ -60,7 +60,7 @@ public class ProxyConnectionData
     @Override
     public SortedMap<Object, Data> getAggregatedDataFromHttpQuerying(VisualVMModel     model,
                                                                      HttpRequestSender requestSender)
-            throws Exception
+        throws Exception
         {
         return null;
         }
