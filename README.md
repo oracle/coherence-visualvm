@@ -58,7 +58,7 @@ To install the Plugin carry out the following:
 
 >Note: If you already have an older version of the plugin installed, click on `Check For Newest` and follow the prompts.
 
-For more information about using the Coherence VisualVM plugin see the official https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/using-jmx-manage-oracle-coherence.html[Coherence Documentation].
+For more information about using the Coherence VisualVM plugin see the official [Coherence Documentation](https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/manage/using-jmx-manage-oracle-coherence.html).
 
 Other useful resources:
 
@@ -180,7 +180,7 @@ graphs of that information
 
 Depending upon the edition and functionality you are using, the following optional tabs may be displayed:
 
-* **Topics** - If you cluster is configured with topics, this tab displays information about any active Topics including size, message rates and unconsumed messages.
+* **Topics** - If you cluster is configured with topics, this tab displays information about any active Topics including size, message rates and unconsumed messages. See [here](https://github.com/oracle/coherence-visualvm/blob/main/help/help.adoc#TopcTableModel) for more details.
 * **Proxy Servers**  - If your cluster is running proxy servers, this tab displays information about the proxy servers and the number of connections across each proxy server and total connections. See [here](https://github.com/oracle/coherence-visualvm/blob/main/help/help.adoc#ProxyTableModel) for more details.
 * **HTTP Servers**  - If your cluster is running proxy servers with HTTP acceptors, this tab displays information about the HTTP servers, the number of connections across each server, total connections and graphs of response codes, errors and requests over time for a selected service. See [here](https://github.com/oracle/coherence-visualvm/blob/main/help/help.adoc#HttpProxyTableModel) for more details.
 * **Executors** - If your cluster is configured to run the Executor Service, this tab displays information about the number of tasks completed, in-progress and rejected. See [here](https://github.com/oracle/coherence-visualvm/blob/main/help/help.adoc#ExecutorTableModel) for more details.
@@ -194,7 +194,7 @@ Depending upon the edition and functionality you are using, the following option
 * **Health** – If your cluster supports the Health Check API, this tab displays information regarding the status of all health endpoints. See [here](https://github.com/oracle/coherence-visualvm/blob/main/help/help.adoc#HealthSummaryTableModel) for more details.
 
 
-## <a id="building"></a> Building the Plugin
+## <a id="build"></a> Building the Plugin
 
 If you wish to build the Plugin from scratch please follow the instructions below.
 
