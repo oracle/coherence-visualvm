@@ -32,7 +32,7 @@ NOTE: The most current version of the Plugin requires VisualVM release 2.1 or la
 
 The Plugin will connect to and display data for the following Coherence versions:
 
-* **Community Editions**: 22.06.x, 21.12.x, 14.1.1.0.x
+* **Community Editions**: 22.06.x, 21.12.x (*), 14.1.1.0.x
 
 * **Commercial Editions**: 14.1.1.2206.x, 14.1.1.0.x, 12.2.1.5.x, 12.2.1.4.x 12.1.3.x and 12.1.2.x
 
