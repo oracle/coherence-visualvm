@@ -43,6 +43,7 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.PersistenceData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ProxyData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.RamJournalData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -51,7 +52,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
@@ -64,16 +64,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
+
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
 import static com.oracle.coherence.plugin.visualvm.helper.RenderHelper.getRenderedBytes;
@@ -113,7 +112,7 @@ public class CoherenceClusterSnapshotPanel
         f_btnPause.addActionListener(new ToggleNotificationsListener());
         f_btnPause.setToolTipText(getLocalText("TTIP_refresh"));
 
-        f_txtStatus  = getTextField(6, JTextField.RIGHT);
+        f_txtStatus  = getTextField(6, SwingConstants.RIGHT);
         pnlHeader.add(getLocalizedLabel("LBL_refresh_status", f_txtStatus));
         f_txtStatus.setText(REFRESHING_MESSAGE);
 
@@ -169,7 +168,7 @@ public class CoherenceClusterSnapshotPanel
             }
         }
 
-    private String getContent() throws Exception
+    private String getContent()
         {
         StringBuilder sb =
                 new StringBuilder(htmlHead())
@@ -946,13 +945,13 @@ public class CoherenceClusterSnapshotPanel
         @Override
         public DataFlavor[] getTransferDataFlavors()
             {
-            return html.toArray(new DataFlavor[html.size()]);
+            return htmlList.toArray(new DataFlavor[htmlList.size()]);
             }
 
         @Override
         public boolean isDataFlavorSupported(DataFlavor flavor)
             {
-            return html.contains(flavor);
+            return htmlList.contains(flavor);
             }
 
         @Override
@@ -967,11 +966,11 @@ public class CoherenceClusterSnapshotPanel
 
          // ----- constants -------------------------------------------------
 
-        private static List<DataFlavor> html = new ArrayList<>(1);
+        private static List<DataFlavor> htmlList = new ArrayList<>(1);
 
         static
             {
-            html.add(DataFlavor.allHtmlFlavor);
+            htmlList.add(DataFlavor.allHtmlFlavor);
             }
 
         // ----- data members -----------------------------------------------
