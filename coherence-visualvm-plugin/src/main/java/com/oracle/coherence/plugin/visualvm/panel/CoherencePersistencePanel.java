@@ -460,7 +460,7 @@ public class CoherencePersistencePanel
 
                     if ((sSnapshotName != null && !"".equals(sSnapshotName)) || !f_fPrompt)
                         {
-                        // sanitze the snapshot name
+                        // sanitize the snapshot name
                         sSnapshotName = sanitizeSnapshot(sSnapshotName);
 
                         if (f_fConfirm)
