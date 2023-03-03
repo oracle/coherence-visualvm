@@ -50,6 +50,7 @@ import java.util.logging.Logger;
  * Class to add a right-click option on a Host in VisualVM to discover Coherence clusters via name service.
  *
  * @author tam 2022.10.13
+ * @since 1.6.0
  */
 public class DiscoverCoherenceClusterAction
         extends SingleDataSourceAction<Host>
@@ -103,14 +104,30 @@ public class DiscoverCoherenceClusterAction
             {
             String sHostName = f_host.getHostName();
 
-            StatusDisplayer.Message status = StatusDisplayer.getDefault().setStatusText(Localization.getLocalText("LBL_discovering_clusters", sHostName),5);
+            // Prompt for the Cluster port
+            String sClusterPort = DialogHelper.showInputDialog("LBL_enter_cluster_port", Integer.toString(DEFAULT_NS_PORT));
+            if ("".equals(sClusterPort) || sClusterPort == null)
+                {
+                return null;
+                }
+
+            if (!DiscoveryUtils.isValidNSPort(sClusterPort))
+                {
+                DialogHelper.showWarningDialog(Localization.getLocalText("LBL_invalid_cluster_port", sClusterPort));
+                return null;
+                }
+
+            int nClusterPort = Integer.parseInt(sClusterPort);
+
+            StatusDisplayer.Message status = StatusDisplayer.getDefault().setStatusText(
+                    Localization.getLocalText("LBL_discovering_clusters", sHostName, sClusterPort),5);
             try
                 {
-                Map<String, String> mapClusters = DiscoveryUtils.discoverManagementURLS(sHostName, DEFAULT_NS_PORT);
+                Map<String, String> mapClusters = DiscoveryUtils.discoverManagementURLS(sHostName, nClusterPort);
 
                 if (mapClusters.isEmpty())
                     {
-                    DialogHelper.showInfoDialog(Localization.getLocalText("LBL_no_clusters", sHostName));
+                    DialogHelper.showInfoDialog(Localization.getLocalText("LBL_no_clusters", sHostName, sClusterPort));
                     return null;
                     }
 
@@ -127,7 +144,7 @@ public class DiscoverCoherenceClusterAction
                 }
             catch (Exception e)
                 {
-                DialogHelper.showWarningDialog(Localization.getLocalText("LBL_error_discovering", sHostName));
+                DialogHelper.showWarningDialog(Localization.getLocalText("LBL_error_discovering", sHostName, sClusterPort, e.getLocalizedMessage()));
                 LOGGER.log(Level.WARNING, "Unable to discover clusters", e);
                 }
             return null;

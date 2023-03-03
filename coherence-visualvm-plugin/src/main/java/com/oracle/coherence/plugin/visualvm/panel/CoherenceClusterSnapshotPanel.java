@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,6 +29,7 @@ package com.oracle.coherence.plugin.visualvm.panel;
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 
+import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ClusterData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
@@ -42,21 +43,38 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.PersistenceData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ProxyData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.RamJournalData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 
+import java.awt.FlowLayout;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import java.util.logging.Logger;
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicData;
+
+import javax.swing.JButton;
 import javax.swing.JEditorPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.BorderFactory;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
+import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
 import static com.oracle.coherence.plugin.visualvm.helper.RenderHelper.getRenderedBytes;
 
 
@@ -81,6 +99,30 @@ public class CoherenceClusterSnapshotPanel
         {
         super(new BorderLayout(), model);
 
+        JPanel pnlHeader = new JPanel();
+        pnlHeader.setLayout(new FlowLayout());
+        pnlHeader.setOpaque(false);
+
+        JButton btnCopy = new JButton(getLocalizedText("LBL_copy_html_to_clipboard"));
+        btnCopy.setMnemonic(KeyEvent.VK_C);
+        btnCopy.addActionListener(new CopyNotificationsListener());
+
+        f_btnPause = new JButton(PAUSE);
+        f_btnPause.setMnemonic(KeyEvent.VK_P);
+        f_btnPause.addActionListener(new ToggleNotificationsListener());
+        f_btnPause.setToolTipText(getLocalText("TTIP_refresh"));
+
+        f_txtStatus  = getTextField(6, SwingConstants.RIGHT);
+        pnlHeader.add(getLocalizedLabel("LBL_refresh_status", f_txtStatus));
+        f_txtStatus.setText(REFRESHING_MESSAGE);
+
+        f_txtStatus.setBackground(Color.green);
+        f_txtStatus.setForeground(Color.black);
+
+        pnlHeader.add(f_txtStatus);
+        pnlHeader.add(f_btnPause);
+        pnlHeader.add(btnCopy);
+
         setOpaque(false);
         f_htmlTextArea = new JEditorPane("text/html", "")
             {
@@ -94,6 +136,7 @@ public class CoherenceClusterSnapshotPanel
         f_htmlTextArea.setBorder(BorderFactory.createEmptyBorder(14, 8, 14, 8));
 
         JScrollPane scrollPane = new JScrollPane(f_htmlTextArea);
+        add(pnlHeader, BorderLayout.NORTH);
         add(scrollPane);
         }
 
@@ -102,60 +145,17 @@ public class CoherenceClusterSnapshotPanel
     @Override
     public void updateGUI()
         {
+        if (!isRefreshing())
+            {
+            // ignore if we are paused
+            return;
+            }
         try
             {
-            StringBuilder sb =
-                    new StringBuilder(htmlHead())
-                            .append(clusterOverview())
-                            .append(HR)
-                            .append(machinesOverview())
-                            .append(HR)
-                            .append(membersOverview())
-                            .append(HR)
-                            .append(servicesOverview())
-                            .append(HR)
-                            .append(cachesOverview())
-                            .append(HR);
-
-            if (f_model.isCoherenceExtendConfigured())
-                {
-                sb.append(proxyServerOverview()).append(HR);
-                }
-            if (f_model.isPersistenceConfigured())
-                {
-                sb.append(persistenceOverview()).append(HR);
-                }
-            if (f_model.isHttpProxyConfigured())
-                {
-                sb.append(httpProxyOverview()).append(HR);
-                }
-            if (f_model.isFederationCongfigured())
-                {
-                sb.append(federationOverview()).append(HR);
-                }
-            if (f_model.isElasticDataConfigured())
-                {
-                sb.append(elasticDataOverview("RAM"))
-                  .append(elasticDataOverview("FLASH"))
-                  .append(HR);
-                }
-            if (f_model.isExecutorConfigured())
-                {
-                sb.append(executorOverview()).append(HR);
-                }
-            if (f_model.isTopicsConfigured())
-                {
-                sb.append(topicsOverview()).append(HR);
-                }
-            if (f_model.isGrpcProxyConfigured())
-                {
-                sb.append(grpcOverview()).append(HR);
-                }
-
-            String sCurrent = sb.append("</body></html>").toString();
+            String sCurrent = getContent();
             if (!sCurrent.equals(m_lastValue))
                 {
-                // the value has changed so update this stops flicker if the data has not been refreshed
+                // the value has changed so update. This stops flicker if the data has not been refreshed
                 f_htmlTextArea.setText(sCurrent);
                 m_lastValue = sCurrent;
                 }
@@ -166,6 +166,59 @@ public class CoherenceClusterSnapshotPanel
             // whole plugin will not display
             LOGGER.warning("Failed to render cluster snapshot " + e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
             }
+        }
+
+    private String getContent()
+        {
+        StringBuilder sb =
+                new StringBuilder(htmlHead())
+                        .append(clusterOverview())
+                        .append(HR)
+                        .append(machinesOverview())
+                        .append(HR)
+                        .append(membersOverview())
+                        .append(HR)
+                        .append(servicesOverview())
+                        .append(HR)
+                        .append(cachesOverview())
+                        .append(HR);
+
+        if (f_model.isCoherenceExtendConfigured())
+            {
+            sb.append(proxyServerOverview()).append(HR);
+            }
+        if (f_model.isPersistenceConfigured())
+            {
+            sb.append(persistenceOverview()).append(HR);
+            }
+        if (f_model.isHttpProxyConfigured())
+            {
+            sb.append(httpProxyOverview()).append(HR);
+            }
+        if (f_model.isFederationCongfigured())
+            {
+            sb.append(federationOverview()).append(HR);
+            }
+        if (f_model.isElasticDataConfigured())
+            {
+            sb.append(elasticDataOverview("RAM"))
+              .append(elasticDataOverview("FLASH"))
+              .append(HR);
+            }
+        if (f_model.isExecutorConfigured())
+            {
+            sb.append(executorOverview()).append(HR);
+            }
+        if (f_model.isTopicsConfigured())
+            {
+            sb.append(topicsOverview()).append(HR);
+            }
+        if (f_model.isGrpcProxyConfigured())
+            {
+            sb.append(grpcOverview()).append(HR);
+            }
+
+        return  sb.append("</body></html>").toString();
         }
 
     // ----- helpers --------------------------------------------------------
@@ -744,7 +797,7 @@ public class CoherenceClusterSnapshotPanel
      */
     private String label(String sLabel)
         {
-        return "<b>" + sLabel + ":" + "</b";
+        return "<b>" + sLabel + ":" + "</b>";
         }
 
     /**
@@ -828,6 +881,15 @@ public class CoherenceClusterSnapshotPanel
         m_grpcData             = f_model.getData(VisualVMModel.DataType.GRPC_PROXY);
         }
 
+    /**
+     * Returns a boolean indicating if the snapshot is refreshing.
+     * @return true or false indicating if the snapshot is refreshing
+     */
+    private boolean isRefreshing()
+        {
+        return f_txtStatus.getText().equals(REFRESHING_MESSAGE);
+        }
+
     // ----- constants ------------------------------------------------------
 
     private static final long serialVersionUID = -761252043492412546L;
@@ -839,12 +901,127 @@ public class CoherenceClusterSnapshotPanel
 
     private static final String HR = "<hr>";
 
+    private static final String PAUSED_MESSAGE     = Localization.getLocalText("LBL_paused");
+    private static final String REFRESHING_MESSAGE = Localization.getLocalText("LBL_refreshing");
+    private static final String PAUSE              = Localization.getLocalText("LBL_pause_refresh");
+    private static final String RESUME             = Localization.getLocalText("LBL_resume_refresh");
+
+    // ----- inner classes -------------------------------------------------
+
+    /**
+     * A class to react to button press to copy contents.
+     */
+    private class CopyNotificationsListener
+            implements ActionListener
+        {
+        // ----- ActionListener methods -------------------------------------
+
+        @Override
+        public void actionPerformed(ActionEvent event)
+            {
+            try
+                {
+                Toolkit.getDefaultToolkit()
+                      .getSystemClipboard()
+                      .setContents(new Html(getContent()), null);
+                DialogHelper.showInfoDialog(getLocalText("LBL_copied"));
+                }
+            catch (Exception e)
+                {
+                DialogHelper.showWarningDialog(e.getMessage());
+                }
+            }
+        }
+
+    private static class Html implements Transferable
+        {
+        // ----- constructors -----------------------------------------------
+
+        public Html(String sContents)
+            {
+            f_sContents = sContents;
+            }
+
+        @Override
+        public DataFlavor[] getTransferDataFlavors()
+            {
+            return htmlList.toArray(new DataFlavor[htmlList.size()]);
+            }
+
+        @Override
+        public boolean isDataFlavorSupported(DataFlavor flavor)
+            {
+            return htmlList.contains(flavor);
+            }
+
+        @Override
+        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
+            {
+            if (flavor == DataFlavor.allHtmlFlavor)
+               {
+               return f_sContents;
+               }
+            throw new UnsupportedFlavorException(flavor);
+            }
+
+         // ----- constants -------------------------------------------------
+
+        private static List<DataFlavor> htmlList = new ArrayList<>(1);
+
+        static
+            {
+            htmlList.add(DataFlavor.allHtmlFlavor);
+            }
+
+        // ----- data members -----------------------------------------------
+
+        private final String f_sContents;
+        }
+
+    /**
+     * A class to react to button press to toggle refresh.
+     */
+    private class ToggleNotificationsListener
+            implements ActionListener
+        {
+        // ----- ActionListener methods -------------------------------------
+
+        @Override
+        public void actionPerformed(ActionEvent event)
+            {
+            if (isRefreshing())
+                {
+                f_txtStatus.setText(PAUSED_MESSAGE);
+                f_btnPause.setText(RESUME);
+                f_txtStatus.setBackground(Color.orange);
+                f_txtStatus.setForeground(Color.white);
+                }
+            else
+                {
+                f_txtStatus.setText(REFRESHING_MESSAGE);
+                f_btnPause.setText(PAUSE);
+                f_txtStatus.setBackground(Color.green);
+                f_txtStatus.setForeground(Color.black);
+                }
+            }
+        }
+
     // ----- data members ---------------------------------------------------
 
     /**
      * HTML Text area.
      */
     private final JEditorPane f_htmlTextArea;
+
+    /**
+     * Refresh status.
+     */
+    private final JTextField f_txtStatus;
+
+    /**
+     * Pause / resume refresh.
+     */
+    private final JButton f_btnPause;
 
     /**
      * The member statistics data retrieved from the {@link VisualVMModel}.

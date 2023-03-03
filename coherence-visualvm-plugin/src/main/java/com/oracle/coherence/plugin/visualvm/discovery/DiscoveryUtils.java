@@ -41,9 +41,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Utilities for discovering Coherence clusters via tne name service.
+ * Utilities for discovering Coherence clusters via the name service.
  *
  * @author tam 2022.10.13
+ * @since 1.6.0
  */
 public class DiscoveryUtils
     {
@@ -143,6 +144,24 @@ public class DiscoveryUtils
 
         return setResults;
     }
+
+    /**
+     * Returns true if the specified String is a valid NS port value.
+     * @param sClusterPort cluster port as string
+     * @return true if it is a valid NS port value.
+     */
+    protected static boolean isValidNSPort(String sClusterPort)
+        {
+        try
+            {
+            int nPort = Integer.parseInt(sClusterPort);
+            return nPort > 1024 && nPort <= 65535;
+            }
+        catch (Exception e)
+            {
+            return false;
+            }
+        }
 
     // ----- constants ------------------------------------------------------
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,6 +25,8 @@
 
 package com.oracle.coherence.plugin.visualvm.helper;
 
+import com.oracle.coherence.plugin.visualvm.Localization;
+import javax.swing.JOptionPane;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 
@@ -79,5 +81,16 @@ public class DialogHelper
         Object answer = DialogDisplayer.getDefault().notify(message);
 
         return NotifyDescriptor.YES_OPTION.equals(answer);
+        }
+
+    /**
+     * Show an input dialog and request input.
+     * @param sLabel   label to use for the prompt
+     * @param sDefault default value
+     * @return the selected value.
+     */
+    public static String showInputDialog(String sLabel, String sDefault)
+        {
+        return JOptionPane.showInputDialog(Localization.getLocalText(sLabel), sDefault);
         }
     }
