@@ -31,7 +31,8 @@ name: Java CI - Released versions
 
 on:
   push:
-    branches: [ main ]
+    branches:
+    - '*'
 
 jobs:
   build:
