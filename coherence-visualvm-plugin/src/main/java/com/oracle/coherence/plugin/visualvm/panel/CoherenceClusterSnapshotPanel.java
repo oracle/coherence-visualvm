@@ -994,7 +994,7 @@ public class CoherenceClusterSnapshotPanel
                 f_txtStatus.setText(PAUSED_MESSAGE);
                 f_btnPause.setText(RESUME);
                 f_txtStatus.setBackground(Color.orange);
-                f_txtStatus.setForeground(Color.white);
+                f_txtStatus.setForeground(Color.black);
                 }
             else
                 {
