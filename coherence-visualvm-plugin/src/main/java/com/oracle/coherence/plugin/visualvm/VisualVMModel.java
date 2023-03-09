@@ -1401,7 +1401,7 @@ public class VisualVMModel
     /**
      * Labels for topic subscribers table.
      */
-    private static final String[] TOPIC_SUBSCRIBER_LABELS = new String[] {  Localization.getLocalText("LBL_subscriber_id"),
+    private static final String[] TOPIC_SUBSCRIBER_LABELS = new String[] {Localization.getLocalText("LBL_subscriber_id"),
         Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText("LBL_state"),
         Localization.getLocalText(LBL_CHANNELS), Localization.getLocalText("LBL_subscriber_group"),
         Localization.getLocalText("LBL_received"), Localization.getLocalText("LBL_errors"),
