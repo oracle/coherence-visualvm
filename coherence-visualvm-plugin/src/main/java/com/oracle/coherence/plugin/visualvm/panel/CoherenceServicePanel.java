@@ -365,7 +365,6 @@ public class CoherenceServicePanel
                 }
 
             setThreadValues(nTotalThreads, nTotalIdle, threadUtil);
-
             }
         else
             {

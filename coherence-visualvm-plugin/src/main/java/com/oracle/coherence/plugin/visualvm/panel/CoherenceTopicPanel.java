@@ -233,7 +233,7 @@ public class CoherenceTopicPanel
         bottomPanel.setOpaque(false);
         detailHeaderPanel.setOpaque(false);
 
-        f_txtSelectedTopic = getTextField(25, SwingConstants.LEFT);
+        f_txtSelectedTopic = getTextField(30, SwingConstants.LEFT);
         detailHeaderPanel.add(getLocalizedLabel("LBL_selected_service_topic", f_txtSelectedTopic));
         detailHeaderPanel.add(f_txtSelectedTopic);
 
@@ -399,6 +399,9 @@ public class CoherenceTopicPanel
 
                     f_txtSelectedTopic.setText(sSelectedTopic);
                     f_txtSelectedTopic.setToolTipText(sSelectedTopic);
+
+                    f_tmodelDetail.setDataList(null);
+                    f_tmodelDetail.fireTableDataChanged();
 
                     f_tmodelSubscribers.setDataList(null);
                     f_tmodelSubscribers.fireTableDataChanged();
