@@ -76,16 +76,16 @@ public class TopicSubscriberData
         {
         Data data = new TopicSubscriberData();
 
-        data.setColumn(TopicSubscriberData.NODE_ID, Integer.valueOf(getNumberValue(aoColumns[2].toString())));
-        data.setColumn(TopicSubscriberData.SUBSCRIBER, Long.valueOf(getNumberValue(aoColumns[3].toString())));
-        data.setColumn(TopicSubscriberData.STATE, aoColumns[4].toString());
-        data.setColumn(TopicSubscriberData.CHANNELS, Integer.valueOf(getNumberValue(aoColumns[5].toString())));
+        data.setColumn(NODE_ID, Integer.valueOf(getNumberValue(aoColumns[2].toString())));
+        data.setColumn(SUBSCRIBER, Long.valueOf(getNumberValue(aoColumns[3].toString())));
+        data.setColumn(STATE, aoColumns[4].toString());
+        data.setColumn(CHANNELS, Integer.valueOf(getNumberValue(aoColumns[5].toString())));
         Object sSubscriberGroup = aoColumns[6];
-        data.setColumn(TopicSubscriberData.SUBSCRIBER_GROUP, sSubscriberGroup != null ? sSubscriberGroup.toString() : "n/a");
-        data.setColumn(TopicSubscriberData.RECEIVED, Long.valueOf(getNumberValue(aoColumns[7].toString())));
-        data.setColumn(TopicSubscriberData.ERRORS, Long.valueOf(getNumberValue(aoColumns[8].toString())));
-        data.setColumn(TopicSubscriberData.BACKLOG, Long.valueOf(getNumberValue(aoColumns[9].toString())));
-        data.setColumn(TopicSubscriberData.TYPE, aoColumns[10].toString());
+        data.setColumn(SUBSCRIBER_GROUP, sSubscriberGroup != null ? sSubscriberGroup.toString() : "n/a");
+        data.setColumn(RECEIVED, Long.valueOf(getNumberValue(aoColumns[7].toString())));
+        data.setColumn(ERRORS, Long.valueOf(getNumberValue(aoColumns[8].toString())));
+        data.setColumn(BACKLOG, Long.valueOf(getNumberValue(aoColumns[9].toString())));
+        data.setColumn(TYPE, aoColumns[10].toString());
 
         return data;
         }
@@ -138,10 +138,10 @@ public class TopicSubscriberData
 
                 TopicSubscriberData data = new TopicSubscriberData();
 
-                data.setColumn(TopicSubscriberData.NODE_ID, node.get("nodeId").asInt());
-                data.setColumn(TopicSubscriberData.SUBSCRIBER, node.get("id").asLong());
-                data.setColumn(TopicSubscriberData.STATE, node.get("stateName").asText());
-                data.setColumn(TopicSubscriberData.CHANNELS, node.get("channelCount").asInt());
+                data.setColumn(SUBSCRIBER, node.get("id").asLong());
+                data.setColumn(NODE_ID, node.get("nodeId").asInt());
+                data.setColumn(STATE, node.get("stateName").asText());
+                data.setColumn(CHANNELS, node.get("channelCount").asInt());
 
                 String sSubType = node.get("subType").asText();
                 String sSubscriberGroup = "n/a";
@@ -152,13 +152,13 @@ public class TopicSubscriberData
                     sSubscriberGroup  = jsonNode != null ? jsonNode.asText() : "n/a";
                     }
 
-                data.setColumn(TopicSubscriberData.SUBSCRIBER_GROUP, sSubscriberGroup);
-                data.setColumn(TopicSubscriberData.RECEIVED, node.get("receivedCount").asLong());
-                data.setColumn(TopicSubscriberData.ERRORS, node.get("receiveErrors").asLong());
-                data.setColumn(TopicSubscriberData.BACKLOG, node.get("backlog").asLong());
-                data.setColumn(TopicSubscriberData.TYPE, sSubType);
+                data.setColumn(SUBSCRIBER_GROUP, sSubscriberGroup);
+                data.setColumn(RECEIVED, node.get("receivedCount").asLong());
+                data.setColumn(ERRORS, node.get("receiveErrors").asLong());
+                data.setColumn(BACKLOG, node.get("backlog").asLong());
+                data.setColumn(TYPE, sSubType);
 
-                mapData.put(data.getColumn(0), data);
+                mapData.put(data.getColumn(SUBSCRIBER), data);
                 }
             }
         return mapData;
@@ -174,14 +174,14 @@ public class TopicSubscriberData
     public static final String REPORT_TOPIC_SUBSCRIBERS = "reports/visualvm/topic-subscribers.xml";
 
     /**
-     * Array index for node id.
-     */
-    public static final int NODE_ID = 0;
-
-    /**
      * Array index for subscriber.
      */
-    public static final int SUBSCRIBER = 1;
+    public static final int SUBSCRIBER = 0;
+
+    /**
+     * Array index for node id.
+     */
+    public static final int NODE_ID = 1;
 
     /**
      * Array index for state.
