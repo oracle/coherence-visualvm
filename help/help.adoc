@@ -55,7 +55,7 @@ For the main Coherence VisualVM Plugin documentation please see https://github.c
 * <<JCacheConfigurationTableModel, JCache Tables>>
 * <<HotCacheTableModel, Hot Cache Table>>
 * <<HotCachePerCacheTableModel, Hot Cache Per Cache Table>>
-* <<TopcTableModel, Topic Table>>
+* <<TopicTableModel, Topic Table>>
 ** <<TopicSubscriberTableModel, Topic Subscribers Table>>
 ** <<TopicSubscriberGroupTableModel, Topic Subscriber Groups Table>>
 
@@ -531,7 +531,7 @@ All attributes are from `Coherence:type=CoherenceAdapter,name=hotcache,member=me
 |Mean value | PerCacheStatistics.Mean
 !===
 
-[#TopcTableModel]
+[#TopicTableModel]
 === Topic Table
 
 All attributes are from `Coherence:type=PagedTopic`.

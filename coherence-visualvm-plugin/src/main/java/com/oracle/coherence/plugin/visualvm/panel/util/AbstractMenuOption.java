@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -295,7 +295,14 @@ public abstract class AbstractMenuOption
      */
     protected int getSelectedRow()
         {
-        return f_jtable != null ? f_jtable.getSelectedRow() : -1;
+        int nSelectedRow = f_jtable != null ? f_jtable.getSelectedRow() : -1;
+        if (nSelectedRow != -1)
+            {
+            // set the correct model row index taking into account sorting
+            nSelectedRow = f_jtable.convertRowIndexToModel(nSelectedRow);
+            }
+
+        return nSelectedRow;
         }
 
     /**
