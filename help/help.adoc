@@ -56,6 +56,7 @@ For the main Coherence VisualVM Plugin documentation please see https://github.c
 * <<HotCacheTableModel, Hot Cache Table>>
 * <<HotCachePerCacheTableModel, Hot Cache Per Cache Table>>
 * <<TopicTableModel, Topic Table>>
+** <<TopicDetailTableModel, Topic Members Table>>
 ** <<TopicSubscriberTableModel, Topic Subscribers Table>>
 ** <<TopicSubscriberGroupTableModel, Topic Subscriber Groups Table>>
 
@@ -532,7 +533,6 @@ All attributes are from `Coherence:type=CoherenceAdapter,name=hotcache,member=me
 !===
 
 [#TopicTableModel]
-[#TopicDetailTableModel]
 === Topic Table
 
 All attributes are from `Coherence:type=PagedTopic`.
@@ -540,6 +540,23 @@ All attributes are from `Coherence:type=PagedTopic`.
 !===
 |**Column** | **Source / Comment**
 |Service/Topic | key
+|Channels | ChannelCount
+|Published | PublishedCount
+| MPage Capacity | PageCapacity
+| Reconnect Retry | ReconnectRetry
+| Reconnect Timeout | ReconnectTimeout
+| Reconnect Wait | ReconnectWait
+| Retain Consumed | RetainConsumed
+!===
+
+[#TopicDetailTableModel]
+=== Topic Members Table
+
+All attributes are from `Coherence:type=PagedTopic`.
+
+!===
+|**Column** | **Source / Comment**
+|Node Id | key
 |Channels | ChannelCount
 |Published | PublishedCount
 | MPage Capacity | PageCapacity

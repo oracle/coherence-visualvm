@@ -80,10 +80,6 @@
         <name>ReconnectWait</name>
       </column>
 
-      <column id="SubscriberTimeout">
-        <name>SubscriberTimeout</name>
-      </column>
-
       <column id="RetainConsumed">
         <name>RetainConsumed</name>
       </column>

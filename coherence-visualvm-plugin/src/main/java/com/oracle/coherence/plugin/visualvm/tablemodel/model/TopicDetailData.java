@@ -70,7 +70,7 @@ public class TopicDetailData
     @Override
     public String getReporterReport()
         {
-        return REPORT_TOPIC_SUBSCRIBERS;
+        return REPORT_TOPIC_DETAIL;
         }
 
     @Override
@@ -142,7 +142,7 @@ public class TopicDetailData
     /**
      * Report for topics data.
      */
-    public static final String REPORT_TOPIC_SUBSCRIBERS = "reports/visualvm/topic-detail.xml";
+    public static final String REPORT_TOPIC_DETAIL = "reports/visualvm/topic-detail.xml";
 
     /**
      * Array index for node id.
