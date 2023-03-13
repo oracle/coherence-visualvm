@@ -89,8 +89,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.management.MBeanServerConnection;
-
 
 /**
  * A class that is used to store and update Coherence cluster
@@ -236,7 +234,7 @@ public class VisualVMModel
 
             if (m_fLogJMXQueryTimes)
                 {
-                LOGGER.log(Level.INFO, "Starting querying all statistics: {0}", DATE_FORMAT.format(new Date()));
+                LOGGER.log(Level.INFO, "Starting querying all statistics: {0}", f_dateFormat.format(new Date()));
                 }
 
             long ldtStart = System.currentTimeMillis();
@@ -280,7 +278,7 @@ public class VisualVMModel
 
             if (m_fLogJMXQueryTimes)
                {
-               LOGGER.log(Level.INFO, "Time to query all statistics was {0} ms: {1}", new Object[]{ldtTotalDuration, DATE_FORMAT.format(new Date())});
+               LOGGER.log(Level.INFO, "Time to query all statistics was {0} ms: {1}", new Object[]{ldtTotalDuration, f_dateFormat.format(new Date())});
                }
 
             m_nRefreshTime  = getRefreshTime();
@@ -1765,12 +1763,12 @@ public class VisualVMModel
      */
     public static final String PROP_DISABLE_MBEAN_CHECK = "coherence.plugin.visualvm.disable.mbean.check";
 
+    // ----- data members ---------------------------------------------------
+
     /**
      * Date format.
      */
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-
-    // ----- data members ---------------------------------------------------
+    private final SimpleDateFormat f_dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
     /**
      * The time between refresh of JMX data. Defaults to DEFAULT_REFRESH_TIME.
