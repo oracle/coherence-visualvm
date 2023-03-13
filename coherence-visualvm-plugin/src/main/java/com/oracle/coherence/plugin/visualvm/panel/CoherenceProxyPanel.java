@@ -73,7 +73,6 @@ import javax.swing.table.TableModel;
 
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
 
-import static com.oracle.coherence.plugin.visualvm.helper.JMXUtils.getAttributeValue;
 import static com.oracle.coherence.plugin.visualvm.helper.JMXUtils.getAttributeValueAsString;
 
 /**

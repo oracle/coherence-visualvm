@@ -71,7 +71,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -214,16 +216,29 @@ public class VisualVMModel
         }
 
     /**
-     * Refresh the statistics from the given {@link MBeanServerConnection}
-     * connection. This method will only refresh data if at least the REFRESH_TIME
-     * has passed since last refresh.
+     * Refresh the statistics from the given {@link RequestSender}
+     * This method will only refresh data if at least the REFRESH_TIME
+     * has passed since last refresh, or an immediate refresh is requested after
+     * selecting a new row in a master-detail table.
      *
      * @param requestSender  the RequestSender to use
      */
     public void refreshStatistics(RequestSender requestSender)
         {
-        if (System.currentTimeMillis() - m_ldtLastUpdate >= m_nRefreshTime)
+        boolean fImmediateRefresh = isImmediateRefresh();
+
+        if (fImmediateRefresh || (System.currentTimeMillis() - m_ldtLastUpdate >= m_nRefreshTime))
             {
+            if (fImmediateRefresh)
+                {
+                setImmediateRefresh(false);
+                }
+
+            if (m_fLogJMXQueryTimes)
+                {
+                LOGGER.log(Level.INFO, "Starting querying all statistics: {0}", DATE_FORMAT.format(new Date()));
+                }
+
             long ldtStart = System.currentTimeMillis();
             // refresh every iteration so we can enable and disable on the fly
             m_fLogJMXQueryTimes = isLogQueryTimes();
@@ -265,7 +280,7 @@ public class VisualVMModel
 
             if (m_fLogJMXQueryTimes)
                {
-               LOGGER.log(Level.INFO, "Time to query all statistics was {0} ms", ldtTotalDuration);
+               LOGGER.log(Level.INFO, "Time to query all statistics was {0} ms: {1}", new Object[]{ldtTotalDuration, DATE_FORMAT.format(new Date())});
                }
 
             m_nRefreshTime  = getRefreshTime();
@@ -1234,6 +1249,32 @@ public class VisualVMModel
         m_fIRestCacheOptimizationAvailable = fValue;
         }
 
+    /**
+     * Returns true if immediate refresh is requested.
+     *
+     * @return true if immediate refresh is requested
+     */
+    public boolean isImmediateRefresh()
+        {
+        synchronized (this)
+            {
+            return m_fIsImmediateRefresh;
+            }
+        }
+
+    /**
+     * Set the value for immediate refresh.
+     *
+     * @param fRefresh true if immediate refresh is requested
+     */
+    public void setImmediateRefresh(boolean fRefresh)
+        {
+        synchronized (this)
+            {
+            m_fIsImmediateRefresh = fRefresh;
+            }
+        }
+
     // ----- constants ------------------------------------------------------
 
     /**
@@ -1724,6 +1765,11 @@ public class VisualVMModel
      */
     public static final String PROP_DISABLE_MBEAN_CHECK = "coherence.plugin.visualvm.disable.mbean.check";
 
+    /**
+     * Date format.
+     */
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
     // ----- data members ---------------------------------------------------
 
     /**
@@ -1877,4 +1923,10 @@ public class VisualVMModel
      * If this value is null it means we have not yet determined if the cluster supports this.
      */
     private Boolean m_fIRestCacheOptimizationAvailable = null;
+
+    /**
+     * Indicates if an immediate refresh is requested due to a change in
+     * selection in a master-detail table.
+     */
+    private boolean m_fIsImmediateRefresh;
     }

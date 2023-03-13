@@ -410,6 +410,9 @@ public class CoherenceTopicPanel
                     f_tmodelSubscriberGroups.fireTableDataChanged();
 
                     m_topicData = null;
+
+                    // force immediate refresh
+                    f_model.setImmediateRefresh(true);
                     }
                 }
             }

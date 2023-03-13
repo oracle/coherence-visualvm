@@ -500,6 +500,9 @@ public class CoherenceCachePanel
                     f_txtMaxQueryDescription.setText("");
                     f_txtMaxQueryDuration.setText("");
                     m_cacheData = null;
+
+                    // force immediate refresh
+                    f_model.setImmediateRefresh(true);
                     }
                 }
             }
