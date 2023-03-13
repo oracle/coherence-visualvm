@@ -852,6 +852,9 @@ public class CoherenceFederationPanel
 
                     // update graphs
                     populateOutboundTabs(m_pneTabOutboundGraph);
+
+                    // force immediate refresh
+                    f_model.setImmediateRefresh(true);
                     }
 
                 return;
@@ -904,7 +907,7 @@ public class CoherenceFederationPanel
                     // get rid of old details data for inbound and outbound
                     f_model.eraseFederationDetailsData();
 
-                    // update destails data display
+                    // update details data display
                     m_tmodelOutbound.setDataList(null);
                     m_tmodelOutbound.fireTableDataChanged();
                     m_tmodelInbound.setDataList(null);
@@ -920,7 +923,6 @@ public class CoherenceFederationPanel
                     // force immediate refresh
                     f_model.setImmediateRefresh(true);
                     }
-                return;
                 }
             }
 
