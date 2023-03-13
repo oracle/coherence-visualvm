@@ -322,6 +322,9 @@ public class CoherenceHotCachePanel
                     f_tpercacheModel.fireTableDataChanged();
                     populateTabs(f_pneTabs, sSelectedMember);
                     populateBottomPanel(f_pnebottom, null);
+
+                    // force immediate refresh
+                    f_model.setImmediateRefresh(true);
                     }
                 }
             //select the percache operation table

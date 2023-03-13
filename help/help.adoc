@@ -532,6 +532,7 @@ All attributes are from `Coherence:type=CoherenceAdapter,name=hotcache,member=me
 !===
 
 [#TopicTableModel]
+[#TopicDetailTableModel]
 === Topic Table
 
 All attributes are from `Coherence:type=PagedTopic`.

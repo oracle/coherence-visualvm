@@ -215,6 +215,9 @@ public class CoherenceHttpProxyPanel
                     m_cLastResponse3xxCount = -1L;
                     m_cLastResponse4xxCount = -1L;
                     m_cLastResponse5xxCount = -1L;
+
+                    // force immediate refresh
+                    f_model.setImmediateRefresh(true);
                     }
                 }
             }

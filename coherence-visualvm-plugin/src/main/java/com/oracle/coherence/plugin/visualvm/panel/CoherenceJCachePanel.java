@@ -280,6 +280,9 @@ public class CoherenceJCachePanel
 
                     // Update the Graphs
                     addSplitPaneAndGraph();
+
+                    // force immediate refresh
+                    f_model.setImmediateRefresh(true); 
                     }
                 }
             }
