@@ -223,12 +223,6 @@ public class PersistenceData
         }
 
     @Override
-    public String getReporterReport()
-        {
-        return null;    // see comment below
-        }
-
-    @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
         // The reporter does not support running a method on an extracted value and therefore
@@ -236,6 +230,12 @@ public class PersistenceData
         // Coherence:type=PersistenceSnapshot entry. If we were to do this with the reporter
         // we should have to issue a separate call to query JMX for the snapshot count.
         return null;
+        }
+
+    @Override
+    public String getReporterReport()
+        {
+        return null;    // see comment below
         }
 
     @Override

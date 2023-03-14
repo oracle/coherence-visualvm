@@ -188,6 +188,15 @@ public class HttpSessionData
         }
 
     @Override
+    public SortedMap<Object, Data> getAggregatedDataFromHttpQuerying(VisualVMModel     model,
+                                                                     HttpRequestSender requestSender)
+            throws Exception
+        {
+        // no reports being used, hence using default functionality provided in getJMXData
+        return null;
+        }
+
+    @Override
     public String getReporterReport()
         {
         return null;    // see comment below
@@ -196,16 +205,6 @@ public class HttpSessionData
     @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
-        // difficult to implement using reporter
-        return null;
-        }
-
-    @Override
-    public SortedMap<Object, Data> getAggregatedDataFromHttpQuerying(VisualVMModel     model,
-                                                                     HttpRequestSender requestSender)
-            throws Exception
-        {
-        // no reports being used, hence using default functionality provided in getJMXData
         return null;
         }
 
