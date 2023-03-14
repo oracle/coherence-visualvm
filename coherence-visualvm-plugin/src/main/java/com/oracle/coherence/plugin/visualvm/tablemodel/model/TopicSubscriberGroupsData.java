@@ -143,14 +143,14 @@ public class TopicSubscriberGroupsData
     public static final String REPORT_SUBSCRIBER_GROUPS = "reports/visualvm/topic-subscriber-groups.xml";
 
     /**
-     * Array index for subscriber group.
-     */
-    public static final int SUBSCRIBER_GROUP = 0;
-
-    /**
      * Array index for node id.
      */
-    public static final int NODE_ID = 1;
+    public static final int NODE_ID = 0;
+
+    /**
+     * Array index for subscriber group.
+     */
+    public static final int SUBSCRIBER_GROUP = 1;
 
     /**
      * Array index for channels.
