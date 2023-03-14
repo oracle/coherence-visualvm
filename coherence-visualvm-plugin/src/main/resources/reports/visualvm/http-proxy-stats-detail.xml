@@ -65,7 +65,6 @@
 
             <column id="HostIp">
                 <name>HostIP</name>
-                <group-by>true</group-by>
             </column>
 
             <column id="AverageRequestTime">

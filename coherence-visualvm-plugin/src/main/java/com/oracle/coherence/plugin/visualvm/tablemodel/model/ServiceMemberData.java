@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -75,7 +75,7 @@ public class ServiceMemberData
 
         if (sSelectedService != null)
             {
-            SortedMap<Object, Data> mapData = new TreeMap<Object, Data>();
+            SortedMap<Object, Data> mapData = new TreeMap<>();
             String[] asParts                = getServiceParts(sSelectedService);
             String   sDomainPartition       = asParts.length == 1 ? null : asParts[0];
 
@@ -124,7 +124,7 @@ public class ServiceMemberData
                     mapData.put(nodeId, data);
                     }
 
-                return new ArrayList<Map.Entry<Object, Data>>(mapData.entrySet());
+                return new ArrayList<>(mapData.entrySet());
 
                 }
             catch (Exception e)

@@ -74,8 +74,8 @@ public class ServiceData
     @SuppressWarnings("rawtypes")
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender sender, VisualVMModel model)
         {
-        SortedMap<Object, Data> mapData              = new TreeMap<Object, Data>();
-        Set<String>             setDistributedCaches = new HashSet<String>();
+        SortedMap<Object, Data> mapData              = new TreeMap<>();
+        Set<String>             setDistributedCaches = new HashSet<>();
         Data                    data;
 
         try
@@ -101,7 +101,7 @@ public class ServiceData
 
                 mapData.put(sServiceName, data);
 
-                // if its dist cache or federated then save so we don't, double count size for repl
+                // if its dist cache or federated then save, so we don't, double count size for repl
                 // caches
                 String sServiceType = (String) sender.getAttribute(cacheNameObjName, "Type");
                 if (isDistributed(sServiceType))
@@ -121,7 +121,7 @@ public class ServiceData
                 String[] asServiceDetails = getDomainAndService(sRawServiceName);
                 String   sDomainPartition = asServiceDetails[0];
                 String   sServiceName     = asServiceDetails[1];
-                // select only the current service so we can determine the number of storage-enabled
+                // select only the current service, so we can determine the number of storage-enabled
                 // members.
                 Set resultSet = sender.getMembersOfService(sServiceName, sDomainPartition);
 

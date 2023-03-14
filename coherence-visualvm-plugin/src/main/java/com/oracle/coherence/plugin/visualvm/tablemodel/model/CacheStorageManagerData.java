@@ -71,7 +71,7 @@ public class CacheStorageManagerData
     @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
-        SortedMap<Object, Data> mapData = new TreeMap<Object, Data>();
+        SortedMap<Object, Data> mapData = new TreeMap<>();
         Data                    data;
         Pair<String, String> selectedCache = model.getSelectedCache();
 
@@ -140,7 +140,7 @@ public class CacheStorageManagerData
                     mapData.put(data.getColumn(0), data);
                     }
 
-                return new ArrayList<Map.Entry<Object, Data>>(mapData.entrySet());
+                return new ArrayList<>(mapData.entrySet());
                 }
             catch (Exception e)
                 {
