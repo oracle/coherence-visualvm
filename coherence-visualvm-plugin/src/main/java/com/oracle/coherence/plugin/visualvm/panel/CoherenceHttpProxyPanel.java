@@ -152,7 +152,7 @@ public class CoherenceHttpProxyPanel
         }
 
     /**
-     * Inner class to change the the information displayed on the detailModel
+     * Inner class to change the information displayed on the detailModel
      * table when the master changes.
      */
     private class SelectRowListSelectionListener
