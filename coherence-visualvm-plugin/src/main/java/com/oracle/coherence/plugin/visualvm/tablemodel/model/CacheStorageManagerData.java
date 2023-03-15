@@ -288,8 +288,9 @@ public class CacheStorageManagerData
                 data.setColumn(CacheStorageManagerData.NODE_ID, nodeCacheStorage.get("nodeId").asInt());
                 data.setColumn(CacheStorageManagerData.LOCKS_GRANTED, locksGranted.asInt());
                 data.setColumn(CacheStorageManagerData.LOCKS_PENDING, nodeCacheStorage.get("locksPending").asInt());
-                data.setColumn(CacheStorageManagerData.LISTENER_KEY_COUNT,nodeCacheStorage.get("listenerKeyCount").asInt());
-                data.setColumn(CacheStorageManagerData.LISTENER_FILTER_COUNT,nodeCacheStorage.get("listenerFilterCount").asInt());
+                JsonNode listenerKeyCount = nodeCacheStorage.get("listenerKeyCount");
+                data.setColumn(CacheStorageManagerData.LISTENER_KEY_COUNT, listenerKeyCount == null ? 0 : listenerKeyCount.asInt());
+                data.setColumn(CacheStorageManagerData.LISTENER_FILTER_COUNT, nodeCacheStorage.get("listenerFilterCount").asInt());
                 data.setColumn(CacheStorageManagerData.MAX_QUERY_DURATION, nodeCacheStorage.get("maxQueryDurationMillis").asLong());
                 data.setColumn(CacheStorageManagerData.MAX_QUERY_DESCRIPTION, nodeCacheStorage.get("maxQueryDescription").asText());
                 data.setColumn(CacheStorageManagerData.NON_OPTIMIZED_QUERY_AVG, nodeCacheStorage.get("nonOptimizedQueryAverageMillis").asLong());

@@ -989,7 +989,8 @@ public class HttpRequestSender
                 .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(CACHES).addPathSegment(sCacheName)
                 .addPathSegment(MEMBERS).addQueryParameter(FIELDS,
                                                                    "nodeId,locksGranted,locksPending,listenerRegistrations,maxQueryDurationMillis,maxQueryDescription," +
-                                                                   "nonOptimizedQueryAverageMillis,optimizedQueryAverageMillis,indexTotalUnits,indexingTotalMillis")
+                                                                   "nonOptimizedQueryAverageMillis,optimizedQueryAverageMillis,indexTotalUnits,indexingTotalMillis," +
+                                                                   "listenerFilterCount,listenerKeyCount")
                 .addQueryParameter(LINKS, "");
 
         if (sDomainPartition != null)
