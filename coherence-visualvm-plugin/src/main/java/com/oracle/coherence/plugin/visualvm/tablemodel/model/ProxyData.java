@@ -74,7 +74,7 @@ public class ProxyData
     @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
-        SortedMap<Object, Data> mapData = new TreeMap<Object, Data>();
+        SortedMap<Object, Data> mapData = new TreeMap<>();
         Data                    data;
 
         try

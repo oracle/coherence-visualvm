@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -81,8 +81,7 @@ public class MemberData
 
             for (Iterator<ObjectName> nodIter = setNodeNames.iterator(); nodIter.hasNext(); )
                 {
-                ObjectName nodeNameObjName = (ObjectName) nodIter.next();
-
+                ObjectName nodeNameObjName = nodIter.next();
                 Integer    nodeId          = Integer.valueOf(nodeNameObjName.getKeyProperty("nodeId"));
 
                 data = new MemberData();
@@ -112,7 +111,7 @@ public class MemberData
 
                 mapData.put(nodeId, data);
                 }
-            return new ArrayList<Map.Entry<Object, Data>>(mapData.entrySet());
+            return new ArrayList<>(mapData.entrySet());
 
             }
         catch (Exception e)
@@ -216,7 +215,7 @@ public class MemberData
     public static int ADDRESS = 1;
 
     /**
-     * Array index for machine name.
+     * Array index for port.
      */
     public static int PORT = 2;
 

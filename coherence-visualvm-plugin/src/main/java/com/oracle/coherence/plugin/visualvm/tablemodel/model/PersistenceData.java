@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -212,7 +212,7 @@ public class PersistenceData
                 mapData.put(sServiceNameKey, data);
                 }
 
-            return new ArrayList<Map.Entry<Object, Data>>(mapData.entrySet());
+            return new ArrayList<>(mapData.entrySet());
             }
         catch (Exception e)
             {
@@ -223,12 +223,6 @@ public class PersistenceData
         }
 
     @Override
-    public String getReporterReport()
-        {
-        return null;    // see comment below
-        }
-
-    @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
         // The reporter does not support running a method on an extracted value and therefore
@@ -236,6 +230,12 @@ public class PersistenceData
         // Coherence:type=PersistenceSnapshot entry. If we were to do this with the reporter
         // we should have to issue a separate call to query JMX for the snapshot count.
         return null;
+        }
+
+    @Override
+    public String getReporterReport()
+        {
+        return null;    // see comment below
         }
 
     @Override

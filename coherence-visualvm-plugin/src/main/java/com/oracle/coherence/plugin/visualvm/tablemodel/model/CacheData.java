@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -74,7 +74,7 @@ public class CacheData
     @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender sender, VisualVMModel model)
         {
-        SortedMap<Object, Data> mapData = new TreeMap<Object, Data>();
+        SortedMap<Object, Data> mapData = new TreeMap<>();
         Data                    data;
 
         try
@@ -183,7 +183,7 @@ public class CacheData
                     }
 
                 // update the cache entry averages
-                data = (CacheData) mapData.get(key);
+                data = mapData.get(key);
 
                 // for FIXED unit calculator make the memory bytes and MB and avg object size null
                 if ("FIXED".equals(data.getColumn(CacheData.UNIT_CALCULATOR)))

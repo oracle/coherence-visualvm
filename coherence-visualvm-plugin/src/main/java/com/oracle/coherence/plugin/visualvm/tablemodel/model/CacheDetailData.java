@@ -85,7 +85,7 @@ public class CacheDetailData
     @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
-        SortedMap<Object, Data> cacheMap = new TreeMap<Object, Data>();
+        SortedMap<Object, Data> cacheMap = new TreeMap<>();
         Data                    data;
         Pair<String, String> selectedCache = model.getSelectedCache();
 
@@ -103,7 +103,7 @@ public class CacheDetailData
 
                 for (Iterator<ObjectName> iter = resultSet.iterator(); iter.hasNext(); )
                     {
-                    ObjectName objName = (ObjectName) iter.next();
+                    ObjectName objName = iter.next();
 
                     // check which cache tier data we should extract.
                     if (objName.getKeyProperty("tier").equals(m_type.getValue()))
@@ -113,7 +113,7 @@ public class CacheDetailData
                         }
                     }
 
-                return new ArrayList<Map.Entry<Object, Data>>(cacheMap.entrySet());
+                return new ArrayList<>(cacheMap.entrySet());
                 }
             catch (Exception e)
                 {

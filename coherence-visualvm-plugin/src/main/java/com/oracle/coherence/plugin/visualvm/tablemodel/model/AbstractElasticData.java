@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -96,7 +96,7 @@ public abstract class AbstractElasticData
      */
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender sender, VisualVMModel model)
         {
-        SortedMap<Object, Data> mapData = new TreeMap<Object, Data>();
+        SortedMap<Object, Data> mapData = new TreeMap<>();
         Data                    data;
 
         // The following rules for compaction count
@@ -162,7 +162,7 @@ public abstract class AbstractElasticData
                 mapData.put(nodeId, data);
                 }
 
-            return new ArrayList<Map.Entry<Object, Data>>(mapData.entrySet());
+            return new ArrayList<>(mapData.entrySet());
             }
         catch (Exception e)
             {

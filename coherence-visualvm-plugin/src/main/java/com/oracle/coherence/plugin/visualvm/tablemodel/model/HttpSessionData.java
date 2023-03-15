@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -68,7 +68,7 @@ public class HttpSessionData
     @Override
     public List<Map.Entry<Object, Data>> getJMXData(RequestSender requestSender, VisualVMModel model)
         {
-        SortedMap<Object, Data> mapData          = new TreeMap<Object, Data>();
+        SortedMap<Object, Data> mapData          = new TreeMap<>();
         boolean                 isWebLogicServer = false;
         Data                    data;
 
@@ -177,7 +177,7 @@ public class HttpSessionData
                     }
                 }
 
-            return new ArrayList<Map.Entry<Object, Data>>(mapData.entrySet());
+            return new ArrayList<>(mapData.entrySet());
             }
         catch (Exception e)
             {
@@ -185,6 +185,15 @@ public class HttpSessionData
 
             return null;
             }
+        }
+
+    @Override
+    public SortedMap<Object, Data> getAggregatedDataFromHttpQuerying(VisualVMModel     model,
+                                                                     HttpRequestSender requestSender)
+            throws Exception
+        {
+        // no reports being used, hence using default functionality provided in getJMXData
+        return null;
         }
 
     @Override
@@ -196,16 +205,6 @@ public class HttpSessionData
     @Override
     public Data processReporterData(Object[] aoColumns, VisualVMModel model)
         {
-        // difficult to implement using reporter
-        return null;
-        }
-
-    @Override
-    public SortedMap<Object, Data> getAggregatedDataFromHttpQuerying(VisualVMModel     model,
-                                                                     HttpRequestSender requestSender)
-            throws Exception
-        {
-        // no reports being used, hence using default functionality provided in getJMXData
         return null;
         }
 
