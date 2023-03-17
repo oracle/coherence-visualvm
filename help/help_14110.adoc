@@ -41,6 +41,7 @@ For the main Coherence VisualVM Plugin documentation please see https://github.c
 ** <<FederationOutboundTableModel, Federation Outbound Table>>
 ** <<FederationInboundTableModel, Federation Inbound Table>>
 * <<ProxyTableModel, Proxy Servers Table>>
+** <<ProxyConnectionsTableModel, Proxy Connections Table>>
 * <<HttpProxyTableModel, Http Servers Table>>
 ** <<HttpProxyMemberTableModel, Http Servers Detail Table>>
 * <<PersistenceTableModel, Persistence Table>>
@@ -77,7 +78,7 @@ See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/o
 
 This table shows information regarding all the members in a Coherence cluster.
 
-All attributes are from `NodeMBean` (`Coherence:type=Node,nodeId=n`).
+All attributes are from `Node MBean` (`Coherence:type=Node,nodeId=n`).
 
 !===
 |**Column** | **Source / Comment**
@@ -100,7 +101,7 @@ See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/o
 
 This table shows service summary information regarding all the services in a Coherence cluster.
 
-All attributes are summarized from `ServiceMBean` (`Coherence:type=Service,name=serviceName`).
+All attributes are summarized from `Service MBean` (`Coherence:type=Service,name=serviceName`).
 
 !===
 |**Column** | **Source / Comment**
@@ -122,7 +123,7 @@ See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/o
 
 This table shows service detail information regarding the selected service.
 
-All attributes are from `ServiceMBean` for specific nodes. (`Coherence:type=Service,name=serviceName,nodeId=n`).
+All attributes are from `Service MBean` for specific nodes. (`Coherence:type=Service,name=serviceName,nodeId=n`).
 
 !===
 |**Column** | **Source / Comment**
@@ -142,7 +143,7 @@ See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/o
 
 This table shows cache summary for all caches in a Coherence cluster.
 
-All attributes are summarized from `CacheMBean` (`Coherence:type=CacheMBean,tier=back`).
+All attributes are summarized from `Cache MBean` (`Coherence:type=CacheMBean,tier=back`).
 
 !===
 |**Column** | **Source / Comment**
@@ -162,7 +163,7 @@ See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/o
 ==== Cache Size and Access Details Table
 This table shows cache details regarding the selected cache.
 
-All attributes are from `CacheMBean` (`Coherence:type=CacheMBean,tier=back`).
+All attributes are from `Cache MBean` (`Coherence:type=CacheMBean,tier=back`).
 
 !===
 |**Column** | **Source / Comment**
@@ -181,14 +182,14 @@ See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/o
 ==== Front Cache Size and Access Details Table
 This table shows cache front details regarding the selected cache.
 
-All attributes are from `CacheMBean` (`Coherence:type=CacheMBean,tier=front`) and are the same as the above table.
+All attributes are from `Cache MBean` (`Coherence:type=CacheMBean,tier=front`) and are the same as the above table.
 
 [#CacheStorageManagerTableModel]
 === Cache Storage Details
 
 This table shows cache storage regarding the selected cache.
 
-All attributes are from `StorageManager` (`Coherence:type=StorageManager,service=serviceName,cache=cacheName`).
+All attributes are from `StorageManager MBean` (`Coherence:type=StorageManager,service=serviceName,cache=cacheName`).
 
 !===
 |**Column** | **Source / Comment**
@@ -211,7 +212,7 @@ See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/o
 
 This table shows federation summary details in a Coherence cluster.
 
-All attributes are summarised from `DestinationMBean` and `OriginMBean` (Coherence:type=Federation,subType=Destination` and `Coherence:type=Federation,subType=Origin`).
+All attributes are summarised from `Destination MBean` and `Origin MBean` (Coherence:type=Federation,subType=Destination` and `Coherence:type=Federation,subType=Origin`).
 
 !===
 |**Column** | **Source / Comment**
@@ -232,7 +233,7 @@ https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracl
 
 This table shows federation outbound details for the selected service.
 
-All attributes are from `DestinationMBean` (Coherence:type=Federation,subType=Destination`).
+All attributes are from `Destination MBean` (Coherence:type=Federation,subType=Destination`).
 
 !===
 |**Column** | **Source / Comment**
@@ -253,7 +254,7 @@ See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/o
 
 This table shows federation inbound details for the selected service.
 
-All attributes are from `OriginMBean` (Coherence:type=Federation,subType=Origin`).
+All attributes are from `Origin MBean` (Coherence:type=Federation,subType=Origin`).
 
 !===
 |**Column** | **Source / Comment**
@@ -274,13 +275,13 @@ See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/o
 
 This table shows summary for proxy servers in a Coherence cluster.
 
-All attributes are summarised from `ConnectionManagerMBean` where `Procotol=tcp` and `ConnectionMBean` (`Coherence:type=ConnectionManager` and  `Coherence:type=Connection`).
+All attributes are summarised from `ConnectionManager MBean` where `Procotol=tcp` and `Connection MBean` (`Coherence:type=ConnectionManager` and  `Coherence:type=Connection`).
 
 !===
 |**Column** | **Source / Comment**
 |IP Address/Port | HostIP
 |Service Name | name (key)
-|Node Id | ndoeId (key)
+|Node Id | nodeId (key)
 |Connection Count | ConnectionCount
 |Outgoing Msg Backlog | OutgoingMessageBacklog
 |Total Bytes Rcv | TotalBytesReceived
@@ -292,12 +293,36 @@ All attributes are summarised from `ConnectionManagerMBean` where `Procotol=tcp`
 See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-022FB1A1-F377-405A-A424-2CB1781330C1[ConnectionManagerMBean]
 or https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-F247B2A6-85A6-4F87-AD69-C0E184EF25D5[ConnectionMBean] documentation for more information.
 
+[#ProxyConnectionsTableModel]
+=== Proxy Connections Table
+
+This table shows summary for proxy connections servers in a Coherence cluster.
+
+All attributes are summarised from `Connection MBean`  (`Coherence:type=Connection`).
+
+!===
+|**Column** | **Source / Comment**
+|UUID | UUID (key)
+|Connection ms | ConnectionTimeMillis
+|Connection Time | calculated
+|Connection Count | ConnectionCount
+|Remote Address | RemoteAddress : RemotePort
+|Data Sent | TotalBytesSent
+|Data Rec | TotalBytesReceived
+|Backlog| OutgoingByteBacklog
+|Client Process | ClientProcessName
+|Role | ClientRole
+!===
+
+See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracle-coherence-mbeans-reference.html#GUID-F247B2A6-85A6-4F87-AD69-C0E184EF25D5[ConnectionMBean] documentation for more information.
+
+
 [#HttpProxyTableModel]
 === Http Servers Table
 
 This table shows summary for Http servers running in the Coherence cluster.
 
-All attributes are summarised from `ConnectionManagerMBean` where `Procotol=http` (`Coherence:type=ConnectionManager`).
+All attributes are summarised from `ConnectionManager MBean` where `Procotol=http` (`Coherence:type=ConnectionManager`).
 
 !===
 |**Column** | **Source / Comment**
@@ -317,7 +342,7 @@ See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/o
 
 This table shows Http server details for the selected Http server.
 
-All attributes are from `ConnectionManagerMBean` where `Procotol=http` (`Coherence:type=ConnectionManager`).
+All attributes are from `ConnectionManager MBean` where `Procotol=http` (`Coherence:type=ConnectionManager`).
 
 !===
 |**Column** | **Source / Comment**
@@ -336,8 +361,8 @@ See https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/o
 
 This table shows Persistence summary for the Coherence cluster.
 
-All attributes are summarized from `ServiceMBean` (`Coherence:type=Service,name=serviceName`) except for
-`Snapshot Count` and `Status` which are from `PersistenceMBean` (`Coherence:type=Persistence)`.
+All attributes are summarized from `Service MBean` (`Coherence:type=Service,name=serviceName`) except for
+`Snapshot Count` and `Status` which are from `Persistence MBean` (`Coherence:type=Persistence)`.
 
 !===
 |**Column** | **Source / Comment**
@@ -360,7 +385,7 @@ https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/manage/oracl
 
 These tables show Elastic data summary for the Coherence cluster for either RAM or Flash Journal.
 
-All attributes are from `RamJournalRM` or `FlashJournalRM` (`Coherence:type=Journal,name=FlashJournalRM` or `Coherence:type=Journal,name=RamJournalRM`).
+All attributes are from `RamJournalRM MBean` or `FlashJournalRM MBean` (`Coherence:type=Journal,name=FlashJournalRM` or `Coherence:type=Journal,name=RamJournalRM`).
 
 !===
 |**Column** | **Source / Comment**
