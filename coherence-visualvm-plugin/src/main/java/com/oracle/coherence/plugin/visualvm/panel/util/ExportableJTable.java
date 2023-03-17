@@ -179,6 +179,10 @@ public class ExportableJTable
         else if (src.equals(m_menuItemHelp))
             {
             String sSimpleName = dataModel.getClass().getSimpleName();
+            if ("".equals(sSimpleName))
+                {
+                sSimpleName = "ProxyConnectionsTableModel";
+                }
 
             try
                 {
