@@ -1,0 +1,64 @@
+#
+#  Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+#  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+#
+#  This code is free software; you can redistribute it and/or modify it
+#  under the terms of the GNU General Public License version 2 only, as
+#  published by the Free Software Foundation.  Oracle designates this
+#  particular file as subject to the "Classpath" exception as provided
+#  by Oracle in the LICENSE file that accompanied this code.
+#
+#  This code is distributed in the hope that it will be useful, but WITHOUT
+#  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#  version 2 for more details (a copy is included in the LICENSE file that
+#  accompanied this code).
+#
+#  You should have received a copy of the GNU General Public License version
+#  2 along with this work; if not, write to the Free Software Foundation,
+#  Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+#  Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+#  or visit www.oracle.com if you need additional information or have any
+#  questions.
+#
+
+# ---------------------------------------------------------------------------
+# Coherence VisualVM Plugin Actions Scheduled Trivy Scan
+# ---------------------------------------------------------------------------
+name: Scheduled Trivy Scan
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '*'
+  schedule:
+    # Every day at midnight
+    - cron: '0 0 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+#   Checkout the source, we need a depth of zero to fetch all of the history otherwise
+#   the copyright check cannot work out the date of the files from Git.
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'zulu'
+
+    - name: Trivy Scan
+      shell: bash
+      run: |
+        DIR=`mktemp -d`
+        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b ${DIR} v0.38.3
+        ${DIR}/trivy --exit-code fs 1 .
+        
+        
