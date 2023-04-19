@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -1820,7 +1821,7 @@ public class HttpRequestSender
         }
 
     /**
-     * Encode a cache name by encoding.
+     * Encode a cache name.
      *
      * @param sCacheName service name to encode
      * @return encoded cache name
