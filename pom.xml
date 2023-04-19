@@ -34,7 +34,7 @@
   <groupId>com.oracle.coherence.plugin.visualvm</groupId>
   <artifactId>coherence-visualvm-main</artifactId>
   <packaging>pom</packaging>
-  <version>1.6.0</version>
+  <version>1.6.1-SNAPSHOT</version>
   <name>Coherence VisualVM Plugin Parent</name>
 
   <description>
