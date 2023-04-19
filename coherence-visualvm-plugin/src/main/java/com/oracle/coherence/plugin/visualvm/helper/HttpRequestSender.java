@@ -37,9 +37,11 @@ import com.oracle.coherence.plugin.visualvm.panel.CoherencePersistencePanel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -311,7 +313,7 @@ public class HttpRequestSender
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
                 .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(CACHES)
-                .addPathSegment(sCacheName).addPathSegment(MEMBERS);
+                .addPathSegment(encodeCacheName(sCacheName)).addPathSegment(MEMBERS);
         if (sDomainPartition != null)
             {
             urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
@@ -986,7 +988,7 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(CACHES).addPathSegment(sCacheName)
+                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(CACHES).addPathSegment(encodeCacheName(sCacheName))
                 .addPathSegment(MEMBERS).addQueryParameter(FIELDS,
                                                                    "nodeId,locksGranted,locksPending,listenerRegistrations,maxQueryDurationMillis,maxQueryDescription," +
                                                                    "nonOptimizedQueryAverageMillis,optimizedQueryAverageMillis,indexTotalUnits,indexingTotalMillis," +
@@ -1016,7 +1018,7 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(CACHES).addPathSegment(sCacheName)
+                .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(CACHES).addPathSegment(encodeCacheName(sCacheName))
                 .addPathSegment(MEMBERS);
         if (sDomainPartition != null)
             {
@@ -1815,6 +1817,24 @@ public class HttpRequestSender
     private String encodeServiceName(String sServiceName)
         {
         return sServiceName.replaceAll("\"", "");
+        }
+
+    /**
+     * Encode a cache name by encoding.
+     *
+     * @param sCacheName service name to encode
+     * @return encoded cache name
+     */
+    private String encodeCacheName(String sCacheName)
+        {
+        try
+            {
+            return URLEncoder.encode(sCacheName, "UTF8");
+            }
+        catch (UnsupportedEncodingException e)
+            {
+            return sCacheName;
+            }
         }
 
     /**
