@@ -131,8 +131,7 @@ connect via REST as described above or if you want to connect to the `domain run
 
 7. Right-Click on the connection and select `Open`. The Coherence tab will be displayed.
 
-   >Note: If you wish to secure access to the REST endpoints or via JMX, please refer to either the https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/index.html[Coherence Documentation]
-   or relevant JMX security documentation.
+   If you wish to secure access to the REST endpoints or via JMX, please refer to either the [Coherence Documentation](https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/index.html) or relevant JMX security documentation.
 
 ## <a id="prefs"></a> Changing the Plugin Behaviour via the Options Tab
 
