@@ -685,7 +685,7 @@ public class CoherenceCachePanel
                                            ExportableJTable jtable, String sOperation)
             {
             super(model, requestSender, jtable);
-            f_sOperation = sOperation;;
+            f_sOperation = sOperation;
             }
 
        @Override
