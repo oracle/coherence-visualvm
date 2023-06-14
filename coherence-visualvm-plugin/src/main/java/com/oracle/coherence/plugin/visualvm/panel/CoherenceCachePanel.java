@@ -25,7 +25,6 @@
 
 package com.oracle.coherence.plugin.visualvm.panel;
 
-import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
@@ -33,6 +32,7 @@ import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.panel.util.MenuOption;
+import com.oracle.coherence.plugin.visualvm.panel.util.SeparatorMenuOption;
 import com.oracle.coherence.plugin.visualvm.tablemodel.CacheDetailTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.CacheStorageManagerTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.CacheTableModel;
@@ -206,16 +206,14 @@ public class CoherenceCachePanel
         table.setIntercellSpacing(new Dimension(6, 3));
         table.setRowHeight(table.getRowHeight() + 4);
 
-        // experimental heat map
-        if (GlobalPreferences.sharedInstance().isHeatMapEnabled())
-            {
-            table.setMenuOptions(
-                    new MenuOption[]{new ShowHeatMapMenuOption(model, m_requestSender,
-                            table,
-                            ShowHeatMapMenuOption.TYPE_SIZE),
-                            new ShowHeatMapMenuOption(model, m_requestSender, table,
-                                    ShowHeatMapMenuOption.TYPE_MEMORY)});
-            }
+        table.setMenuOptions(
+            new MenuOption[]{
+                    new ShowHeatMapMenuOption(model, m_requestSender, table, ShowHeatMapMenuOption.TYPE_SIZE),
+                    new ShowHeatMapMenuOption(model, m_requestSender, table, ShowHeatMapMenuOption.TYPE_MEMORY),
+                    new SeparatorMenuOption(model, m_requestSender, table),
+                    new InvokeCacheOperationMenuOpen(model, m_requestSender, table, TRUNCATE),
+                    new InvokeCacheOperationMenuOpen(model, m_requestSender, table, CLEAR)
+            });
 
         setTablePadding(f_tableDetail);
         f_tableDetail.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableDetail, SELECTED_CACHE)});
@@ -673,14 +671,69 @@ public class CoherenceCachePanel
          * Menu option description.
          */
         private final String f_sMenuItem;
-
-
        }
 
     /**
-     * An experimental menu option to display a heat map for the cache sizes or
-     * primary storage used. To enable, set the following system property<br>
-     *  coherence.jvisualvm.heatmap.enabled=true
+     * Menu option to invoke clear or truncate against a cache. Only available in most recent versions of Coherence.
+     */
+    protected class InvokeCacheOperationMenuOpen
+           extends AbstractMenuOption
+       {
+       // ----- constructors -----------------------------------------------
+
+       public InvokeCacheOperationMenuOpen(VisualVMModel model, RequestSender requestSender,
+                                           ExportableJTable jtable, String sOperation)
+            {
+            super(model, requestSender, jtable);
+            f_sOperation = sOperation;
+            }
+
+       @Override
+       public String getMenuItem()
+           {
+           return getLocalizedText(f_sOperation.equals(TRUNCATE) ? "LBL_truncate" : "LBL_clear");
+           }
+
+       @Override
+       public void actionPerformed(ActionEvent e)
+           {
+           int nRow = getSelectedRow();
+
+           if (nRow == -1)
+               {
+               DialogHelper.showInfoDialog(Localization.getLocalText("LBL_must_select_row"));
+               }
+           else
+               {
+               Pair<String, String> selectedCache = f_model.getSelectedCache();
+               String sQuestion = Localization.getLocalText("LBL_confirm_cache_operation", f_sOperation, selectedCache.toString());
+
+                if (!DialogHelper.showConfirmDialog(sQuestion))
+                    {
+                    return;
+                    }
+               try
+                   {
+                   m_requestSender.invokeStorageManagerOperation(selectedCache.getX(), selectedCache.getY(), f_sOperation);
+                   showMessageDialog(Localization.getLocalText("LBL_result"), Localization.getLocalText("LBL_cache_operation_completed", f_sOperation),
+                                          JOptionPane.INFORMATION_MESSAGE);
+                   }
+               catch (Exception ee)
+                   {
+                   showMessageDialog(Localization.getLocalText("ERR_cannot_run_cache_operation", selectedCache.toString()),
+                                 ee.getMessage() + "\n" + ee.getCause(), JOptionPane.ERROR_MESSAGE);
+                   }
+               }
+           }
+
+           // ----- data members ------------------------------------------------
+
+           private final String f_sOperation;
+       }
+
+    /**
+     * A menu option to display a heat map for the cache sizes or
+     * primary storage used.
      */
     protected class ShowHeatMapMenuOption
             extends AbstractMenuOption
@@ -1071,6 +1124,9 @@ public class CoherenceCachePanel
     // ---- constants -------------------------------------------------------
 
     private static final long serialVersionUID = -7612569043492412496L;
+
+    public static final String TRUNCATE = "truncateCache";
+    public static final String CLEAR = "clearCache";
 
     // ----- data members ---------------------------------------------------
 
