@@ -679,7 +679,7 @@ public class CoherenceCachePanel
     protected class InvokeCacheOperationMenuOpen
            extends AbstractMenuOption
        {
-        // ----- constructors -----------------------------------------------
+       // ----- constructors -----------------------------------------------
 
        public InvokeCacheOperationMenuOpen(VisualVMModel model, RequestSender requestSender,
                                            ExportableJTable jtable, String sOperation)
@@ -693,7 +693,6 @@ public class CoherenceCachePanel
            {
            return getLocalizedText(f_sOperation.equals(TRUNCATE) ? "LBL_truncate" : "LBL_clear");
            }
-
 
        @Override
        public void actionPerformed(ActionEvent e)
@@ -727,16 +726,14 @@ public class CoherenceCachePanel
                }
            }
 
-
            // ----- data members ------------------------------------------------
 
-       private final String f_sOperation;
+           private final String f_sOperation;
        }
 
     /**
-     * An experimental menu option to display a heat map for the cache sizes or
-     * primary storage used. To enable, set the following system property<br>
-     *  coherence.jvisualvm.heatmap.enabled=true
+     * A menu option to display a heat map for the cache sizes or
+     * primary storage used.
      */
     protected class ShowHeatMapMenuOption
             extends AbstractMenuOption
