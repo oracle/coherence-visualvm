@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.node.MissingNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
+import com.oracle.coherence.plugin.visualvm.panel.CoherenceCachePanel;
 import com.oracle.coherence.plugin.visualvm.panel.CoherencePersistencePanel;
 
 import java.io.IOException;
@@ -271,6 +272,20 @@ public class HttpRequestSender
             }
 
         return setObjectNames;
+        }
+
+    @Override
+    public void invokeStorageManagerOperation(String sService, String sCacheName, String sOperation)
+            throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath()
+                 .addPathSegment(SERVICES)
+                 .addPathSegment(encodeServiceName(sService))
+                 .addPathSegment("storage")
+                 .addPathSegment(encodeServiceName(sCacheName))
+                 .addPathSegment(sOperation.equals(CoherenceCachePanel.CLEAR) ? "clear" : "truncate");
+
+        sendPostRequest(urlBuilder);
         }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -111,6 +111,18 @@ public class JMXRequestSender
             throws Exception
         {
         return f_connection.queryNames(new ObjectName("Coherence:type=Cache,*"), null);
+        }
+
+    @Override
+    public void invokeStorageManagerOperation(String sService, String sCacheName, String sOperation)
+            throws Exception
+        {
+        ObjectName objectName = new ObjectName("Coherence:type=StorageManager,service=" + sService + ",cache=" + sCacheName + ",*");
+
+        Set<ObjectName> setResult = getCompleteObjectName(objectName);
+        String sFQN = getFirstResult(setResult);
+
+        invoke(new ObjectName(sFQN), sOperation,  new Object[]{}, new String[]{});
         }
 
     @Override

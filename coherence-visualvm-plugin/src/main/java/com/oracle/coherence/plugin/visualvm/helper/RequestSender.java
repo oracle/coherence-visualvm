@@ -91,6 +91,18 @@ public interface RequestSender
             throws Exception;
 
     /**
+     * Invoke a Storage Manager operation.
+     *
+     * @param sService      the name of the service
+     * @param sCacheName    the name of the cache
+     * @param sOperation    the name of the operation
+     *
+     * @throws Exception in case of errors
+     */
+    void invokeStorageManagerOperation(String sService, String sCacheName, String sOperation)
+            throws Exception;
+
+    /**
      * Return the list of all journal member ObjectNames in the cluster.
      *
      * @param sJournalType  the journal type(FlashJournalRM/RamJournalRM)
