@@ -282,7 +282,6 @@ public class CoherencePersistencePanel
 
         if (m_persistenceData != null)
             {
-            m_cMaxMaxLatency = cLatencyMax;
             f_txtTotalActiveSpaceUsed.setText(String.format(MEM_FORMAT, (cTotalActive * 1.0f) / GraphHelper.MB));
             cLatencyAverage = cLatencyTotal / count;
             if (cLatencyMax > m_cMaxMaxLatency)
