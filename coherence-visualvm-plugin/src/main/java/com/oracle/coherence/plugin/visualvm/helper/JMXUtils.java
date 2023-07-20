@@ -42,6 +42,14 @@ import javax.management.ObjectName;
  */
 public class JMXUtils
     {
+    // ----- constructors ---------------------------------------------------
+
+    /**
+     * Private constructor.
+     */
+    private JMXUtils()
+        {
+        }
 
     // ----- helpers --------------------------------------------------------
 
@@ -188,7 +196,7 @@ public class JMXUtils
     /**
      * A representation of a JMX Field request which can be an Attribute or Key.
      */
-    protected static abstract class JMXField
+    protected abstract static class JMXField
         {
         /**
          * Construct a new field request for a given name.

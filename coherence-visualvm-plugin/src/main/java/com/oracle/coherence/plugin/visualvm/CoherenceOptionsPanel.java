@@ -548,7 +548,7 @@ public class CoherenceOptionsPanel
                                               e.getValue()));
                                       setMetrics.stream()
                                                 .filter(m->m.getServiceName().equals(s) && m.getPartitionId() == nPartitionId)
-                                                .forEach(m->sb.append(String.format("  %s%n", mapLines.get(m.getLineId()))));
+                                                .forEach(m->sb.append(String.format(FORMAT, mapLines.get(m.getLineId()))));
                                       });
 
                             sb.append("\nOutput by partition and event for ").append(s).append('\n');
@@ -563,10 +563,10 @@ public class CoherenceOptionsPanel
                                 sb.append("- Partition ").append(p).append('\n');
                                 // retrieve the initial partition assign which has been marked with partition of -1
                                 setMetrics.stream().filter(m -> m.getServiceName().equals(s) && m.getPartitionId() == -1)
-                                       .forEach(m -> sb.append(String.format("  %s%n", mapLines.get(m.getLineId()))));
+                                       .forEach(m -> sb.append(String.format(FORMAT, mapLines.get(m.getLineId()))));
                                 setMetrics.stream()
                                        .filter(m -> m.getServiceName().equals(s) && m.getPartitionId() == p)
-                                       .forEach(m -> sb.append(String.format("  %s%n", mapLines.get(m.getLineId()))));
+                                       .forEach(m -> sb.append(String.format(FORMAT, mapLines.get(m.getLineId()))));
                                 });
                             }
                         });
@@ -608,6 +608,7 @@ public class CoherenceOptionsPanel
         private static final String MIN = "  Min (ms)";
         private static final String TOTAL = "    Total (ms)";
         private static final String PERCENT = "   Percent";
+        private static final String FORMAT = "  %s%n";
 
         // ----- data members -----------------------------------------------
 

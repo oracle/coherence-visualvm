@@ -515,7 +515,7 @@ public class HttpRequestSender
 
                 // the type attribute returned in the response is the service type, but in the object name,
                 // type is always Service
-                mapKeysProps.put("type", "Service");
+                mapKeysProps.put("type", SERVICE_CC);
                 setObjectNames.add(new ObjectName(COHERENCE, mapKeysProps));
                 }
             }
@@ -799,7 +799,7 @@ public class HttpRequestSender
            {
            case CoherenceTopicPanel.RETRIEVE_HEADS:
                sRealOperation = "heads";
-               sKey           = "links";
+               sKey           = LINKS;
                break;
            case CoherenceTopicPanel.NOTIFY_POPULATED:
                sRealOperation = "notifyPopulated";
@@ -865,7 +865,7 @@ public class HttpRequestSender
 
                 Hashtable<String, String> mapKeysProps = new Hashtable<>();
                 serviceMember.fields().forEachRemaining(e -> mapKeysProps.put(e.getKey(), e.getValue().asText()));
-                mapKeysProps.put("type", "Service");
+                mapKeysProps.put("type", SERVICE_CC);
                 setObjectNames.add(new ObjectName(COHERENCE, mapKeysProps));
                 }
             }
@@ -1617,7 +1617,7 @@ public class HttpRequestSender
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, SERVICE)))
                         .addPathSegment(CACHES).addPathSegment(objectName.getKeyProperty("cache"))
                         .addPathSegment(MEMBERS).addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID));
-            case "Service":
+            case SERVICE_CC:
                 return urlBuilder.addPathSegment(SERVICES)
                         .addPathSegment(encodeServiceName(getKeyPropertyFromObjName(objectName, "name")))
                         .addPathSegment(MEMBERS).addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID))
@@ -1676,8 +1676,9 @@ public class HttpRequestSender
                         return urlBuilder.addPathSegment("operatingSystem");
                         }
                     }
+            default:
+                return null;
             }
-        return null;
         }
 
     /**
@@ -2003,6 +2004,7 @@ public class HttpRequestSender
     private static final String SUBSCRIBERS  = "subscribers";
     private static final String SUBGROUPS    = "subscriberGroups";
     private static final String SERVICE      = "service";
+    private static final String SERVICE_CC   = "Service";
     private static final String MEMBERS      = "members";
     private static final String CACHES       = "caches";
     private static final String PERSISTENCE  = "persistence";
@@ -2037,11 +2039,13 @@ public class HttpRequestSender
             @Override
             public void checkClientTrusted(X509Certificate[] certs, String authType)
                 {
+                // empty as we want a way for user to connect using invalid cer
                 }
 
             @Override
             public void checkServerTrusted(X509Certificate[] certs, String authType)
                 {
+                // empty as we want a way for user to connect using invalid cert
                 }
             }
         };
