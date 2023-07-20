@@ -138,8 +138,8 @@ public class JMXRequestSender
             throws Exception
         {
         return f_connection.queryNames(new ObjectName("Coherence:type=Cache,service=" + sServiceName
-                + (sDomainPartition != null ? ",domainPartition=" + sDomainPartition : "")
-                + ",name=" + sCacheName + ",*"), null);
+                + (sDomainPartition != null ? DOMAIN_PARTITION + sDomainPartition : "")
+                + NAME + sCacheName + ",*"), null);
         }
 
     @Override
@@ -148,7 +148,7 @@ public class JMXRequestSender
         {
 
         return f_connection.queryNames(new ObjectName("Coherence:type=StorageManager,service="
-                + sServiceName + (sDomainPartition != null ? ",domainPartition=" + sDomainPartition : "")
+                + sServiceName + (sDomainPartition != null ? DOMAIN_PARTITION + sDomainPartition : "")
                 + ",cache=" + sCacheName + ",*"), null);
         }
 
@@ -156,7 +156,7 @@ public class JMXRequestSender
     public Set<ObjectName> getAllClusters()
             throws Exception
         {
-        return f_connection.queryNames(new ObjectName("Coherence:type=Cluster,*"), null);
+        return f_connection.queryNames(new ObjectName(CLUSTER), null);
         }
 
     @Override
@@ -232,7 +232,7 @@ public class JMXRequestSender
             throws Exception
         {
         return f_connection.queryNames(new ObjectName("Coherence:type=Service,name=" + sServiceName +
-                (sDomainPartition != null ? ",domainPartition=" + sDomainPartition : "") + ",*"), null);
+                (sDomainPartition != null ? DOMAIN_PARTITION + sDomainPartition : "") + ",*"), null);
         }
 
     @Override
@@ -261,7 +261,7 @@ public class JMXRequestSender
             throws Exception
         {
         String sQuery = "Coherence:type=PartitionAssignment,service="
-                + sService + (sDomainPartition != null ? ",domainPartition=" + sDomainPartition : "")
+                + sService + (sDomainPartition != null ? DOMAIN_PARTITION + sDomainPartition : "")
                 + ",responsibility=DistributionCoordinator,*";
         return f_connection.queryNames(new ObjectName(sQuery), null);
         }
@@ -304,13 +304,13 @@ public class JMXRequestSender
         if (sSubscriberGroup == null)
             {
             // topic only
-            objectName = new ObjectName("Coherence:type=PagedTopic,service=" + sService + ",name=" + sTopic + ",*");
+            objectName = new ObjectName("Coherence:type=PagedTopic,service=" + sService + NAME + sTopic + ",*");
             }
         else
            {
            // subscriber group
            objectName = new ObjectName("Coherence:type=PagedTopicSubscriberGroup,service=" + sService + ",topic=" + sTopic +
-                                       ",name=" + sSubscriberGroup + ",*");
+                                       NAME + sSubscriberGroup + ",*");
            }
 
 
@@ -380,7 +380,7 @@ public class JMXRequestSender
         {
         // look up the full name of the MBean in case we are in container
         Set<ObjectName> setResult = getCompleteObjectName(
-                new ObjectName("Coherence:type=Cluster,*"));
+                new ObjectName(CLUSTER));
 
         String sFQN = getFirstResult(setResult);
 
@@ -491,7 +491,7 @@ public class JMXRequestSender
 
         try
             {
-            memberId = (Integer) JMXUtils.runJMXQuerySingleResult(f_connection, "Coherence:type=Cluster,*",
+            memberId = (Integer) JMXUtils.runJMXQuerySingleResult(f_connection, CLUSTER,
                     new JMXUtils.Attribute("LocalMemberId"));
             }
         catch (Exception e)
@@ -617,6 +617,10 @@ public class JMXRequestSender
      * The logger object to use.
      */
     private static final Logger LOGGER = Logger.getLogger(JMXRequestSender.class.getName());
+
+    private static final String DOMAIN_PARTITION = ",domainPartition=";
+    private static final String NAME             = ",name=";
+    private static final String CLUSTER          = "Coherence:type=Cluster,*";
 
     // ------ data members --------------------------------------------------
 

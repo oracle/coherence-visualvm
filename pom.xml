@@ -34,7 +34,7 @@
   <groupId>com.oracle.coherence.plugin.visualvm</groupId>
   <artifactId>coherence-visualvm-main</artifactId>
   <packaging>pom</packaging>
-  <version>1.6.1-SNAPSHOT</version>
+  <version>1.6.2-SNAPSHOT</version>
   <name>Coherence VisualVM Plugin Parent</name>
 
   <description>
@@ -53,7 +53,7 @@
     <com.sun.xml.bind.version>2.3.0</com.sun.xml.bind.version>
 
     <!-- default coherence versions -->
-    <default.coherence.ce.version>22.06.4</default.coherence.ce.version>
+    <default.coherence.ce.version>22.06.5</default.coherence.ce.version>
     <default.coherence.commercial.version>14.1.2-0-0-SNAPSHOT
     </default.coherence.commercial.version>
 

@@ -382,15 +382,8 @@ public class VisualVMModel
             return false;
             }
 
-        if (!isExecutorConfigured() &&
-            (
-            clazz.equals(DataType.EXECUTOR.getClassName())
-            ))
-            {
-            return false;
-            }
-
-        return true;
+            return isExecutorConfigured() ||
+                   (!clazz.equals(DataType.EXECUTOR.getClassName()));
         }
 
     /**
@@ -1343,8 +1336,8 @@ public class VisualVMModel
 
         private DataType(Class<?> clz, String[] asMeta)
             {
-            clazz      = clz;
-            asMetadata = asMeta;
+            f_clazz      = clz;
+            f_asMetadata = asMeta;
             }
 
         /**
@@ -1354,7 +1347,7 @@ public class VisualVMModel
          */
         public Class<?> getClassName()
             {
-            return clazz;
+            return f_clazz;
             }
 
         /**
@@ -1364,18 +1357,18 @@ public class VisualVMModel
          */
         public String[] getMetadata()
             {
-            return asMetadata;
+            return f_asMetadata;
             }
 
         /**
          * The {@link Class} associated with this enum.
          */
-        private final Class<?> clazz;
+        private final Class<?> f_clazz;
 
         /**
          * The column name associated with this enum.
          */
-        private final String[] asMetadata;
+        private final String[] f_asMetadata;
         }
 
     /**
@@ -1393,6 +1386,8 @@ public class VisualVMModel
     private static final String LBL_SIZE         = "LBL_size";
     private static final String LBL_CACHE_HITS   = "LBL_cache_hits";
     private static final String LBL_CACHE_MISSES = "LBL_cache_misses";
+    private static final String LBL_TOTAL_GETS   = "LBL_total_gets";
+    private static final String LBL_TOTAL_PUTS   = "LBL_total_puts";
 
     /**
      * Labels for service table.
@@ -1472,8 +1467,8 @@ public class VisualVMModel
     private static final String[] CACHE_DETAIL_LABELS = new String[]
         {
         Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText(LBL_SIZE),
-        Localization.getLocalText(LBL_MEMORY_BYTES), Localization.getLocalText("LBL_total_gets"),
-        Localization.getLocalText("LBL_total_puts"), Localization.getLocalText(LBL_CACHE_HITS),
+        Localization.getLocalText(LBL_MEMORY_BYTES), Localization.getLocalText(LBL_TOTAL_GETS),
+        Localization.getLocalText(LBL_TOTAL_PUTS), Localization.getLocalText(LBL_CACHE_HITS),
         Localization.getLocalText(LBL_CACHE_MISSES), Localization.getLocalText("LBL_hit_probability")
         };
 
@@ -1483,7 +1478,7 @@ public class VisualVMModel
     private static final String[] CACHE_FRONT_DETAIL_LABELS = new String[]
         {
         Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText(LBL_SIZE),
-        Localization.getLocalText("LBL_total_gets"), Localization.getLocalText("LBL_total_puts"),
+        Localization.getLocalText(LBL_TOTAL_GETS), Localization.getLocalText(LBL_TOTAL_PUTS),
         Localization.getLocalText(LBL_CACHE_HITS), Localization.getLocalText(LBL_CACHE_MISSES),
         Localization.getLocalText("LBL_hit_probability")
         };
@@ -1684,8 +1679,8 @@ public class VisualVMModel
      */
     private static final String[] JCACHE_STATS_LABELS = new String[]
         {
-        Localization.getLocalText("LBL_config_cache"), Localization.getLocalText("LBL_total_puts"),
-        Localization.getLocalText("LBL_total_gets"), Localization.getLocalText("LBL_removals"),
+        Localization.getLocalText("LBL_config_cache"), Localization.getLocalText(LBL_TOTAL_PUTS),
+        Localization.getLocalText(LBL_TOTAL_GETS), Localization.getLocalText("LBL_removals"),
         Localization.getLocalText(LBL_CACHE_HITS), Localization.getLocalText(LBL_CACHE_MISSES),
         Localization.getLocalText("LBL_evictions"), Localization.getLocalText("GRPH_average_get_time"),
         Localization.getLocalText("GRPH_average_put_time"), Localization.getLocalText("GRPH_average_remove_time"),
