@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -228,7 +228,7 @@ public class CoherenceHotCachePanel
                         }
                     if((int) entry.getValue().getColumn(HotCacheData.Max3)!=Integer.MIN_VALUE)
                         {
-                        GraphHelper.addValuesToHotcacheGraph(m_hotcacheGraph3,(double) entry.getValue().getColumn(HotCacheData.Mean3), Integer.valueOf((int) entry.getValue().getColumn(HotCacheData.Max3)).longValue(), Integer.valueOf((int) entry.getValue().getColumn(HotCacheData.Min3)).longValue());
+                        GraphHelper.addValuesToHotcacheGraph(m_hotcacheGraph3,(double) entry.getValue().getColumn(HotCacheData.Mean3), (long) entry.getValue().getColumn(HotCacheData.Max3), (long) entry.getValue().getColumn(HotCacheData.Min3));
                         }
                     if((long) entry.getValue().getColumn(HotCacheData.Max4)!=Long.MIN_VALUE)
                         {
@@ -244,7 +244,7 @@ public class CoherenceHotCachePanel
                         }
                     if((int) entry.getValue().getColumn(HotCacheData.Max7)!=Integer.MIN_VALUE)
                         {
-                        GraphHelper.addValuesToHotcacheGraph(m_hotcacheGraph7, (double) entry.getValue().getColumn(HotCacheData.Mean7), Integer.valueOf((int) entry.getValue().getColumn(HotCacheData.Max7)).longValue(), Integer.valueOf((int) entry.getValue().getColumn(HotCacheData.Min7)).longValue());
+                        GraphHelper.addValuesToHotcacheGraph(m_hotcacheGraph7, (double) entry.getValue().getColumn(HotCacheData.Mean7), (long) entry.getValue().getColumn(HotCacheData.Max7), (long) entry.getValue().getColumn(HotCacheData.Min7));
                         }
                     break;
                     }

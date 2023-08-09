@@ -375,13 +375,7 @@ public class PersistenceData
             Set<ObjectName> setResult = requestSender
                     .getCompleteObjectName(new ObjectName(getMBeanName(sServiceName)));
 
-            String sFQN = null;
-
-            for (Object oResult : setResult)
-                {
-                sFQN = oResult.toString();
-                break;
-                }
+            String sFQN = setResult.isEmpty() ? null : setResult.iterator().next().toString();
 
             sStatus = requestSender.getAttribute(new ObjectName(sFQN), "OperationStatus");
             }
