@@ -296,7 +296,7 @@ public abstract class AbstractMenuOption
     protected int getSelectedRow()
         {
         int nSelectedRow = f_jtable != null ? f_jtable.getSelectedRow() : -1;
-        if (nSelectedRow != -1)
+        if (nSelectedRow != -1 && f_jtable != null)
             {
             // set the correct model row index taking into account sorting
             nSelectedRow = f_jtable.convertRowIndexToModel(nSelectedRow);

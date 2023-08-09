@@ -584,11 +584,7 @@ public class JMXRequestSender
         // look up the full name of the MBean in case we are in container
         Set<ObjectName> setResult = getCompleteObjectName(new ObjectName(sQuery));
 
-        for (Object oResult : setResult)
-            {
-            return oResult.toString();
-            }
-        return null;
+        return setResult.isEmpty() ? null : setResult.iterator().next().toString();
         }
 
 
@@ -602,13 +598,7 @@ public class JMXRequestSender
      */
     private String getFirstResult(Set<ObjectName> setResult)
         {
-        String sFQN = null;
-
-        if (!setResult.isEmpty())
-            {
-            sFQN = setResult.iterator().next().toString();
-            }
-        return sFQN;
+        return setResult.isEmpty() ? null : setResult.iterator().next().toString();
         }
 
     // ------ constants -----------------------------------------------------
