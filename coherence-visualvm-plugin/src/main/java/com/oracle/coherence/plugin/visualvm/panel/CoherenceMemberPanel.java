@@ -321,13 +321,7 @@ public class CoherenceMemberPanel
             super(model, requestSender, jtable);
             }
 
-           // ----- MenuOptions methods ----------------------------------------
-
-        @Override
-        public String getMenuItem()
-            {
-            return getLocalizedText("LBL_report_node_environment");
-            }
+        // ----- MenuOptions methods ----------------------------------------
 
         @Override
         public void actionPerformed(ActionEvent e)
@@ -345,7 +339,6 @@ public class CoherenceMemberPanel
                     {
                     nNodeId        = (Integer) getJTable().getModel().getValueAt(nRow, 0);
                     String sResult = generateHeader(nNodeId) + m_requestSender.reportEnvironment(nNodeId);
-
                     showMessageDialog(getLocalizedText("LBL_environment_for_node") + " " + nNodeId,
                         sResult, JOptionPane.INFORMATION_MESSAGE, 500, 400, true);
                     }
@@ -354,6 +347,12 @@ public class CoherenceMemberPanel
                     showMessageDialog("Error running reportEnvironment for Node " + nNodeId, getSanitizedMessage(ee), JOptionPane.ERROR_MESSAGE);
                     }
                 }
+            }
+
+        @Override
+        public String getMenuItem()
+            {
+            return getLocalizedText("LBL_report_node_environment");
             }
         }
 
