@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -184,7 +184,8 @@ public class CoherenceMemberPanel
                     menuDetail,
                     new ReportEnvironmentMenuOption(model, m_requestSender, f_table),
                     new ReportNodeStateMenuOption(model, m_requestSender, f_table),
-                    new ReportNodeStateMultiMenuOption(model, m_requestSender, f_table)});
+                    new ReportNodeStateMultiMenuOption(model, m_requestSender, f_table),
+                    new GetDescriptionMenuOption(model, m_requestSender, f_table)});
             }
         else
             {
@@ -320,13 +321,7 @@ public class CoherenceMemberPanel
             super(model, requestSender, jtable);
             }
 
-           // ----- MenuOptions methods ----------------------------------------
-
-        @Override
-        public String getMenuItem()
-            {
-            return getLocalizedText("LBL_report_node_environment");
-            }
+        // ----- MenuOptions methods ----------------------------------------
 
         @Override
         public void actionPerformed(ActionEvent e)
@@ -344,6 +339,66 @@ public class CoherenceMemberPanel
                     {
                     nNodeId        = (Integer) getJTable().getModel().getValueAt(nRow, 0);
                     String sResult = generateHeader(nNodeId) + m_requestSender.reportEnvironment(nNodeId);
+                    showMessageDialog(getLocalizedText("LBL_environment_for_node") + " " + nNodeId,
+                        sResult, JOptionPane.INFORMATION_MESSAGE, 500, 400, true);
+                    }
+                catch (Exception ee)
+                    {
+                    showMessageDialog("Error running reportEnvironment for Node " + nNodeId, getSanitizedMessage(ee), JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+
+        @Override
+        public String getMenuItem()
+            {
+            return getLocalizedText("LBL_report_node_environment");
+            }
+        }
+
+   // ----- inner classes GetDescriptionMenuOption ----------------------
+
+    /**
+     * A class to call the description operation on the selected ClusterNode
+     * MBean and display the details.
+     */
+    private class GetDescriptionMenuOption
+            extends AbstractMenuOption
+        {
+
+        /**
+         * {@inheritDoc}
+         */
+        public GetDescriptionMenuOption(VisualVMModel model, RequestSender requestSender,
+                                           ExportableJTable jtable)
+            {
+            super(model, requestSender, jtable);
+            }
+
+           // ----- MenuOptions methods ----------------------------------------
+
+        @Override
+        public String getMenuItem()
+            {
+            return getLocalizedText("LBL_get_description");
+            }
+
+        @Override
+        public void actionPerformed(ActionEvent e)
+            {
+            int nRow = getSelectedRow();
+            Integer nNodeId = null;
+
+            if (nRow == -1)
+                {
+                DialogHelper.showInfoDialog(getLocalizedText("LBL_must_select_row"));
+                }
+            else
+                {
+                try
+                    {
+                    nNodeId        = (Integer) getJTable().getModel().getValueAt(nRow, 0);
+                    String sResult = generateHeader(nNodeId) + m_requestSender.getNodeDescription(nNodeId);
 
                     showMessageDialog(getLocalizedText("LBL_environment_for_node") + " " + nNodeId,
                         sResult, JOptionPane.INFORMATION_MESSAGE, 500, 400, true);

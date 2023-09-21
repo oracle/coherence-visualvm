@@ -581,6 +581,22 @@ public class HttpRequestSender
         }
 
     @Override
+    public String getServiceDescription(String sService, String sDomainPartition)
+            throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sService)).addPathSegment("description")
+                .addQueryParameter(LINKS, "");
+        if (sDomainPartition != null)
+            {
+            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            }
+
+        JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
+        return rootNode.get("description").asText();
+        }
+
+    @Override
     public Set<Object[]> getPartitionAssignmentAttributes(String sService, String sDomainPartition)
             throws Exception
         {
@@ -677,6 +693,18 @@ public class HttpRequestSender
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
         return rootNode.get("environment").asText();
+        }
+
+    @Override
+    public String getNodeDescription(Integer nNodeId)
+            throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(MEMBERS)
+                .addPathSegment(nNodeId + "").addPathSegment("description")
+                .addQueryParameter(LINKS, "");
+
+        JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
+        return rootNode.get("description").asText();
         }
 
     /**

@@ -323,6 +323,19 @@ public interface RequestSender
             throws Exception;
 
     /**
+     * Get the description of a service.
+     *
+     * @param sService          the name of the service
+     * @param sDomainPartition  the domain partition to which the service belongs
+     *
+     * @return the service description
+     *
+     * @throws Exception in case of errors
+     */
+    String getServiceDescription(String sService, String sDomainPartition)
+            throws Exception;
+
+    /**
      * Get the attributes of the SimpleAssignmentStrategyMBean.
      *
      * @param sService          the name of the service
@@ -402,6 +415,18 @@ public interface RequestSender
      * @throws Exception in case of errors
      */
     String reportEnvironment(Integer nNodeId)
+            throws Exception;
+
+    /**
+     * Get the description of a Cluster member.
+     *
+     * @param nNodeId  the ID of the cluster member
+     *
+     * @return the description of a cluster member
+     *
+     * @throws Exception in case of errors
+     */
+    String getNodeDescription(Integer nNodeId)
             throws Exception;
 
     /**

@@ -98,7 +98,8 @@ public class CoherenceServicePanel
             // only available in 12.2.1 and above
             table.setMenuOptions(new MenuOption[]{
                     new RightClickMenuOption(model, m_requestSender, table, REPORT_DISTRIBUTIONS),
-                    new RightClickMenuOption(model, m_requestSender, table, SHOW_PARTITION_STATS)});
+                    new RightClickMenuOption(model, m_requestSender, table, SHOW_PARTITION_STATS),
+                    new RightClickMenuOption(model, m_requestSender, table, SHOW_SERVICE_DESCRIPTION)});
             }
         else if (model.getClusterVersionAsInt() >= 121200)
             {
@@ -426,8 +427,8 @@ public class CoherenceServicePanel
         public String getMenuItem()
             {
             return getLocalizedText(f_nOption == REPORT_DISTRIBUTIONS
-                    ? "LBL_report_sched_dist"
-                    : "LBL_partition_stats");
+                    ? "LBL_report_sched_dist" : f_nOption == SHOW_PARTITION_STATS
+                    ? "LBL_partition_stats" : "LBL_show_service_description");
             }
 
         /**
@@ -458,6 +459,10 @@ public class CoherenceServicePanel
                     if (f_nOption == REPORT_DISTRIBUTIONS)
                         {
                         sResult = m_requestSender.getScheduledDistributions(sService, sDomainPartition);
+                        }
+                    else if (f_nOption == SHOW_SERVICE_DESCRIPTION)
+                        {
+                        sResult = m_requestSender.getServiceDescription(sService, sDomainPartition);
                         }
                     else if (f_nOption == SHOW_PARTITION_STATS)
                         {
@@ -513,7 +518,7 @@ public class CoherenceServicePanel
          */
         private String getSanitizedMessage(Exception e)
             {
-            String sError = e.getMessage();
+            String sError = e != null ? e.getMessage() : "unknown";
             return sError.contains("name cannot be null") ? "Node no longer available or operation not valid for service type." : sError;
             }
 
@@ -643,6 +648,11 @@ public class CoherenceServicePanel
      * Right click option for showing partitions statistics.
      */
     private final int SHOW_PARTITION_STATS = 1;
+
+    /**
+     * Right click option for showing service description.
+     */
+    private final int SHOW_SERVICE_DESCRIPTION = 2;
 
     // ----- data members ---------------------------------------------------
 

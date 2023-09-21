@@ -280,6 +280,17 @@ public class JMXRequestSender
         }
 
     @Override
+    public String getServiceDescription(String sService, String sDomainPartition)
+            throws Exception
+       {
+       Set<ObjectName> setResult = getServiceObjectName(sService, sDomainPartition, getLocalMemberId());
+
+       String sFQN = getFirstResult(setResult);
+
+       return (String) invoke(new ObjectName(sFQN), "getServiceDescription", new Object[0], new String[0]);
+       }
+
+    @Override
     public Set<Object[]> getPartitionAssignmentAttributes(String sService, String sDomainPartition)
             throws Exception
         {
@@ -370,6 +381,19 @@ public class JMXRequestSender
         return (String) invoke(new ObjectName(sFQN), "reportEnvironment", new Object[0], new String[0]);
         }
 
+    @Override
+    public String getNodeDescription(Integer nNodeId)
+            throws Exception
+        {
+        // look up the full name of the MBean in case we are in container
+        Set<ObjectName> setResult = getCompleteObjectName(
+                new ObjectName("Coherence:type=Node,nodeId=" + nNodeId + ",*"));
+
+        String sFQN = getFirstResult(setResult);
+
+        return (String) invoke(new ObjectName(sFQN), "getNodeDescription", new Object[0], new String[0]);
+        }
+
     /**
      * Issue a dump cluster heap request.
      *
@@ -453,6 +477,15 @@ public class JMXRequestSender
 
 
     // ------ JMXRequestSender methods --------------------------------------
+
+    public Set<ObjectName> getServiceObjectName(String sService, String sDomainPartition, int nMemberId)
+            throws Exception
+        {
+        String sQuery = "Coherence:type=Service,name="
+                        + sService + (sDomainPartition != null ? DOMAIN_PARTITION + sDomainPartition : "")
+                        + ",nodeId=" + nMemberId + ",*";
+        return f_connection.queryNames(new ObjectName(sQuery), null);
+        }
 
     /**
      * Retrieve the Reporter MBean for the local member Id. We do a query to get the object
