@@ -468,60 +468,57 @@ public class VisualVMModel
 
                     // if we have not yet evaluated if the reporter is available, e.g. value of null,
                     // then do it. Also check for the version as well.
-                    if (isReporterAvailable() == null || is1213AndAbove() == null)
+                    if ((isReporterAvailable() == null || is1213AndAbove() == null) && clusterData != null)
                         {
                         // get the Coherence version. Easier to do if we are connected to a cluster,
                         // but we have JMX connection as we have to look in data we collected.
 
-                        if (clusterData != null)
+                        for (Entry<Object, Data> entry : clusterData)
                             {
-                            for (Entry<Object, Data> entry : clusterData)
+                            // there will only be one cluster entry
+
+                            String sCoherenceVersion =
+                                entry.getValue().getColumn(ClusterData.VERSION).toString().replaceFirst(" .*$", "")
+                                                .replaceFirst("[\\.-]SNAPSHOT.*$","").replaceAll("-",".");
+                            m_sClusterVersion = sCoherenceVersion;
+
+                            int nVersion = 0;
+
+                            if (sCoherenceVersion.startsWith("3.5"))
                                 {
-                                // there will only be one cluster entry
-
-                                String sCoherenceVersion =
-                                    entry.getValue().getColumn(ClusterData.VERSION).toString().replaceFirst(" .*$", "")
-                                                    .replaceFirst("[\\.-]SNAPSHOT.*$","").replaceAll("-",".");
-                                m_sClusterVersion = sCoherenceVersion;
-
-                                int nVersion = 0;
-
-                                if (sCoherenceVersion.startsWith("3.5"))
-                                    {
-                                    // manual check as version numbering changed after 35
-                                    nVersion = 353;
-                                    }
-                                else if (sCoherenceVersion.startsWith("2"))
-                                    {
-                                    // check for versions such as 20.06 or 20.06.01 and convert them to an ever-increasing number
-                                    // 20.06    -> 2006000
-                                    // 20.06.1  -> 2006100
-                                    // 20.06.10 -> 2006100
-                                    String sStrippedVersion = sCoherenceVersion.replaceAll("\\.", "");
-                                    nVersion = Integer.parseInt(sStrippedVersion) * (int) Math.pow(10, 7 - (double) sStrippedVersion.length());
-                                    }
-                                else
-                                    {
-                                    nVersion = Integer.parseInt(sCoherenceVersion.replaceAll("\\.", ""));
-                                    }
-
-                                LOGGER.log(Level.INFO, "Raw Coherence version identified as {0}", m_sClusterVersion);
-                                LOGGER.log(Level.INFO, "Numeric Coherence version identified as {0}", String.format("%d", nVersion));
-
-                                if (nVersion >= 121300)
-                                    {
-                                    // only set if the reporter available is it is not already set as we may have
-                                    // got to this code path because is1213AndAbove() is still null
-                                    setReporterAvailable(isReporterAvailable() == null || isReporterAvailable());
-                                    m_fis1213AndAbove = true;
-                                    }
-                                else
-                                    {
-                                    setReporterAvailable(isReporterAvailable() != null && isReporterAvailable());
-                                    m_fis1213AndAbove = false;
-                                    }
-                                m_nClusterVersion = nVersion;
+                                // manual check as version numbering changed after 35
+                                nVersion = 353;
                                 }
+                            else if (sCoherenceVersion.startsWith("2"))
+                                {
+                                // check for versions such as 20.06 or 20.06.01 and convert them to an ever-increasing number
+                                // 20.06    -> 2006000
+                                // 20.06.1  -> 2006100
+                                // 20.06.10 -> 2006100
+                                String sStrippedVersion = sCoherenceVersion.replaceAll("\\.", "");
+                                nVersion = Integer.parseInt(sStrippedVersion) * (int) Math.pow(10, 7 - (double) sStrippedVersion.length());
+                                }
+                            else
+                                {
+                                nVersion = Integer.parseInt(sCoherenceVersion.replaceAll("\\.", ""));
+                                }
+
+                            LOGGER.log(Level.INFO, "Raw Coherence version identified as {0}", m_sClusterVersion);
+                            LOGGER.log(Level.INFO, "Numeric Coherence version identified as {0}", String.format("%d", nVersion));
+
+                            if (nVersion >= 121300)
+                                {
+                                // only set if the reporter available is it is not already set as we may have
+                                // got to this code path because is1213AndAbove() is still null
+                                setReporterAvailable(isReporterAvailable() == null || isReporterAvailable());
+                                m_fis1213AndAbove = true;
+                                }
+                            else
+                                {
+                                setReporterAvailable(isReporterAvailable() != null && isReporterAvailable());
+                                m_fis1213AndAbove = false;
+                                }
+                            m_nClusterVersion = nVersion;
                             }
                         }
 

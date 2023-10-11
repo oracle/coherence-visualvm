@@ -262,7 +262,7 @@ public class RenderHelper
         public DecimalRenderer(NumberFormat sFormat)
             {
             super();
-            this.numberFormat = sFormat;
+            this.m_numberFormat = sFormat;
             setHorizontalAlignment(SwingConstants.RIGHT);
             }
 
@@ -282,7 +282,7 @@ public class RenderHelper
 
                 renderedLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-                String text = numberFormat.format((Number) value);
+                String text = m_numberFormat.format((Number) value);
 
                 renderedLabel.setText(text);
                 }
@@ -293,7 +293,7 @@ public class RenderHelper
         /**
          * Default the format to millis.
          */
-        private NumberFormat numberFormat = MILLIS_FORMAT;
+        private NumberFormat m_numberFormat = MILLIS_FORMAT;
         }
 
     /**

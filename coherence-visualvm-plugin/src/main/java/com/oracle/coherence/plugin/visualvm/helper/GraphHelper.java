@@ -307,7 +307,7 @@ public class GraphHelper
      */
     public static void addValuesToTotalProxyConnectionsGraph(SimpleXYChartSupport graph, int cTotalConnections)
         {
-        graph.addValues(System.currentTimeMillis(), new long[] {(long) cTotalConnections});
+        graph.addValues(System.currentTimeMillis(), new long[] {cTotalConnections});
         }
 
     /**
