@@ -125,7 +125,13 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath();
-        JsonNode rootNode = getResponseJson(sendGetRequest(modifyTarget(objName, urlBuilder)));
+        urlBuilder = modifyTarget(objName, urlBuilder);
+        if (urlBuilder == null)
+            {
+            throw new RuntimeException("urlBuild returned null");
+            }
+
+        JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
 
         // in case of back cache or storage manager we have to get the first item
         if (objName.getKeyProperty("type").equals(CACHE) ||
