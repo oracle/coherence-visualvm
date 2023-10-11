@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -80,7 +80,7 @@ class CoherenceClusterConfigurator extends JPanel
         CoherenceClusterConfigurator hc = new CoherenceClusterConfigurator();
         final DialogDescriptor dd =
                 new DialogDescriptor(hc, Localization.getLocalText("LBL_Add_Coherence_Cluster"), true,
-                        new Object[]{hc.m_okButton, DialogDescriptor.CANCEL_OPTION}, hc.m_okButton, 0,
+                        new Object[]{hc.m_okButton, NotifyDescriptor.CANCEL_OPTION}, hc.m_okButton, 0,
                         null, null);
 
         final Dialog d = DialogDisplayer.getDefault().createDialog(dd);

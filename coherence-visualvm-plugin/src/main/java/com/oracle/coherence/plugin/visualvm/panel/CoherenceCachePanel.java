@@ -334,7 +334,7 @@ public class CoherenceCachePanel
         f_tmodelStorage.setDataList(m_cacheStorageData);
 
         // check if near cache is configured
-        m_isNearCacheConfigured = m_cacheFrontDetailData != null && m_cacheFrontDetailData.size() > 0;
+        m_isNearCacheConfigured = m_cacheFrontDetailData != null && !m_cacheFrontDetailData.isEmpty();
 
         if (m_isNearCacheConfigured)
             {
@@ -455,7 +455,7 @@ public class CoherenceCachePanel
          */
         public SelectRowListSelectionListener(ExportableJTable table)
             {
-            this.table = table;
+            this.m_table = table;
             }
 
 
@@ -478,10 +478,10 @@ public class CoherenceCachePanel
 
             if (!selectionModel.isSelectionEmpty())
                 {
-                nSelectedRow = selectionModel.getMinSelectionIndex();
+                m_nSelectedRow = selectionModel.getMinSelectionIndex();
 
                 // get the service at the selected row, which is the first column
-                Pair<String, String> selectedCache = (Pair<String, String>) table.getValueAt(nSelectedRow, 0);
+                Pair<String, String> selectedCache = (Pair<String, String>) m_table.getValueAt(m_nSelectedRow, 0);
 
                 if (!selectedCache.equals(f_model.getSelectedCache()))
                     {
@@ -510,15 +510,15 @@ public class CoherenceCachePanel
          */
         public void updateRowSelection()
             {
-            table.addRowSelectionInterval(nSelectedRow, nSelectedRow);
+            m_table.addRowSelectionInterval(m_nSelectedRow, m_nSelectedRow);
             }
 
-        private ExportableJTable table;
+        private ExportableJTable m_table;
 
         /**
          * The currently selected row.
          */
-        private int nSelectedRow;
+        private int m_nSelectedRow;
         }
 
     /**
@@ -775,7 +775,7 @@ public class CoherenceCachePanel
         @Override
         public void actionPerformed (ActionEvent e)
             {
-            if (m_cacheData != null && m_cacheData.size() > 0)
+            if (m_cacheData != null && !m_cacheData.isEmpty())
                 {
                 updateData();
 
@@ -834,7 +834,7 @@ public class CoherenceCachePanel
                 m_cTotal += cValue;
                 Pair<Pair<String, String>, Long> cache = new Pair<>((Pair<String, String>) entry.getValue().getColumn(CacheData.CACHE_NAME), cValue);
 
-                if (f_listValues.size() == 0)
+                if (f_listValues.isEmpty())
                     {
                     f_listValues.add(cache);
                     }
@@ -990,7 +990,7 @@ public class CoherenceCachePanel
                         String sCache      = cache.toString();
                         String sCacheShort = cache.getY();
 
-                                StringBuffer sb = new StringBuffer(sCache).append(" - ")
+                        StringBuilder sb = new StringBuilder(sCache).append(" - ")
                                 .append(RenderHelper.INTEGER_FORMAT.format(nValue))
                                 .append(f_nType == TYPE_MEMORY ? " bytes" : " objects")
                                 .append(" (")

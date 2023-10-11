@@ -268,10 +268,10 @@ public class HttpRequestSender
                 mapKeysProps.put("name", cacheMember.get("name").asText());
                 mapKeysProps.put(SERVICE, cacheMember.get(SERVICE).asText());
 
-                JsonNode domainPartition = cacheMember.get("domainPartition");
+                JsonNode domainPartition = cacheMember.get(DOMAIN_PART);
                 if (domainPartition != null)
                     {
-                    mapKeysProps.put("domainPartition", domainPartition.asText());
+                    mapKeysProps.put(DOMAIN_PART, domainPartition.asText());
                     }
                 setObjectNames.add(new ObjectName(COHERENCE, mapKeysProps));
                 }
@@ -338,7 +338,7 @@ public class HttpRequestSender
                 .addPathSegment(encodeCacheName(sCacheName)).addPathSegment(MEMBERS);
         if (sDomainPartition != null)
             {
-            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            urlBuilder.addQueryParameter(DOMAIN_PART, sDomainPartition);
             }
 
         urlBuilder.addQueryParameter(FIELDS, "service,name,type,tier,nodeId")
@@ -426,14 +426,14 @@ public class HttpRequestSender
                 .addPathSegment(PROXY).addPathSegment(MEMBERS).addQueryParameter(FIELDS, "name,type,nodeId");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode nodeWebAppItems = (JsonNode) rootNode.get(ITEMS);
+        JsonNode nodeWebAppItems = rootNode.get(ITEMS);
         Set<ObjectName> setObjectNames = new HashSet<>();
 
         if (nodeWebAppItems != null && nodeWebAppItems.isArray())
             {
             for (int k = 0; k < ((ArrayNode) nodeWebAppItems).size(); k++)
                 {
-                JsonNode webAppMember = (JsonNode) nodeWebAppItems.get(k);
+                JsonNode webAppMember = nodeWebAppItems.get(k);
 
                 if (webAppMember.get("type").asText().equals(sSessionManager))
                     {
@@ -507,7 +507,7 @@ public class HttpRequestSender
                 .addQueryParameter(LINKS, "");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode nodeServiceMembersItems = (JsonNode) rootNode.get(ITEMS);
+        JsonNode nodeServiceMembersItems = rootNode.get(ITEMS);
         Set<ObjectName> setObjectNames = new HashSet<>();
 
         if (nodeServiceMembersItems != null && nodeServiceMembersItems.isArray())
@@ -579,7 +579,7 @@ public class HttpRequestSender
                 .addPathSegment(encodeServiceName(sService)).addPathSegment("partition").addPathSegment("scheduledDistributions");
         if (sDomainPartition != null)
             {
-            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            urlBuilder.addQueryParameter(DOMAIN_PART, sDomainPartition);
             }
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
@@ -591,15 +591,15 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
-                .addPathSegment(encodeServiceName(sService)).addPathSegment("description")
+                .addPathSegment(encodeServiceName(sService)).addPathSegment(DESCRIPTION)
                 .addQueryParameter(LINKS, "");
         if (sDomainPartition != null)
             {
-            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            urlBuilder.addQueryParameter(DOMAIN_PART, sDomainPartition);
             }
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
-        return rootNode.get("description").asText();
+        return rootNode.get(DESCRIPTION).asText();
         }
 
     @Override
@@ -612,7 +612,7 @@ public class HttpRequestSender
                                              "maxStorageSizeKB,maxLoadNodeId");
         if (sDomainPartition != null)
             {
-            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            urlBuilder.addQueryParameter(DOMAIN_PART, sDomainPartition);
             }
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
@@ -706,11 +706,11 @@ public class HttpRequestSender
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath().addPathSegment(MEMBERS)
-                .addPathSegment(nNodeId + "").addPathSegment("description")
+                .addPathSegment(nNodeId + "").addPathSegment(DESCRIPTION)
                 .addQueryParameter(LINKS, "");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
-        return rootNode.get("description").asText();
+        return rootNode.get(DESCRIPTION).asText();
         }
 
     /**
@@ -735,7 +735,7 @@ public class HttpRequestSender
                 .addPathSegment(encodeServiceName(sService)).addPathSegment(PERSISTENCE).addPathSegment(SNAPSHOTS);
         if (sDomainPartition != null)
             {
-            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            urlBuilder.addQueryParameter(DOMAIN_PART, sDomainPartition);
             }
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
@@ -761,7 +761,7 @@ public class HttpRequestSender
                 .addPathSegment(encodeServiceName(sService)).addPathSegment(PERSISTENCE).addPathSegment(ARCHIVES);
         if (sDomainPartition != null)
             {
-            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            urlBuilder.addQueryParameter(DOMAIN_PART, sDomainPartition);
             }
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
         JsonNode nodeSnapshots = rootNode.get(ARCHIVES);
@@ -881,14 +881,14 @@ public class HttpRequestSender
                 .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(MEMBERS);
         if (sDomainPartition != null)
             {
-            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            urlBuilder.addQueryParameter(DOMAIN_PART, sDomainPartition);
             }
 
         urlBuilder.addQueryParameter(FIELDS, "name,type,nodeId,domainPartition")
                 .addQueryParameter(LINKS, "");
 
         JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
-        JsonNode nodeServiceMembers = (JsonNode) rootNode.get(ITEMS);
+        JsonNode nodeServiceMembers = rootNode.get(ITEMS);
         Set<ObjectName> setObjectNames = new HashSet<>();
 
         if (nodeServiceMembers != null && nodeServiceMembers.isArray())
@@ -928,7 +928,7 @@ public class HttpRequestSender
 
         if (sDomainPartition != null)
             {
-            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            urlBuilder.addQueryParameter(DOMAIN_PART, sDomainPartition);
             }
 
         return getResponseJson(sendGetRequest(urlBuilder));
@@ -988,7 +988,7 @@ public class HttpRequestSender
 
         if (sDomainPartition != null)
             {
-            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            urlBuilder.addQueryParameter(DOMAIN_PART, sDomainPartition);
             }
 
         return getResponseJson(sendGetRequest(urlBuilder));
@@ -1047,7 +1047,7 @@ public class HttpRequestSender
 
         if (sDomainPartition != null)
             {
-            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            urlBuilder.addQueryParameter(DOMAIN_PART, sDomainPartition);
             }
 
         return getResponseJson(sendGetRequest(urlBuilder));
@@ -1072,7 +1072,7 @@ public class HttpRequestSender
                 .addPathSegment(MEMBERS);
         if (sDomainPartition != null)
             {
-            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            urlBuilder.addQueryParameter(DOMAIN_PART, sDomainPartition);
             }
 
         urlBuilder.addQueryParameter(FIELDS, "name,type,size,service,nodeId," +
@@ -1313,7 +1313,7 @@ public class HttpRequestSender
                 .addPathSegment(encodeServiceName(sServiceName)).addPathSegment(PROXY);
         if (sDomainPartition != null)
             {
-            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            urlBuilder.addQueryParameter(DOMAIN_PART, sDomainPartition);
             }
 
         urlBuilder = urlBuilder.addQueryParameter(FIELDS, "name,type,httpServerType,totalRequestCount," +
@@ -1339,7 +1339,7 @@ public class HttpRequestSender
                 .addPathSegment(encodeServiceName(sServiceName));
         if (sDomainPartition != null)
             {
-            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            urlBuilder.addQueryParameter(DOMAIN_PART, sDomainPartition);
             }
 
         urlBuilder = urlBuilder.addQueryParameter(FIELDS, "name,domainPartition,statusHA,partitionsAll," +
@@ -1368,7 +1368,7 @@ public class HttpRequestSender
 
         if (sDomainPartition != null)
             {
-            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            urlBuilder.addQueryParameter(DOMAIN_PART, sDomainPartition);
             }
 
         urlBuilder = urlBuilder.addQueryParameter(FIELDS, "status,bytesReceivedSecs,msgsReceivedSecs")
@@ -1398,7 +1398,7 @@ public class HttpRequestSender
 
         if (sDomainPartition != null)
             {
-            urlBuilder.addQueryParameter("domainPartition", sDomainPartition);
+            urlBuilder.addQueryParameter(DOMAIN_PART, sDomainPartition);
             }
 
         urlBuilder = urlBuilder.addQueryParameter(FIELDS, "status,bytesSentSecs,msgsSentSecs")
@@ -1703,12 +1703,9 @@ public class HttpRequestSender
                         .addPathSegment(getKeyPropertyFromObjName(objectName, NODE_ID))
                         .addPathSegment("platform");
                 String subType = objectName.getKeyProperty("subType");
-                if (subType != null)
+                if ("OperatingSystem".equals(subType))
                     {
-                    if ("OperatingSystem".equals(subType))
-                        {
-                        return urlBuilder.addPathSegment("operatingSystem");
-                        }
+                    return urlBuilder.addPathSegment("operatingSystem");
                     }
             default:
                 return null;
@@ -2055,6 +2052,8 @@ public class HttpRequestSender
     private static final String ARCHIVES     = "archives";
     private static final String STATISTICS   = "statistics";
     private static final String CACHE        = "Cache";
+    private static final String DOMAIN_PART  = "domainPartition";
+    private static final String DESCRIPTION  = "description";
 
     /**
      * A trust manager that will trust all certificates. Only used when the preference to ignore SSL certs is chosen.

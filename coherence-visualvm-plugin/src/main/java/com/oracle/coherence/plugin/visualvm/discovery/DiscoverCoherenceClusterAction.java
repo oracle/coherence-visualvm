@@ -163,7 +163,7 @@ public class DiscoverCoherenceClusterAction
     @Override
     protected void updateState(Set<Host> selectedHosts)
         {
-        if (tracksSelection)
+        if (m_fTracksSelection)
             {
             super.updateState(selectedHosts);
             }
@@ -187,7 +187,7 @@ public class DiscoverCoherenceClusterAction
         if (selectionAware == null)
             {
             selectionAware = new DiscoverCoherenceClusterAction();
-            selectionAware.tracksSelection = true;
+            selectionAware.m_fTracksSelection = true;
             }
         return selectionAware;
         }
@@ -208,5 +208,5 @@ public class DiscoverCoherenceClusterAction
 
     private static DiscoverCoherenceClusterAction alwaysEnabled;
     private static DiscoverCoherenceClusterAction selectionAware;
-    private boolean tracksSelection = false;
+    private boolean                               m_fTracksSelection = false;
     }

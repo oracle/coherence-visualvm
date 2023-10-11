@@ -361,7 +361,7 @@ public class JMXRequestSender
         {
         // look up the full name of the MBean in case we are in container
         Set<ObjectName> setResult = getCompleteObjectName(
-                new ObjectName("Coherence:type=Node,nodeId=" + nNodeId + ",*"));
+                new ObjectName(COHERENCE_TYPE_NODE + nNodeId + ",*"));
 
         String sFQN = getFirstResult(setResult);
 
@@ -374,7 +374,7 @@ public class JMXRequestSender
         {
         // look up the full name of the MBean in case we are in container
         Set<ObjectName> setResult = getCompleteObjectName(
-                new ObjectName("Coherence:type=Node,nodeId=" + nNodeId + ",*"));
+                new ObjectName(COHERENCE_TYPE_NODE + nNodeId + ",*"));
 
         String sFQN = getFirstResult(setResult);
 
@@ -387,7 +387,7 @@ public class JMXRequestSender
         {
         // look up the full name of the MBean in case we are in container
         Set<ObjectName> setResult = getCompleteObjectName(
-                new ObjectName("Coherence:type=Node,nodeId=" + nNodeId + ",*"));
+                new ObjectName(COHERENCE_TYPE_NODE + nNodeId + ",*"));
 
         String sFQN = getFirstResult(setResult);
 
@@ -641,9 +641,10 @@ public class JMXRequestSender
      */
     private static final Logger LOGGER = Logger.getLogger(JMXRequestSender.class.getName());
 
-    private static final String DOMAIN_PARTITION = ",domainPartition=";
-    private static final String NAME             = ",name=";
-    private static final String CLUSTER          = "Coherence:type=Cluster,*";
+    private static final String DOMAIN_PARTITION    = ",domainPartition=";
+    private static final String NAME                = ",name=";
+    private static final String CLUSTER             = "Coherence:type=Cluster,*";
+    private static final String COHERENCE_TYPE_NODE = "Coherence:type=Node,nodeId=";
 
     // ------ data members --------------------------------------------------
 
