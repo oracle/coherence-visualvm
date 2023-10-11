@@ -82,23 +82,23 @@ public class CoherenceClusterOverviewPanel
         pnlHeader.setLayout(new FlowLayout());
         pnlHeader.setOpaque(false);
 
-        f_txtClusterName = getTextField(15, JTextField.LEFT);
+        f_txtClusterName = getTextField(15, SwingConstants.LEFT);
         pnlHeader.add(getLocalizedLabel("LBL_cluster_name", f_txtClusterName));
         pnlHeader.add(f_txtClusterName);
 
-        f_txtVersion = getTextField(8, JTextField.LEFT);
+        f_txtVersion = getTextField(8, SwingConstants.LEFT);
         pnlHeader.add(getLocalizedLabel("LBL_version", f_txtVersion));
         pnlHeader.add(f_txtVersion);
 
-        f_txtClusterSize = getTextField(3, JTextField.RIGHT);
+        f_txtClusterSize = getTextField(3, SwingConstants.RIGHT);
         pnlHeader.add(getLocalizedLabel("LBL_members", f_txtClusterSize));
         pnlHeader.add(f_txtClusterSize);
 
-        f_txtRefreshDate = getTextField(18, JTextField.LEFT);
+        f_txtRefreshDate = getTextField(18, SwingConstants.LEFT);
         pnlHeader.add(getLocalizedLabel("LBL_refresh_date", f_txtRefreshDate));
         pnlHeader.add(f_txtRefreshDate);
 
-        f_txtClusterStatusHA = getTextField(10, JTextField.LEFT);
+        f_txtClusterStatusHA = getTextField(10, SwingConstants.LEFT);
         pnlHeader.add(getLocalizedLabel("LBL_cluster_statusha", f_txtClusterStatusHA));
         pnlHeader.add(f_txtClusterStatusHA);
 
