@@ -1708,7 +1708,7 @@ public class HttpRequestSender
                     return urlBuilder.addPathSegment("operatingSystem");
                     }
             default:
-                return null;
+                return urlBuilder;
             }
         }
 
