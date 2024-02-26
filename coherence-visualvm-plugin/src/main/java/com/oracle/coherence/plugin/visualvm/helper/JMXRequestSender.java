@@ -118,7 +118,7 @@ public class JMXRequestSender
     public void invokeStorageManagerOperation(String sService, String sCacheName, String sOperation)
             throws Exception
         {
-        ObjectName objectName = new ObjectName("Coherence:type=StorageManager,service=" + sService + ",cache=" + sCacheName + ",*");
+        ObjectName objectName = new ObjectName(STORAGE_MANAGER_EQUALS + sService + CACHE_EQUALS + sCacheName + ",*");
 
         Set<ObjectName> setResult = getCompleteObjectName(objectName);
         String sFQN = getFirstResult(setResult);
@@ -130,7 +130,7 @@ public class JMXRequestSender
     public String invokeReportPartitionsStatsOperation(String sService, String sCacheName)
             throws Exception
         {
-        ObjectName objectName = new ObjectName("Coherence:type=StorageManager,service=" + sService + ",cache=" + sCacheName + ",*");
+        ObjectName objectName = new ObjectName(STORAGE_MANAGER_EQUALS + sService + CACHE_EQUALS + sCacheName + ",*");
 
         Set<ObjectName> setResult = getCompleteObjectName(objectName);
         String sFQN = getFirstResult(setResult);
@@ -161,9 +161,9 @@ public class JMXRequestSender
             throws Exception
         {
 
-        return f_connection.queryNames(new ObjectName("Coherence:type=StorageManager,service="
+        return f_connection.queryNames(new ObjectName(STORAGE_MANAGER_EQUALS
                 + sServiceName + (sDomainPartition != null ? DOMAIN_PARTITION + sDomainPartition : "")
-                + ",cache=" + sCacheName + ",*"), null);
+                + CACHE_EQUALS + sCacheName + ",*"), null);
         }
 
     @Override
@@ -655,10 +655,12 @@ public class JMXRequestSender
      */
     private static final Logger LOGGER = Logger.getLogger(JMXRequestSender.class.getName());
 
-    private static final String DOMAIN_PARTITION    = ",domainPartition=";
-    private static final String NAME                = ",name=";
-    private static final String CLUSTER             = "Coherence:type=Cluster,*";
-    private static final String COHERENCE_TYPE_NODE = "Coherence:type=Node,nodeId=";
+    private static final String DOMAIN_PARTITION       = ",domainPartition=";
+    private static final String NAME                   = ",name=";
+    private static final String CLUSTER                = "Coherence:type=Cluster,*";
+    private static final String COHERENCE_TYPE_NODE    = "Coherence:type=Node,nodeId=";
+    private static final String CACHE_EQUALS           = ",cache=";
+    private static final String STORAGE_MANAGER_EQUALS = "Coherence:type=StorageManager,service=";
 
     // ------ data members --------------------------------------------------
 
