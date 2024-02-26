@@ -224,7 +224,8 @@ public class CoherenceCachePanel
         setTablePadding(f_tableStorage);
         f_tableStorage.setMenuOptions(new MenuOption[] {
                 new ShowDetailMenuOption(model, f_tableStorage, SELECTED_STORAGE),
-                new ShowIndexInfoMenuOption(model, m_requestSender, f_tableStorage)
+                new ShowIndexInfoMenuOption(model, m_requestSender, f_tableStorage),
+                new ShowPartitionStatsMenuOption(model, m_requestSender, f_tableStorage)
         });
 
         // Create the scroll pane and add the table to it.
@@ -531,7 +532,7 @@ public class CoherenceCachePanel
         // ----- constructors -----------------------------------------------
 
        /**
-         * Create a new menu option for displaying heat map.
+         * Create a new menu option for displaying index information.
          *
          * @param model          the {@link VisualVMModel} to get collected data from
          * @param requestSender  the {@link MBeanServerConnection} to perform additional queries
@@ -656,6 +657,65 @@ public class CoherenceCachePanel
 
                showMessageDialog(Localization.getLocalText("LBL_index_info"),
                                                                 sb.toString(), JOptionPane.INFORMATION_MESSAGE);
+               }
+           catch (Exception ee)
+               {
+               showMessageDialog(Localization.getLocalText("LBL_error"),
+                                ee.getMessage(), JOptionPane.ERROR_MESSAGE);
+               }
+
+           }
+
+       // ----- data members ------------------------------------------------
+
+        /**
+         * Menu option description.
+         */
+        private final String f_sMenuItem;
+       }
+
+    /**
+     * Right-click option to show index information.
+     */
+    protected class ShowPartitionStatsMenuOption
+        extends AbstractMenuOption
+        {
+
+        // ----- constructors -----------------------------------------------
+
+       /**
+         * Create a new menu option for displaying partition stats information.
+         *
+         * @param model          the {@link VisualVMModel} to get collected data from
+         * @param requestSender  the {@link MBeanServerConnection} to perform additional queries
+         * @param jtable         the {@link ExportableJTable} that this applies to
+         */
+       public ShowPartitionStatsMenuOption(VisualVMModel model, RequestSender requestSender,
+                                      ExportableJTable jtable)
+           {
+           super(model, requestSender, jtable);
+           f_sMenuItem = getLocalizedText("LBL_cache_partition_stats");
+           }
+
+       // ----- AbstractMenuOption methods ---------------------------------
+
+       @Override
+       public String getMenuItem()
+           {
+           return f_sMenuItem;
+           }
+
+       @Override
+       public void actionPerformed(ActionEvent e)
+           {
+           String sResult = "unknown";
+           Pair<String, String> selectedCache = f_model.getSelectedCache();
+
+           try
+               {
+               sResult = m_requestSender.invokeReportPartitionsStatsOperation(selectedCache.getX(), selectedCache.getY());
+               showMessageDialog(Localization.getLocalText("LBL_cache_partition_stats"),
+                                                                sResult, JOptionPane.INFORMATION_MESSAGE);
                }
            catch (Exception ee)
                {
@@ -848,7 +908,7 @@ public class CoherenceCachePanel
                     while (iter.hasNext())
                         {
                         Pair<Pair<String, String>, Long> entryHeatMap = iter.next();
-                        if (entryHeatMap.getY().longValue() <= cache.getY().longValue())
+                        if (entryHeatMap.getY() <= cache.getY())
                             {
                             // add new value at the current position
                             f_listValues.add(nLocation, cache);

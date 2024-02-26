@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -292,6 +292,26 @@ public class HttpRequestSender
                  .addPathSegment(sOperation.equals(CoherenceCachePanel.CLEAR) ? "clear" : "truncate");
 
         sendPostRequest(urlBuilder);
+        }
+
+    @Override
+    public String invokeReportPartitionsStatsOperation(String sService, String sCacheName)
+            throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath()
+                 .addPathSegment(SERVICES)
+                 .addPathSegment(encodeServiceName(sService))
+                 .addPathSegment("storage")
+                 .addPathSegment(encodeServiceName(sCacheName))
+                 .addPathSegment(PART_STATS);
+
+        JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
+        if (rootNode != null)
+            {
+            return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(rootNode.get(PART_STATS));
+            }
+        
+        return "";
         }
 
     @Override
@@ -2054,6 +2074,7 @@ public class HttpRequestSender
     private static final String CACHE        = "Cache";
     private static final String DOMAIN_PART  = "domainPartition";
     private static final String DESCRIPTION  = "description";
+    public  static final String PART_STATS   = "reportPartitionStats";
 
     /**
      * A trust manager that will trust all certificates. Only used when the preference to ignore SSL certs is chosen.

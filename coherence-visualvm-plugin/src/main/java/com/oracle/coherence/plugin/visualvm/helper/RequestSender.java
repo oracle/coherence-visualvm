@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -100,6 +100,17 @@ public interface RequestSender
      * @throws Exception in case of errors
      */
     void invokeStorageManagerOperation(String sService, String sCacheName, String sOperation)
+            throws Exception;
+
+    /**
+     * Invoke the reportPartitionStats Storage Manager operation.
+     *
+     * @param sService      the name of the service
+     * @param sCacheName    the name of the cache
+     *
+     * @throws Exception in case of errors
+     */
+    String invokeReportPartitionsStatsOperation(String sService, String sCacheName)
             throws Exception;
 
     /**

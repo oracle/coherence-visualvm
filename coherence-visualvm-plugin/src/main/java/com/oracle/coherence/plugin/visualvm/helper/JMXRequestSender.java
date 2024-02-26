@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -46,6 +46,7 @@ import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
+import static com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender.PART_STATS;
 import static com.oracle.coherence.plugin.visualvm.panel.CoherenceTopicPanel.NOTIFY_POPULATED;
 
 /**
@@ -124,6 +125,19 @@ public class JMXRequestSender
 
         invoke(new ObjectName(sFQN), sOperation,  new Object[]{}, new String[]{});
         }
+
+    @Override
+    public String invokeReportPartitionsStatsOperation(String sService, String sCacheName)
+            throws Exception
+        {
+        ObjectName objectName = new ObjectName("Coherence:type=StorageManager,service=" + sService + ",cache=" + sCacheName + ",*");
+
+        Set<ObjectName> setResult = getCompleteObjectName(objectName);
+        String sFQN = getFirstResult(setResult);
+
+        return (String) invoke(new ObjectName(sFQN), PART_STATS, new Object[]{"json"}, new String[]{String.class.getName()});
+        }
+
 
     @Override
     public Set<ObjectName> getAllJournalMembers(String sJournalType)
