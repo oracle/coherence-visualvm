@@ -285,6 +285,15 @@ public interface RequestSender
             throws Exception;
 
     /**
+     * Get the list of View MBeans.
+     *
+     * @return list of view MBeans
+     * @throws Exception in case of errors
+     */
+    Set<ObjectName> getViewMembers(String sServiceName, String sViewName)
+            throws Exception;
+
+    /**
      * Get the list of Connection MBeans in the cluster for a service and node.
      * @param sServiceName service name
      * @param nNodeId node id

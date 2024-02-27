@@ -257,6 +257,13 @@ public class JMXRequestSender
         }
 
     @Override
+    public Set<ObjectName> getViewMembers(String sServiceName, String sViewName)
+            throws Exception
+        {
+        return f_connection.queryNames(new ObjectName("Coherence:type=View,service=" + sServiceName + ",name=" + sViewName + ",*"), null);
+        }
+
+    @Override
     public Set<ObjectName> getProxyConnections(String sServiceName, int nNodeId)
             throws Exception
        {

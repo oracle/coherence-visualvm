@@ -561,6 +561,21 @@ public class HttpRequestSender
         }
 
     @Override
+    public Set<ObjectName> getViewMembers(String sServiceName, String sViewName)
+            throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sServiceName))
+                .addPathSegment("views")
+                .addPathSegment(encodeCacheName(sViewName))
+                .addPathSegment(MEMBERS)
+                .addQueryParameter(LINKS, "");
+
+        return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
+
+        }
+
+    @Override
     public Set<ObjectName> getProxyConnections(String sServiceName, int nNodeId)
             throws Exception
        {
@@ -1172,6 +1187,24 @@ public class HttpRequestSender
         }
 
     /**
+     * Get the view data in the cluster.
+     *
+     * @return the data for all the cluster members
+     * @throws Exception in case of errors
+     */
+    public JsonNode getDataForViews(String sServiceName, String sViewName) throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sServiceName))
+                .addPathSegment("views")
+                .addPathSegment(encodeCacheName(sViewName))
+                .addPathSegment(MEMBERS)
+                .addQueryParameter(LINKS, "");
+
+        return getResponseJson(sendGetRequest(urlBuilder));
+        }
+
+    /**
      * Get the data for all the topics in the cluster.
      *
      * @return the data for all the cluster members
@@ -1453,7 +1486,7 @@ public class HttpRequestSender
         InputStream inputStream = connection.getInputStream();
         if (isRequestDebugEnabled)
             {
-            LOGGER.info((System.currentTimeMillis() - start) + "ms to open connection to "
+            LOGGER.info((System.currentTimeMillis() - start) + " ms to open connection to "
                         + urlBuilder.getUrl().toString() + " ");
             }
 

@@ -63,6 +63,7 @@ import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicDetailData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.TopicSubscriberGroupsData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Tuple;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.ViewData;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -173,6 +174,7 @@ public class VisualVMModel
         f_mapDataRetrievers.put(ExecutorData.class, new ExecutorData());
         f_mapDataRetrievers.put(GrpcProxyData.class, new GrpcProxyData());
         f_mapDataRetrievers.put(HealthData.class, new HealthData());
+        f_mapDataRetrievers.put(ViewData.class, new ViewData());
 
         // Loop through each data retriever and initialize the map of
         // report XML. Doing it this way we load it only once
@@ -1036,6 +1038,17 @@ public class VisualVMModel
         }
 
     /**
+     * Return if View caches are configured.
+     *
+     * @return true if view caches are configured.
+     */
+    public boolean isViewCacheCongfigured()
+        {
+        return m_mapCollectedData.get(DataType.VIEW) != null
+               && !m_mapCollectedData.get(DataType.VIEW).isEmpty();
+        }
+
+    /**
      * Returns if Elastic Data is configured.
      *
      * @return true if Elastic Data is configured.
@@ -1329,9 +1342,10 @@ public class VisualVMModel
         HOTCACHE_PERCACHE(HotCachePerCacheData.class, HOTCACHE_PERCACHE_LABELS),
         EXECUTOR(ExecutorData.class, EXECUTOR_LABELS),
         GRPC_PROXY(GrpcProxyData.class, GRPC_PROXY_LABELS),
-        HEALTH(HealthData.class, HEALTH_LABELS);
+        HEALTH(HealthData.class, HEALTH_LABELS),
+        VIEW(ViewData.class, VIEW_LABELS);
 
-        private DataType(Class<?> clz, String[] asMeta)
+        DataType(Class<?> clz, String[] asMeta)
             {
             f_clazz      = clz;
             f_asMetadata = asMeta;
@@ -1467,6 +1481,17 @@ public class VisualVMModel
         Localization.getLocalText(LBL_MEMORY_BYTES), Localization.getLocalText(LBL_TOTAL_GETS),
         Localization.getLocalText(LBL_TOTAL_PUTS), Localization.getLocalText(LBL_CACHE_HITS),
         Localization.getLocalText(LBL_CACHE_MISSES), Localization.getLocalText("LBL_hit_probability")
+        };
+
+    /**
+     * Labels for views table.
+     */
+    private static final String[] VIEW_LABELS = new String[]
+        {
+        Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText(LBL_SIZE),
+        Localization.getLocalText("LBL_reconnect_Interval"), Localization.getLocalText("LBL_filter"),
+        Localization.getLocalText("LBL_transformed"), Localization.getLocalText("LBL_transformer"),
+        Localization.getLocalText("LBL_read_only"),  Localization.getLocalText("LBL_cache_values")
         };
 
     /**
