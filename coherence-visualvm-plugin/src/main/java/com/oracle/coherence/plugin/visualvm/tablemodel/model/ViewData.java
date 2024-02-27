@@ -57,7 +57,7 @@ public class ViewData
     // ----- constructors ---------------------------------------------------
 
     /**
-     * Create ProxyData passing in the number of columns.
+     * Create ViewData passing in the number of columns.
      */
     public ViewData()
         {
@@ -122,10 +122,8 @@ public class ViewData
         // the report XML contains the following tokens that require substitution:
         // %SERVICE_NAME%
         // %VIEW_NAME%
-
         Pair<String, String> selectedCache = model.getSelectedCache();
 
-        // see if we have domainPartition key
         String sServiceName     = null;
         String sDomainPartition = null;
 
@@ -137,9 +135,9 @@ public class ViewData
             }
 
         return sServiceName == null ? sReporterXML :
-                sReporterXML.replaceAll("%SERVICE_NAME%", escape(sServiceName) +
-                                        (sDomainPartition != null ? ",domainPartition=" + sDomainPartition : "") )
-                            .replaceAll("%VIEW_NAME%", escape(selectedCache.getY()));
+              sReporterXML.replaceAll("%SERVICE_NAME%", escape(sServiceName) +
+                                      (sDomainPartition != null ? ",domainPartition=" + sDomainPartition : "") )
+                          .replaceAll("%VIEW_NAME%", escape(selectedCache.getY()));
         }
 
     @Override
