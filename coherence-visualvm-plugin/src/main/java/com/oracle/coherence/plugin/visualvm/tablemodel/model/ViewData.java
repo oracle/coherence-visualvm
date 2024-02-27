@@ -38,10 +38,10 @@ import java.util.logging.Logger;
 import static com.oracle.coherence.plugin.visualvm.helper.JMXUtils.getAttributeValueAsString;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
+
 import javax.management.AttributeList;
 import javax.management.ObjectName;
 
@@ -79,7 +79,7 @@ public class ViewData
 
             for (Iterator<ObjectName> nodIter = viewNamesSet.iterator(); nodIter.hasNext(); )
                 {
-                ObjectName viewNameObjName = (ObjectName) nodIter.next();
+                ObjectName viewNameObjName = nodIter.next();
 
                 data = new ViewData();
                 

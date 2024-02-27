@@ -41,7 +41,6 @@
     </filters>
 
     <query>
-<!--      <pattern>Coherence:type=View,*</pattern>-->
         <pattern>Coherence:type=View,service=%SERVICE_NAME%,name=%VIEW_NAME%,*</pattern>
     </query>
 

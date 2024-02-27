@@ -260,7 +260,7 @@ public class JMXRequestSender
     public Set<ObjectName> getViewMembers(String sServiceName, String sViewName)
             throws Exception
         {
-        return f_connection.queryNames(new ObjectName("Coherence:type=View,service=" + sServiceName + ",name=" + sViewName + ",*"), null);
+        return f_connection.queryNames(new ObjectName("Coherence:type=View,service=" + sServiceName + NAME + sViewName + ",*"), null);
         }
 
     @Override

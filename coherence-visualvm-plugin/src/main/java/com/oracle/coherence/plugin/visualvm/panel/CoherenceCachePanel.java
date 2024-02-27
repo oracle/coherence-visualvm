@@ -1348,8 +1348,7 @@ public class CoherenceCachePanel
     /**
      * The storage view data retrieved from the {@link VisualVMModel}.
      */
-    private List<Entry<Object, Data>> m_viewData = null;
-
+    private transient List<Entry<Object, Data>> m_viewData = null;
 
     /**
      * The row selection listener.
