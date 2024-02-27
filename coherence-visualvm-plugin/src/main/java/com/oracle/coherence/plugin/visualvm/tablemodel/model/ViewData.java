@@ -121,18 +121,11 @@ public class ViewData
         {
         // the report XML contains the following tokens that require substitution: %SERVICE_NAME% and %VIEW_NAME%
         Pair<String, String> selectedCache = model.getSelectedCache();
-
-        String sServiceName     = null;
-
-        if (selectedCache != null)
-            {
-            String[] asServiceDetails = getDomainAndService(selectedCache.getX());
-            sServiceName              = asServiceDetails[1];
-            }
+        String sServiceName = selectedCache.getX();
 
         return sServiceName == null ? sReporterXML :
               sReporterXML.replaceAll("%SERVICE_NAME%", escape(sServiceName)
-                          .replaceAll("%VIEW_NAME%", escape(selectedCache.getY()));
+                          .replaceAll("%VIEW_NAME%", escape(selectedCache.getY())));
         }
 
     @Override
