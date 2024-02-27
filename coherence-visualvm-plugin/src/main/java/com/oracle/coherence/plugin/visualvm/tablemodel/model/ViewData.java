@@ -119,24 +119,19 @@ public class ViewData
     @Override
     public String preProcessReporterXML(VisualVMModel model, String sReporterXML)
         {
-        // the report XML contains the following tokens that require substitution:
-        // %SERVICE_NAME%
-        // %VIEW_NAME%
+        // the report XML contains the following tokens that require substitution: %SERVICE_NAME% and %VIEW_NAME%
         Pair<String, String> selectedCache = model.getSelectedCache();
 
         String sServiceName     = null;
-        String sDomainPartition = null;
 
         if (selectedCache != null)
             {
             String[] asServiceDetails = getDomainAndService(selectedCache.getX());
             sServiceName              = asServiceDetails[1];
-            sDomainPartition          = asServiceDetails[0];
             }
 
         return sServiceName == null ? sReporterXML :
-              sReporterXML.replaceAll("%SERVICE_NAME%", escape(sServiceName) +
-                                      (sDomainPartition != null ? ",domainPartition=" + sDomainPartition : "") )
+              sReporterXML.replaceAll("%SERVICE_NAME%", escape(sServiceName)
                           .replaceAll("%VIEW_NAME%", escape(selectedCache.getY()));
         }
 
@@ -190,7 +185,7 @@ public class ViewData
                 data.setColumn(READ_ONLY, Boolean.toString(viewNode.get("readOnly").asBoolean()));
                 data.setColumn(CACHE_VALUES, Boolean.toString(viewNode.get("cacheValues").asBoolean()));
                 JsonNode transformer = viewNode.get("transformer");
-                data.setColumn(TRANSFORMER, transformer == null ? "n/a" : Boolean.toString(transformer.asBoolean()));
+                data.setColumn(TRANSFORMER, transformer == null ? "n/a" : transformer.asText());
 
                 mapData.put(data.getColumn(NODE_ID), data);
                 }
