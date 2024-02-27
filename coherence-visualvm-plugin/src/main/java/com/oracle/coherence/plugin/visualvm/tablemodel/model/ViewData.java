@@ -72,6 +72,10 @@ public class ViewData
         SortedMap<Object, Data> mapData = new TreeMap<>();
         Data                    data;
         Pair<String, String>    selectedCache = model.getSelectedCache();
+        if (selectedCache == null)
+            {
+            return null;
+            }
 
         try
             {
@@ -121,11 +125,17 @@ public class ViewData
         {
         // the report XML contains the following tokens that require substitution: %SERVICE_NAME% and %VIEW_NAME%
         Pair<String, String> selectedCache = model.getSelectedCache();
-        String sServiceName = selectedCache.getX();
+        String sServiceName = "";
+        String sViewName    = "";
+        if (selectedCache != null)
+            {
+            sServiceName = selectedCache.getX();
+            sViewName    = selectedCache.getY();
+            }
 
         return sServiceName == null ? sReporterXML :
-              sReporterXML.replaceAll("%SERVICE_NAME%", escape(sServiceName)
-                          .replaceAll("%VIEW_NAME%", escape(selectedCache.getY())));
+              sReporterXML.replaceAll("%SERVICE_NAME%", escape(sServiceName))
+                          .replaceAll("%VIEW_NAME%", escape(sViewName));
         }
 
     @Override
@@ -139,7 +149,7 @@ public class ViewData
         data.setColumn(FILTER, aoColumns[5].toString());
         data.setColumn(TRANSFORMED, Boolean.toString(Boolean.parseBoolean(aoColumns[6].toString())));
         Object sTransformer = aoColumns[7];
-        data.setColumn(TRANSFORMER, "".equals(sTransformer) || sTransformer == null ? "n/a" : sTransformer.toString());
+        data.setColumn(TRANSFORMER, "".equals(sTransformer) || "null".equals(sTransformer) || sTransformer == null ? "n/a" : sTransformer.toString());
         data.setColumn(READ_ONLY, Boolean.toString(Boolean.parseBoolean(aoColumns[8].toString())));
         data.setColumn(CACHE_VALUES, Boolean.toString(Boolean.parseBoolean(aoColumns[9].toString())));
 
@@ -178,7 +188,7 @@ public class ViewData
                 data.setColumn(READ_ONLY, Boolean.toString(viewNode.get("readOnly").asBoolean()));
                 data.setColumn(CACHE_VALUES, Boolean.toString(viewNode.get("cacheValues").asBoolean()));
                 JsonNode transformer = viewNode.get("transformer");
-                data.setColumn(TRANSFORMER, transformer == null ? "n/a" : transformer.asText());
+                data.setColumn(TRANSFORMER, transformer == null || "null".equals(transformer.asText()) ? "n/a" : transformer.asText());
 
                 mapData.put(data.getColumn(NODE_ID), data);
                 }
@@ -274,9 +284,4 @@ public class ViewData
      * JMX attribute name for CacheValues.
      */
     private static final String ATTR_CACHE_VALUES = "CacheValues";
-
-    /**
-     * JMX attribute name for Node Id.
-     */
-    private static final String ATTR_NODE_ID = "NodeId";
     }
