@@ -36,6 +36,7 @@ import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.MachineData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.MemberData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.NodeStorageData;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
@@ -87,6 +88,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+
+import static com.oracle.coherence.plugin.visualvm.helper.GraphHelper.MB;
 
 
 /**
@@ -296,9 +299,9 @@ public abstract class AbstractCoherencePanel
      * @param nodeId the node id to check
      * @return true if the node is storage-enabled
      */
-    protected boolean isNodeStorageEnabled(int nodeId)
+    public static boolean isNodeStorageEnabled(VisualVMModel model, int nodeId)
         {
-        List<Map.Entry<Object, Data>> nodeStorageData = f_model.getData(VisualVMModel.DataType.NODE_STORAGE);
+        List<Map.Entry<Object, Data>> nodeStorageData = model.getData(VisualVMModel.DataType.NODE_STORAGE);
 
         if (nodeStorageData != null)
             {
@@ -773,8 +776,111 @@ public abstract class AbstractCoherencePanel
         {
         String[] asParts = AbstractData.getDomainAndService(sSelectedServiceName);
         return asParts[1];
+        }
+
+    /**
+     * Return the machineData data for overview and tracers.
+     *
+     * @param machineData member data to introspect
+     * @return the data, 0 = Integer, count
+     *                   1 = Double, cTotalLoadAverage
+     *                   2 = Double, cMax
+     */
+    public static Object[] getClusterLoadAverage(List<Map.Entry<Object, Data>> machineData)
+        {
+        int    cCount            = 0;
+        double cLoadAverage      = 0;
+        double cMax              = -1;
+        double cTotalLoadAverage = 0;
+
+        // work out the max and average load averages for the graph
+        if (machineData != null)
+            {
+            for (Map.Entry<Object, Data> entry : machineData)
+                {
+                cCount++;
+                cLoadAverage      = (Double) entry.getValue().getColumn(MachineData.SYSTEM_LOAD_AVERAGE);
+                cTotalLoadAverage += cLoadAverage;
+
+                if (cMax == -1 || cLoadAverage > cMax)
+                    {
+                    cMax = cLoadAverage;
+                    }
+                }
             }
 
+        return new Object[] {
+                cCount,
+                cTotalLoadAverage,
+                cMax
+        };
+    }
+
+    /**
+     * Return the member data for overview and tracers.
+     *
+     * @param memberData member data to introspect
+     * @return the data, 0 = Integer, count
+     *                   1 = Integer, totalMemory
+     *                   2 = Integer, usedMemory
+     *                   3 = Float, totalPublisherRate
+     *                   4 = Float = totalReceiverRate
+     *                   5 = Float = minPublisherRate
+     *                   6 = Float = minReceiverRate
+     */
+    public static Object[] getMemberMemoryRateData(VisualVMModel model, List<Map.Entry<Object, Data>> memberData)
+        {
+        int   cTotalMemory        = 0;
+        int   cTotalMemoryUsed    = 0;
+        float cTotalPublisherRate = 0.0f;
+        float cTotalReceiverRate  = 0.0f;
+        float cMinPublisherRate   = -1;
+        float cMinReceiverRate    = -1;
+        int   cCount              = 0;
+
+        // get the min /max values for publisher and receiver success rates
+        if (memberData != null)
+            {
+            float cRate = 0;
+
+            for (Map.Entry<Object, Data> entry : memberData)
+                {
+                // only include memory is the node is storage enabled
+                if (isNodeStorageEnabled(model, (Integer) entry.getValue().getColumn(MemberData.NODE_ID)))
+                    {
+                    cTotalMemory     += (Integer) entry.getValue().getColumn(MemberData.MAX_MEMORY);
+                    cTotalMemoryUsed += (Integer) entry.getValue().getColumn(MemberData.USED_MEMORY);
+                    }
+
+                cCount++;
+                cRate               = (Float) entry.getValue().getColumn(MemberData.PUBLISHER_SUCCESS);
+                cTotalPublisherRate += cRate;
+
+                if (cMinPublisherRate == -1 || cRate < cMinPublisherRate)
+                    {
+                    cMinPublisherRate = cRate;
+                    }
+
+                cRate              = (Float) entry.getValue().getColumn(MemberData.RECEIVER_SUCCESS);
+                cTotalReceiverRate += cRate;
+
+                if (cMinReceiverRate == -1 || cRate < cMinReceiverRate)
+                    {
+                    cMinReceiverRate = cRate;
+                    }
+                }
+            }
+
+        return new Object[] {
+                cCount,
+                cTotalMemory,
+                cTotalMemoryUsed,
+                cTotalPublisherRate,
+                cTotalReceiverRate,
+                cMinPublisherRate,
+                cMinReceiverRate
+        };
+    }
 
     /**
      * Return the storage details.
@@ -800,7 +906,7 @@ public abstract class AbstractCoherencePanel
         for (Map.Entry<Object, Data> entry : memberData)
             {
             // only include memory if node is storage enabled
-            if (isNodeStorageEnabled((Integer) entry.getValue().getColumn(MemberData.NODE_ID)))
+            if (isNodeStorageEnabled(f_model, (Integer) entry.getValue().getColumn(MemberData.NODE_ID)))
                 {
                 cStorageCount++;
                 cTotalMemory += (Integer) entry.getValue().getColumn(MemberData.MAX_MEMORY);
@@ -871,7 +977,7 @@ public abstract class AbstractCoherencePanel
                 long cTotalBackup = (Long) entry.getValue().getColumn(PersistenceData.TOTAL_BACKUP_SPACE_USED_MB);
 
                 cTotalActiveSpace += cTotalActive == -1 ? 0 : cTotalActive;
-                cTotalBackupSpace += cTotalBackup == -1 ? 0 : cTotalBackup * GraphHelper.MB;
+                cTotalBackupSpace += cTotalBackup == -1 ? 0 : cTotalBackup * MB;
 
                 cLatencyTotal += (Float) entry.getValue().getColumn(PersistenceData.AVERAGE_LATENCY);
 

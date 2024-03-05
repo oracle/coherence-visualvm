@@ -1,5 +1,5 @@
 #
-#  Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+#  Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
 #  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 #
 #  This code is free software; you can redistribute it and/or modify it
@@ -57,6 +57,17 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2-snapshots
+
+    - name: Set up JDK 8 for Tracer Build
+      uses: actions/setup-java@v3
+      with:
+        java-version: '8'
+        distribution: 'zulu'
+
+    - name: Build Tracer
+      shell: bash
+      run: |
+        ./scripts/install-tracer-library.sh
 
     - name: Set up JDK 17 for Build
       uses: actions/setup-java@v3

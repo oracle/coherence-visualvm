@@ -185,46 +185,27 @@ public class CoherenceClusterOverviewPanel
         float cTotalReceiverRate  = 0.0f;
         float cMinPublisherRate   = -1;
         float cMinReceiverRate    = -1;
+        int   cCount              = 0;
 
         // get the min /max values for publisher and receiver success rates
         if (m_memberData != null)
             {
-            int   count = 0;
-            float cRate = 0;
+            Object[] aoValues = getMemberMemoryRateData(f_model, m_memberData);
 
-            for (Entry<Object, Data> entry : m_memberData)
-                {
-                // only include memory is the node is storage enabled
-                if (isNodeStorageEnabled((Integer) entry.getValue().getColumn(MemberData.NODE_ID)))
-                    {
-                    cTotalMemory     += (Integer) entry.getValue().getColumn(MemberData.MAX_MEMORY);
-                    cTotalMemoryUsed += (Integer) entry.getValue().getColumn(MemberData.USED_MEMORY);
-                    }
-
-                count++;
-                cRate               = (Float) entry.getValue().getColumn(MemberData.PUBLISHER_SUCCESS);
-                cTotalPublisherRate += cRate;
-
-                if (cMinPublisherRate == -1 || cRate < cMinPublisherRate)
-                    {
-                    cMinPublisherRate = cRate;
-                    }
-
-                cRate              = (Float) entry.getValue().getColumn(MemberData.RECEIVER_SUCCESS);
-                cTotalReceiverRate += cRate;
-
-                if (cMinReceiverRate == -1 || cRate < cMinReceiverRate)
-                    {
-                    cMinReceiverRate = cRate;
-                    }
-                }
+            cCount              = (Integer) aoValues[0];
+            cTotalMemory        = (Integer) aoValues[1];
+            cTotalMemoryUsed    = (Integer) aoValues[2];
+            cTotalPublisherRate = (Float) aoValues[3];
+            cTotalReceiverRate  = (Float) aoValues[4];
+            cMinPublisherRate   = (Float) aoValues[5];
+            cMinReceiverRate    = (Float) aoValues[6];
 
             // update the publisher graph
             GraphHelper.addValuesToPublisherGraph(f_publisherGraph, cMinPublisherRate,
-                count == 0 ? 0 : cTotalPublisherRate / count);
+                cCount == 0 ? 0 : cTotalPublisherRate / cCount);
 
             GraphHelper.addValuesToReceiverGraph(f_receiverGraph, cMinReceiverRate,
-                count == 0 ? 0 : cTotalReceiverRate / count);
+                cCount == 0 ? 0 : cTotalReceiverRate / cCount);
             }
 
         // update the memory graph
@@ -282,24 +263,17 @@ public class CoherenceClusterOverviewPanel
             }
 
         int    count             = 0;
-        double cLoadAverage      = 0;
         double cMax              = -1;
         double cTotalLoadAverage = 0;
 
         // work out the max and average load averages for the graph
         if (m_machineData != null)
             {
-            for (Entry<Object, Data> entry : m_machineData)
-                {
-                count++;
-                cLoadAverage      = (Double) entry.getValue().getColumn(MachineData.SYSTEM_LOAD_AVERAGE);
-                cTotalLoadAverage += cLoadAverage;
-
-                if (cMax == -1 || cLoadAverage > cMax)
-                    {
-                    cMax = cLoadAverage;
-                    }
-                }
+            Object[] aoValues = getClusterLoadAverage(m_machineData);
+            
+            count = (Integer) aoValues[0];
+            cTotalLoadAverage = (Double) aoValues[1];
+            cMax = (Double) aoValues[2];
 
             // update graph
             GraphHelper.addValuesToLoadAverageGraph(f_loadAverageGraph, (float) cMax,

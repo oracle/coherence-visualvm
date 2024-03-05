@@ -1229,9 +1229,9 @@ public class GraphHelper
      */
     public static final int VALUES_LIMIT = Integer.getInteger("coherence.plugin.visualvm.values.limit", 50000);
 
-    private static final String GRPH_CURRENT_AVERAGE = "GRPH_current_average";
-    private static final String GRPH_MINIMUM         = "GRPH_minimum";
-    private static final String GRPH_MAXIMUM         = "GRPH_maximum";
-    private static final String GRPH_AVERAGE         = "GRPH_average";
-    private static final String GRPH_CURRENT_MAXIMUM = "GRPH_current_maximum";
+    public static final String GRPH_CURRENT_AVERAGE = "GRPH_current_average";
+    public static final String GRPH_MINIMUM         = "GRPH_minimum";
+    public static final String GRPH_MAXIMUM         = "GRPH_maximum";
+    public static final String GRPH_AVERAGE         = "GRPH_average";
+    public static final String GRPH_CURRENT_MAXIMUM = "GRPH_current_maximum";
     }

@@ -65,9 +65,9 @@
     <groovy.version>3.0.12</groovy.version>
     <jackson.version>2.13.5</jackson.version>
     <jackson.databind.version>${jackson.version}</jackson.databind.version>
-    <java.version>1.8</java.version>
+    <java.version>11</java.version>
     <java.version.eight>1.8</java.version.eight>
-    <java.version.release>8</java.version.release>
+    <java.version.release>11</java.version.release>
     <javax.activation.version>1.2.0</javax.activation.version>
     <junit.version>4.13.1</junit.version>
     <visualvm.version>2.1</visualvm.version>
@@ -136,6 +136,13 @@
         <artifactId>org-graalvm-visualvm-host</artifactId>
         <version>${visualvm.version}</version>
       </dependency>
+      <!-- trace dependency -->
+      <dependency>
+        <groupId>org.graalvm.visualvm.modules</groupId>
+        <artifactId>org-graalvm-visualvm-modules-tracer</artifactId>
+        <version>${visualvm.version}</version>
+      </dependency>
+
       <dependency>
         <groupId>org.netbeans.api</groupId>
         <artifactId>org-openide-modules</artifactId>
@@ -259,6 +266,10 @@
             <source>${java.version}</source>
             <target>${java.version}</target>
             <release>${java.version.release}</release>
+            <compilerArgs>
+              <arg>--add-opens</arg>
+              <arg>jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED</arg>
+            </compilerArgs>
           </configuration>
         </plugin>
 

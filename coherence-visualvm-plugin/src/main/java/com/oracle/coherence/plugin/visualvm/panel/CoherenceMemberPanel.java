@@ -284,7 +284,7 @@ public class CoherenceMemberPanel
                 {
                 Data data = entry.getValue();
                 int nodeId = (Integer) entry.getKey();
-                if (!isNodeStorageEnabled(nodeId))
+                if (!isNodeStorageEnabled(f_model, nodeId))
                     {
                     data.setColumn(MemberData.STORAGE_ENABLED, "false");
                     }

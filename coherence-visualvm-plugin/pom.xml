@@ -108,6 +108,11 @@
     </dependency>
 
     <dependency>
+      <groupId>org.graalvm.visualvm.modules</groupId>
+      <artifactId>org-graalvm-visualvm-modules-tracer</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
     </dependency>
@@ -123,6 +128,14 @@
     <dependency>
       <groupId>com.oracle.coherence.ce</groupId>
       <artifactId>coherence-discovery</artifactId>
+    </dependency>
+
+    <!--- mock dependency -->
+    <dependency>
+      <groupId>com.oracle.coherence.plugin.visualvm</groupId>
+      <artifactId>coherence-visualvm-tracer</artifactId>
+      <version>1.7.0-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -164,6 +177,10 @@
           <source>${java.version}</source>
           <target>${java.version}</target>
           <release>${java.version.release}</release>
+          <compilerArgs>
+            <arg>--add-opens</arg>
+            <arg>jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
 

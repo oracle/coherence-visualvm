@@ -60,6 +60,17 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
+    - name: Set up JDK 8 for Tracer Build
+      uses: actions/setup-java@v3
+      with:
+        java-version: '8'
+        distribution: 'zulu'
+
+    - name: Build Tracer
+      shell: bash
+      run: |
+        ./scripts/install-tracer-library.sh
+
     - name: Set up JDK 11 for Build
       uses: actions/setup-java@v3
       with:
