@@ -58,7 +58,7 @@ public abstract class AbstractCoherenceMonitorProbe
         this.f_resolver     = resolver;
         }
 
-    public synchronized final long[] getItemValues(long timestamp)
+    public final synchronized long[] getItemValues(long timestamp)
         {
         VisualVMModel model = f_resolver.getMonitoredData();
         if (model != null)
@@ -91,7 +91,7 @@ public abstract class AbstractCoherenceMonitorProbe
             }
         if (oValue instanceof Integer)
             {
-            return (long)((Integer)oValue);
+            return ((Integer)oValue);
             }
         if (oValue instanceof String)
             {
@@ -126,8 +126,8 @@ public abstract class AbstractCoherenceMonitorProbe
 
     private final int f_nValuesCount;
 
-    protected final long[] ZERO_VALUES2 = new long[]{0L,0L};
-    protected final long[] ZERO_VALUES1 = new long[]{0L};
+    protected static final long[] ZERO_VALUES2 = new long[]{0L,0L};
+    protected static final long[] ZERO_VALUES1 = new long[]{0L};
 
     // ----- constants ------------------------------------------------------
 

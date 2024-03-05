@@ -40,30 +40,29 @@ public class CustomFormatter
 
     public CustomFormatter(int factor, String units)
         {
-        this.factor = factor;
-        this.units = units;
+        this.m_nFactor = factor;
+        this.m_sUnits  = units;
         }
 
     @Override
     public String formatValue(long value, int format)
         {
-        return FORMAT.format(value / (double) this.factor);
+        return FORMAT.format(value / (double) this.m_nFactor);
         }
 
     @Override
     public String getUnits(int format)
         {
-        return this.units;
+        return this.m_sUnits;
         }
 
     // ----- constants ------------------------------------------------------
 
     private static final NumberFormat FORMAT = NumberFormat.getInstance();
-
-
+    
     // ----- data members ---------------------------------------------------
 
-    private final int    factor;
-    private final String units;
+    private final int    m_nFactor;
+    private final String m_sUnits;
 
     }

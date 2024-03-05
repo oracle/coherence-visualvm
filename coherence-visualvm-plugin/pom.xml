@@ -130,14 +130,6 @@
       <artifactId>coherence-discovery</artifactId>
     </dependency>
 
-    <!--- mock dependency -->
-    <dependency>
-      <groupId>com.oracle.coherence.plugin.visualvm</groupId>
-      <artifactId>coherence-visualvm-tracer</artifactId>
-      <version>1.7.0-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest</artifactId>

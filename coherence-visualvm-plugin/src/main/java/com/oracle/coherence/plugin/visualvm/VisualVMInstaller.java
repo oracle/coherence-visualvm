@@ -65,12 +65,12 @@ public class VisualVMInstaller
         CoherenceApplicationTypeFactory.initialize();
 
         // register the tracer probes
-        if (provider == null)
+        if (m_provider == null)
             {
-            provider = new TracerPackageProviderImpl();
+            m_provider = new TracerPackageProviderImpl();
             }
 
-        TracerSupport.getInstance().registerPackageProvider(provider);
+        TracerSupport.getInstance().registerPackageProvider(m_provider);
         }
 
     /**
@@ -86,15 +86,14 @@ public class VisualVMInstaller
         CoherenceApplicationTypeFactory.shutdown();
 
         // un-register the tracer probes
-        if (provider == null)
+        if (m_provider == null)
             {
-            provider = new TracerPackageProviderImpl();
+            m_provider = new TracerPackageProviderImpl();
             }
 
-        TracerSupport.getInstance().unregisterPackageProvider(provider);
+        TracerSupport.getInstance().unregisterPackageProvider(m_provider);
         }
-
-
+        
     /**
      * Provider of Coherence tracer probes.
      */
@@ -111,7 +110,7 @@ public class VisualVMInstaller
             {
             return new ClusterMonitorPackage[] {new ClusterMonitorPackage(application)};
             }
-    }
+        }
 
-    private TracerPackageProviderImpl provider;
- }
+    private transient TracerPackageProviderImpl m_provider;
+    }

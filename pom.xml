@@ -136,7 +136,8 @@
         <artifactId>org-graalvm-visualvm-host</artifactId>
         <version>${visualvm.version}</version>
       </dependency>
-      <!-- trace dependency -->
+      
+      <!-- tracer dependency -->
       <dependency>
         <groupId>org.graalvm.visualvm.modules</groupId>
         <artifactId>org-graalvm-visualvm-modules-tracer</artifactId>
