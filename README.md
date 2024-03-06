@@ -26,13 +26,14 @@ NOTE: The most current version of the Plugin requires VisualVM release 2.1 or la
 3. [Connecting to a Coherence Cluster](#connect)
 4. [Changing the Plugin Behaviour via the Options Tab](#prefs)
 5. [Monitoring Capabilities](#capabilities)
-6. [Building the Plugin](#build)
+6. [Using Coherence with the Tracer framework](#tracer)
+7. [Building the Plugin](#build)
 
 ## <a id="versions"></a> Supported Coherence Versions
 
 The Plugin will connect to and display data for the following Coherence versions:
 
-* **Community Editions**: 22.06.x, 21.12.x (*), 14.1.1.0.x
+* **Community Editions**: 24.03.x, 23.09.x, 22.06.x, 21.12.x (*), 14.1.1.0.x
 
 * **Commercial Editions**: 14.1.1.2206.x, 14.1.1.0.x, 12.2.1.5.x, 12.2.1.4.x 12.1.3.x and 12.1.2.x
 
@@ -192,6 +193,11 @@ Depending upon the edition and functionality you are using, the following option
 * **gRPC Proxies** – If your cluster is configured with gRPC Proxies, this tab displays information about the requests sent and received as well as successful and failed requests. A Graph of message rates and durations is also displayed. This tab will only show when connected via JMX and is not supported for REST connections. See [here](https://github.com/oracle/coherence-visualvm/blob/main/help/help.adoc#GrpcProxyTableModel) for more details.
 * **Health** – If your cluster supports the Health Check API, this tab displays information regarding the status of all health endpoints. See [here](https://github.com/oracle/coherence-visualvm/blob/main/help/help.adoc#HealthSummaryTableModel) for more details.
 
+## <a id="tracer"></a> Using Coherence with the Tracer framework
+
+Version 1.7.0 of the Coherence VisualVM Plugin comes with integration with the VisualVM Tracer framework.
+
+
 
 ## <a id="build"></a> Building the Plugin
 
@@ -204,6 +210,10 @@ You must have the following:
 1. Java JDK 11+ - To build and test the plugin
 2. Maven 3.6.3+
 3. Git
+ 
+Note: 
+To install the tracer support, you must also run the script `./scrips/install-tracer-library.sh`
+Ensure you set your environment to JDK 1.8 to run this script.
 
 ### Clone the Repository
 
