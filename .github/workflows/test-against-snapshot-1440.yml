@@ -61,12 +61,12 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '8'
-        distribution: 'adopt'
+        distribution: 'zulu'
 
     - name: Build Tracer
       shell: bash
       run: |
-        ./scripts/install-tracer-library.sh
+        cd ./scripts && ./install-tracer-library.sh && cd ..
 
     - name: Print Versions
       run: mvn -version && ant -version

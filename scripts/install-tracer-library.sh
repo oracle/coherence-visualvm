@@ -26,34 +26,40 @@
 #
 # Purpose: Build and install the org-graalvm-visualvm-modules-tracer plugin as it is not available in Maven.
 set -e
-echo "Installing required tracer VisualVM dependencies"
-TEMP_DIR=`mktemp -d`
-echo "Temp dir = ${TEMP_DIR}"
 
-trap "rm -rf $TEMP_DIR 2>&1 > /dev/null" 0 1 2 3
+# temp workaround
+DIR=`pwd`
 
-cd $TEMP_DIR
-echo "Cloning VisualVM..."
-git clone https://github.com/oracle/visualvm.git
-cd visualvm
-git checkout 2.1.7
+#echo "Installing required tracer VisualVM dependencies"
+#TEMP_DIR=`mktemp -d`
+#echo "Temp dir = ${TEMP_DIR}"
+#
+#trap "rm -rf $TEMP_DIR 2>&1 > /dev/null" 0 1 2 3
+#
+#cd $TEMP_DIR
+#echo "Cloning VisualVM..."
+#git clone https://github.com/oracle/visualvm.git
+#cd visualvm
+#git checkout 2.1.7
+#
+#curl -Lo /tmp/nb140_platform_20230511.zip https://github.com/oracle/visualvm/releases/download/2.1.7/nb140_platform_20230511.zip
+#cd visualvm
+#unzip /tmp/nb140_platform_20230511.zip
+#
+#echo "Building VisualVM..."
+#ant build-zip
+#
+#cd ../plugins
+#ant build
+#
+#MODULE_NAME=org-graalvm-visualvm-modules-tracer
+#
+#TRACER=`find . -name ${MODULE_NAME}.jar | sed 1q`
+#FULL_PATH=`pwd`/${TRACER}
+#
+#echo "Installing ${FULL_PATH}"
 
-curl -Lo /tmp/nb140_platform_20230511.zip https://github.com/oracle/visualvm/releases/download/2.1.7/nb140_platform_20230511.zip
-cd visualvm
-unzip /tmp/nb140_platform_20230511.zip
-
-echo "Building VisualVM..."
-ant build-zip
-
-cd ../plugins
-ant build
-
-MODULE_NAME=org-graalvm-visualvm-modules-tracer
-
-TRACER=`find . -name ${MODULE_NAME}.jar | sed 1q`
-FULL_PATH=`pwd`/${TRACER}
-
-echo "Installing ${FULL_PATH}"
+FULL_PATH=$DIR/org-graalvm-visualvm-modules-tracer-2.1.jar
 
 set -x
 mvn install:install-file -Dfile=${FULL_PATH} -DgroupId=org.graalvm.visualvm.modules -DartifactId=org-graalvm-visualvm-modules-tracer -Dversion=2.1 -Dpackaging=jar
