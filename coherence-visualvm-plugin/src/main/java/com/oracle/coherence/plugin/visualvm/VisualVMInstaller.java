@@ -32,6 +32,8 @@ import com.oracle.coherence.plugin.visualvm.impl.CoherenceClusterProvider;
 
 import com.oracle.coherence.plugin.visualvm.tracer.cluster.ClusterMonitorPackage;
 
+import com.oracle.coherence.plugin.visualvm.tracer.proxy.ProxyMonitorPackage;
+import com.oracle.coherence.plugin.visualvm.tracer.service.ServiceMonitorPackage;
 import org.graalvm.visualvm.application.Application;
 import org.graalvm.visualvm.modules.tracer.TracerPackage;
 import org.graalvm.visualvm.modules.tracer.TracerPackageProvider;
@@ -108,7 +110,12 @@ public class VisualVMInstaller
 
         public TracerPackage<Application>[] getPackages(Application application)
             {
-            return new ClusterMonitorPackage[] {new ClusterMonitorPackage(application)};
+            return new TracerPackage[]
+                {
+                new ClusterMonitorPackage(application),
+                new ProxyMonitorPackage(application),
+                new ServiceMonitorPackage(application)
+                };
             }
         }
 
