@@ -259,6 +259,7 @@ You must have the following:
  
 Note: 
 To install the tracer support, you must also run the script `./scrips/install-tracer-library.sh`
+
 Ensure you set your environment to JDK 1.8 to run this script.
 
 ### Clone the Repository
