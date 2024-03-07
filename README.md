@@ -241,7 +241,7 @@ The supported Coherence probes are:
 
 &nbsp; &nbsp; ![elastic Data](assets/probes-elastic-data.png)
  
-> Note: The initial release of this integration only summary information to be plotted. We may include
+> Note: The initial release of this integration, only summary information to be plotted. We may include
 > additional functionality in future releases to allow for specific services or caches to be monitored.
 > There are no timelines for these releases. If you would like spefic information included, please raise an issue.
 
