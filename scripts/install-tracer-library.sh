@@ -27,8 +27,6 @@
 # Purpose: Build and install the org-graalvm-visualvm-modules-tracer plugin as it is not available in Maven.
 set -e
 
-# temp workaround
-#DIR=`pwd`
 #
 #echo "Installing required tracer VisualVM dependencies"
 #TEMP_DIR=`mktemp -d`
@@ -60,7 +58,8 @@ set -e
 #echo "Installing ${FULL_PATH}"
 
 # Temp workaround
- FULL_PATH=$DIR/org-graalvm-visualvm-modules-tracer-2.1.jar
+DIR=`pwd`
+FULL_PATH=$DIR/org-graalvm-visualvm-modules-tracer-2.1.jar
 
 set -x
 mvn install:install-file -Dfile=${FULL_PATH} -DgroupId=org.graalvm.visualvm.modules -DartifactId=org-graalvm-visualvm-modules-tracer -Dversion=2.1 -Dpackaging=jar
