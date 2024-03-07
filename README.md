@@ -199,7 +199,7 @@ Version 1.7.0 of the Coherence VisualVM Plugin introduces initial integration wi
  
 From the VisualVM website 
 
-> VisualVM Trace provides detailed monitoring and analyzing Java applications. Using various probes, 
+> The VisualVM Tracer framework provides detailed monitoring and analyzing Java applications. Using various probes, 
 > the Tracer gathers metrics from an application and displays the data in a timeline. The data are 
 > displayed both graphically and in a table and can be exported to common formats for further processing 
 > by external tools.
@@ -241,9 +241,9 @@ The supported Coherence probes are:
 
 &nbsp; &nbsp; ![elastic Data](assets/probes-elastic-data.png)
  
-> Note: The initial release of this integration, only summary information to be plotted. We may include
+> Note: In the initial release of this integration, only summary information can to be plotted. We may include
 > additional functionality in future releases to allow for specific services or caches to be monitored.
-> There are no timelines for these releases. If you would like spefic information included, please raise an issue.
+> There are no timelines for these releases. If you would like specific information included, please raise an issue.
 
 ## <a id="build"></a> Building the Plugin
 
