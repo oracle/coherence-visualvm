@@ -28,7 +28,7 @@ package com.oracle.coherence.plugin.visualvm.tracer.elasticdata;
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.RamJournalData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.AbstractElasticData;
 
 import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe;
 
@@ -56,8 +56,8 @@ public class RamJournalMemoryProbe
     @Override
     public long[] getValues(VisualVMModel model)
         {
-        long nRamJournalCommitted = getSingValueSum(model, VisualVMModel.DataType.RAMJOURNAL, RamJournalData.TOTAL_COMMITTED_BYTES, ZERO_VALUES1)[0];
-        long nRamJournalUsed      = getSingValueSum(model, VisualVMModel.DataType.RAMJOURNAL, RamJournalData.TOTAL_DATA_SIZE, ZERO_VALUES1)[0];
+        long nRamJournalCommitted = getSingValueSum(model, VisualVMModel.DataType.RAMJOURNAL, AbstractElasticData.TOTAL_COMMITTED_BYTES, ZERO_VALUES1)[0];
+        long nRamJournalUsed      = getSingValueSum(model, VisualVMModel.DataType.RAMJOURNAL, AbstractElasticData.TOTAL_DATA_SIZE, ZERO_VALUES1)[0];
         return new long[] {nRamJournalCommitted, nRamJournalUsed};
         }
 

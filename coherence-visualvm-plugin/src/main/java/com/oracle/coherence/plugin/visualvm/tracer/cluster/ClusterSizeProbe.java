@@ -60,7 +60,7 @@ public class ClusterSizeProbe
 
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
-        return new TracerProbeDescriptor(Localization.getLocalText("LBL_total_members"),
+        return new TracerProbeDescriptor(Localization.getLocalText(LBL),
                 Localization.getLocalText("LBL_members_desc"), ICON, 5, available);
         }
 
@@ -68,9 +68,13 @@ public class ClusterSizeProbe
         {
         return new ProbeItemDescriptor[]
             {
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText("LBL_total_members"),
-                    getMonitorsString("LBL_total_members"), ItemValueFormatter.DEFAULT_DECIMAL,
+            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
+                    getMonitorsString(LBL), ItemValueFormatter.DEFAULT_DECIMAL,
                     1d, 0, 1),
             };
         }
+
+    // ----- constants ------------------------------------------------------
+
+    private static final String LBL = "LBL_total_members";
     }

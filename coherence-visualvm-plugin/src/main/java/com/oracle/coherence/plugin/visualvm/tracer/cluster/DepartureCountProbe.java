@@ -59,7 +59,7 @@ public class DepartureCountProbe
 
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
-        return new TracerProbeDescriptor(Localization.getLocalText("LBL_member_departure_count"),
+        return new TracerProbeDescriptor(Localization.getLocalText(LBL),
                 Localization.getLocalText("LBL_departure_count"), ICON, 10, available);
         }
     
@@ -67,9 +67,14 @@ public class DepartureCountProbe
         {
         return new ProbeItemDescriptor[]
             {
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText("LBL_member_departure_count"),
-                    getMonitorsString("LBL_member_departure_count"), ItemValueFormatter.DEFAULT_DECIMAL,
+            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
+                    getMonitorsString(LBL), ItemValueFormatter.DEFAULT_DECIMAL,
                     1d, 0, 1),
             };
         }
+
+
+    // ----- constants ------------------------------------------------------
+
+    private static final String LBL = "LBL_member_departure_count";
     }

@@ -28,7 +28,7 @@ package com.oracle.coherence.plugin.visualvm.tracer.elasticdata;
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.RamJournalData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.AbstractElasticData;
 
 import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe;
 
@@ -56,8 +56,8 @@ public class RamJournalFilesProbe
     @Override
     public long[] getValues(VisualVMModel model)
         {
-        long nRamJournalFileCount = getSingValueSum(model, VisualVMModel.DataType.RAMJOURNAL, RamJournalData.FILE_COUNT, ZERO_VALUES1)[0];
-        long nRamJournaMaxFiles   = getSingValueSum(model, VisualVMModel.DataType.RAMJOURNAL, RamJournalData.MAX_FILES, ZERO_VALUES1)[0];
+        long nRamJournalFileCount = getSingValueSum(model, VisualVMModel.DataType.RAMJOURNAL, AbstractElasticData.FILE_COUNT, ZERO_VALUES1)[0];
+        long nRamJournaMaxFiles   = getSingValueSum(model, VisualVMModel.DataType.RAMJOURNAL, AbstractElasticData.MAX_FILES, ZERO_VALUES1)[0];
         return new long[] {nRamJournalFileCount, nRamJournaMaxFiles};
         }
 
