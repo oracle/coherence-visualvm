@@ -195,9 +195,55 @@ Depending upon the edition and functionality you are using, the following option
 
 ## <a id="tracer"></a> Using Coherence with the Tracer framework
 
-Version 1.7.0 of the Coherence VisualVM Plugin comes with integration with the VisualVM Tracer framework.
+Version 1.7.0 of the Coherence VisualVM Plugin introduces initial integration with the VisualVM Tracer framework.
+ 
+From the VisualVM website 
 
+> VisualVM Trace provides detailed monitoring and analyzing Java applications. Using various probes, 
+> the Tracer gathers metrics from an application and displays the data in a timeline. The data are 
+> displayed both graphically and in a table and can be exported to common formats for further processing 
+> by external tools.
 
+When you connect to a cluster via JMX, you will see the `Tracer` tab as shown below:
+
+&nbsp;&nbsp;  ![Coherence VisualVM Probes](assets/probes.png)
+
+Each of the probes areas can be expanded to reveal the individual probes. You can select the probes and then 
+click `Start` to display the information.
+
+The supported Coherence probes are:
+
+*Cluster Overview*
+
+&nbsp; &nbsp; ![Cluster Overview](assets/probes-cluster-overview.png)
+
+*Services*
+
+&nbsp; &nbsp; ![Cluster Overview](assets/probes-services.png)
+
+*Caches*
+
+&nbsp; &nbsp; ![Caches](assets/probes-caches.png)
+
+*Proxy Servers*
+
+&nbsp; &nbsp; ![Proxy Servers](assets/probes-proxies.png)
+
+*Persistence*
+
+&nbsp; &nbsp; ![Persistence](assets/probes-persistence.png)
+
+*Federation*
+
+&nbsp; &nbsp; ![Federation](assets/probes-federation.png)
+
+*Elastic Data*
+
+&nbsp; &nbsp; ![elastic Data](assets/probes-elastic-data.png)
+ 
+> Note: The initial release of this integration only summary information to be plotted. We may include
+> additional functionality in future releases to allow for specific services or caches to be monitored.
+> There are no timelines for these releases. If you would like spefic information included, please raise an issue.
 
 ## <a id="build"></a> Building the Plugin
 
