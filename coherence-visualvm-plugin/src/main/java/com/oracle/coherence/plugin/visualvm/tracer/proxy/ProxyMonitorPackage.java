@@ -102,7 +102,7 @@ public class ProxyMonitorPackage
 
     private static final String NAME = Localization.getLocalText("LBL_proxy_probe");
     private static final String DESCR = Localization.getLocalText("LBL_proxy_probe_description");
-    private static final int POSITION = 520;
+    private static final int POSITION = 20520;
 
     private TracerProbeDescriptor         m_proxyConnectionsProbeDescriptor;
     private TracerProbeDescriptor         m_proxyOutgoingMsgProbeDescriptor;

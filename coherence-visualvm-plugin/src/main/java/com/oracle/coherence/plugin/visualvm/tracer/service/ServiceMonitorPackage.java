@@ -124,7 +124,7 @@ public class ServiceMonitorPackage
 
     private static final String NAME = Localization.getLocalText("LBL_service_probe");
     private static final String DESCR = Localization.getLocalText("LBL_service_probe_description");
-    private static final int POSITION = 505;
+    private static final int POSITION = 20505;
 
     private TracerProbeDescriptor         m_pendingRequestsProbeDescriptor;
     private TracerProbeDescriptor         m_endangeredProbeDescriptor;

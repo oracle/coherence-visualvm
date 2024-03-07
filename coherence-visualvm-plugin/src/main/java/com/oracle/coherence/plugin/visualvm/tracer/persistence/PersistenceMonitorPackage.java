@@ -23,7 +23,7 @@
  * questions.
  */
 
-package com.oracle.coherence.plugin.visualvm.tracer.elasticdata;
+package com.oracle.coherence.plugin.visualvm.tracer.persistence;
 
 import static com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe.ICON;
 
@@ -40,16 +40,15 @@ import org.graalvm.visualvm.modules.tracer.TracerProbe;
 import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
 
 
-
 /**
- * A {@link TracerPackage} to show elastic data related probes.
+ * A {@link TracerPackage} to show persistence related probes.
  * 
- * @author tam 2024.03.07
+ * @author tam 2024.03.06
  */
-public class ElasticDataMonitorPackage
+public class PersistenceMonitorPackage
         extends TracerPackage<Application> implements AbstractCoherenceMonitorProbe.MonitoredDataResolver {
 
-    public ElasticDataMonitorPackage(Application application)
+    public PersistenceMonitorPackage(Application application)
         {
         super(NAME, DESCR, ICON, POSITION);
         this.f_model = VisualVMView.getModelForApplication(application);
@@ -59,53 +58,43 @@ public class ElasticDataMonitorPackage
 
     @Override
     public TracerProbeDescriptor[] getProbeDescriptors() {
-        m_ramournalMemoryProbeDescriptor   = RamJournalMemoryProbe.createDescriptor(f_model != null);
-        m_flashjournalSpaceProbeDescriptor = FlashJournalSpaceProbe.createDescriptor(f_model != null);
-        m_ramjournalFilesProbeDescriptor   = RamJournalFilesProbe.createDescriptor(f_model != null);
-        m_flashjournalFilesProbeDescriptor = FlashJournalFilesProbe.createDescriptor(f_model != null);
+        m_activeSpaceProbeDescriptor = ActiveSpaceProbe.createDescriptor(f_model != null);
+        m_backupSpaceProbeDescriptor = BackupSpaceProbe.createDescriptor(f_model != null);
+        m_maxLatencyProbeDescriptor  = MaximumLatencyProbe.createDescriptor(f_model != null);
 
         return new TracerProbeDescriptor[] {
-                m_ramournalMemoryProbeDescriptor,
-                m_flashjournalSpaceProbeDescriptor,
-                m_ramjournalFilesProbeDescriptor,
-                m_flashjournalFilesProbeDescriptor
+            m_activeSpaceProbeDescriptor,
+            m_backupSpaceProbeDescriptor,
+            m_maxLatencyProbeDescriptor
         };
     }
 
     @Override
     public TracerProbe<Application> getProbe(TracerProbeDescriptor descriptor)
         {
-        if (descriptor == m_ramournalMemoryProbeDescriptor)
+        if (descriptor == m_activeSpaceProbeDescriptor)
             {
-            if (m_ramjournalMemoryProbe == null)
+            if (m_activeSpaceProbe == null)
                 {
-                m_ramjournalMemoryProbe = new RamJournalMemoryProbe(this);
+                m_activeSpaceProbe = new ActiveSpaceProbe(this);
                 }
-            return m_ramjournalMemoryProbe;
+            return m_activeSpaceProbe;
             }
-        else if (descriptor == m_flashjournalSpaceProbeDescriptor)
+        else if (descriptor == m_backupSpaceProbeDescriptor)
             {
-            if (m_flashjournalSpaceProbe == null)
+            if (m_backupSpaceProbe == null)
                 {
-                m_flashjournalSpaceProbe = new FlashJournalSpaceProbe(this);
+                m_backupSpaceProbe = new BackupSpaceProbe(this);
                 }
-            return m_flashjournalSpaceProbe;
+            return m_backupSpaceProbe;
             }
-        else if (descriptor == m_flashjournalFilesProbeDescriptor)
+        else if (descriptor == m_maxLatencyProbeDescriptor)
             {
-            if (m_flashjournalFilesProbe == null)
+            if (m_maxLatencyProbe == null)
                 {
-                m_flashjournalFilesProbe = new FlashJournalFilesProbe(this);
+                m_maxLatencyProbe = new MaximumLatencyProbe(this);
                 }
-            return m_flashjournalFilesProbe;
-            }
-        else if (descriptor == m_ramjournalFilesProbeDescriptor)
-            {
-            if (m_ramjournalFilesProbe == null)
-                {
-                m_ramjournalFilesProbe = new RamJournalFilesProbe(this);
-                }
-            return m_ramjournalFilesProbe;
+            return m_maxLatencyProbe;
             }
         else
             {
@@ -123,19 +112,17 @@ public class ElasticDataMonitorPackage
 
     // ----- constants ------------------------------------------------------
 
-    private static final String NAME = Localization.getLocalText("LBL_elasticdata_probe");
-    private static final String DESCR = Localization.getLocalText("LBL_elasticdata_probe_description");
-    private static final int POSITION = 20570;
+    private static final String NAME = Localization.getLocalText("LBL_persistence_probe");
+    private static final String DESCR = Localization.getLocalText("LBL_persistence_description");
+    private static final int POSITION = 20525;
 
-    private TracerProbeDescriptor m_ramournalMemoryProbeDescriptor;
-    private TracerProbeDescriptor m_flashjournalSpaceProbeDescriptor;
-    private TracerProbeDescriptor m_ramjournalFilesProbeDescriptor;
-    private TracerProbeDescriptor m_flashjournalFilesProbeDescriptor;
+    private TracerProbeDescriptor         m_activeSpaceProbeDescriptor;
+    private TracerProbeDescriptor         m_backupSpaceProbeDescriptor;
+    private TracerProbeDescriptor         m_maxLatencyProbeDescriptor;
 
-    private AbstractCoherenceMonitorProbe m_ramjournalMemoryProbe;
-    private AbstractCoherenceMonitorProbe m_flashjournalSpaceProbe;
-    private AbstractCoherenceMonitorProbe m_ramjournalFilesProbe;
-    private AbstractCoherenceMonitorProbe m_flashjournalFilesProbe;
+    private AbstractCoherenceMonitorProbe m_activeSpaceProbe;
+    private AbstractCoherenceMonitorProbe m_backupSpaceProbe;
+    private AbstractCoherenceMonitorProbe m_maxLatencyProbe;
 
     private final VisualVMModel f_model;
     }

@@ -104,7 +104,7 @@ public class CacheMonitorPackage
 
     private static final String NAME = Localization.getLocalText("LBL_cache_probe");
     private static final String DESCR = Localization.getLocalText("LBL_cache_probe_description");
-    private static final int POSITION = 510;
+    private static final int POSITION = 20510;
 
     private TracerProbeDescriptor         m_memorySizeProbeDescriptor;
     private TracerProbeDescriptor         m_SizeProbeDescriptor;

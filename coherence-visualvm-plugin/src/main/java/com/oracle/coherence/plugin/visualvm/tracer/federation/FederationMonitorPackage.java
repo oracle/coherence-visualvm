@@ -124,7 +124,7 @@ public class FederationMonitorPackage
 
     private static final String NAME = Localization.getLocalText("LBL_federation_probe");
     private static final String DESCR = Localization.getLocalText("LBL_federation_probe_description");
-    private static final int POSITION = 550;
+    private static final int POSITION = 20550;
 
     private TracerProbeDescriptor m_bytesSentPerSecondProbeDescriptor;
     private TracerProbeDescriptor m_msgsSentPerSecondProbeDescriptor;

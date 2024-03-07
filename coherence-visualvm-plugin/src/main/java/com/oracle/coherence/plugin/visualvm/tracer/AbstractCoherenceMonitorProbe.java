@@ -119,6 +119,7 @@ public abstract class AbstractCoherenceMonitorProbe
 
        return new long[] {getValueAsLong(data.get(0).getValue().getColumn(nColumn))};
        }
+
     /**
      * Returns the sum of a single value from all entries for a datatype.
      * @param model     the {@link VisualVMModel} to use
@@ -142,6 +143,37 @@ public abstract class AbstractCoherenceMonitorProbe
             }
 
        return new long[] {nSum};
+       }
+
+     /**
+     * Returns the max of a single value from all entries for a datatype.
+     * @param model     the {@link VisualVMModel} to use
+     * @param dataType  the {@link VisualVMModel.DataType} to query
+     * @param nColumn   the column to extract
+     * @param aDefault  default value
+     *
+     * @return the tracer result
+     */
+    protected long[] getSingValueMax(VisualVMModel model, VisualVMModel.DataType dataType, int nColumn, long[] aDefault)
+       {
+       List<Map.Entry<Object, Data>> data = model.getData(dataType);
+       long nMax   = 0L;
+       long nValue = 0L;
+
+       if (data != null && !data.isEmpty())
+            {
+            for (Map.Entry<Object, Data> entry : data)
+                {
+                nValue = getValueAsLong(entry.getValue().getColumn(nColumn));
+
+                if (nValue > nMax)
+                    {
+                    nMax = nValue;
+                    }
+                }
+            }
+
+       return new long[] {nMax};
        }
 
     // ----- data members ---------------------------------------------------

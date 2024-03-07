@@ -143,7 +143,7 @@ public class ClusterMonitorPackage
 
     private static final String NAME = Localization.getLocalText("LBL_cluster_probe");
     private static final String DESCR = Localization.getLocalText("LBL_cluster_probe_description");
-    private static final int POSITION = 500;
+    private static final int POSITION = 20500;
 
     private TracerProbeDescriptor         m_heapProbeDescriptor;
     private TracerProbeDescriptor         m_clusterSizeProbeDescriptor;
