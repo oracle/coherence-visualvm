@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -36,6 +36,7 @@ import com.oracle.coherence.plugin.visualvm.panel.util.SeparatorMenuOption;
 import com.oracle.coherence.plugin.visualvm.tablemodel.CacheDetailTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.CacheStorageManagerTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.CacheTableModel;
+import com.oracle.coherence.plugin.visualvm.tablemodel.CacheViewTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheDetailData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheFrontDetailData;
@@ -72,6 +73,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.ViewData;
 import javax.management.Attribute;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
@@ -135,20 +137,23 @@ public class CoherenceCachePanel
         pnlTop.setOpaque(false);
 
         // create any table models required
-        f_tmodel = new CacheTableModel(VisualVMModel.DataType.CACHE.getMetadata());
-        f_tmodelDetail = new CacheDetailTableModel(VisualVMModel.DataType.CACHE_DETAIL.getMetadata());
+        f_tmodel            = new CacheTableModel(VisualVMModel.DataType.CACHE.getMetadata());
+        f_tmodelDetail      = new CacheDetailTableModel(VisualVMModel.DataType.CACHE_DETAIL.getMetadata());
         f_tmodelFrontDetail = new CacheDetailTableModel(VisualVMModel.DataType.CACHE_FRONT_DETAIL.getMetadata());
-        f_tmodelStorage = new CacheStorageManagerTableModel(VisualVMModel.DataType.CACHE_STORAGE_MANAGER.getMetadata());
+        f_tmodelStorage     = new CacheStorageManagerTableModel(VisualVMModel.DataType.CACHE_STORAGE_MANAGER.getMetadata());
+        f_tmodelViews       = new CacheViewTableModel(VisualVMModel.DataType.VIEW.getMetadata());
 
         final ExportableJTable table = new ExportableJTable(f_tmodel, model);
-        f_tableDetail = new ExportableJTable(f_tmodelDetail, model);
-        f_tableFrontDetail = new ExportableJTable(f_tmodelFrontDetail, model);
-        f_tableStorage = new ExportableJTable(f_tmodelStorage, model);
+        f_tableDetail                = new ExportableJTable(f_tmodelDetail, model);
+        f_tableFrontDetail           = new ExportableJTable(f_tmodelFrontDetail, model);
+        f_tableStorage               = new ExportableJTable(f_tmodelStorage, model);
+        f_tableViews                 = new ExportableJTable(f_tmodelViews, model);
 
         table.setPreferredScrollableViewportSize(new Dimension(500, table.getRowHeight() * 5));
         f_tableDetail.setPreferredScrollableViewportSize(new Dimension(500, f_tableDetail.getRowHeight() * 3));
         f_tableFrontDetail.setPreferredScrollableViewportSize(new Dimension(500, f_tableFrontDetail.getRowHeight() * 3));
         f_tableStorage.setPreferredScrollableViewportSize(new Dimension(500, f_tableStorage.getRowHeight() * 3));
+        f_tableViews.setPreferredScrollableViewportSize(new Dimension(500, f_tableStorage.getRowHeight() * 3));
 
         // define renderers for the columns
         RenderHelper.setColumnRenderer(table, CacheData.CACHE_NAME, new RenderHelper.ToolTipRenderer());
@@ -162,6 +167,7 @@ public class CoherenceCachePanel
         RenderHelper.setHeaderAlignment(f_tableDetail, SwingConstants.CENTER);
         RenderHelper.setHeaderAlignment(f_tableFrontDetail, SwingConstants.CENTER);
         RenderHelper.setHeaderAlignment(f_tableStorage, SwingConstants.CENTER);
+        RenderHelper.setHeaderAlignment(f_tableViews, SwingConstants.CENTER);
 
         RenderHelper.setColumnRenderer(f_tableDetail, CacheDetailData.CACHE_HITS, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_tableDetail, CacheDetailData.CACHE_MISSES, new RenderHelper.IntegerRenderer());
@@ -203,6 +209,10 @@ public class CoherenceCachePanel
         RenderHelper.setColumnRenderer(f_tableStorage, CacheStorageManagerData.INDEXING_TOTAL_MILLIS,
                                        new RenderHelper.IntegerRenderer());
 
+        RenderHelper.setColumnRenderer(f_tableViews, ViewData.NODE_ID, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableViews, ViewData.SIZE, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableViews, ViewData.RECONNECT_INTERVAL, new RenderHelper.IntegerRenderer());
+
         table.setIntercellSpacing(new Dimension(6, 3));
         table.setRowHeight(table.getRowHeight() + 4);
 
@@ -215,6 +225,7 @@ public class CoherenceCachePanel
                     new InvokeCacheOperationMenuOpen(model, m_requestSender, table, CLEAR)
             });
 
+        setTablePadding(f_tableViews);
         setTablePadding(f_tableDetail);
         f_tableDetail.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableDetail, SELECTED_CACHE)});
 
@@ -224,7 +235,8 @@ public class CoherenceCachePanel
         setTablePadding(f_tableStorage);
         f_tableStorage.setMenuOptions(new MenuOption[] {
                 new ShowDetailMenuOption(model, f_tableStorage, SELECTED_STORAGE),
-                new ShowIndexInfoMenuOption(model, m_requestSender, f_tableStorage)
+                new ShowIndexInfoMenuOption(model, m_requestSender, f_tableStorage),
+                new ShowPartitionStatsMenuOption(model, m_requestSender, f_tableStorage)
         });
 
         // Create the scroll pane and add the table to it.
@@ -232,16 +244,20 @@ public class CoherenceCachePanel
         JScrollPane scrollPaneDetail  = new JScrollPane(f_tableDetail);
         JScrollPane scrollPaneStorage = new JScrollPane(f_tableStorage);
 
+        f_scrollPaneViews       = new JScrollPane(f_tableViews);
         f_scrollPaneFrontDetail = new JScrollPane(f_tableFrontDetail);
 
         configureScrollPane(scrollPane, table);
         configureScrollPane(scrollPaneDetail, f_tableDetail);
         configureScrollPane(f_scrollPaneFrontDetail, f_tableFrontDetail);
+        configureScrollPane(f_scrollPaneViews, f_tableViews);
         configureScrollPane(scrollPaneStorage, f_tableStorage);
+
         scrollPane.setOpaque(false);
         scrollPaneDetail.setOpaque(false);
         scrollPaneStorage.setOpaque(false);
         f_scrollPaneFrontDetail.setOpaque(false);
+        f_scrollPaneViews.setOpaque(false);
 
         pnlTop.add(scrollPane, BorderLayout.CENTER);
         pneSplit.add(pnlTop);
@@ -290,10 +306,11 @@ public class CoherenceCachePanel
     @Override
     public void updateData()
         {
-        m_cacheData = f_model.getData(VisualVMModel.DataType.CACHE);
-        m_cacheDetailData = f_model.getData(VisualVMModel.DataType.CACHE_DETAIL);
+        m_cacheData            = f_model.getData(VisualVMModel.DataType.CACHE);
+        m_cacheDetailData      = f_model.getData(VisualVMModel.DataType.CACHE_DETAIL);
         m_cacheFrontDetailData = f_model.getData(VisualVMModel.DataType.CACHE_FRONT_DETAIL);
-        m_cacheStorageData = f_model.getData(VisualVMModel.DataType.CACHE_STORAGE_MANAGER);
+        m_cacheStorageData     = f_model.getData(VisualVMModel.DataType.CACHE_STORAGE_MANAGER);
+        m_viewData             = f_model.getData(VisualVMModel.DataType.VIEW);
 
         // zero out memory if the selected cache is FIXED unit calculator
         Tuple selectedCache = f_model.getSelectedCache();
@@ -336,9 +353,17 @@ public class CoherenceCachePanel
         // check if near cache is configured
         m_isNearCacheConfigured = m_cacheFrontDetailData != null && !m_cacheFrontDetailData.isEmpty();
 
+        // check if view cache is configured
+        m_isViewCacheConfigured = m_viewData != null && !m_viewData.isEmpty();
+
         if (m_isNearCacheConfigured)
             {
             f_tmodelFrontDetail.setDataList(m_cacheFrontDetailData);
+            }
+
+        if (m_isViewCacheConfigured)
+            {
+            f_tmodelViews.setDataList(m_viewData);
             }
 
         // if we are currently displaying the heat map then update it
@@ -368,6 +393,23 @@ public class CoherenceCachePanel
                 {
                 f_pneTab.remove(f_scrollPaneFrontDetail);
                 m_isFrontCacheTabAdded = false;
+                }
+            }
+
+        if (m_isViewCacheConfigured)
+           {
+            if (!m_isViewTabAdded && f_pneTab != null)
+                {
+                f_pneTab.addTab(getLocalizedText("TAB_view_caches"), f_scrollPaneViews);
+                m_isViewTabAdded = true;
+                }
+            }
+        else
+            {
+            if (m_isViewTabAdded && f_pneTab != null)
+                {
+                f_pneTab.remove(f_scrollPaneViews);
+                m_isViewTabAdded = false;
                 }
             }
 
@@ -429,6 +471,7 @@ public class CoherenceCachePanel
         fireTableDataChangedWithSelection(f_tableDetail, f_tmodelDetail);
         fireTableDataChangedWithSelection(f_tableFrontDetail, f_tmodelFrontDetail);
         fireTableDataChangedWithSelection(f_tableStorage, f_tmodelStorage);
+        fireTableDataChangedWithSelection(f_tableViews, f_tmodelViews);
 
         if (f_model.getSelectedCache() != null)
             {
@@ -495,6 +538,9 @@ public class CoherenceCachePanel
                     f_tmodelFrontDetail.setDataList(null);
                     f_tmodelFrontDetail.fireTableDataChanged();
 
+                    f_tmodelViews.setDataList(null);
+                    f_tmodelViews.fireTableDataChanged();
+
                     f_txtMaxQueryDescription.setText("");
                     f_txtMaxQueryDuration.setText("");
                     m_cacheData = null;
@@ -531,7 +577,7 @@ public class CoherenceCachePanel
         // ----- constructors -----------------------------------------------
 
        /**
-         * Create a new menu option for displaying heat map.
+         * Create a new menu option for displaying index information.
          *
          * @param model          the {@link VisualVMModel} to get collected data from
          * @param requestSender  the {@link MBeanServerConnection} to perform additional queries
@@ -656,6 +702,65 @@ public class CoherenceCachePanel
 
                showMessageDialog(Localization.getLocalText("LBL_index_info"),
                                                                 sb.toString(), JOptionPane.INFORMATION_MESSAGE);
+               }
+           catch (Exception ee)
+               {
+               showMessageDialog(Localization.getLocalText("LBL_error"),
+                                ee.getMessage(), JOptionPane.ERROR_MESSAGE);
+               }
+
+           }
+
+       // ----- data members ------------------------------------------------
+
+        /**
+         * Menu option description.
+         */
+        private final String f_sMenuItem;
+       }
+
+    /**
+     * Right-click option to show index information.
+     */
+    protected class ShowPartitionStatsMenuOption
+        extends AbstractMenuOption
+        {
+
+        // ----- constructors -----------------------------------------------
+
+       /**
+         * Create a new menu option for displaying partition stats information.
+         *
+         * @param model          the {@link VisualVMModel} to get collected data from
+         * @param requestSender  the {@link MBeanServerConnection} to perform additional queries
+         * @param jtable         the {@link ExportableJTable} that this applies to
+         */
+       public ShowPartitionStatsMenuOption(VisualVMModel model, RequestSender requestSender,
+                                      ExportableJTable jtable)
+           {
+           super(model, requestSender, jtable);
+           f_sMenuItem = getLocalizedText("LBL_cache_partition_stats");
+           }
+
+       // ----- AbstractMenuOption methods ---------------------------------
+
+       @Override
+       public String getMenuItem()
+           {
+           return f_sMenuItem;
+           }
+
+       @Override
+       public void actionPerformed(ActionEvent e)
+           {
+           String sResult = "unknown";
+           Pair<String, String> selectedCache = f_model.getSelectedCache();
+
+           try
+               {
+               sResult = m_requestSender.invokeReportPartitionsStatsOperation(selectedCache.getX(), selectedCache.getY());
+               showMessageDialog(Localization.getLocalText("LBL_cache_partition_stats"),
+                                                                sResult, JOptionPane.INFORMATION_MESSAGE);
                }
            catch (Exception ee)
                {
@@ -848,7 +953,7 @@ public class CoherenceCachePanel
                     while (iter.hasNext())
                         {
                         Pair<Pair<String, String>, Long> entryHeatMap = iter.next();
-                        if (entryHeatMap.getY().longValue() <= cache.getY().longValue())
+                        if (entryHeatMap.getY() <= cache.getY())
                             {
                             // add new value at the current position
                             f_listValues.add(nLocation, cache);
@@ -1136,10 +1241,21 @@ public class CoherenceCachePanel
     private boolean m_isNearCacheConfigured = false;
 
     /**
+     * Flag to indicate if near view is configured.
+     */
+    private boolean m_isViewCacheConfigured = false;
+
+    /**
      * Flag to indicate if we already added the front
      * cache detail tab.
      */
     private boolean m_isFrontCacheTabAdded = false;
+
+    /**
+    /**
+     * Flag to indicate if we already added the view cache tab.
+     */
+    private boolean m_isViewTabAdded = false;
 
     /**
      * The tabbed panel.
@@ -1151,6 +1267,12 @@ public class CoherenceCachePanel
      * cache details tab.
      */
     private final JScrollPane f_scrollPaneFrontDetail;
+
+    /**
+     * The scroll panel which we use to display front
+     * view details tab.
+     */
+    private final JScrollPane f_scrollPaneViews;
 
     /**
      * Total number of caches.
@@ -1198,6 +1320,12 @@ public class CoherenceCachePanel
     protected final CacheStorageManagerTableModel f_tmodelStorage;
 
     /**
+     * The {@link CacheViewTableModel} to display cache viuews data.
+     */
+    protected final CacheViewTableModel f_tmodelViews;
+
+
+    /**
      * The cache data retrieved from the {@link VisualVMModel}.
      */
     private List<Entry<Object, Data>> m_cacheData = null;
@@ -1218,6 +1346,11 @@ public class CoherenceCachePanel
     private List<Entry<Object, Data>> m_cacheStorageData = null;
 
     /**
+     * The storage view data retrieved from the {@link VisualVMModel}.
+     */
+    private transient List<Entry<Object, Data>> m_viewData = null;
+
+    /**
      * The row selection listener.
      */
     private final SelectRowListSelectionListener f_listener;
@@ -1236,6 +1369,11 @@ public class CoherenceCachePanel
      * The {@link ExportableJTable} to use to display storage data.
      */
     private final ExportableJTable f_tableStorage;
+
+    /**
+     * The {@link ExportableJTable} to use to display cache view data.
+     */
+    private final ExportableJTable f_tableViews;
 
     /**
      * Currently displaying heat map.

@@ -33,7 +33,7 @@
   <parent>
     <groupId>com.oracle.coherence.plugin.visualvm</groupId>
     <artifactId>coherence-visualvm-main</artifactId>
-    <version>1.6.3-SNAPSHOT</version>
+    <version>1.7.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -108,6 +108,11 @@
     </dependency>
 
     <dependency>
+      <groupId>org.graalvm.visualvm.modules</groupId>
+      <artifactId>org-graalvm-visualvm-modules-tracer</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
     </dependency>
@@ -164,6 +169,10 @@
           <source>${java.version}</source>
           <target>${java.version}</target>
           <release>${java.version.release}</release>
+          <compilerArgs>
+            <arg>--add-opens</arg>
+            <arg>jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
 

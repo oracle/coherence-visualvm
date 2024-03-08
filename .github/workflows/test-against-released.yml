@@ -47,6 +47,7 @@ jobs:
           - 22.06.6
           - 23.09
           - 23.09.1
+          - 23.09.2
 
     steps:
     - name: Checkout
@@ -58,6 +59,17 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
+
+    - name: Set up JDK 8 for Tracer Build
+      uses: actions/setup-java@v3
+      with:
+        java-version: '8'
+        distribution: 'temurin'
+
+    - name: Build Tracer
+      shell: bash
+      run: |
+        cd ./scripts && ./install-tracer-library.sh && cd ..
 
     - name: Set up JDK 11 for Build
       uses: actions/setup-java@v3

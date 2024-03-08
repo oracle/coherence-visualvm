@@ -26,13 +26,14 @@ NOTE: The most current version of the Plugin requires VisualVM release 2.1 or la
 3. [Connecting to a Coherence Cluster](#connect)
 4. [Changing the Plugin Behaviour via the Options Tab](#prefs)
 5. [Monitoring Capabilities](#capabilities)
-6. [Building the Plugin](#build)
+6. [Using Coherence with the Tracer framework](#tracer)
+7. [Building the Plugin](#build)
 
 ## <a id="versions"></a> Supported Coherence Versions
 
 The Plugin will connect to and display data for the following Coherence versions:
 
-* **Community Editions**: 22.06.x, 21.12.x (*), 14.1.1.0.x
+* **Community Editions**: 24.03.x, 23.09.x, 22.06.x, 21.12.x (*), 14.1.1.0.x
 
 * **Commercial Editions**: 14.1.1.2206.x, 14.1.1.0.x, 12.2.1.5.x, 12.2.1.4.x 12.1.3.x and 12.1.2.x
 
@@ -192,6 +193,57 @@ Depending upon the edition and functionality you are using, the following option
 * **gRPC Proxies** – If your cluster is configured with gRPC Proxies, this tab displays information about the requests sent and received as well as successful and failed requests. A Graph of message rates and durations is also displayed. This tab will only show when connected via JMX and is not supported for REST connections. See [here](https://github.com/oracle/coherence-visualvm/blob/main/help/help.adoc#GrpcProxyTableModel) for more details.
 * **Health** – If your cluster supports the Health Check API, this tab displays information regarding the status of all health endpoints. See [here](https://github.com/oracle/coherence-visualvm/blob/main/help/help.adoc#HealthSummaryTableModel) for more details.
 
+## <a id="tracer"></a> Using Coherence with the Tracer framework
+
+Version 1.7.0 of the Coherence VisualVM Plugin introduces initial integration with the VisualVM Tracer framework.
+ 
+From the VisualVM website 
+
+> The VisualVM Tracer framework provides detailed monitoring and analyzing Java applications. Using various probes, 
+> the Tracer gathers metrics from an application and displays the data in a timeline. The data are 
+> displayed both graphically and in a table and can be exported to common formats for further processing 
+> by external tools.
+
+When you connect to a cluster via JMX, you will see the `Tracer` tab as shown below:
+
+&nbsp;&nbsp;  ![Coherence VisualVM Probes](assets/probes.png)
+
+Each of the probes areas can be expanded to reveal the individual probes. You can select the probes and then 
+click `Start` to display the information.
+
+The supported Coherence probes are:
+
+*Cluster Overview*
+
+&nbsp; &nbsp; ![Cluster Overview](assets/probes-cluster-overview.png)
+
+*Services*
+
+&nbsp; &nbsp; ![Cluster Overview](assets/probes-services.png)
+
+*Caches*
+
+&nbsp; &nbsp; ![Caches](assets/probes-caches.png)
+
+*Proxy Servers*
+
+&nbsp; &nbsp; ![Proxy Servers](assets/probes-proxies.png)
+
+*Persistence*
+
+&nbsp; &nbsp; ![Persistence](assets/probes-persistence.png)
+
+*Federation*
+
+&nbsp; &nbsp; ![Federation](assets/probes-federation.png)
+
+*Elastic Data*
+
+&nbsp; &nbsp; ![elastic Data](assets/probes-elastic-data.png)
+ 
+> Note: In the initial release of this integration, only summary information can to be plotted. We may include
+> additional functionality in future releases to allow for specific services or caches to be monitored.
+> There are no timelines for these releases. If you would like specific information included, please raise an issue.
 
 ## <a id="build"></a> Building the Plugin
 
@@ -204,6 +256,11 @@ You must have the following:
 1. Java JDK 11+ - To build and test the plugin
 2. Maven 3.6.3+
 3. Git
+ 
+Note: 
+To install the tracer support, you must also run the script `./scrips/install-tracer-library.sh`
+
+Ensure you set your environment to JDK 1.8 to run this script.
 
 ### Clone the Repository
 

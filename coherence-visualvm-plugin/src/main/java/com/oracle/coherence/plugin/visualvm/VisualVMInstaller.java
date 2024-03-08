@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -30,6 +30,20 @@ import com.oracle.coherence.plugin.visualvm.datasource.CoherenceClustersDataSour
 
 import com.oracle.coherence.plugin.visualvm.impl.CoherenceClusterProvider;
 
+import com.oracle.coherence.plugin.visualvm.tracer.cache.CacheMonitorPackage;
+import com.oracle.coherence.plugin.visualvm.tracer.cluster.ClusterMonitorPackage;
+import com.oracle.coherence.plugin.visualvm.tracer.elasticdata.ElasticDataMonitorPackage;
+import com.oracle.coherence.plugin.visualvm.tracer.federation.FederationMonitorPackage;
+import com.oracle.coherence.plugin.visualvm.tracer.persistence.PersistenceMonitorPackage;
+import com.oracle.coherence.plugin.visualvm.tracer.proxy.ProxyMonitorPackage;
+import com.oracle.coherence.plugin.visualvm.tracer.service.ServiceMonitorPackage;
+
+import org.graalvm.visualvm.application.Application;
+
+import org.graalvm.visualvm.modules.tracer.TracerPackage;
+import org.graalvm.visualvm.modules.tracer.TracerPackageProvider;
+import org.graalvm.visualvm.modules.tracer.TracerSupport;
+
 import org.openide.modules.ModuleInstall;
 
 /**
@@ -56,6 +70,14 @@ public class VisualVMInstaller
         CoherenceClusterDataSourceViewProvider.register();
         CoherenceClusterProvider.initCoherenceClustersDataSource();
         CoherenceApplicationTypeFactory.initialize();
+
+        // register the tracer probes
+        if (m_provider == null)
+            {
+            m_provider = new TracerPackageProviderImpl();
+            }
+
+        TracerSupport.getInstance().registerPackageProvider(m_provider);
         }
 
     /**
@@ -69,5 +91,42 @@ public class VisualVMInstaller
         CoherenceClusterDataSourceDescriptorProvider.unregister();
         CoherenceClusterDataSourceViewProvider.unregister();
         CoherenceApplicationTypeFactory.shutdown();
+
+        // un-register the tracer probes
+        if (m_provider == null)
+            {
+            m_provider = new TracerPackageProviderImpl();
+            }
+
+        TracerSupport.getInstance().unregisterPackageProvider(m_provider);
         }
+        
+    /**
+     * Provider of Coherence tracer probes.
+     */
+    private static class TracerPackageProviderImpl
+            extends TracerPackageProvider<Application>
+        {
+
+        TracerPackageProviderImpl()
+            {
+            super(Application.class);
+            }
+
+        public TracerPackage<Application>[] getPackages(Application application)
+            {
+            return new TracerPackage[]
+                {
+                new ClusterMonitorPackage(application),
+                new ProxyMonitorPackage(application),
+                new ServiceMonitorPackage(application),
+                new CacheMonitorPackage(application),
+                new FederationMonitorPackage(application),
+                new ElasticDataMonitorPackage(application),
+                new PersistenceMonitorPackage(application)
+                };
+            }
+        }
+
+    private transient TracerPackageProviderImpl m_provider;
     }

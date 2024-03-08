@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -46,6 +46,7 @@ import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
+import static com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender.PART_STATS;
 import static com.oracle.coherence.plugin.visualvm.panel.CoherenceTopicPanel.NOTIFY_POPULATED;
 
 /**
@@ -117,13 +118,26 @@ public class JMXRequestSender
     public void invokeStorageManagerOperation(String sService, String sCacheName, String sOperation)
             throws Exception
         {
-        ObjectName objectName = new ObjectName("Coherence:type=StorageManager,service=" + sService + ",cache=" + sCacheName + ",*");
+        ObjectName objectName = new ObjectName(STORAGE_MANAGER_EQUALS + sService + CACHE_EQUALS + sCacheName + ",*");
 
         Set<ObjectName> setResult = getCompleteObjectName(objectName);
         String sFQN = getFirstResult(setResult);
 
         invoke(new ObjectName(sFQN), sOperation,  new Object[]{}, new String[]{});
         }
+
+    @Override
+    public String invokeReportPartitionsStatsOperation(String sService, String sCacheName)
+            throws Exception
+        {
+        ObjectName objectName = new ObjectName(STORAGE_MANAGER_EQUALS + sService + CACHE_EQUALS + sCacheName + ",*");
+
+        Set<ObjectName> setResult = getCompleteObjectName(objectName);
+        String sFQN = getFirstResult(setResult);
+
+        return (String) invoke(new ObjectName(sFQN), PART_STATS, new Object[]{"json"}, new String[]{String.class.getName()});
+        }
+
 
     @Override
     public Set<ObjectName> getAllJournalMembers(String sJournalType)
@@ -147,9 +161,9 @@ public class JMXRequestSender
             throws Exception
         {
 
-        return f_connection.queryNames(new ObjectName("Coherence:type=StorageManager,service="
+        return f_connection.queryNames(new ObjectName(STORAGE_MANAGER_EQUALS
                 + sServiceName + (sDomainPartition != null ? DOMAIN_PARTITION + sDomainPartition : "")
-                + ",cache=" + sCacheName + ",*"), null);
+                + CACHE_EQUALS + sCacheName + ",*"), null);
         }
 
     @Override
@@ -240,6 +254,13 @@ public class JMXRequestSender
             throws Exception
         {
         return f_connection.queryNames(new ObjectName("Coherence:type=ConnectionManager,*"), null);
+        }
+
+    @Override
+    public Set<ObjectName> getViewMembers(String sServiceName, String sViewName)
+            throws Exception
+        {
+        return f_connection.queryNames(new ObjectName("Coherence:type=View,service=" + sServiceName + NAME + sViewName + ",*"), null);
         }
 
     @Override
@@ -641,10 +662,12 @@ public class JMXRequestSender
      */
     private static final Logger LOGGER = Logger.getLogger(JMXRequestSender.class.getName());
 
-    private static final String DOMAIN_PARTITION    = ",domainPartition=";
-    private static final String NAME                = ",name=";
-    private static final String CLUSTER             = "Coherence:type=Cluster,*";
-    private static final String COHERENCE_TYPE_NODE = "Coherence:type=Node,nodeId=";
+    private static final String DOMAIN_PARTITION       = ",domainPartition=";
+    private static final String NAME                   = ",name=";
+    private static final String CLUSTER                = "Coherence:type=Cluster,*";
+    private static final String COHERENCE_TYPE_NODE    = "Coherence:type=Node,nodeId=";
+    private static final String CACHE_EQUALS           = ",cache=";
+    private static final String STORAGE_MANAGER_EQUALS = "Coherence:type=StorageManager,service=";
 
     // ------ data members --------------------------------------------------
 

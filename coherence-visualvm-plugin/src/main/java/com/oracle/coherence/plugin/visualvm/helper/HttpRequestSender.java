@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -295,6 +295,26 @@ public class HttpRequestSender
         }
 
     @Override
+    public String invokeReportPartitionsStatsOperation(String sService, String sCacheName)
+            throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath()
+                 .addPathSegment(SERVICES)
+                 .addPathSegment(encodeServiceName(sService))
+                 .addPathSegment("storage")
+                 .addPathSegment(encodeServiceName(sCacheName))
+                 .addPathSegment(PART_STATS);
+
+        JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
+        if (rootNode != null)
+            {
+            return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(rootNode.get(PART_STATS));
+            }
+        
+        return "";
+        }
+
+    @Override
     public Set<ObjectName> getAllJournalMembers(String sJournalType)
             throws Exception
         {
@@ -538,6 +558,21 @@ public class HttpRequestSender
                 .addQueryParameter(FIELDS, "name,type,domainPartition,nodeId");
 
         return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
+        }
+
+    @Override
+    public Set<ObjectName> getViewMembers(String sServiceName, String sViewName)
+            throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sServiceName))
+                .addPathSegment("views")
+                .addPathSegment(encodeCacheName(sViewName))
+                .addPathSegment(MEMBERS)
+                .addQueryParameter(LINKS, "");
+
+        return getSetObjectNamesFromResponse(sendGetRequest(urlBuilder));
+
         }
 
     @Override
@@ -1152,6 +1187,24 @@ public class HttpRequestSender
         }
 
     /**
+     * Get the view data in the cluster.
+     *
+     * @return the data for all the cluster members
+     * @throws Exception in case of errors
+     */
+    public JsonNode getDataForViews(String sServiceName, String sViewName) throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sServiceName))
+                .addPathSegment("views")
+                .addPathSegment(encodeCacheName(sViewName))
+                .addPathSegment(MEMBERS)
+                .addQueryParameter(LINKS, "");
+
+        return getResponseJson(sendGetRequest(urlBuilder));
+        }
+
+    /**
      * Get the data for all the topics in the cluster.
      *
      * @return the data for all the cluster members
@@ -1433,7 +1486,7 @@ public class HttpRequestSender
         InputStream inputStream = connection.getInputStream();
         if (isRequestDebugEnabled)
             {
-            LOGGER.info((System.currentTimeMillis() - start) + "ms to open connection to "
+            LOGGER.info((System.currentTimeMillis() - start) + " ms to open connection to "
                         + urlBuilder.getUrl().toString() + " ");
             }
 
@@ -2054,6 +2107,7 @@ public class HttpRequestSender
     private static final String CACHE        = "Cache";
     private static final String DOMAIN_PART  = "domainPartition";
     private static final String DESCRIPTION  = "description";
+    public  static final String PART_STATS   = "reportPartitionStats";
 
     /**
      * A trust manager that will trust all certificates. Only used when the preference to ignore SSL certs is chosen.

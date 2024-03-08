@@ -62,6 +62,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -156,6 +157,14 @@ public class VisualVMView
     protected DataViewComponent createComponent()
         {
         final VisualVMModel model = VisualVMModel.getInstance();
+
+        m_model = model;
+
+        // only add the tracer if we are connecting via JMX
+        if (m_application != null)
+            {
+            addModelForApplication(m_application, model);
+            }
 
         boolean fClusterSnapshotEnabled = com.oracle.coherence.plugin.visualvm.GlobalPreferences
                 .sharedInstance().isClusterSnapshotEnabled();
@@ -418,6 +427,9 @@ public class VisualVMView
     protected void removed()
         {
         m_timer.stop();
+
+        // remove this application and the mapped VisualVmModel
+        f_visualVmModels.remove(m_application);
         }
 
     /**
@@ -428,6 +440,28 @@ public class VisualVMView
     public void dataRemoved(Application app)
         {
         m_timer.stop();
+        }
+
+     /**
+     * Returns the model that is being used for the application.
+     *
+     * @param application {@link Application} to associate with {@link VisualVMModel}
+     * @return  the {@link VisualVMModel}
+     */
+    public static VisualVMModel getModelForApplication(Application application)
+        {
+        return f_visualVmModels.get(application);
+        }
+
+    /**
+     * Add the model that is being used for the application.
+     *
+     * @param application {@link Application} to associate with {@link VisualVMModel}
+     * @param model       {@link VisualVMModel}
+     */
+    public static void addModelForApplication(Application application, VisualVMModel model)
+        {
+        f_visualVmModels.put(application, model);
         }
 
     // ----- constants ------------------------------------------------------
@@ -447,8 +481,11 @@ public class VisualVMView
      */
     private static final Logger LOGGER = Logger.getLogger(VisualVMView.class.getName());
 
+    private static final ConcurrentHashMap<Application, VisualVMModel> f_visualVmModels = new ConcurrentHashMap<>();
+
     // ----- data members ---------------------------------------------------
 
+    private VisualVMModel m_model;
     /**
      * Component used to display the tabs.
      */
