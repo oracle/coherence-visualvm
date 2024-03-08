@@ -74,5 +74,5 @@ public class CacheMemorySizeProbe
 
     // ----- constants ------------------------------------------------------
 
-    private static final String LBL = "GRPH_total_cache";
+    private static final String LBL = "LBL_total_cache";
     }
