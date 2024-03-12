@@ -22,7 +22,7 @@ NOTE: The most current version of the Plugin requires VisualVM release 2.1 or la
 # Table of Contents
 
 1. [Supported Coherence Versions](#versions)
-2. [Installing the Plugin from VisualVM](#install)
+2. [Installation](#installation)
 3. [Connecting to a Coherence Cluster](#connect)
 4. [Changing the Plugin Behaviour via the Options Tab](#prefs)
 5. [Monitoring Capabilities](#capabilities)
@@ -42,7 +42,7 @@ The Plugin will connect to and display data for the following Coherence versions
 >Note: Support for versions older than Commercial Edition 3.7, and Community Edition 21.12 is now deprecated and no longer supported. The plugin may still work with these older versions, but is not guaranteed to continue to. Please upgrade to the latest Coherence versions available for continued support.
 
 
-## <a id="install"></a> Installing the Plugin from VisualVM
+## Installation
 
 The Coherence VisualVM Plugin is available from the list of plugins in VisualVM versions 2.0.6 and above.
 
