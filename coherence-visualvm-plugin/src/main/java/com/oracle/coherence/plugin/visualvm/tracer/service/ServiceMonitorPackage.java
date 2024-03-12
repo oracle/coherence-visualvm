@@ -41,7 +41,7 @@ import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
 
 
 /**
- * A {@link TracerPackage} to show servier related probes.
+ * A {@link TracerPackage} to show service related probes.
  * 
  * @author tam 2024.03.06
  */
