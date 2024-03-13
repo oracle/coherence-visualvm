@@ -23,31 +23,28 @@
  *  questions.
  */
 
-package com.oracle.coherence.plugin.visualvm.tracer.service;
+package com.oracle.coherence.plugin.visualvm.tracer.cache;
 
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
-
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceMemberData;
-
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheDetailData;
 import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe;
-
 import org.graalvm.visualvm.modules.tracer.ItemValueFormatter;
-
 import org.graalvm.visualvm.modules.tracer.ProbeItemDescriptor;
 import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
 
 /**
- * Tracer probe to return the total task backlog for the currently selected service.
+ * Tracer probe to return the total number of cache entries across all services.
  *
- * @author tam 2024.03.12
+ * @author tam 2024.03.13
  */
-public class SelectedServiceTaskBackLogProbe
+public class SelectedCacheSizeProbe
         extends AbstractCoherenceMonitorProbe
     {
     // ----- constructors ---------------------------------------------------
 
-    public SelectedServiceTaskBackLogProbe(MonitoredDataResolver resolver)
+    public SelectedCacheSizeProbe(MonitoredDataResolver resolver)
         {
         super(1, createItemDescriptors(), resolver);
         }
@@ -57,13 +54,13 @@ public class SelectedServiceTaskBackLogProbe
     @Override
     public long[] getValues(VisualVMModel model)
         {
-        return new long[] {getSelectedServiceSumInteger(model, ServiceMemberData.TASK_BACKLOG)};
+        return new long[]{getSelectedCacheSum(model, VisualVMModel.DataType.CACHE_DETAIL, CacheDetailData.SIZE)};
         }
 
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
-        return new TracerProbeDescriptor(Localization.getLocalText("LBL_selected_service_task_backlog"),
-                Localization.getLocalText("LBL_selected_service_task_backlog_desc"), ICON, 25, available);
+        return new TracerProbeDescriptor(Localization.getLocalText("LBL_selected_cache_size"),
+                Localization.getLocalText("LBL_selected_cache_size_desc"), ICON, 10, available);
         }
 
     private static ProbeItemDescriptor[] createItemDescriptors()
@@ -72,11 +69,11 @@ public class SelectedServiceTaskBackLogProbe
             {
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
                     getMonitorsString(LBL), ItemValueFormatter.DEFAULT_DECIMAL,
-                    1d, 0, 1)
+                    1d, 0, 1),
             };
         }
 
     // ----- constants ------------------------------------------------------
 
-    private static final String LBL  = "LBL_task_backlog";
+    private static final String LBL = "LBL_size";
     }

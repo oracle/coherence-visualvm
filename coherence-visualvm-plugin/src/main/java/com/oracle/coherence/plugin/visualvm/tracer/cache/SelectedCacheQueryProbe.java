@@ -23,33 +23,30 @@
  *  questions.
  */
 
-package com.oracle.coherence.plugin.visualvm.tracer.service;
+package com.oracle.coherence.plugin.visualvm.tracer.cache;
 
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
-
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheStorageManagerData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceMemberData;
-
 import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe;
-
-import org.graalvm.visualvm.modules.tracer.ItemValueFormatter;
-
+import com.oracle.coherence.plugin.visualvm.tracer.CustomFormatter;
 import org.graalvm.visualvm.modules.tracer.ProbeItemDescriptor;
 import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
 
 /**
- * Tracer probe to return the total task backlog for the currently selected service.
+ * Tracer probe to return the query information for the currently selected cache.
  *
  * @author tam 2024.03.12
  */
-public class SelectedServiceTaskBackLogProbe
+public class SelectedCacheQueryProbe
         extends AbstractCoherenceMonitorProbe
     {
     // ----- constructors ---------------------------------------------------
 
-    public SelectedServiceTaskBackLogProbe(MonitoredDataResolver resolver)
+    public SelectedCacheQueryProbe(MonitoredDataResolver resolver)
         {
-        super(1, createItemDescriptors(), resolver);
+        super(3, createItemDescriptors(), resolver);
         }
 
     // ---- TracerProbe methods ---------------------------------------------
@@ -57,13 +54,17 @@ public class SelectedServiceTaskBackLogProbe
     @Override
     public long[] getValues(VisualVMModel model)
         {
-        return new long[] {getSelectedServiceSumInteger(model, ServiceMemberData.TASK_BACKLOG)};
+        return new long[]{
+                getSelectedCacheMax(model, VisualVMModel.DataType.CACHE_STORAGE_MANAGER, CacheStorageManagerData.MAX_QUERY_DURATION),
+                getSelectedCacheAverage(model, VisualVMModel.DataType.CACHE_STORAGE_MANAGER, CacheStorageManagerData.NON_OPTIMIZED_QUERY_AVG),
+                getSelectedCacheAverage(model, VisualVMModel.DataType.CACHE_STORAGE_MANAGER, CacheStorageManagerData.OPTIMIZED_QUERY_AVG),
+            };
         }
 
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
-        return new TracerProbeDescriptor(Localization.getLocalText("LBL_selected_service_task_backlog"),
-                Localization.getLocalText("LBL_selected_service_task_backlog_desc"), ICON, 25, available);
+        return new TracerProbeDescriptor(Localization.getLocalText("LBL_selected_cache_query"),
+                Localization.getLocalText("LBL_selected_cache_query_desc"), ICON, 20, available);
         }
 
     private static ProbeItemDescriptor[] createItemDescriptors()
@@ -71,12 +72,20 @@ public class SelectedServiceTaskBackLogProbe
         return new ProbeItemDescriptor[]
             {
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
-                    getMonitorsString(LBL), ItemValueFormatter.DEFAULT_DECIMAL,
-                    1d, 0, 1)
+                    getMonitorsString(LBL), new CustomFormatter(1, "ms"),
+                    1, 0, 1),
+            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL2),
+                    getMonitorsString(LBL2), new CustomFormatter(1000, "ms"),
+                    1000d, 0, 1),
+            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL3),
+                    getMonitorsString(LBL3), new CustomFormatter(1000, "ms"),
+                    1000d, 0, 1),
             };
         }
 
     // ----- constants ------------------------------------------------------
 
-    private static final String LBL  = "LBL_task_backlog";
+    private static final String LBL  = "LBL_max_query_millis";
+    private static final String LBL2 = "LBL_non_opt_avge";
+    private static final String LBL3 = "LBL_opt_avge";
     }

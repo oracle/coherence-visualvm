@@ -23,12 +23,13 @@
  *  questions.
  */
 
-package com.oracle.coherence.plugin.visualvm.tracer.service;
+package com.oracle.coherence.plugin.visualvm.tracer.cache;
 
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceMemberData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheDetailData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheStorageManagerData;
 
 import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe;
 
@@ -38,18 +39,18 @@ import org.graalvm.visualvm.modules.tracer.ProbeItemDescriptor;
 import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
 
 /**
- * Tracer probe to return the total task backlog for the currently selected service.
+ * Tracer probe to return the total memory and index memory across all services.
  *
- * @author tam 2024.03.12
+ * @author tam 2024.03.13
  */
-public class SelectedServiceTaskBackLogProbe
+public class SelectedCacheMemoryProbe
         extends AbstractCoherenceMonitorProbe
     {
     // ----- constructors ---------------------------------------------------
 
-    public SelectedServiceTaskBackLogProbe(MonitoredDataResolver resolver)
+    public SelectedCacheMemoryProbe(MonitoredDataResolver resolver)
         {
-        super(1, createItemDescriptors(), resolver);
+        super(2, createItemDescriptors(), resolver);
         }
 
     // ---- TracerProbe methods ---------------------------------------------
@@ -57,26 +58,32 @@ public class SelectedServiceTaskBackLogProbe
     @Override
     public long[] getValues(VisualVMModel model)
         {
-        return new long[] {getSelectedServiceSumInteger(model, ServiceMemberData.TASK_BACKLOG)};
+        return new long[]{
+                getSelectedCacheSum(model, VisualVMModel.DataType.CACHE_DETAIL, CacheDetailData.MEMORY_BYTES),
+                getSelectedCacheSum(model, VisualVMModel.DataType.CACHE_STORAGE_MANAGER, CacheStorageManagerData.INDEX_TOTAL_UNITS)};
         }
 
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
-        return new TracerProbeDescriptor(Localization.getLocalText("LBL_selected_service_task_backlog"),
-                Localization.getLocalText("LBL_selected_service_task_backlog_desc"), ICON, 25, available);
+        return new TracerProbeDescriptor(Localization.getLocalText("LBL_selected_cache_memory"),
+                Localization.getLocalText("LBL_selected_cache_size_desc"), ICON, 10, available);
         }
 
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]
             {
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
-                    getMonitorsString(LBL), ItemValueFormatter.DEFAULT_DECIMAL,
-                    1d, 0, 1)
+            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL1),
+                    getMonitorsString(LBL1), ItemValueFormatter.DEFAULT_BYTES,
+                    1d, 0, 1),
+            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL2),
+                    getMonitorsString(LBL2), ItemValueFormatter.DEFAULT_BYTES,
+                    1d, 0, 1),
             };
         }
 
     // ----- constants ------------------------------------------------------
 
-    private static final String LBL  = "LBL_task_backlog";
+    private static final String LBL1 = "LBL_total_cache";
+    private static final String LBL2 = "LBL_index_memory";
     }

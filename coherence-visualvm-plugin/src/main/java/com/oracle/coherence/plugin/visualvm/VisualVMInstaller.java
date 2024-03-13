@@ -31,6 +31,7 @@ import com.oracle.coherence.plugin.visualvm.datasource.CoherenceClustersDataSour
 import com.oracle.coherence.plugin.visualvm.impl.CoherenceClusterProvider;
 
 import com.oracle.coherence.plugin.visualvm.tracer.cache.CacheMonitorPackage;
+import com.oracle.coherence.plugin.visualvm.tracer.cache.SelectedCacheMonitorPackage;
 import com.oracle.coherence.plugin.visualvm.tracer.cluster.ClusterMonitorPackage;
 import com.oracle.coherence.plugin.visualvm.tracer.elasticdata.ElasticDataMonitorPackage;
 import com.oracle.coherence.plugin.visualvm.tracer.federation.FederationMonitorPackage;
@@ -123,6 +124,7 @@ public class VisualVMInstaller
                 new ServiceMonitorPackage(application),
                 new SelectedServiceMonitorPackage(application),
                 new CacheMonitorPackage(application),
+                new SelectedCacheMonitorPackage(application),
                 new FederationMonitorPackage(application),
                 new ElasticDataMonitorPackage(application),
                 new PersistenceMonitorPackage(application)
