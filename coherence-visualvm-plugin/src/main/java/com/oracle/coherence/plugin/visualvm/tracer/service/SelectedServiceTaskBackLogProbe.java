@@ -23,37 +23,33 @@
  *  questions.
  */
 
-package com.oracle.coherence.plugin.visualvm.tracer.cluster;
+package com.oracle.coherence.plugin.visualvm.tracer.service;
 
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.ClusterData;
 
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.MemberData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceMemberData;
+
 import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe;
 
 import org.graalvm.visualvm.modules.tracer.ItemValueFormatter;
+
 import org.graalvm.visualvm.modules.tracer.ProbeItemDescriptor;
 import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
-import java.util.List;
-import java.util.Map;
-
-import static com.oracle.coherence.plugin.visualvm.panel.AbstractCoherencePanel.isNodeStorageEnabled;
 
 /**
- * Tracer probe to return the cluster size.
+ * Tracer probe to return the total task backlog for the currently selected service.
  *
- * @author tam 2024.03.03
+ * @author tam 2024.03.12
  */
-public class ClusterSizeProbe
+public class SelectedServiceTaskBackLogProbe
         extends AbstractCoherenceMonitorProbe
     {
     // ----- constructors ---------------------------------------------------
 
-    public ClusterSizeProbe(MonitoredDataResolver resolver)
+    public SelectedServiceTaskBackLogProbe(MonitoredDataResolver resolver)
         {
-        super(2, createItemDescriptors(), resolver);
+        super(1, createItemDescriptors(), resolver);
         }
 
     // ---- TracerProbe methods ---------------------------------------------
@@ -61,25 +57,13 @@ public class ClusterSizeProbe
     @Override
     public long[] getValues(VisualVMModel model)
         {
-        long nTotalMembers = getSingValue(model, VisualVMModel.DataType.CLUSTER, ClusterData.CLUSTER_SIZE, ZERO_VALUES1)[0];
-        long nStorageCount = 0L;
-
-        // determine the number of storage-enabled members
-        for (Map.Entry<Object, Data> entry : model.getData(VisualVMModel.DataType.MEMBER))
-            {
-            // only include memory is the node is storage enabled
-            if (isNodeStorageEnabled(model, (Integer) entry.getValue().getColumn(MemberData.NODE_ID)))
-                {
-                nStorageCount++;
-                }
-            }
-        return new long[]{nTotalMembers, nStorageCount};
+        return new long[] {getSelectedServiceSumInteger(model, ServiceMemberData.TASK_BACKLOG)};
         }
 
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
-        return new TracerProbeDescriptor(Localization.getLocalText("LBL_cluster_members"),
-                Localization.getLocalText("LBL_members_desc"), ICON, 5, available);
+        return new TracerProbeDescriptor(Localization.getLocalText("LBL_selected_service_task_backlog"),
+                Localization.getLocalText("LBL_selected_service_task_backlog_desc"), ICON, 25, available);
         }
 
     private static ProbeItemDescriptor[] createItemDescriptors()
@@ -88,15 +72,11 @@ public class ClusterSizeProbe
             {
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
                     getMonitorsString(LBL), ItemValueFormatter.DEFAULT_DECIMAL,
-                    1d, 0, 1),
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL2),
-                    getMonitorsString(LBL2), ItemValueFormatter.DEFAULT_DECIMAL,
-                    1d, 0, 1),
+                    1d, 0, 1)
             };
         }
 
     // ----- constants ------------------------------------------------------
 
-    private static final String LBL  = "LBL_total_members";
-    private static final String LBL2 = "LBL_total_storage_members";
+    private static final String LBL  = "LBL_task_backlog";
     }

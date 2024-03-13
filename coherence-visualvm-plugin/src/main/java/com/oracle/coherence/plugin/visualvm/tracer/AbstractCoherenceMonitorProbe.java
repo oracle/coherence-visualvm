@@ -26,14 +26,21 @@ package com.oracle.coherence.plugin.visualvm.tracer;
 
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
+
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceMemberData;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+
 import org.graalvm.visualvm.application.Application;
+
 import org.graalvm.visualvm.modules.tracer.ItemValueFormatter;
 import org.graalvm.visualvm.modules.tracer.ProbeItemDescriptor;
 import org.graalvm.visualvm.modules.tracer.TracerProbe;
+
 import org.openide.util.ImageUtilities;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -87,15 +94,19 @@ public abstract class AbstractCoherenceMonitorProbe
         {
         if (oValue instanceof Long)
             {
-            return (Long)oValue;
+            return (Long) oValue;
             }
         if (oValue instanceof Integer)
             {
-            return ((Integer)oValue);
+            return ((Integer) oValue);
             }
         if (oValue instanceof String)
             {
             return Long.parseLong((String) oValue);
+            }
+        if (oValue instanceof Float)
+            {
+            return ((Float) oValue).longValue();
             }
         return 0L;
         }
@@ -176,6 +187,182 @@ public abstract class AbstractCoherenceMonitorProbe
        return new long[] {nMax};
        }
 
+     /**
+     * Returns the total and idle threads for the selected service.
+     * @param model     the {@link VisualVMModel} to use
+     *
+     * @return the tracer result
+     *                0: Integer - total thread count
+     *                1: Integer - total idle threads
+     */
+    protected Object[] getSelectedServiceThreadValues(VisualVMModel model)
+       {
+       List<Map.Entry<Object, Data>> data = model.getData(VisualVMModel.DataType.SERVICE_DETAIL);
+       int nTotalThreadCount = 0;
+       int nTotalIdleThreads = 0;
+
+       if (data != null && !data.isEmpty())
+           {
+           for (Map.Entry<Object, Data> entry : data)
+               {
+               nTotalThreadCount += (Integer) entry.getValue().getColumn(ServiceMemberData.THREAD_COUNT);
+               nTotalIdleThreads += (Integer) entry.getValue().getColumn(ServiceMemberData.THREAD_IDLE_COUNT);
+               }
+           }
+
+       return new Object[] {nTotalThreadCount, nTotalIdleThreads};
+       }
+
+     /**
+     * Returns the max and average value for a selected service.
+     *
+     * @param model     the {@link VisualVMModel} to use
+     * @param nColumn   the column to extract
+     *
+     * @return the tracer result (multiplied byt 1000)
+     *                0: Long - Max
+     *                1: Long - Average
+     */
+    protected Long[] getSelectedServiceMaxAndAverage(VisualVMModel model, int nColumn)
+       {
+       List<Map.Entry<Object, Data>> data = model.getData(VisualVMModel.DataType.SERVICE_DETAIL);
+
+       long nTotal   = 0L;
+       long nMax     = 0L;
+       long nCount   = 0L;
+       long nCurrent = 0L;
+
+       if (data != null && !data.isEmpty())
+           {
+           for (Map.Entry<Object, Data> entry : data)
+               {
+               nCurrent = (long) ((Float) entry.getValue().getColumn(nColumn) * 1000L);
+               if (nCurrent <= 0)
+                   {
+                   // exclude negative values
+                   continue;
+                   }
+               nCount++;
+               nTotal  += nCurrent;
+               if (nCurrent > nMax)
+                   {
+                   nMax = nCurrent;
+                   }
+               }
+           }
+
+       return nCount == 0L ? new Long[] {0L,0L} : new Long[] {nMax, nTotal / nCount};
+       }
+
+    /**
+     * Returns the total value for a selected service.
+     *
+     * @param model     the {@link VisualVMModel} to use
+     * @param nColumn   the column to extract
+     *
+     * @return the tracer result
+     */
+    protected long getSelectedServiceSumInteger(VisualVMModel model, int nColumn)
+       {
+       List<Map.Entry<Object, Data>> data = model.getData(VisualVMModel.DataType.SERVICE_DETAIL);
+
+       int nTotal = 0;
+
+       if (data != null && !data.isEmpty())
+           {
+           for (Map.Entry<Object, Data> entry : data)
+               {
+               nTotal += (Integer) entry.getValue().getColumn(nColumn);
+               }
+           }
+
+       return nTotal;
+       }
+
+    /**
+     * Returns the total value for a selected cache and datatype.
+     *
+     * @param model     the {@link VisualVMModel} to use
+     * @param dataType  the {@link VisualVMModel.DataType} to extract from
+     * @param nColumn   the column to extract
+     *
+     * @return the tracer result
+     */
+    protected long getSelectedCacheSum(VisualVMModel model, VisualVMModel.DataType dataType, int nColumn)
+       {
+       List<Map.Entry<Object, Data>> data = model.getData(dataType);
+
+       long nTotal = 0L;
+
+       if (data != null && !data.isEmpty())
+           {
+           for (Map.Entry<Object, Data> entry : data)
+               {
+               nTotal += getValueAsLong(entry.getValue().getColumn(nColumn));
+               }
+           }
+
+       return nTotal;
+       }
+
+    /**
+     * Returns the max value for a selected cache and datatype.
+     *
+     * @param model     the {@link VisualVMModel} to use
+     * @param dataType  the {@link VisualVMModel.DataType} to extract from
+     * @param nColumn   the column to extract
+     *
+     * @return the tracer result
+     */
+    protected long getSelectedCacheMax(VisualVMModel model, VisualVMModel.DataType dataType, int nColumn)
+       {
+       List<Map.Entry<Object, Data>> data = model.getData(dataType);
+
+       long nMax = 0L;
+
+       if (data != null && !data.isEmpty())
+           {
+           for (Map.Entry<Object, Data> entry : data)
+               {
+               long nValue = getValueAsLong(entry.getValue().getColumn(nColumn));
+               if (nValue > nMax)
+                   {
+                   nMax = nValue;
+                   }
+               }
+           }
+
+       return nMax;
+       }
+
+    /**
+     * Returns the max value for a selected cache and datatype.
+     *
+     * @param model     the {@link VisualVMModel} to use
+     * @param dataType  the {@link VisualVMModel.DataType} to extract from
+     * @param nColumn   the column to extract
+     *
+     * @return the tracer result multiplied by 1000L
+     */
+    protected long getSelectedCacheAverage(VisualVMModel model, VisualVMModel.DataType dataType, int nColumn)
+       {
+       List<Map.Entry<Object, Data>> data = model.getData(dataType);
+
+       long nTotal = 0L;
+       long nCount = 0L;
+
+       if (data != null && !data.isEmpty())
+           {
+           for (Map.Entry<Object, Data> entry : data)
+               {
+               nTotal += getValueAsLong(entry.getValue().getColumn(nColumn)) * 1000L;
+               nCount++;
+               }
+           }
+
+       return nCount == 0 ? 0L : nTotal / nCount;
+       }
+
     // ----- data members ---------------------------------------------------
 
     private final MonitoredDataResolver f_resolver;
@@ -190,5 +377,4 @@ public abstract class AbstractCoherenceMonitorProbe
     public static final Icon ICON = new ImageIcon(ImageUtilities.loadImage(IMAGE_PATH, true)); // NOI18N
 
     public static final ItemValueFormatter CUSTOM_FORMATTER = new CustomFormatter(1000, "");
-
     }

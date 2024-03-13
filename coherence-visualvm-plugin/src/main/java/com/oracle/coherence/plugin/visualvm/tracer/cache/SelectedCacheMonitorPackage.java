@@ -23,7 +23,7 @@
  * questions.
  */
 
-package com.oracle.coherence.plugin.visualvm.tracer.service;
+package com.oracle.coherence.plugin.visualvm.tracer.cache;
 
 import static com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe.ICON;
 
@@ -41,14 +41,14 @@ import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
 
 
 /**
- * A {@link TracerPackage} to show service related probes.
+ * A {@link TracerPackage} to show cache related probes for the currently selected cache.
  * 
- * @author tam 2024.03.06
+ * @author tam 2024.03.12
  */
-public class ServiceMonitorPackage
+public class SelectedCacheMonitorPackage
         extends TracerPackage<Application> implements AbstractCoherenceMonitorProbe.MonitoredDataResolver {
 
-    public ServiceMonitorPackage(Application application)
+    public SelectedCacheMonitorPackage(Application application)
         {
         super(NAME, DESCR, ICON, POSITION);
         this.f_model = VisualVMView.getModelForApplication(application);
@@ -58,53 +58,53 @@ public class ServiceMonitorPackage
 
     @Override
     public TracerProbeDescriptor[] getProbeDescriptors() {
-        m_pendingRequestsProbeDescriptor = PartitionedPendingRequestsProbe.createDescriptor(f_model != null);
-        m_endangeredProbeDescriptor      = EndangeredPartitionsProbe.createDescriptor(f_model != null);
-        m_unbalancedProbeDescriptor      = UnbalancedPartitionsProbe.createDescriptor(f_model != null);
-        m_vulnerableProbeDescriptor      = VulnerablePartitionsProbe.createDescriptor(f_model != null);
+        m_sizeProbeDescriptor      = SelectedCacheSizeProbe.createDescriptor(f_model != null);
+        m_memoryProbeDescriptor    = SelectedCacheMemoryProbe.createDescriptor(f_model != null);
+        m_listenersProbeDescriptor = SelectedCacheListenersProbe.createDescriptor(f_model != null);
+        m_queryProbeDescriptor     = SelectedCacheQueryProbe.createDescriptor(f_model != null);
 
         return new TracerProbeDescriptor[] {
-            m_pendingRequestsProbeDescriptor,
-            m_endangeredProbeDescriptor,
-            m_unbalancedProbeDescriptor,
-            m_vulnerableProbeDescriptor
+            m_sizeProbeDescriptor,
+            m_memoryProbeDescriptor,
+            m_listenersProbeDescriptor,
+            m_queryProbeDescriptor
         };
     }
 
     @Override
     public TracerProbe<Application> getProbe(TracerProbeDescriptor descriptor)
         {
-        if (descriptor == m_pendingRequestsProbeDescriptor)
+        if (descriptor == m_sizeProbeDescriptor)
             {
-            if (m_PendingRequestsProbe == null)
+            if (m_sizeProbe == null)
                 {
-                m_PendingRequestsProbe = new PartitionedPendingRequestsProbe(this);
+                m_sizeProbe = new SelectedCacheSizeProbe(this);
                 }
-            return m_PendingRequestsProbe;
+            return m_sizeProbe;
             }
-        else if (descriptor == m_endangeredProbeDescriptor)
+        else if (descriptor == m_memoryProbeDescriptor)
             {
-            if (m_endangeredProbe == null)
+            if (m_memoryProbe == null)
                 {
-                m_endangeredProbe = new EndangeredPartitionsProbe(this);
+                m_memoryProbe = new SelectedCacheMemoryProbe(this);
                 }
-            return m_endangeredProbe;
+            return m_memoryProbe;
             }
-        else if (descriptor == m_unbalancedProbeDescriptor)
+        else if (descriptor == m_listenersProbeDescriptor)
             {
-            if (m_unbalancedProbe == null)
+            if (m_listenersProbe == null)
                 {
-                m_unbalancedProbe = new UnbalancedPartitionsProbe(this);
+                m_listenersProbe = new SelectedCacheListenersProbe(this);
                 }
-            return m_unbalancedProbe;
+            return m_listenersProbe;
             }
-        else if (descriptor == m_vulnerableProbeDescriptor)
+        else if (descriptor == m_queryProbeDescriptor)
             {
-            if (m_vulnerableProbe == null)
+            if (m_queryProbe == null)
                 {
-                m_vulnerableProbe = new VulnerablePartitionsProbe(this);
+                m_queryProbe = new SelectedCacheQueryProbe(this);
                 }
-            return m_vulnerableProbe;
+            return m_queryProbe;
             }
         else
             {
@@ -122,19 +122,19 @@ public class ServiceMonitorPackage
 
     // ----- constants ------------------------------------------------------
 
-    private static final String NAME = Localization.getLocalText("LBL_service_probe");
-    private static final String DESCR = Localization.getLocalText("LBL_service_probe_description");
-    private static final int POSITION = 20505;
+    private static final String NAME = Localization.getLocalText("LBL_selected_cache_probe");
+    private static final String DESCR = Localization.getLocalText("LBL_selected_cache_probe_description");
+    private static final int POSITION = 20511;
 
-    private TracerProbeDescriptor         m_pendingRequestsProbeDescriptor;
-    private TracerProbeDescriptor         m_endangeredProbeDescriptor;
-    private TracerProbeDescriptor         m_unbalancedProbeDescriptor;
-    private TracerProbeDescriptor         m_vulnerableProbeDescriptor;
+    private TracerProbeDescriptor         m_sizeProbeDescriptor;
+    private TracerProbeDescriptor         m_memoryProbeDescriptor;
+    private TracerProbeDescriptor         m_listenersProbeDescriptor;
+    private TracerProbeDescriptor         m_queryProbeDescriptor;
 
-    private AbstractCoherenceMonitorProbe m_PendingRequestsProbe;
-    private AbstractCoherenceMonitorProbe m_endangeredProbe;
-    private AbstractCoherenceMonitorProbe m_unbalancedProbe;
-    private AbstractCoherenceMonitorProbe m_vulnerableProbe;
+    private AbstractCoherenceMonitorProbe m_sizeProbe;
+    private AbstractCoherenceMonitorProbe m_memoryProbe;
+    private AbstractCoherenceMonitorProbe m_listenersProbe;
+    private AbstractCoherenceMonitorProbe m_queryProbe;
 
     private final VisualVMModel f_model;
     }

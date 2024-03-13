@@ -206,44 +206,7 @@ From the VisualVM website
 
 When you connect to a cluster via JMX, you will see the `Tracer` tab as shown below:
 
-&nbsp;&nbsp;  ![Coherence VisualVM Probes](assets/probes.png)
-
-Each of the probes areas can be expanded to reveal the individual probes. You can select the probes and then 
-click `Start` to display the information.
-
-The supported Coherence probes are:
-
-*Cluster Overview*
-
-&nbsp; &nbsp; ![Cluster Overview](assets/probes-cluster-overview.png)
-
-*Services*
-
-&nbsp; &nbsp; ![Cluster Overview](assets/probes-services.png)
-
-*Caches*
-
-&nbsp; &nbsp; ![Caches](assets/probes-caches.png)
-
-*Proxy Servers*
-
-&nbsp; &nbsp; ![Proxy Servers](assets/probes-proxies.png)
-
-*Persistence*
-
-&nbsp; &nbsp; ![Persistence](assets/probes-persistence.png)
-
-*Federation*
-
-&nbsp; &nbsp; ![Federation](assets/probes-federation.png)
-
-*Elastic Data*
-
-&nbsp; &nbsp; ![elastic Data](assets/probes-elastic-data.png)
- 
-> Note: In the initial release of this integration, only summary information can to be plotted. We may include
-> additional functionality in future releases to allow for specific services or caches to be monitored.
-> There are no timelines for these releases. If you would like specific information included, please raise an issue.
+TBC. 
 
 ## <a id="build"></a> Building the Plugin
 

@@ -288,11 +288,10 @@ public class CoherenceServicePanel
                 // only include task averages where there is a thread count
                 if (cThread > 0)
                     {
-                    // update values for taks average duration
+                    // update values for task average duration
                     cTotalTaskAverage++;
 
                     cAverage          = (Float) entry.getValue().getColumn(ServiceMemberData.TASK_AVERAGE_DURATION);
-
                     nTotalTaskAverage += cAverage;
 
                     if (cAverage > nMaxTaskAverage)

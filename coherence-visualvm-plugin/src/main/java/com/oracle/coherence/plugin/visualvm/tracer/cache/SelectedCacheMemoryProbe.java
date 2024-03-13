@@ -23,35 +23,32 @@
  *  questions.
  */
 
-package com.oracle.coherence.plugin.visualvm.tracer.cluster;
+package com.oracle.coherence.plugin.visualvm.tracer.cache;
 
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.ClusterData;
 
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.MemberData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheDetailData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheStorageManagerData;
+
 import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe;
 
 import org.graalvm.visualvm.modules.tracer.ItemValueFormatter;
+
 import org.graalvm.visualvm.modules.tracer.ProbeItemDescriptor;
 import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
-import java.util.List;
-import java.util.Map;
-
-import static com.oracle.coherence.plugin.visualvm.panel.AbstractCoherencePanel.isNodeStorageEnabled;
 
 /**
- * Tracer probe to return the cluster size.
+ * Tracer probe to return the total memory and index memory across all services.
  *
- * @author tam 2024.03.03
+ * @author tam 2024.03.13
  */
-public class ClusterSizeProbe
+public class SelectedCacheMemoryProbe
         extends AbstractCoherenceMonitorProbe
     {
     // ----- constructors ---------------------------------------------------
 
-    public ClusterSizeProbe(MonitoredDataResolver resolver)
+    public SelectedCacheMemoryProbe(MonitoredDataResolver resolver)
         {
         super(2, createItemDescriptors(), resolver);
         }
@@ -61,42 +58,32 @@ public class ClusterSizeProbe
     @Override
     public long[] getValues(VisualVMModel model)
         {
-        long nTotalMembers = getSingValue(model, VisualVMModel.DataType.CLUSTER, ClusterData.CLUSTER_SIZE, ZERO_VALUES1)[0];
-        long nStorageCount = 0L;
-
-        // determine the number of storage-enabled members
-        for (Map.Entry<Object, Data> entry : model.getData(VisualVMModel.DataType.MEMBER))
-            {
-            // only include memory is the node is storage enabled
-            if (isNodeStorageEnabled(model, (Integer) entry.getValue().getColumn(MemberData.NODE_ID)))
-                {
-                nStorageCount++;
-                }
-            }
-        return new long[]{nTotalMembers, nStorageCount};
+        return new long[]{
+                getSelectedCacheSum(model, VisualVMModel.DataType.CACHE_DETAIL, CacheDetailData.MEMORY_BYTES),
+                getSelectedCacheSum(model, VisualVMModel.DataType.CACHE_STORAGE_MANAGER, CacheStorageManagerData.INDEX_TOTAL_UNITS)};
         }
 
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
-        return new TracerProbeDescriptor(Localization.getLocalText("LBL_cluster_members"),
-                Localization.getLocalText("LBL_members_desc"), ICON, 5, available);
+        return new TracerProbeDescriptor(Localization.getLocalText("LBL_selected_cache_memory"),
+                Localization.getLocalText("LBL_selected_cache_size_desc"), ICON, 10, available);
         }
 
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]
             {
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
-                    getMonitorsString(LBL), ItemValueFormatter.DEFAULT_DECIMAL,
+            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL1),
+                    getMonitorsString(LBL1), ItemValueFormatter.DEFAULT_BYTES,
                     1d, 0, 1),
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL2),
-                    getMonitorsString(LBL2), ItemValueFormatter.DEFAULT_DECIMAL,
+                    getMonitorsString(LBL2), ItemValueFormatter.DEFAULT_BYTES,
                     1d, 0, 1),
             };
         }
 
     // ----- constants ------------------------------------------------------
 
-    private static final String LBL  = "LBL_total_members";
-    private static final String LBL2 = "LBL_total_storage_members";
+    private static final String LBL1 = "LBL_total_cache";
+    private static final String LBL2 = "LBL_index_memory";
     }
