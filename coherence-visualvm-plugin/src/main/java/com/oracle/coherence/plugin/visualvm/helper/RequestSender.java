@@ -107,10 +107,11 @@ public interface RequestSender
      *
      * @param sService      the name of the service
      * @param sCacheName    the name of the cache
+     * @param sOutputFormat the output format
      *
      * @throws Exception in case of errors
      */
-    String invokeReportPartitionsStatsOperation(String sService, String sCacheName)
+    String invokeReportPartitionsStatsOperation(String sService, String sCacheName, String sOutputFormat)
             throws Exception;
 
     /**

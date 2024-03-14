@@ -72,8 +72,8 @@ public class SelectedCacheQueryProbe
         return new ProbeItemDescriptor[]
             {
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
-                    getMonitorsString(LBL), new CustomFormatter(1, "ms"),
-                    1, 0, 1),
+                    getMonitorsString(LBL), new CustomFormatter(1000, "ms"),
+                    1000d, 0, 1),
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL2),
                     getMonitorsString(LBL2), new CustomFormatter(1000, "ms"),
                     1000d, 0, 1),

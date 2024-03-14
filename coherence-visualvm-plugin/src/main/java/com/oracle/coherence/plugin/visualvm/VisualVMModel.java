@@ -1276,6 +1276,16 @@ public class VisualVMModel
             }
         }
 
+    public void setRequestSender(RequestSender requestSender)
+        {
+        m_requestSender = requestSender;
+        }
+
+    public RequestSender getRequestSender()
+        {
+        return m_requestSender;
+        }
+
     // ----- constants ------------------------------------------------------
 
     /**
@@ -1944,4 +1954,9 @@ public class VisualVMModel
      * selection in a master-detail table.
      */
     private boolean m_fIsImmediateRefresh;
+
+    /**
+     * {@link RequestSender} for this {@link VisualVMModel}.
+     */
+    private RequestSender m_requestSender;
     }

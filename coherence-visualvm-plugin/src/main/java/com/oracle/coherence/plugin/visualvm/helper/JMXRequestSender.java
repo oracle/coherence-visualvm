@@ -127,7 +127,7 @@ public class JMXRequestSender
         }
 
     @Override
-    public String invokeReportPartitionsStatsOperation(String sService, String sCacheName)
+    public String invokeReportPartitionsStatsOperation(String sService, String sCacheName, String sOutputFormat)
             throws Exception
         {
         ObjectName objectName = new ObjectName(STORAGE_MANAGER_EQUALS + sService + CACHE_EQUALS + sCacheName + ",*");
@@ -135,7 +135,7 @@ public class JMXRequestSender
         Set<ObjectName> setResult = getCompleteObjectName(objectName);
         String sFQN = getFirstResult(setResult);
 
-        return (String) invoke(new ObjectName(sFQN), PART_STATS, new Object[]{"json"}, new String[]{String.class.getName()});
+        return (String) invoke(new ObjectName(sFQN), PART_STATS, new Object[]{sOutputFormat}, new String[]{String.class.getName()});
         }
 
 

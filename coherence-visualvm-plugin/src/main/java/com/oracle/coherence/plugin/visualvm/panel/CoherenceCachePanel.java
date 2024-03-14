@@ -29,6 +29,7 @@ import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
+import com.oracle.coherence.plugin.visualvm.helper.JMXRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.panel.util.MenuOption;
@@ -71,6 +72,7 @@ import java.util.List;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ViewData;
@@ -78,6 +80,7 @@ import javax.management.Attribute;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -233,11 +236,29 @@ public class CoherenceCachePanel
         f_tableFrontDetail.setMenuOptions(new MenuOption[] {new ShowDetailMenuOption(model, f_tableFrontDetail, SELECTED_FRONT_CACHE)});
 
         setTablePadding(f_tableStorage);
-        f_tableStorage.setMenuOptions(new MenuOption[] {
-                new ShowDetailMenuOption(model, f_tableStorage, SELECTED_STORAGE),
-                new ShowIndexInfoMenuOption(model, m_requestSender, f_tableStorage),
-                new ShowPartitionStatsMenuOption(model, m_requestSender, f_tableStorage)
-        });
+        
+        MenuOption showDetailMenuOption = new ShowDetailMenuOption(model, f_tableStorage, SELECTED_STORAGE);
+        MenuOption showIndexInfoMenuOption = new ShowIndexInfoMenuOption(model, m_requestSender, f_tableStorage);
+
+        if (model.getRequestSender() instanceof JMXRequestSender)
+            {
+            // add json and csv options
+            f_tableStorage.setMenuOptions(new MenuOption[] {
+                showDetailMenuOption,
+                showIndexInfoMenuOption,
+                new ShowPartitionStatsMenuOption(model, m_requestSender, f_tableStorage, "json"),
+                new ShowPartitionStatsMenuOption(model, m_requestSender, f_tableStorage, "csv")
+               });
+            }
+        else
+            {
+            // generic json option
+            f_tableStorage.setMenuOptions(new MenuOption[] {
+                showDetailMenuOption,
+                showIndexInfoMenuOption,
+                new ShowPartitionStatsMenuOption(model, m_requestSender, f_tableStorage, "json")
+               });
+            }
 
         // Create the scroll pane and add the table to it.
         JScrollPane scrollPane        = new JScrollPane(table);
@@ -734,12 +755,15 @@ public class CoherenceCachePanel
          * @param model          the {@link VisualVMModel} to get collected data from
          * @param requestSender  the {@link MBeanServerConnection} to perform additional queries
          * @param jtable         the {@link ExportableJTable} that this applies to
+         * @param sFormat        the format of json or csv
          */
        public ShowPartitionStatsMenuOption(VisualVMModel model, RequestSender requestSender,
-                                      ExportableJTable jtable)
+                                      ExportableJTable jtable, String sFormat)
            {
            super(model, requestSender, jtable);
-           f_sMenuItem = getLocalizedText("LBL_cache_partition_stats");
+           f_sFormat     = sFormat;
+           String sLabel = "csv".equals(f_sFormat) ? "LBL_cache_partition_stats_csv" : "LBL_cache_partition_stats_json";
+           f_sMenuItem = getLocalizedText(sLabel);
            }
 
        // ----- AbstractMenuOption methods ---------------------------------
@@ -758,7 +782,7 @@ public class CoherenceCachePanel
 
            try
                {
-               sResult = m_requestSender.invokeReportPartitionsStatsOperation(selectedCache.getX(), selectedCache.getY());
+               sResult = m_requestSender.invokeReportPartitionsStatsOperation(selectedCache.getX(), selectedCache.getY(), f_sFormat);
                showMessageDialog(Localization.getLocalText("LBL_cache_partition_stats"),
                                                                 sResult, JOptionPane.INFORMATION_MESSAGE);
                }
@@ -767,15 +791,49 @@ public class CoherenceCachePanel
                showMessageDialog(Localization.getLocalText("LBL_error"),
                                 ee.getMessage(), JOptionPane.ERROR_MESSAGE);
                }
-
            }
 
-       // ----- data members ------------------------------------------------
+        @Override
+        public boolean equals(Object o)
+            {
+            if (this == o)
+                {
+                return true;
+                }
 
-        /**
-         * Menu option description.
-         */
-        private final String f_sMenuItem;
+            if (o == null || getClass() != o.getClass())
+                {
+                return false;
+                }
+
+            ShowPartitionStatsMenuOption that = (ShowPartitionStatsMenuOption) o;
+
+            if (!Objects.equals(f_sMenuItem, that.f_sMenuItem))
+                {
+                return false;
+                }
+               return Objects.equals(f_sFormat, that.f_sFormat);
+            }
+
+            @Override
+            public int hashCode()
+                {
+                int result = f_sMenuItem != null ? f_sMenuItem.hashCode() : 0;
+                result = 31 * result + (f_sFormat != null ? f_sFormat.hashCode() : 0);
+                return result;
+                }
+
+            // ----- data members ------------------------------------------------
+
+       /**
+        * Menu option description.
+        */
+       private final String f_sMenuItem;
+
+       /**
+        * output format.
+        */
+       private final String f_sFormat;
        }
 
     /**
