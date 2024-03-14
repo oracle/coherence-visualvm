@@ -295,7 +295,7 @@ public class HttpRequestSender
         }
 
     @Override
-    public String invokeReportPartitionsStatsOperation(String sService, String sCacheName)
+    public String invokeReportPartitionsStatsOperation(String sService, String sCacheName, String sOutputForma)
             throws Exception
         {
         URLBuilder urlBuilder = getBasePath()

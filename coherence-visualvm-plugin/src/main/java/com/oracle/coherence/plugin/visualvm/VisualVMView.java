@@ -157,6 +157,7 @@ public class VisualVMView
     protected DataViewComponent createComponent()
         {
         final VisualVMModel model = VisualVMModel.getInstance();
+        model.setRequestSender(m_requestSender);
 
         m_model = model;
 
