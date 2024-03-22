@@ -28,16 +28,17 @@ package com.oracle.coherence.plugin.visualvm.tracer.cluster;
 import java.util.List;
 import java.util.Map;
 
-import static com.oracle.coherence.plugin.visualvm.helper.GraphHelper.GRPH_CURRENT_AVERAGE;
-import static com.oracle.coherence.plugin.visualvm.helper.GraphHelper.GRPH_MAXIMUM;
-import static com.oracle.coherence.plugin.visualvm.panel.AbstractCoherencePanel.getClusterLoadAverage;
-
-import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe;
 import org.graalvm.visualvm.modules.tracer.ProbeItemDescriptor;
 import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
+
+import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
+import static com.oracle.coherence.plugin.visualvm.helper.GraphHelper.GRPH_CURRENT_AVERAGE;
+import static com.oracle.coherence.plugin.visualvm.helper.GraphHelper.GRPH_MAXIMUM;
+import static com.oracle.coherence.plugin.visualvm.panel.AbstractCoherencePanel.getClusterLoadAverage;
+
 
 /**
  * Tracer probe to return average and max load average.
@@ -80,20 +81,24 @@ public class LoadAverageProbe
 
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
-        return new TracerProbeDescriptor(Localization.getLocalText("GRPH_load_average"),
-                Localization.getLocalText("LBL_load_average_desc"), ICON, 15, available);
+        return new TracerProbeDescriptor(getLocalText("GRPH_load_average"),
+                getLocalText("LBL_load_average_desc"), ICON, 15, available);
         }
 
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]
             {
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(GRPH_CURRENT_AVERAGE),
+            ProbeItemDescriptor.continuousLineFillItem(getLocalText(LBL) + " - " + getLocalText(GRPH_CURRENT_AVERAGE),
                     getMonitorsString(GRPH_CURRENT_AVERAGE), CUSTOM_FORMATTER,
-                    1000, 0,  1),
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(GRPH_MAXIMUM),
+                    1000, 0,  0),
+            ProbeItemDescriptor.continuousLineFillItem(getLocalText(LBL) + " - " + getLocalText(GRPH_MAXIMUM),
                     getMonitorsString(GRPH_MAXIMUM), CUSTOM_FORMATTER,
-                    1000, 0, 1)
+                    1000, 0, 0)
             };
         }
+
+    // ----- constants ------------------------------------------------------
+
+    private static final String LBL = "LBL_load_average";
     }

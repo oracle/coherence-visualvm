@@ -36,6 +36,8 @@ import org.graalvm.visualvm.modules.tracer.ItemValueFormatter;
 import org.graalvm.visualvm.modules.tracer.ProbeItemDescriptor;
 import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
 
+import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
+
 /**
  * Tracer probe to return the ram journal files used.
  *
@@ -58,30 +60,31 @@ public class RamJournalFilesProbe
         {
         long nRamJournalFileCount = getSingValueSum(model, VisualVMModel.DataType.RAMJOURNAL, AbstractElasticData.FILE_COUNT, ZERO_VALUES1)[0];
         long nRamJournaMaxFiles   = getSingValueSum(model, VisualVMModel.DataType.RAMJOURNAL, AbstractElasticData.MAX_FILES, ZERO_VALUES1)[0];
-        return new long[] {nRamJournalFileCount, nRamJournaMaxFiles};
+        return new long[] {nRamJournaMaxFiles, nRamJournalFileCount};
         }
 
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
-        return new TracerProbeDescriptor(Localization.getLocalText("LBL_ram_journal_files"),
-                Localization.getLocalText("LBL_ramjournal_files_desc"), ICON, 15, available);
+        return new TracerProbeDescriptor(getLocalText("LBL_ram_journal_files"),
+                getLocalText("LBL_ramjournal_files_desc"), ICON, 15, available);
         }
 
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]
             {
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL1),
-                    getMonitorsString(LBL1), ItemValueFormatter.DEFAULT_DECIMAL,
-                    1d, 0, 1),
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL2),
+            ProbeItemDescriptor.continuousLineFillItem(getLocalText(PREFIX) + " - " +getLocalText(LBL2),
                     getMonitorsString(LBL2), ItemValueFormatter.DEFAULT_DECIMAL,
-                    1d, 0, 1),
+                    1d, 0, 0),
+            ProbeItemDescriptor.continuousLineFillItem(getLocalText(PREFIX) + " - " +getLocalText(LBL1),
+                    getMonitorsString(LBL1), ItemValueFormatter.DEFAULT_DECIMAL,
+                    1d, 0, 0),
             };
         }
 
     // ----- constants ------------------------------------------------------
 
-    private static final String LBL1 = "LBL_journal_files_used";
-    private static final String LBL2 = "LBL_max_journal_files";
+    private static final String LBL1   = "LBL_journal_files_used";
+    private static final String LBL2   = "LBL_max_journal_files";
+    private static final String PREFIX = "LBL_ram";
     }

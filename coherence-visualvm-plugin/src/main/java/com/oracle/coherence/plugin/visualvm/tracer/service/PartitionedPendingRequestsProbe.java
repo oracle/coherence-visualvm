@@ -71,7 +71,7 @@ public class PartitionedPendingRequestsProbe
             {
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
                     getMonitorsString(LBL), ItemValueFormatter.DEFAULT_DECIMAL,
-                    1d, 0, 1),
+                    1d, 0, 0),
             };
         }
 

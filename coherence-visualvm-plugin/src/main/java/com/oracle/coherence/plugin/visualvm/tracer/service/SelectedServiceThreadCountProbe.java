@@ -72,10 +72,10 @@ public class SelectedServiceThreadCountProbe
             {
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
                     getMonitorsString(LBL), ItemValueFormatter.DEFAULT_DECIMAL,
-                    1d, 0, 1),
+                    1d, 0, 0),
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL2),
                     getMonitorsString(LBL2), ItemValueFormatter.DEFAULT_DECIMAL,
-                    1d, 0, 1),
+                    1d, 0, 0),
             };
         }
 

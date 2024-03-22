@@ -75,7 +75,7 @@ public class BackupSpaceProbe
             {
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
                     getMonitorsString(LBL), ItemValueFormatter.DEFAULT_BYTES,
-                    1d, 0, 1),
+                    1d, 0, 0),
             };
         }
 

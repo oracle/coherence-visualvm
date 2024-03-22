@@ -25,10 +25,9 @@
 
 package com.oracle.coherence.plugin.visualvm.tracer.cluster;
 
-import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.MemberData;
+
 import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe;
 
 import org.graalvm.visualvm.modules.tracer.ItemValueFormatter;
@@ -38,7 +37,7 @@ import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
 import java.util.List;
 import java.util.Map;
 
-import static com.oracle.coherence.plugin.visualvm.helper.GraphHelper.GB;
+import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
 import static com.oracle.coherence.plugin.visualvm.helper.GraphHelper.MB;
 import static com.oracle.coherence.plugin.visualvm.panel.AbstractCoherencePanel.getMemberMemoryRateData;
 
@@ -81,20 +80,20 @@ public class StorageMembersHeapProbe
 
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
-        return new TracerProbeDescriptor(Localization.getLocalText("GRPH_cluster_memory_details"),
-                Localization.getLocalText("LBL_storage_members_heap_desc"), ICON, 15, available);
+        return new TracerProbeDescriptor(getLocalText("GRPH_cluster_memory_details"),
+                getLocalText("LBL_storage_members_heap_desc"), ICON, 15, available);
         }
     
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]
             {
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText("GRPH_total_cluster_memory"),
+            ProbeItemDescriptor.continuousLineFillItem(getLocalText("GRPH_total_cluster_memory"),
                     getMonitorsString("GRPH_total_cluster_memory"), ItemValueFormatter.DEFAULT_BYTES,
-                    1d, 0,  GB),
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText("GRPH_used_cluster_memory"),
+                    1d, 0,  0),
+            ProbeItemDescriptor.continuousLineFillItem(getLocalText("GRPH_used_cluster_memory"),
                     getMonitorsString("GRPH_used_cluster_memory"), ItemValueFormatter.DEFAULT_BYTES,
-                    1d, 0, GB)
+                    1d, 0, 0)
             };
         }
     }

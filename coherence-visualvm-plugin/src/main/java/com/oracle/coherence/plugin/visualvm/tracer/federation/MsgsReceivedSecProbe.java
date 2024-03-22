@@ -69,7 +69,7 @@ public class MsgsReceivedSecProbe
             {
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
                     getMonitorsString(LBL), new CustomFormatter(1, "msg/ s"),
-                    1d, 0, 1),
+                    1d, 0, 0),
             };
         }
 

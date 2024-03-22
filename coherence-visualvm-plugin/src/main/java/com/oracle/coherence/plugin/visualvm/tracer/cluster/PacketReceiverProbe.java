@@ -28,17 +28,15 @@ package com.oracle.coherence.plugin.visualvm.tracer.cluster;
 import java.util.List;
 import java.util.Map;
 
-import static com.oracle.coherence.plugin.visualvm.helper.GraphHelper.GRPH_CURRENT_AVERAGE;
-import static com.oracle.coherence.plugin.visualvm.helper.GraphHelper.GRPH_MINIMUM;
-import static com.oracle.coherence.plugin.visualvm.panel.AbstractCoherencePanel.getMemberMemoryRateData;
-
-import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe;
-import org.graalvm.visualvm.modules.tracer.ItemValueFormatter;
-import org.graalvm.visualvm.modules.tracer.ProbeItemDescriptor;
+
 import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
+
+import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
+import static com.oracle.coherence.plugin.visualvm.panel.AbstractCoherencePanel.getMemberMemoryRateData;
+
 
 /**
  * Tracer probe to return average and minimum package receiver.
@@ -52,7 +50,7 @@ public class PacketReceiverProbe
 
     public PacketReceiverProbe(MonitoredDataResolver resolver)
         {
-        super(2, PacketPublisherProbe.createItemDescriptors(), resolver);
+        super(2, PacketPublisherProbe.createItemDescriptors("LBL_receiver"), resolver);
         }
 
     // ---- TracerProbe methods ---------------------------------------------
@@ -82,7 +80,7 @@ public class PacketReceiverProbe
 
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
-        return new TracerProbeDescriptor(Localization.getLocalText("GRPH_packet_receiver"),
-                Localization.getLocalText("LBL_packet_receiver_desc"), ICON, 15, available);
+        return new TracerProbeDescriptor(getLocalText("GRPH_packet_receiver"),
+                getLocalText("LBL_packet_receiver_desc"), ICON, 15, available);
         }
     }

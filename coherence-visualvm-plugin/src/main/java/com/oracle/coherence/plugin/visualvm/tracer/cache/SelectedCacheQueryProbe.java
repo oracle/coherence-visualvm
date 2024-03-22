@@ -73,13 +73,13 @@ public class SelectedCacheQueryProbe
             {
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
                     getMonitorsString(LBL), new CustomFormatter(1000, "ms"),
-                    1000d, 0, 1),
+                    1000d, 0, 0),
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL2),
                     getMonitorsString(LBL2), new CustomFormatter(1000, "ms"),
-                    1000d, 0, 1),
+                    1000d, 0, 0),
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL3),
                     getMonitorsString(LBL3), new CustomFormatter(1000, "ms"),
-                    1000d, 0, 1),
+                    1000d, 0, 0),
             };
         }
 
