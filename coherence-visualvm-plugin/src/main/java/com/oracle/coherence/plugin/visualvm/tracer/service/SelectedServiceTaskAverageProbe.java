@@ -63,12 +63,6 @@ public class SelectedServiceTaskAverageProbe
         return new long[]{aoResults[0], aoResults[1]};
         }
 
-    public static TracerProbeDescriptor createDescriptor(boolean available)
-        {
-        return new TracerProbeDescriptor(getLocalText("LBL_selected_service_task_avg"),
-                getLocalText("LBL_selected_service_task_avg_desc"), ICON, 15, available);
-        }
-
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]
@@ -80,6 +74,12 @@ public class SelectedServiceTaskAverageProbe
                     getMonitorsString(LBL2), new CustomFormatter(1000, "ms"),
                     1000d, 0, 0),
             };
+        }
+
+    public static TracerProbeDescriptor createDescriptor(boolean available)
+        {
+        return new TracerProbeDescriptor(getLocalText("LBL_selected_service_task_avg"),
+                getLocalText("LBL_selected_service_task_avg_desc"), ICON, 15, available);
         }
 
     // ----- constants ------------------------------------------------------

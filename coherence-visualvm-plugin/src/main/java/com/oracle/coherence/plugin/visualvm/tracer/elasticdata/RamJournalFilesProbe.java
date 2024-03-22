@@ -63,12 +63,6 @@ public class RamJournalFilesProbe
         return new long[] {nRamJournaMaxFiles, nRamJournalFileCount};
         }
 
-    public static TracerProbeDescriptor createDescriptor(boolean available)
-        {
-        return new TracerProbeDescriptor(getLocalText("LBL_ram_journal_files"),
-                getLocalText("LBL_ramjournal_files_desc"), ICON, 15, available);
-        }
-
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]
@@ -80,6 +74,12 @@ public class RamJournalFilesProbe
                     getMonitorsString(LBL1), ItemValueFormatter.DEFAULT_DECIMAL,
                     1d, 0, 0),
             };
+        }
+
+    public static TracerProbeDescriptor createDescriptor(boolean available)
+        {
+        return new TracerProbeDescriptor(getLocalText("LBL_ram_journal_files"),
+                getLocalText("LBL_ramjournal_files_desc"), ICON, 15, available);
         }
 
     // ----- constants ------------------------------------------------------
