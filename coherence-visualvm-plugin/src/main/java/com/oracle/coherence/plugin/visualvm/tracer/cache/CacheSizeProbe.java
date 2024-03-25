@@ -70,7 +70,7 @@ public class CacheSizeProbe
         {
         return new ProbeItemDescriptor[]
             {
-            ProbeItemDescriptor.continuousLineFillItem(getLocalText("LBL_caches") + " - " + getLocalText(LBL),
+            ProbeItemDescriptor.continuousLineFillItem(getLocalText("LBL_all_caches") + " - " + getLocalText(LBL),
                     getMonitorsString(LBL), ItemValueFormatter.DEFAULT_DECIMAL,
                     1d, 0, 0),
             };

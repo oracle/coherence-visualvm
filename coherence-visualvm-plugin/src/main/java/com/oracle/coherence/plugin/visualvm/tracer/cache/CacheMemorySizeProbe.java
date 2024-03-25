@@ -27,11 +27,16 @@ package com.oracle.coherence.plugin.visualvm.tracer.cache;
 
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
+
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheData;
+
 import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe;
+
 import org.graalvm.visualvm.modules.tracer.ItemValueFormatter;
 import org.graalvm.visualvm.modules.tracer.ProbeItemDescriptor;
 import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
+
+import static com.oracle.coherence.plugin.visualvm.helper.GraphHelper.MB;
 
 /**
  * Tracer probe to return the total memory size of all caches across all services.
@@ -68,7 +73,7 @@ public class CacheMemorySizeProbe
             {
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
                     getMonitorsString(LBL), ItemValueFormatter.DEFAULT_BYTES,
-                    1d, 0, 0),
+                    1d, 0, MB),
             };
         }
 

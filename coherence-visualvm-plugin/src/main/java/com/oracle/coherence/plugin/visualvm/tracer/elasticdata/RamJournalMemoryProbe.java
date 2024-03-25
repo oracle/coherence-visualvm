@@ -36,6 +36,8 @@ import org.graalvm.visualvm.modules.tracer.ItemValueFormatter;
 import org.graalvm.visualvm.modules.tracer.ProbeItemDescriptor;
 import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
 
+import static com.oracle.coherence.plugin.visualvm.helper.GraphHelper.MB;
+
 /**
  * Tracer probe to return the ram journal memory committed and used.
  *
@@ -73,10 +75,10 @@ public class RamJournalMemoryProbe
             {
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL1),
                     getMonitorsString(LBL1), ItemValueFormatter.DEFAULT_BYTES,
-                    1d, 0, 0),
+                    1d, 0, MB),
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL2),
                     getMonitorsString(LBL2), ItemValueFormatter.DEFAULT_BYTES,
-                    1d, 0, 0),
+                    1d, 0, MB),
             };
         }
 

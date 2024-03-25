@@ -90,10 +90,10 @@ public class StorageMembersHeapProbe
             {
             ProbeItemDescriptor.continuousLineFillItem(getLocalText("GRPH_total_cluster_memory"),
                     getMonitorsString("GRPH_total_cluster_memory"), ItemValueFormatter.DEFAULT_BYTES,
-                    1d, 0,  0),
+                    1d, 0,  MB),
             ProbeItemDescriptor.continuousLineFillItem(getLocalText("GRPH_used_cluster_memory"),
                     getMonitorsString("GRPH_used_cluster_memory"), ItemValueFormatter.DEFAULT_BYTES,
-                    1d, 0, 0)
+                    1d, 0, MB)
             };
         }
     }

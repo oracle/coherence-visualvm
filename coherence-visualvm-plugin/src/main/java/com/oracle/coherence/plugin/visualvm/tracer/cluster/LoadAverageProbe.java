@@ -74,8 +74,8 @@ public class LoadAverageProbe
 
         return new long[]
             {
-            (long) ((cTotalLoadAverage / (cCount * 1.0f)) * 1000),
-            (long) (cMax * 1000)
+            (long) (cMax * 1000),
+            (long) ((cTotalLoadAverage / (cCount * 1.0f)) * 1000)
             };
         }
 
@@ -89,12 +89,12 @@ public class LoadAverageProbe
         {
         return new ProbeItemDescriptor[]
             {
-            ProbeItemDescriptor.continuousLineFillItem(getLocalText(LBL) + " - " + getLocalText(GRPH_CURRENT_AVERAGE),
-                    getMonitorsString(GRPH_CURRENT_AVERAGE), CUSTOM_FORMATTER,
-                    1000, 0,  0),
             ProbeItemDescriptor.continuousLineFillItem(getLocalText(LBL) + " - " + getLocalText(GRPH_MAXIMUM),
                     getMonitorsString(GRPH_MAXIMUM), CUSTOM_FORMATTER,
-                    1000, 0, 0)
+                    1000, 0, 0),
+            ProbeItemDescriptor.continuousLineFillItem(getLocalText(LBL) + " - " + getLocalText(GRPH_CURRENT_AVERAGE),
+                    getMonitorsString(GRPH_CURRENT_AVERAGE), CUSTOM_FORMATTER,
+                    1000, 0,  0)
             };
         }
 
