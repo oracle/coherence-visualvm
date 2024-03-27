@@ -169,10 +169,6 @@
           <source>${java.version}</source>
           <target>${java.version}</target>
           <release>${java.version.release}</release>
-          <compilerArgs>
-            <arg>--add-opens</arg>
-            <arg>jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED</arg>
-          </compilerArgs>
         </configuration>
       </plugin>
 
