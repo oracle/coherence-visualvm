@@ -33,9 +33,9 @@ NOTE: The most current version of the Plugin requires VisualVM release 2.1 or la
 
 The Plugin will connect to and display data for the following Coherence versions:
 
-* **Community Editions**: 24.03.x, 23.09.x, 22.06.x, 21.12.x (*), 14.1.1.0.x
+* **Community Editions**: 24.03.x, 23.09.x, 22.06.x, 14.1.1.0.x
 
-* **Commercial Editions**: 14.1.1.2206.x, 14.1.1.0.x, 12.2.1.5.x, 12.2.1.4.x 12.1.3.x and 12.1.2.x
+* **Commercial Editions**: 14.1.1.2206.x, 14.1.1.0.x and 12.2.1.4.x
 
 >Note: If you wish to connect to Coherence version 12.2.1.4.x via REST you should have Coherence version 12.2.1.4.7 or greater.
 
@@ -195,18 +195,37 @@ Depending upon the edition and functionality you are using, the following option
 
 ## <a id="tracer"></a> Using Coherence with the Tracer framework
 
-Version 1.7.0 of the Coherence VisualVM Plugin introduces initial integration with the VisualVM Tracer framework.
+Version 1.7.0 of the Coherence VisualVM Plugin introduces initial integration with the 
+VisualVM Tracer framework.
  
-From the VisualVM website 
+From the VisualVM website:
 
 > The VisualVM Tracer framework provides detailed monitoring and analyzing Java applications. Using various probes, 
 > the Tracer gathers metrics from an application and displays the data in a timeline. The data are 
 > displayed both graphically and in a table and can be exported to common formats for further processing 
 > by external tools.
 
-When you connect to a cluster via JMX, you will see the `Tracer` tab as shown below:
+After installation, when you connect to a cluster via JMX, you will see the `Tracer` tab as shown below:
 
-TBC. 
+![Tracer Tab](assets/visualvm-tracer.png)
+
+There are a number of expandable groups allowing you to choose Coherence related probes to display on the timeline including:
+
+* Coherence Cluster Overview - shows general cluster data such as members, heap, package publisher/receive rates and load averages
+* Coherence Services - Overall - shows overall service partition data
+* Coherence Services - Selected - shows data for the selected service only
+* Coherence Caches - Overall - shows overall cache data such as total cache sizes and memory usage
+* Coherence Caches - Selected - shows data for the selected cache only
+* Coherence Proxy Servers - shows proxy connection details and outgoing backlogs
+* Coherence Persistence - shows active and backup persistence data as well as maximum latency
+* Coherence Federation - shows send and receive rates
+* Coherence Elastic Data - shows elastic data flash a ram journal usage
+
+To start recording tracer data, select the tracer probes that you wish to display and click `Start`.
+
+> Note: The data displayed is the same as is display on the various Coherence tabs.
+ 
+![Tracer Tab](assets/visualvm-tracer-timeline.png)
 
 ## <a id="build"></a> Building the Plugin
 

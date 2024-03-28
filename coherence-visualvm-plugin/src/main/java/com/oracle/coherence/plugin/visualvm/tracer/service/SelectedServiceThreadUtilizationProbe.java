@@ -72,7 +72,7 @@ public class SelectedServiceThreadUtilizationProbe
             {
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
                     getMonitorsString(LBL), ItemValueFormatter.DEFAULT_PERCENT,
-                    1d, 0, 1000)
+                    1d, 0, 0)
             };
         }
 

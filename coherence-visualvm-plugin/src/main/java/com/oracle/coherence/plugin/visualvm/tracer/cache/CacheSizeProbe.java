@@ -25,7 +25,6 @@
 
 package com.oracle.coherence.plugin.visualvm.tracer.cache;
 
-import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheData;
@@ -35,6 +34,8 @@ import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe
 import org.graalvm.visualvm.modules.tracer.ItemValueFormatter;
 import org.graalvm.visualvm.modules.tracer.ProbeItemDescriptor;
 import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
+
+import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
 
 /**
  * Tracer probe to return the total number of cache entries across all services.
@@ -61,17 +62,17 @@ public class CacheSizeProbe
 
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
-        return new TracerProbeDescriptor(Localization.getLocalText(LBL),
-                Localization.getLocalText("LBL_cache_size_desc"), ICON, 10, available);
+        return new TracerProbeDescriptor(getLocalText(LBL),
+                getLocalText("LBL_cache_size_desc"), ICON, 10, available);
         }
 
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]
             {
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
+            ProbeItemDescriptor.continuousLineFillItem(getLocalText("LBL_all_caches") + " - " + getLocalText(LBL),
                     getMonitorsString(LBL), ItemValueFormatter.DEFAULT_DECIMAL,
-                    1d, 0, 1),
+                    1d, 0, 0),
             };
         }
 

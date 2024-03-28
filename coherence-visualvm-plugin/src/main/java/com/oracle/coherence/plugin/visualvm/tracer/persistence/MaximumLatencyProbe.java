@@ -73,7 +73,7 @@ public class MaximumLatencyProbe
             {
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
                     getMonitorsString(LBL), new CustomFormatter(1, "ms"),
-                    1d, 0, 1),
+                    1d, 0, 0),
             };
         }
 

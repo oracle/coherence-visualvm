@@ -37,6 +37,8 @@ import com.oracle.coherence.plugin.visualvm.tracer.CustomFormatter;
 import org.graalvm.visualvm.modules.tracer.ProbeItemDescriptor;
 import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
 
+import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
+
 /**
  * Tracer probe to return the maximum and average request average for the currently selected service.
  *
@@ -64,25 +66,26 @@ public class SelectedServiceRequestAverageProbe
 
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
-        return new TracerProbeDescriptor(Localization.getLocalText("LBL_selected_service_request_avg"),
-                Localization.getLocalText("LBL_selected_service_request_avg_desc"), ICON, 20, available);
+        return new TracerProbeDescriptor(getLocalText("LBL_selected_service_request_avg"),
+                getLocalText("LBL_selected_service_request_avg_desc"), ICON, 20, available);
         }
 
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]
             {
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
+            ProbeItemDescriptor.continuousLineFillItem(getLocalText(PREFIX) + " - " + getLocalText(LBL),
                     getMonitorsString(LBL), new CustomFormatter(1000, "ms"),
-                    1000d, 0, 1),
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL2),
+                    1000d, 0, 0),
+            ProbeItemDescriptor.continuousLineFillItem(getLocalText(PREFIX) + " - " + getLocalText(LBL2),
                     getMonitorsString(LBL2), new CustomFormatter(1000, "ms"),
-                    1000d, 0, 1),
+                    1000d, 0, 0),
             };
         }
 
     // ----- constants ------------------------------------------------------
 
-    private static final String LBL  = "GRPH_current_maximum";
-    private static final String LBL2 = "GRPH_current_average";
+    private static final String LBL    = "GRPH_current_maximum";
+    private static final String LBL2   = "GRPH_current_average";
+    private static final String PREFIX = "LBL_request_average_duration";
     }

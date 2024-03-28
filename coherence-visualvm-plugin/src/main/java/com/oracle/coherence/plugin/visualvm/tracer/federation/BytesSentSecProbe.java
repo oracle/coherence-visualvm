@@ -71,7 +71,7 @@ public class BytesSentSecProbe
             {
             ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(LBL),
                     getMonitorsString(LBL), ItemValueFormatter.DEFAULT_BYTES_PER_SEC,
-                    1d, 0, 1),
+                    1d, 0, 0),
             };
         }
 

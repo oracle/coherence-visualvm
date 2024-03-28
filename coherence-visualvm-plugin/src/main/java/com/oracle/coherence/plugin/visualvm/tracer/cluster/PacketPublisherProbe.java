@@ -28,17 +28,18 @@ package com.oracle.coherence.plugin.visualvm.tracer.cluster;
 import java.util.List;
 import java.util.Map;
 
-import static com.oracle.coherence.plugin.visualvm.helper.GraphHelper.GRPH_CURRENT_AVERAGE;
-import static com.oracle.coherence.plugin.visualvm.helper.GraphHelper.GRPH_MINIMUM;
-import static com.oracle.coherence.plugin.visualvm.panel.AbstractCoherencePanel.getMemberMemoryRateData;
-
-import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
 import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe;
 
 import org.graalvm.visualvm.modules.tracer.ProbeItemDescriptor;
 import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
+
+import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
+import static com.oracle.coherence.plugin.visualvm.helper.GraphHelper.GRPH_CURRENT_AVERAGE;
+import static com.oracle.coherence.plugin.visualvm.helper.GraphHelper.GRPH_MINIMUM;
+import static com.oracle.coherence.plugin.visualvm.panel.AbstractCoherencePanel.getMemberMemoryRateData;
+
 
 /**
  * Tracer probe to return average and minimum package publisher.
@@ -52,7 +53,7 @@ public class PacketPublisherProbe
 
     public PacketPublisherProbe(MonitoredDataResolver resolver)
         {
-        super(2, createItemDescriptors(), resolver);
+        super(2, createItemDescriptors("LBL_publisher"), resolver);
         }
 
     // ---- TracerProbe methods ---------------------------------------------
@@ -82,18 +83,18 @@ public class PacketPublisherProbe
 
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
-        return new TracerProbeDescriptor(Localization.getLocalText("GRPH_packet_publisher"),
-                Localization.getLocalText("LBL_packet_publisher_desc"), ICON, 15, available);
+        return new TracerProbeDescriptor(getLocalText("GRPH_packet_publisher"),
+                getLocalText("LBL_packet_publisher_desc"), ICON, 15, available);
         }
     
-    protected static ProbeItemDescriptor[] createItemDescriptors()
+    protected static ProbeItemDescriptor[] createItemDescriptors(String sLabel)
         {
         return new ProbeItemDescriptor[]
             {
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(GRPH_CURRENT_AVERAGE),
+            ProbeItemDescriptor.continuousLineFillItem(getLocalText(sLabel) + " - " + getLocalText(GRPH_CURRENT_AVERAGE),
                     getMonitorsString(GRPH_CURRENT_AVERAGE), CUSTOM_FORMATTER,
                     1, 0,  1000),
-            ProbeItemDescriptor.continuousLineFillItem(Localization.getLocalText(GRPH_MINIMUM),
+            ProbeItemDescriptor.continuousLineFillItem(getLocalText(sLabel) + " - " + getLocalText(GRPH_MINIMUM),
                     getMonitorsString(GRPH_MINIMUM), CUSTOM_FORMATTER,
                     1, 0, 1000)
             };
