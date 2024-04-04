@@ -235,14 +235,9 @@ If you wish to build the Plugin from scratch please follow the instructions belo
 
 You must have the following:
 
-1. Java JDK 11+ - To build and test the plugin
+1. Java JDK 11 Only - To build and test the plugin
 2. Maven 3.6.3+
 3. Git
- 
-Note: 
-To install the tracer support, you must also run the script `./scrips/install-tracer-library.sh`
-
-Ensure you set your environment to JDK 1.8 to run this script.
 
 ### Clone the Repository
 

@@ -108,7 +108,7 @@
     </dependency>
 
     <dependency>
-      <groupId>org.graalvm.visualvm.modules</groupId>
+      <groupId>org.graalvm.visualvm.api</groupId>
       <artifactId>org-graalvm-visualvm-modules-tracer</artifactId>
     </dependency>
 
