@@ -71,6 +71,7 @@
     <javax.activation.version>1.2.0</javax.activation.version>
     <junit.version>4.13.1</junit.version>
     <visualvm.version>2.1</visualvm.version>
+    <tracer.version>2.1.8</tracer.version>
     <netbeans.version>RELEASE124</netbeans.version>
 
     <hamcrest.version>2.2</hamcrest.version>
@@ -139,9 +140,9 @@
       
       <!-- tracer dependency -->
       <dependency>
-        <groupId>org.graalvm.visualvm.modules</groupId>
+        <groupId>org.graalvm.visualvm.api</groupId>
         <artifactId>org-graalvm-visualvm-modules-tracer</artifactId>
-        <version>${visualvm.version}</version>
+        <version>${tracer.version}</version>
       </dependency>
 
       <dependency>
