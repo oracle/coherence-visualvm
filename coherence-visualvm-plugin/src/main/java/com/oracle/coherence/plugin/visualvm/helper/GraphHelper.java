@@ -176,7 +176,7 @@ public class GraphHelper
      */
     public static SimpleXYChartSupport createTotalProxyConnectionsGraph()
         {
-        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(1, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(getLocalText("GRPH_total_connections"));
         sxycd.addLineItems(getLocalText("GRPH_connection_count"));
@@ -539,7 +539,7 @@ public class GraphHelper
      */
     public static SimpleXYChartSupport createTaskBacklogGraph(String sServiceName)
         {
-        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, 0.01, true, VALUES_LIMIT);
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(1, 0.01, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(Localization.getLocalText("GRPH_task_backlog", sServiceName));
         sxycd.addLineFillItems(getLocalText(GRPH_CURRENT_MAXIMUM), getLocalText(GRPH_CURRENT_AVERAGE));
@@ -594,7 +594,7 @@ public class GraphHelper
      */
     public static SimpleXYChartSupport createPersistenceActiveTotalGraph()
         {
-        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.bytes(0, true,
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.bytes(1, true,
                 VALUES_LIMIT);
 
         sxycd.setChartTitle(getLocalText("GRPH_total_active_space"));
@@ -900,7 +900,7 @@ public class GraphHelper
      */
     public static SimpleXYChartSupport createServicePartitionGraph(String sServiceName)
         {
-        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(1, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(Localization.getLocalText("GRPH_service_partitions", sServiceName));
         sxycd.addLineItems(getLocalText("LBL_pending"),
@@ -1066,7 +1066,7 @@ public class GraphHelper
      */
     public static SimpleXYChartSupport createHttpRequestGraph(String sServiceName)
         {
-        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(1, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(Localization.getLocalText("GRPH_requests_over_time", sServiceName));
         sxycd.addLineItems(getLocalText("LBL_total_request_count"),
@@ -1097,7 +1097,7 @@ public class GraphHelper
      */
     public static SimpleXYChartSupport createHttpResponseGraph(String sServiceName)
         {
-        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(1, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(Localization.getLocalText("GRPH_response_over_time", sServiceName));
         sxycd.addLineItems(getLocalText("LBL_status1xx"),
@@ -1135,7 +1135,7 @@ public class GraphHelper
      */
     public static SimpleXYChartSupport createProxyServerStatsGraph()
         {
-        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.bytes(0, true, VALUES_LIMIT);
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.bytes(1, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(Localization.getLocalText("GRPH_proxy_server_stats"));
         sxycd.addLineItems(getLocalText("LBL_total_bytes_sent"),
