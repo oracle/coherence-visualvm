@@ -263,6 +263,16 @@ public interface RequestSender
     Set<ObjectName> getAllServiceMembers()
             throws Exception;
 
+    /**
+     * Get the list of Persistence Services in the cluster.
+     *
+     * @return list of persistence MBeans
+     *
+     * @throws Exception in case of errors
+     */
+    Set<ObjectName> getAllPersistenceServices()
+            throws Exception;
+
     /***
      * Get the list of ServiceMBean of a service.
      *

@@ -550,6 +550,13 @@ public class HttpRequestSender
         }
 
     @Override
+    public Set<ObjectName> getAllPersistenceServices()
+            throws Exception
+        {
+        return new HashSet<>();  // Never called
+        }
+
+    @Override
     public Set<ObjectName> getAllProxyServerMembers()
             throws Exception
         {

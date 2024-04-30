@@ -635,7 +635,7 @@ public class GraphHelper
      */
     public static SimpleXYChartSupport createSessionCountGraph()
         {
-        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(0, true, VALUES_LIMIT);
+        SimpleXYChartDescriptor sxycd = SimpleXYChartDescriptor.decimal(1, true, VALUES_LIMIT);
 
         sxycd.setChartTitle(getLocalText("GRPH_session_sizes"));
         sxycd.addLineItems(getLocalText("GRPH_total_session_count"),

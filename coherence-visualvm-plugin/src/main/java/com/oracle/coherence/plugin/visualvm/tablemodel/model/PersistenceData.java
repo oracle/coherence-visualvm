@@ -98,41 +98,32 @@ public class PersistenceData
 
             // firstly obtain the list of services that have PersistenceMode
             // not 'n/a'
-            Set<ObjectName> servicesSet = requestSender.getAllServiceMembers();
+            Set<ObjectName> servicesSet = requestSender.getAllPersistenceServices();
 
             for (Iterator<ObjectName> serviceNameIter = servicesSet.iterator(); serviceNameIter.hasNext(); )
                 {
                 ObjectName serviceNameObjName = serviceNameIter.next();
 
-                AttributeList listAttr = requestSender.getAttributes(serviceNameObjName,
-                        new String[] { "PersistenceMode", "StorageEnabled" });
-                String     sPersistenceMode   = getAttributeValueAsString(listAttr, "PersistenceMode");
-                boolean    fStorageEnabled    = Boolean.parseBoolean(getAttributeValueAsString(listAttr, "StorageEnabled"));
+                sServiceName            = serviceNameObjName.getKeyProperty("service");
+                String sDomainPartition = serviceNameObjName.getKeyProperty("domainPartition");
 
-                // only include if PersistenceMode != 'n/a'
-                if (!"n/a".equals(sPersistenceMode) && fStorageEnabled)
+                if (sDomainPartition != null && !setDomainPartitions.contains(sDomainPartition));
                     {
-                    sServiceName            = serviceNameObjName.getKeyProperty("name");
-                    String sDomainPartition = serviceNameObjName.getKeyProperty("domainPartition");
+                    setDomainPartitions.add(sDomainPartition);
+                    }
 
-                    if (sDomainPartition != null && !setDomainPartitions.contains(sDomainPartition))
-                        {
-                        setDomainPartitions.add(sDomainPartition);
-                        }
+                // check for domain partition
+                if (sDomainPartition != null)
+                    {
+                    sServiceName = ServiceData.getFullServiceName(sDomainPartition, sServiceName);
+                    }
 
-                    // check for domain partition
-                    if (sDomainPartition != null)
-                        {
-                        sServiceName = ServiceData.getFullServiceName(sDomainPartition, sServiceName);
-                        }
+                // try to get data
+                data = mapData.get(sServiceName);
 
-                    // try to get data
-                    data = mapData.get(sServiceName);
-
-                    if (data == null)
-                        {
-                        mapData.put(sServiceName, createData(sServiceName, sPersistenceMode, sDomainPartition, requestSender));
-                        }
+                if (data == null)
+                    {
+                    mapData.put(sServiceName, createData(sServiceName, "", sDomainPartition, requestSender));
                     }
                 }
 
@@ -156,14 +147,16 @@ public class PersistenceData
 
                     // only include storage-enabled members
                     AttributeList listAttr = requestSender.getAttributes(objectName,
-                            new String[] { "StorageEnabled", MBEAN_ACTIVE_SPACE, MBEAN_BACKUP_SPACE, "PersistenceLatencyMax", "PersistenceLatencyAverage" });
+                            new String[] { "StorageEnabled", MBEAN_ACTIVE_SPACE, MBEAN_BACKUP_SPACE, "PersistenceLatencyMax",
+                                    "PersistenceLatencyAverage", "PersistenceMode" });
+                    String sPersistenceMode = getAttributeValueAsString(listAttr, "PersistenceMode");
 
                     if (Boolean.parseBoolean(getAttributeValueAsString(listAttr, "StorageEnabled")))
                         {
                         data = mapData.get(sServiceNameKey);
 
                         // PersistenceActiveSpaceUsed is only valid for active or active-backup persistence mode
-                        if (isActivePersistence((String) data.getColumn(PERSISTENCE_MODE)))
+                        if (isActivePersistence(sPersistenceMode))
                             {
                             data.setColumn(TOTAL_ACTIVE_SPACE_USED,
                                     ((Long) data.getColumn(TOTAL_ACTIVE_SPACE_USED)) +
@@ -178,6 +171,8 @@ public class PersistenceData
                                            Math.max(nBackupSpaceUsed, 0));
                             }
 
+                        data.setColumn(PERSISTENCE_MODE, sPersistenceMode);
+
                         // update the max (of the max latencies)
                         long nMaxLatency = Long.parseLong(getAttributeValueAsString(listAttr, "PersistenceLatencyMax"));
 
@@ -187,7 +182,7 @@ public class PersistenceData
                             }
 
                         // count the nodes for working out the average at the end as we are adding up
-                        // all of the averages, putting them in the average latency
+                        // all the averages, putting them in the average latency
                         // and average them
                         cNodes++;
                         data.setColumn(AVERAGE_LATENCY,

@@ -242,6 +242,13 @@ public class JMXRequestSender
         }
 
     @Override
+    public Set<ObjectName> getAllPersistenceServices()
+            throws Exception
+        {
+        return f_connection.queryNames(new ObjectName("Coherence:type=Persistence,*"), null);
+        }
+
+    @Override
     public Set<ObjectName> getMembersOfService(String sServiceName, String sDomainPartition)
             throws Exception
         {
