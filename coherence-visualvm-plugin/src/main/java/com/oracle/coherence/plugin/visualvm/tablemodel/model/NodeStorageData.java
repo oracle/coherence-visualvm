@@ -192,10 +192,15 @@ public class NodeStorageData
                 {
                 ObjectName  objectName     = cacheNameIter.next();
                 Integer     nodeId         = Integer.valueOf(objectName.getKeyProperty(ATTR_NODE_ID));
-                AttributeList listAttr     = requestSender.getAttributes(objectName, new String[] { ATTR_OWNED_PRIMARY });
-                Integer       ownedPrimary = Integer.parseInt(getAttributeValueAsString(listAttr, ATTR_OWNED_PRIMARY));
+                String      sServiceName   = objectName.getKeyProperty("name");
 
-                checkNode(mapNodes, nodeId, ownedPrimary);
+                if (model.getDistributedCaches().contains(sServiceName))
+                   {
+                   // only query if we know this is a distributed cache
+                   AttributeList listAttr     = requestSender.getAttributes(objectName, new String[] { ATTR_OWNED_PRIMARY });
+                   Integer       ownedPrimary = Integer.parseInt(getAttributeValueAsString(listAttr, ATTR_OWNED_PRIMARY));
+                   checkNode(mapNodes, nodeId, ownedPrimary);
+                   }
                 }
             
             return populateMap(mapNodes);

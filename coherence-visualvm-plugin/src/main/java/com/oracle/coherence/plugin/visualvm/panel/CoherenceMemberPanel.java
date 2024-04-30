@@ -380,7 +380,7 @@ public class CoherenceMemberPanel
         @Override
         public String getMenuItem()
             {
-            return getLocalizedText("LBL_get_description");
+            return getLocalizedText("LBL_show_description");
             }
 
         @Override
