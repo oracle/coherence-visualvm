@@ -107,7 +107,7 @@ public class PersistenceData
                 sServiceName            = serviceNameObjName.getKeyProperty("service");
                 String sDomainPartition = serviceNameObjName.getKeyProperty("domainPartition");
 
-                if (sDomainPartition != null && !setDomainPartitions.contains(sDomainPartition));
+                if (sDomainPartition != null && !setDomainPartitions.contains(sDomainPartition))
                     {
                     setDomainPartitions.add(sDomainPartition);
                     }

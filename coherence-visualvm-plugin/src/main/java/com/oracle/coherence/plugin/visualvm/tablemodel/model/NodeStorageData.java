@@ -192,7 +192,7 @@ public class NodeStorageData
                 {
                 ObjectName  objectName     = cacheNameIter.next();
                 Integer     nodeId         = Integer.valueOf(objectName.getKeyProperty(ATTR_NODE_ID));
-                String      sServiceName   = (String) objectName.getKeyProperty("name");
+                String      sServiceName   = objectName.getKeyProperty("name");
 
                 if (model.getDistributedCaches().contains(sServiceName))
                    {
