@@ -49,17 +49,17 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Cache Maven packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2-snapshots
 
     - name: Set up JDK 17 for Build
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: 17
         distribution: 'zulu'
@@ -84,20 +84,20 @@ jobs:
         mvn --file coherence-visualvm-tests/coherence-visualvm-tests-topics/pom.xml -P topics --batch-mode -nsu -e -Dcoherence.version=$COH_VERSION clean install
 
     - name: Build Artifacts test logs
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: failure()
       with:
         name: test-output
         path: coherence-visualvm-tests/**/target/test-output/**/*
 
     - name: Coherence VisualVM Plugin NBM
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coherence-visualvm-plugin-nbm
         path: coherence-visualvm-plugin/target/coherence-visualvm-plugin*.nbm
 
     - name: Coherence VisualVM Plugin Javadoc
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coherence-visualvm-plugin-javadoc
         path: coherence-visualvm-plugin/target/coherence-visualvm-plugin*javadoc.jar
