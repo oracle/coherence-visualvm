@@ -82,17 +82,17 @@ jobs:
       uses: actions/upload-artifact@v4
       if: failure()
       with:
-        name: test-output
+        name: test-output-${{ matrix.version }}
         path: coherence-visualvm-tests/**/target/test-output/**/*
 
     - name: Coherence VisualVM Plugin NBM
       uses: actions/upload-artifact@v4
       with:
-        name: coherence-visualvm-plugin-nbm
+        name: coherence-visualvm-plugin-nbm-${{ matrix.version }}
         path: coherence-visualvm-plugin/target/coherence-visualvm-plugin*.nbm
 
     - name: Coherence VisualVM Plugin Javadoc
       uses: actions/upload-artifact@v4
       with:
-        name: coherence-visualvm-plugin-javadoc
+        name: coherence-visualvm-plugin-javadoc-${{ matrix.version }}
         path: coherence-visualvm-plugin/target/coherence-visualvm-plugin*javadoc.jar
