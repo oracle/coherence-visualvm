@@ -1196,6 +1196,9 @@ public class HttpRequestSender
     /**
      * Get the view data in the cluster.
      *
+     * @param sServiceName  the name of the service
+     * @param sViewName     the name of the view
+     *
      * @return the data for all the cluster members
      * @throws Exception in case of errors
      */

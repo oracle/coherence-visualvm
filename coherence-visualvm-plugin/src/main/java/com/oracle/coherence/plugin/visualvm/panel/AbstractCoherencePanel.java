@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -296,6 +296,7 @@ public abstract class AbstractCoherencePanel
     /**
      * Returns true if the node is storage-enabled.
      *
+     * @param model the {@link VisualVMModel}
      * @param nodeId the node id to check
      * @return true if the node is storage-enabled
      */
@@ -819,6 +820,7 @@ public abstract class AbstractCoherencePanel
     /**
      * Return the member data for overview and tracers.
      *
+     * @param model the {@link VisualVMModel}
      * @param memberData member data to introspect
      * @return the data, 0 = Integer, count
      *                   1 = Integer, totalMemory

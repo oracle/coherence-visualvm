@@ -57,12 +57,16 @@ public class PartitionHelper
 
     /**
      * Parse the partition ownership returned from the REST endpoint.
-     * http://host:port/management/coherence/cluster/services/{serviceName}/members/{memberID}/ownership?links=\&verbose=true
+     * <pre>
+     * {@code http://host:port/management/coherence/cluster/services/{serviceName}/members/{memberID}/ownership?links=\&verbose=true}
+     * </pre>
      * 
      * @param sOwnershipJson  ownership text in Json format
      *
      * @return a {@link Map} keyed by member id, with an array of Integers with 0 being primary and 1+ being backups.
      *         member id of -1 are orphaned.
+     *
+     * @throws {@link PartitionParsingException} if any errors
      */
     public static Map<Integer, PartitionOwnership> parsePartitionOwnership(String sOwnershipJson)
         throws PartitionParsingException
