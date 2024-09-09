@@ -47,6 +47,10 @@ public class SelectedServiceTaskBackLogProbe
     {
     // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public SelectedServiceTaskBackLogProbe(MonitoredDataResolver resolver)
         {
         super(1, createItemDescriptors(), resolver);
@@ -60,12 +64,21 @@ public class SelectedServiceTaskBackLogProbe
         return new long[] {getSelectedServiceSumInteger(model, ServiceMemberData.TASK_BACKLOG)};
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(Localization.getLocalText("LBL_selected_service_task_backlog"),
                 Localization.getLocalText("LBL_selected_service_task_backlog_desc"), ICON, 25, available);
         }
 
+    /**
+     * Create the {@link ProbeItemDescriptor}s for this probe.
+     * @return the {@link ProbeItemDescriptor}s for this probe
+     */
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]

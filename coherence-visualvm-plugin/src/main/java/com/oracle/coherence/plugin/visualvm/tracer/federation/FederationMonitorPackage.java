@@ -48,6 +48,12 @@ import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
 public class FederationMonitorPackage
         extends TracerPackage<Application> implements AbstractCoherenceMonitorProbe.MonitoredDataResolver {
 
+    // ----- constructors ---------------------------------------------------
+
+    /**
+     * Construct a monitor package.
+     * @param application {@link Application} to monitor
+     */
     public FederationMonitorPackage(Application application)
         {
         super(NAME, DESCR, ICON, POSITION);

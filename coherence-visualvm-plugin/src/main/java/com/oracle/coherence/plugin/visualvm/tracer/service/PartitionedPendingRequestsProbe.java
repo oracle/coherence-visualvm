@@ -46,6 +46,10 @@ public class PartitionedPendingRequestsProbe
     {
     // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public PartitionedPendingRequestsProbe(MonitoredDataResolver resolver)
         {
         super(1, createItemDescriptors(), resolver);
@@ -59,12 +63,21 @@ public class PartitionedPendingRequestsProbe
         return getSingValueSum(model, VisualVMModel.DataType.SERVICE, ServiceData.REQUESTS_PENDING, ZERO_VALUES1);
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(Localization.getLocalText(LBL),
                 Localization.getLocalText("LBL_service_pending_desc"), ICON, 20, available);
         }
 
+    /**
+     * Create the {@link ProbeItemDescriptor}s for this probe.
+     * @return the {@link ProbeItemDescriptor}s for this probe
+     */
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]

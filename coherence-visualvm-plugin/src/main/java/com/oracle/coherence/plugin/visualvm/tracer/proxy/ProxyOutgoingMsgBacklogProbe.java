@@ -46,6 +46,10 @@ public class ProxyOutgoingMsgBacklogProbe
     {
     // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public ProxyOutgoingMsgBacklogProbe(MonitoredDataResolver resolver)
         {
         super(1, createItemDescriptors(), resolver);
@@ -59,12 +63,21 @@ public class ProxyOutgoingMsgBacklogProbe
         return getSingValueSum(model, VisualVMModel.DataType.PROXY, ProxyData.OUTGOING_MSG_BACKLOG, ZERO_VALUES1);
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(Localization.getLocalText(LBL),
                 Localization.getLocalText("LBL_proxy_outgoing_desc"), ICON, 5, available);
         }
 
+    /**
+     * Create the {@link ProbeItemDescriptor}s for this probe.
+     * @return the {@link ProbeItemDescriptor}s for this probe
+     */
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]

@@ -48,6 +48,10 @@ public class SelectedServicePartitionsProbe
     {
     // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public SelectedServicePartitionsProbe(MonitoredDataResolver resolver)
         {
         super(4, createItemDescriptors(), resolver);
@@ -76,12 +80,21 @@ public class SelectedServicePartitionsProbe
         return new long[] {0L, 0L, 0L, 0L};
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(Localization.getLocalText("LBL_selected_service_partitions"),
                 Localization.getLocalText("LBL_selected_service_partitions_desc"), ICON, 30, available);
         }
 
+    /**
+     * Create the {@link ProbeItemDescriptor}s for this probe.
+     * @return the {@link ProbeItemDescriptor}s for this probe
+     */
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]

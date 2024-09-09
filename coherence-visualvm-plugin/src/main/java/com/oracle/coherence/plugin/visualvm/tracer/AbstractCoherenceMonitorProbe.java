@@ -57,6 +57,13 @@ public abstract class AbstractCoherenceMonitorProbe
 
     // ----- constructors ---------------------------------------------------
 
+        /**
+         * An abstract implementation of a {link @TracerProbe}.
+         *
+         * @param valuesCount      the number of values to return
+         * @param itemDescriptors  the item description
+         * @param resolver         the {@link MonitoredDataResolver}
+         */
     public AbstractCoherenceMonitorProbe(int valuesCount, ProbeItemDescriptor[] itemDescriptors,
                                   MonitoredDataResolver resolver)
         {
@@ -65,6 +72,11 @@ public abstract class AbstractCoherenceMonitorProbe
         this.f_resolver     = resolver;
         }
 
+    /**
+     * Return the values for the given timestamp.
+     * @param timestamp timestamp to return values for
+     * @return values for the given timestamp
+     */
     public final synchronized long[] getItemValues(long timestamp)
         {
         VisualVMModel model = f_resolver.getMonitoredData();
@@ -78,18 +90,40 @@ public abstract class AbstractCoherenceMonitorProbe
         return noData;
         }
 
+        /**
+         * Returns the monitors string.
+         * @param sKey key for the label
+         * @return the monitors string
+         */
     protected static String getMonitorsString(String sKey)
         {
         return Localization.getLocalText("LBL_monitors") + " " + Localization.getLocalText(sKey);
         }
 
+    /**
+     * Returns the values for the {@link VisualVMModel}.
+     * @param model {@link VisualVMModel}
+     * @return the values
+     */
     protected abstract long[] getValues(VisualVMModel model);
 
+    /**
+     * An interface defining monitored data resolvers.
+     */
     public interface MonitoredDataResolver
         {
+        /**
+         * return the monitored data.
+         * @return the monitored data.
+         */
         VisualVMModel getMonitoredData();
         }
 
+        /**
+         * Returns a value as a long.
+         * @param oValue value to parse
+         * @return value as a long
+         */
     protected long getValueAsLong(Object oValue)
         {
         if (oValue instanceof Long)
@@ -365,16 +399,35 @@ public abstract class AbstractCoherenceMonitorProbe
 
     // ----- data members ---------------------------------------------------
 
+    /**
+     * The resolver.
+     */
     private final MonitoredDataResolver f_resolver;
 
+    /**
+     * The numer of values for this probe.
+     */
     private final int f_nValuesCount;
 
+    /**
+     * An array of two zero values.
+     */
     protected static final long[] ZERO_VALUES2 = new long[]{0L,0L};
+
+    /**
+     * An array of one zero values.
+     */
     protected static final long[] ZERO_VALUES1 = new long[]{0L};
 
     // ----- constants ------------------------------------------------------
 
+    /**
+     * Coherence icon.
+     */
     public static final Icon ICON = new ImageIcon(ImageUtilities.loadImage(IMAGE_PATH, true)); // NOI18N
 
+    /**
+     * Custom formatter.
+     */
     public static final ItemValueFormatter CUSTOM_FORMATTER = new CustomFormatter(1000, "");
     }

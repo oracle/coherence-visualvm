@@ -47,7 +47,12 @@ import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
  */
 public class SelectedCacheMonitorPackage
         extends TracerPackage<Application> implements AbstractCoherenceMonitorProbe.MonitoredDataResolver {
+    // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct a monitor package.
+     * @param application {@link Application} to monitor
+     */
     public SelectedCacheMonitorPackage(Application application)
         {
         super(NAME, DESCR, ICON, POSITION);

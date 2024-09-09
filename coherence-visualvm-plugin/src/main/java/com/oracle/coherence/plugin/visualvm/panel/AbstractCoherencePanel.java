@@ -1153,8 +1153,19 @@ public abstract class AbstractCoherencePanel
     protected static final String[] STATUSHA_VALUES = new String[] {"ENDANGERED", "NODE-SAFE", "MACHINE-SAFE",
                                                                     "RACK-SAFE", "SITE-SAFE"};
 
+    /**
+     * Format for memory.
+     */
     protected static final String MEM_FORMAT = "%,d";
+
+    /**
+     * Node Id.
+     */
     protected static final String NODE_ID    = ",nodeId=";
+
+    /**
+     * Name.
+     */
     protected static final String NAME       = ",name=";
 
     // ----- data members ---------------------------------------------------

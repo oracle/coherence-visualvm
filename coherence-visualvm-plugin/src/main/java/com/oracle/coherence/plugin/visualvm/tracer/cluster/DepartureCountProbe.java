@@ -44,6 +44,10 @@ public class DepartureCountProbe
         extends AbstractCoherenceMonitorProbe
     {
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public DepartureCountProbe(MonitoredDataResolver resolver)
         {
         super(1, createItemDescriptors(), resolver);
@@ -57,12 +61,21 @@ public class DepartureCountProbe
         return getSingValue(model, VisualVMModel.DataType.CLUSTER, ClusterData.DEPARTURE_COUNT, ZERO_VALUES1);
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(Localization.getLocalText(LBL),
                 Localization.getLocalText("LBL_departure_count"), ICON, 10, available);
         }
-    
+
+    /**
+     * Create the {@link ProbeItemDescriptor}s for this probe.
+     * @return the {@link ProbeItemDescriptor}s for this probe
+     */
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]

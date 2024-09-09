@@ -618,6 +618,9 @@ public class CoherenceOptionsPanel
         private final File f_fileLogFile;
         }
 
+    /**
+     * Class returns unavailable metrics.
+     */
     public static class UnavailabilityMetrics
         {
         public UnavailabilityMetrics(String sServiceName, int nMember, int nPartitionId, String sAction, long millis, long nLineId)
