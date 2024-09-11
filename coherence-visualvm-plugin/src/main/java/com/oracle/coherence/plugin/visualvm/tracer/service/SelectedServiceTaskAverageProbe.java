@@ -48,6 +48,10 @@ public class SelectedServiceTaskAverageProbe
     {
     // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public SelectedServiceTaskAverageProbe(MonitoredDataResolver resolver)
         {
         super(2, createItemDescriptors(), resolver);
@@ -63,6 +67,10 @@ public class SelectedServiceTaskAverageProbe
         return new long[]{aoResults[0], aoResults[1]};
         }
 
+    /**
+     * Create the {@link ProbeItemDescriptor}s for this probe.
+     * @return the {@link ProbeItemDescriptor}s for this probe
+     */
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]
@@ -76,6 +84,11 @@ public class SelectedServiceTaskAverageProbe
             };
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(getLocalText("LBL_selected_service_task_avg"),

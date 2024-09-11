@@ -51,6 +51,10 @@ public class PacketPublisherProbe
     {
     // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public PacketPublisherProbe(MonitoredDataResolver resolver)
         {
         super(2, createItemDescriptors("LBL_publisher"), resolver);
@@ -81,12 +85,21 @@ public class PacketPublisherProbe
 
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(getLocalText("GRPH_packet_publisher"),
                 getLocalText("LBL_packet_publisher_desc"), ICON, 15, available);
         }
-    
+
+    /**
+     * Create the {@link ProbeItemDescriptor}s for this probe.
+     * @return the {@link ProbeItemDescriptor}s for this probe
+     */
     protected static ProbeItemDescriptor[] createItemDescriptors(String sLabel)
         {
         return new ProbeItemDescriptor[]

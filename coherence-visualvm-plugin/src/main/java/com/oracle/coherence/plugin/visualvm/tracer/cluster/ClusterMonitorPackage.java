@@ -46,7 +46,13 @@ import static com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonit
  */
 public class ClusterMonitorPackage
         extends TracerPackage<Application> implements AbstractCoherenceMonitorProbe.MonitoredDataResolver {
-    
+
+    // ----- constructors ---------------------------------------------------
+
+    /**
+     * Construct a monitor package.
+     * @param application {@link Application} to monitor
+     */
     public ClusterMonitorPackage(Application application)
         {
         super(NAME, DESCR, ICON, POSITION);

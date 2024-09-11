@@ -661,6 +661,9 @@ public class CoherenceFederationPanel
             private final String f_sLabel;
         }
 
+    /**
+     * Create menu item to stop.
+     */
     public class StopMenuOption
             extends GenericOperationMenuOption
         {
@@ -672,22 +675,34 @@ public class CoherenceFederationPanel
             }
         }
 
+    /**
+     * Create menu item to pause federation.
+     */
     public class PauseMenuOption
             extends GenericOperationMenuOption
         {
         // ----- constructors -----------------------------------------------
 
+        /**
+         * {@inheritDoc}
+         */
         public PauseMenuOption(VisualVMModel model, RequestSender requestSender, ExportableJTable jtable, String sLabel, String sOperation)
             {
             super(model, requestSender, jtable, sLabel, sOperation);
             }
         }
 
+    /**
+     * Create menu item to replicate all federation.
+     */
     public class ReplicateAllMenuOption
             extends GenericOperationMenuOption
         {
         // ----- constructors -----------------------------------------------
 
+        /**
+         * {@inheritDoc}
+         */
         public ReplicateAllMenuOption(VisualVMModel model, RequestSender requestSender, ExportableJTable jtable, String sLabel, String sOperation)
             {
             super(model, requestSender, jtable, sLabel, sOperation);

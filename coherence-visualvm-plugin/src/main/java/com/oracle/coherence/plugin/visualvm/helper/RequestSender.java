@@ -109,6 +109,8 @@ public interface RequestSender
      * @param sCacheName    the name of the cache
      * @param sOutputFormat the output format
      *
+     * @return the result of the operation
+     *
      * @throws Exception in case of errors
      */
     String invokeReportPartitionsStatsOperation(String sService, String sCacheName, String sOutputFormat)
@@ -296,7 +298,10 @@ public interface RequestSender
             throws Exception;
 
     /**
-     * Get the list of View MBeans.
+     * Get the list of View MBeans
+     *
+     * @param sServiceName the name of the service
+     * @param sViewName the name of the view
      *
      * @return list of view MBeans
      * @throws Exception in case of errors
@@ -364,6 +369,19 @@ public interface RequestSender
      * @throws Exception in case of errors
      */
     String getServiceDescription(String sService, String sDomainPartition)
+            throws Exception;
+
+    /**
+     * Get the partition ownership of a service.
+     *
+     * @param sService  the name of the service
+     * @param nNodeID   node Id
+     *
+     * @return the service partition ownership
+     *
+     * @throws Exception in case of errors
+     */
+    String getServiceOwnership(String sService, int nNodeID)
             throws Exception;
 
     /**

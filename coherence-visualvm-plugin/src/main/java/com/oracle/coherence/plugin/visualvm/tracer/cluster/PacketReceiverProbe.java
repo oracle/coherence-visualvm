@@ -48,6 +48,10 @@ public class PacketReceiverProbe
     {
     // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public PacketReceiverProbe(MonitoredDataResolver resolver)
         {
         super(2, PacketPublisherProbe.createItemDescriptors("LBL_receiver"), resolver);
@@ -78,6 +82,11 @@ public class PacketReceiverProbe
 
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(getLocalText("GRPH_packet_receiver"),

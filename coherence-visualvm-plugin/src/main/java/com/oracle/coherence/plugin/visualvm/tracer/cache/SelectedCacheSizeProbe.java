@@ -48,6 +48,10 @@ public class SelectedCacheSizeProbe
     {
     // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public SelectedCacheSizeProbe(MonitoredDataResolver resolver)
         {
         super(1, createItemDescriptors(), resolver);
@@ -61,12 +65,21 @@ public class SelectedCacheSizeProbe
         return new long[]{getSelectedCacheSum(model, VisualVMModel.DataType.CACHE_DETAIL, CacheDetailData.SIZE)};
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(getLocalText("LBL_selected_cache_size"),
                 getLocalText("LBL_selected_cache_size_desc"), ICON, 10, available);
         }
 
+    /**
+     * Create the {@link ProbeItemDescriptor}s for this probe.
+     * @return the {@link ProbeItemDescriptor}s for this probe
+     */
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]

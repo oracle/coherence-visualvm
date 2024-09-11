@@ -48,6 +48,10 @@ public class SelectedCacheMemoryProbe
     {
     // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public SelectedCacheMemoryProbe(MonitoredDataResolver resolver)
         {
         super(2, createItemDescriptors(), resolver);
@@ -63,12 +67,21 @@ public class SelectedCacheMemoryProbe
                 getSelectedCacheSum(model, VisualVMModel.DataType.CACHE_STORAGE_MANAGER, CacheStorageManagerData.INDEX_TOTAL_UNITS)};
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(Localization.getLocalText("LBL_selected_cache_memory"),
                 Localization.getLocalText("LBL_selected_cache_size_desc"), ICON, 10, available);
         }
 
+    /**
+     * Create the {@link ProbeItemDescriptor}s for this probe.
+     * @return the {@link ProbeItemDescriptor}s for this probe
+     */
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]

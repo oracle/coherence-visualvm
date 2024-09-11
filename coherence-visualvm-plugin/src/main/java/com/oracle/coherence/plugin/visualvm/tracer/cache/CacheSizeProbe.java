@@ -47,6 +47,10 @@ public class CacheSizeProbe
     {
     // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public CacheSizeProbe(MonitoredDataResolver resolver)
         {
         super(1, createItemDescriptors(), resolver);
@@ -60,6 +64,11 @@ public class CacheSizeProbe
         return getSingValueSum(model, VisualVMModel.DataType.CACHE, CacheData.SIZE, ZERO_VALUES1);
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(getLocalText(LBL),

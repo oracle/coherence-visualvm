@@ -629,6 +629,20 @@ public class HttpRequestSender
         }
 
     @Override
+    public String getServiceOwnership(String sService, int nNodeID)
+            throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sService)).addPathSegment(MEMBERS)
+                .addPathSegment(Integer.toString(nNodeID)).addPathSegment("ownership")
+                .addQueryParameter(LINKS, "")
+                .addQueryParameter("verbose", "true");
+
+        JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
+        return rootNode.toString();
+        }
+
+    @Override
     public String getServiceDescription(String sService, String sDomainPartition)
             throws Exception
         {
@@ -1195,6 +1209,9 @@ public class HttpRequestSender
 
     /**
      * Get the view data in the cluster.
+     *
+     * @param sServiceName  the name of the service
+     * @param sViewName     the name of the view
      *
      * @return the data for all the cluster members
      * @throws Exception in case of errors

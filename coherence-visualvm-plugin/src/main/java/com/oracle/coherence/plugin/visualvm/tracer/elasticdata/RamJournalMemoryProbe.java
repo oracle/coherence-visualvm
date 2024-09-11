@@ -48,6 +48,10 @@ public class RamJournalMemoryProbe
     {
     // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public RamJournalMemoryProbe(MonitoredDataResolver resolver)
         {
         super(2, createItemDescriptors(), resolver);
@@ -63,6 +67,11 @@ public class RamJournalMemoryProbe
         return new long[] {nRamJournalCommitted, nRamJournalUsed};
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(Localization.getLocalText("GRPH_ramjournal_memory_details"),

@@ -47,6 +47,10 @@ public class FlashJournalFilesProbe
     {
     // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public FlashJournalFilesProbe(MonitoredDataResolver resolver)
         {
         super(2, createItemDescriptors(), resolver);
@@ -62,12 +66,21 @@ public class FlashJournalFilesProbe
         return new long[] {nRamJournaMaxFiles, nRamJournalFileCount};
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(getLocalText("LBL_flash_journal_files"),
                 getLocalText("LBL_flashjournal_files_desc"), ICON, 25, available);
         }
 
+    /**
+     * Create the {@link ProbeItemDescriptor}s for this probe.
+     * @return the {@link ProbeItemDescriptor}s for this probe
+     */
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]

@@ -44,6 +44,10 @@ public class SelectedCacheQueryProbe
     {
     // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public SelectedCacheQueryProbe(MonitoredDataResolver resolver)
         {
         super(3, createItemDescriptors(), resolver);
@@ -61,12 +65,21 @@ public class SelectedCacheQueryProbe
             };
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(Localization.getLocalText("LBL_selected_cache_query"),
                 Localization.getLocalText("LBL_selected_cache_query_desc"), ICON, 20, available);
         }
 
+    /**
+     * Create the {@link ProbeItemDescriptor}s for this probe.
+     * @return the {@link ProbeItemDescriptor}s for this probe
+     */
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]

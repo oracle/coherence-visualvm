@@ -47,6 +47,10 @@ public class SelectedCacheListenersProbe
     {
     // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public SelectedCacheListenersProbe(MonitoredDataResolver resolver)
         {
         super(2, createItemDescriptors(), resolver);
@@ -62,12 +66,21 @@ public class SelectedCacheListenersProbe
                 getSelectedCacheSum(model, VisualVMModel.DataType.CACHE_STORAGE_MANAGER, CacheStorageManagerData.LISTENER_FILTER_COUNT)};
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(Localization.getLocalText("LBL_selected_cache_listeners"),
                 Localization.getLocalText("LBL_selected_cache_listeners_desc"), ICON, 10, available);
         }
 
+    /**
+     * Create the {@link ProbeItemDescriptor}s for this probe.
+     * @return the {@link ProbeItemDescriptor}s for this probe
+     */
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]

@@ -1288,7 +1288,14 @@ public class CoherenceCachePanel
 
     private static final long serialVersionUID = -7612569043492412496L;
 
+    /**
+     * Truncate cache operation.
+     */
     public static final String TRUNCATE = "truncateCache";
+
+    /**
+     * clear cache operation.
+     */
     public static final String CLEAR = "clearCache";
 
     // ----- data members ---------------------------------------------------

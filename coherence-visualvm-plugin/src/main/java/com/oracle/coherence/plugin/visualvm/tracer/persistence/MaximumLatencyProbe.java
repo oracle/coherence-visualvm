@@ -48,6 +48,10 @@ public class MaximumLatencyProbe
     {
     // ----- constructors ---------------------------------------------------
 
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public MaximumLatencyProbe(MonitoredDataResolver resolver)
         {
         super(1, createItemDescriptors(), resolver);
@@ -61,12 +65,21 @@ public class MaximumLatencyProbe
         return getSingValueMax(model, VisualVMModel.DataType.PERSISTENCE, PersistenceData.MAX_LATENCY, ZERO_VALUES1);
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(Localization.getLocalText(LBL),
                 Localization.getLocalText("LBL_max_latency_desc"), ICON, 25, available);
         }
 
+    /**
+     * Create the {@link ProbeItemDescriptor}s for this probe.
+     * @return the {@link ProbeItemDescriptor}s for this probe
+     */
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]

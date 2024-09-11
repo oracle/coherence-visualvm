@@ -50,7 +50,11 @@ public class StorageMembersHeapProbe
         extends AbstractCoherenceMonitorProbe
     {
     // ----- constructors ---------------------------------------------------
-    
+
+    /**
+     * Construct the probe.
+     * @param resolver {@link MonitoredDataResolver}.
+     */
     public StorageMembersHeapProbe(MonitoredDataResolver resolver)
         {
         super(2, createItemDescriptors(), resolver);
@@ -78,12 +82,21 @@ public class StorageMembersHeapProbe
             };
         }
 
+    /**
+     * Create the descriptor for this probe.
+     * @param available indicates to {@link TracerProbeDescriptor} if available
+     * @return the descriptor for this probe
+     */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
         return new TracerProbeDescriptor(getLocalText("GRPH_cluster_memory_details"),
                 getLocalText("LBL_storage_members_heap_desc"), ICON, 15, available);
         }
-    
+
+    /**
+     * Create the {@link ProbeItemDescriptor}s for this probe.
+     * @return the {@link ProbeItemDescriptor}s for this probe
+     */
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]

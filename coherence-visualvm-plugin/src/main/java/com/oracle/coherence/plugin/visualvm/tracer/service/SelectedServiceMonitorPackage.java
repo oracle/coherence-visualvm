@@ -48,6 +48,12 @@ import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
 public class SelectedServiceMonitorPackage
         extends TracerPackage<Application> implements AbstractCoherenceMonitorProbe.MonitoredDataResolver {
 
+    // ----- constructors ---------------------------------------------------
+
+    /**
+     * Construct a monitor package.
+     * @param application {@link Application} to monitor
+     */
     public SelectedServiceMonitorPackage(Application application)
         {
         super(NAME, DESCR, ICON, POSITION);
