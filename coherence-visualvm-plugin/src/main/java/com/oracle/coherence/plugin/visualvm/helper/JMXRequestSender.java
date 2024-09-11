@@ -319,6 +319,20 @@ public class JMXRequestSender
        }
 
     @Override
+    public String getServiceOwnership(String sService,  int nNodeID)
+            throws Exception
+       {
+       Set<ObjectName> setResult = getServiceObjectName(sService, null, getLocalMemberId());
+
+       String sFQN = getFirstResult(setResult);
+
+       String sResult = (String) invoke(new ObjectName(sFQN), "reportOwnership",
+                new Object[]{true}, new String[]{boolean.class.getName()});
+
+       return String.format("{\"ownership\":\"%s\"}", sResult);
+       }
+
+    @Override
     public Set<Object[]> getPartitionAssignmentAttributes(String sService, String sDomainPartition)
             throws Exception
         {

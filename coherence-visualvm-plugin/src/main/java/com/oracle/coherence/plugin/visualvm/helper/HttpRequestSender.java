@@ -629,6 +629,20 @@ public class HttpRequestSender
         }
 
     @Override
+    public String getServiceOwnership(String sService, int nNodeID)
+            throws Exception
+        {
+        URLBuilder urlBuilder = getBasePath().addPathSegment(SERVICES)
+                .addPathSegment(encodeServiceName(sService)).addPathSegment(MEMBERS)
+                .addPathSegment(Integer.toString(nNodeID)).addPathSegment("ownership")
+                .addQueryParameter(LINKS, "")
+                .addQueryParameter("verbose", "true");
+
+        JsonNode rootNode = getResponseJson(sendGetRequest(urlBuilder));
+        return rootNode.toString();
+        }
+
+    @Override
     public String getServiceDescription(String sService, String sDomainPartition)
             throws Exception
         {

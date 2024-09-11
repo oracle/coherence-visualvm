@@ -372,6 +372,19 @@ public interface RequestSender
             throws Exception;
 
     /**
+     * Get the partition ownership of a service.
+     *
+     * @param sService  the name of the service
+     * @param nNodeID   node Id
+     *
+     * @return the service partition ownership
+     *
+     * @throws Exception in case of errors
+     */
+    String getServiceOwnership(String sService, int nNodeID)
+            throws Exception;
+
+    /**
      * Get the attributes of the SimpleAssignmentStrategyMBean.
      *
      * @param sService          the name of the service

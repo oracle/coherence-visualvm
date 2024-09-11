@@ -29,6 +29,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class to define partition ownership for a cluster and service.
+ *
+ * @author ta 2024.09.09
+ */
 public class PartitionOwnership
     {
     public PartitionOwnership(int nMemberId, int nTotalPartitions, int nPrimaryPartitions, int nBackupPartitions)

@@ -28,12 +28,14 @@ package com.oracle.coherence.plugin.visualvm.panel;
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.helper.DialogHelper;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
+import com.oracle.coherence.plugin.visualvm.helper.PartitionHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
 import com.oracle.coherence.plugin.visualvm.panel.util.MenuOption;
 import com.oracle.coherence.plugin.visualvm.tablemodel.ServiceMemberTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.ServiceTableModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.Data;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.MemberData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceData;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.ServiceMemberData;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
@@ -45,6 +47,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -99,7 +102,9 @@ public class CoherenceServicePanel
             table.setMenuOptions(new MenuOption[]{
                     new RightClickMenuOption(model, m_requestSender, table, REPORT_DISTRIBUTIONS),
                     new RightClickMenuOption(model, m_requestSender, table, SHOW_PARTITION_STATS),
-                    new RightClickMenuOption(model, m_requestSender, table, SHOW_SERVICE_DESCRIPTION)});
+                    new RightClickMenuOption(model, m_requestSender, table, SHOW_SERVICE_DESCRIPTION),
+                    new RightClickMenuOption(model, m_requestSender, table, SHOW_PARTITION_OWNERSHIP)
+            });
             }
         else if (model.getClusterVersionAsInt() >= 121200)
             {
@@ -427,7 +432,8 @@ public class CoherenceServicePanel
             {
             return getLocalizedText(f_nOption == REPORT_DISTRIBUTIONS
                     ? "LBL_report_sched_dist" : f_nOption == SHOW_PARTITION_STATS
-                    ? "LBL_partition_stats" : "LBL_show_service_description");
+                    ? "LBL_partition_stats" : f_nOption == SHOW_PARTITION_OWNERSHIP
+                    ? "LBL_show_service_ownership" : "LBL_show_service_description");
             }
 
         /**
@@ -493,6 +499,23 @@ public class CoherenceServicePanel
 
                             sResult = sb.toString();
                             }
+                        }
+                    else if (f_nOption == SHOW_PARTITION_OWNERSHIP)
+                        {
+                        // get at least one member of the service
+                        List<Entry<Object, Data>> memberData =  f_model.getData(VisualVMModel.DataType.MEMBER);
+                        Iterator<Entry<Object, Data>> iter = memberData.iterator();
+                        if (!iter.hasNext())
+                            {
+                            sResult = "Cannot find a member";
+                            }
+                        else
+                            {
+                            int nMember = (Integer) iter.next().getValue().getColumn(MemberData.NODE_ID);
+                            sResult = m_requestSender.getServiceOwnership(sService, nMember);
+                            }
+
+                        sResult = PartitionHelper.toString(sService, PartitionHelper.parsePartitionOwnership(sResult));
                         }
                     else
                         {
@@ -652,6 +675,11 @@ public class CoherenceServicePanel
      * Right click option for showing service description.
      */
     private final int SHOW_SERVICE_DESCRIPTION = 2;
+
+    /**
+     * Right click option for showing partition ownership.
+     */
+    private final int SHOW_PARTITION_OWNERSHIP = 3;
 
     // ----- data members ---------------------------------------------------
 

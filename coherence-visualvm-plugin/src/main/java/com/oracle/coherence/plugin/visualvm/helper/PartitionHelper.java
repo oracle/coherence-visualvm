@@ -29,7 +29,10 @@ package com.oracle.coherence.plugin.visualvm.helper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,7 +56,7 @@ public class PartitionHelper
         {
         }
 
-        // ----- helpers --------------------------------------------------------
+    // ----- helpers --------------------------------------------------------
 
     /**
      * Parse the partition ownership returned from the REST endpoint.
@@ -65,8 +68,6 @@ public class PartitionHelper
      *
      * @return a {@link Map} keyed by member id, with an array of Integers with 0 being primary and 1+ being backups.
      *         member id of -1 are orphaned.
-     *
-     * @throws {@link PartitionParsingException} if any errors
      */
     public static Map<Integer, PartitionOwnership> parsePartitionOwnership(String sOwnershipJson)
         throws PartitionParsingException
@@ -85,6 +86,7 @@ public class PartitionHelper
                 {
                 throw new PartitionParsingException("Unable to find ownership node in [" + jsonNode + "]");
                 }
+
             sOwnership = jsonOwnership.asText();
             if (sOwnership.length() == 0)
                 {
@@ -158,6 +160,44 @@ public class PartitionHelper
         return mapOwnership;
         }
 
+    /**
+     * Create a string representation of the ownership for display.
+     * @param sServiceName  service name
+     * @param mapOwnership   {@link Map} of {@link PartitionOwnership}
+     * @return a string representation
+     */
+    public static String toString(String sServiceName, Map<Integer, PartitionOwnership> mapOwnership)
+        {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Partition Ownership for Service: ").append(sServiceName).append("\n");
+
+        mapOwnership.forEach((k,v) ->
+            {
+            String sMember = k == -1 ? "Orphaned" : "Member " + k;
+
+            sb.append(String.format("%s: primaries=%d, backups=%d\n", sMember, v.getPrimaryPartitions(), v.getBackupPartitions()));
+
+            final AtomicInteger counter = new AtomicInteger(0);
+            v.getPartitionMap().forEach((k1,v1) ->
+                {
+                int nCount = counter.getAndIncrement();
+                if (nCount == 0)
+                    {
+                    sb.append(" - Primary ");
+                    }
+                else
+                    {
+                    sb.append(" - Backup ").append(nCount);
+                    }
+                int[] naPartitions = Arrays.stream(v1).mapToInt(Integer::intValue).toArray();
+                sb.append("  ").append(PartitionHelper.formatPartitions(naPartitions))
+                        .append("\n");
+                });
+            });
+
+        return sb.toString();
+        }
+
     protected static Integer[] extractPartitions(String sString)
         {
         ArrayList<Integer> listPartitions = new ArrayList<>();
@@ -186,10 +226,55 @@ public class PartitionHelper
         return -1;
         }
 
-   protected static String removePrefix(String sString)
-       {
-       return !sString.contains(":") ? "" : sString.replaceFirst("^.*?:\\s", "");
-       }
+    protected static String removePrefix(String sString)
+        {
+        sString = sString.replace("+", " ");
+        return !sString.contains(":") ? "" : sString.replaceFirst("^.*?:\\s", "");
+        }
+
+    public static String formatPartitions(int[] partitions) {
+        if (partitions.length == 0) {
+            return "-";
+        }
+
+        Arrays.sort(partitions);
+
+        List<String> result = new ArrayList<>();
+        int          start  = partitions[0];
+        int prev = partitions[0];
+
+        for (int i = 1; i < partitions.length; i++)
+            {
+            if (partitions[i] == prev + 1)
+                {
+                prev = partitions[i];
+                }
+            else
+                {
+                if (start == prev)
+                    {
+                    result.add(String.valueOf(start));
+                    }
+                else
+                    {
+                    result.add(String.format("%d..%d", start, prev));
+                    }
+                start = partitions[i];
+                prev = partitions[i];
+                }
+            }
+
+        if (start == prev)
+            {
+            result.add(String.valueOf(start));
+            }
+        else
+            {
+            result.add(String.format("%d..%d", start, prev));
+            }
+
+        return String.join(", ", result);
+        }
         
     public static class PartitionParsingException extends Exception
         {

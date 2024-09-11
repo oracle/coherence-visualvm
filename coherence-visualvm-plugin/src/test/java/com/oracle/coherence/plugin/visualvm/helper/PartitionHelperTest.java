@@ -27,8 +27,9 @@
 package com.oracle.coherence.plugin.visualvm.helper;
 
 
-import org.junit.Assert;
-import org.junit.Test;;import java.util.Map;
+import org.junit.Test;
+
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -77,8 +78,10 @@ public class PartitionHelperTest
         {
         Map<Integer, PartitionOwnership> mapOwnerShip  =
                 PartitionHelper.parsePartitionOwnership(encodeOwnership(OWNERSHIP_19_2));
-        mapOwnerShip.forEach((k,v) -> System.out.println("k=" + k + ", v=" + v));
+//        mapOwnerShip.forEach((k,v) -> System.out.println("k=" + k + ", v=" + v));
         assertEquals(7, mapOwnerShip.size());
+
+        System.out.println(PartitionHelper.toString("test", mapOwnerShip));
         }
 
     @Test
@@ -114,6 +117,9 @@ public class PartitionHelperTest
         assertEquals(3, aValues.length);
 
         aValues = PartitionHelper.extractPartitions("Primary[]#006: 031, 032, 033, 034, 035, 036");
+        assertEquals(6, aValues.length);
+
+        aValues = PartitionHelper.extractPartitions("Primary[]#006:+031,+032,+033,+034,+035,+036");
         assertEquals(6, aValues.length);
         }
 
