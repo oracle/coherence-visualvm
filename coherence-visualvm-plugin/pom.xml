@@ -68,6 +68,10 @@
     </dependency>
     <dependency>
       <groupId>org.graalvm.visualvm.api</groupId>
+      <artifactId>org-graalvm-visualvm-threaddump</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.visualvm.api</groupId>
       <artifactId>org-graalvm-visualvm-charts</artifactId>
     </dependency>
     <dependency>

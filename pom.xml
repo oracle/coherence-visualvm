@@ -124,6 +124,11 @@
       </dependency>
       <dependency>
         <groupId>org.graalvm.visualvm.api</groupId>
+        <artifactId>org-graalvm-visualvm-threaddump</artifactId>
+        <version>${visualvm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.graalvm.visualvm.api</groupId>
         <artifactId>org-graalvm-visualvm-core</artifactId>
         <version>${visualvm.version}</version>
       </dependency>
