@@ -46,5 +46,4 @@ public final class ThreadDumpImpl extends ThreadDump
         {
         getStorage().setCustomProperty( "prop_view_closable", Boolean.toString(closable));
         }
-
     }
