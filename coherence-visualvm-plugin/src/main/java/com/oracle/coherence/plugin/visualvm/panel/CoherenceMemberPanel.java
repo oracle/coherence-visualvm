@@ -50,12 +50,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import java.util.Set;
 import java.util.logging.Logger;
 import com.oracle.coherence.plugin.visualvm.threaddump.ThreadDumpImpl;
 import javax.swing.*;
@@ -584,7 +588,23 @@ public class CoherenceMemberPanel
                 // create a temp file
                 try
                     {
-                    File fileTemp = Files.createTempFile("node-" + nNode + "-" , null).toFile();
+                    File   fileTemp = null;
+                    String sPrefix  = "node-" + nNode + "-";
+
+                    if (System.getProperty("os.name").toLowerCase().contains("win"))
+                        {
+                        fileTemp = Files.createTempFile(sPrefix, "suffix").toFile();
+                        fileTemp.setReadable(true, true);
+                        fileTemp.setWritable(true, true);
+                        fileTemp.setExecutable(true, true);
+                        }
+                    else
+                        {
+                        FileAttribute<Set<PosixFilePermission>> attr =
+                                PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------"));
+                        fileTemp = Files.createTempFile(sPrefix , null, attr).toFile();
+                        }
+
                     try (PrintWriter pw = new PrintWriter(fileTemp, "UTF-8"))
                         {
                         pw.write(sThreadDump);
@@ -599,7 +619,7 @@ public class CoherenceMemberPanel
                     }
                 catch (IOException e)
                     {
-                    e.printStackTrace();
+                    LOGGER.warning(e.getMessage());
                     }
                 }
             }
