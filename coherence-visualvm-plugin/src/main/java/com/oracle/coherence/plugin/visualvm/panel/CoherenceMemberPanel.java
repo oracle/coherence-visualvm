@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -46,6 +46,10 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -53,6 +57,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import java.util.logging.Logger;
+import com.oracle.coherence.plugin.visualvm.threaddump.ThreadDumpImpl;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
@@ -60,6 +65,8 @@ import javax.swing.border.TitledBorder;
 
 import javax.swing.event.ChangeListener;
 import org.graalvm.visualvm.charts.SimpleXYChartSupport;
+import org.graalvm.visualvm.core.datasource.DataSource;
+import org.graalvm.visualvm.core.ui.DataSourceWindowManager;
 import org.openide.awt.StatusDisplayer;
 
 import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
@@ -515,7 +522,7 @@ public class CoherenceMemberPanel
 
                             DialogHelper.showInfoDialog(getLocalText("LBL_thread_dump_confirmation"));
 
-                            StringBuilder sb = new StringBuilder(sMessage).append("\n").append(generateHeader(nNode));
+                            StringBuilder sb = new StringBuilder(sMessage);
 
                             Timer timer = new Timer(nDelay * 1000, null);
 
@@ -542,7 +549,7 @@ public class CoherenceMemberPanel
                                         timer.stop();
                                         status[0] = StatusDisplayer.getDefault().setStatusText(getLocalText("LBL_thread_dump_completed"),5);
                                         status[0].clear(5000);
-                                        showThreadDumpResult(nNode, sb.toString());
+                                        showThreadDumpInVisualVM(nNode, sb.toString());
                                         }
                                     }
 
@@ -555,7 +562,7 @@ public class CoherenceMemberPanel
                         }
                     else
                         {
-                        showThreadDumpResult(nNodeId, generateHeader(nNodeId) + " " + m_requestSender.getNodeState(nNodeId));
+                        showThreadDumpInVisualVM(nNodeId, m_requestSender.getNodeState(nNodeId));
                         }
                     }
                 catch (Exception ee)
@@ -568,17 +575,34 @@ public class CoherenceMemberPanel
             // ------ helpers -----------------------------------------------
 
             /**
-             * Display the thread dump result.
-             *
-             * @param nNode       node id
-             * @param sThreadDump the result
+             * Show the therad dump result in VisualVM thread dump viewer.
+             * @param nNode        node id
+             * @param sThreadDump  thread dump content
              */
-            private void showThreadDumpResult(int nNode, String sThreadDump)
+            private void showThreadDumpInVisualVM(int nNode, String sThreadDump)
                 {
-                showMessageDialog(getLocalizedText("LBL_state_for_node") + " " + nNode,
-                        sThreadDump, JOptionPane.INFORMATION_MESSAGE, 500, 400, true);
+                // create a temp file
+                try
+                    {
+                    File fileTemp = Files.createTempFile("node-" + nNode + "-" , null).toFile();
+                    try (PrintWriter pw = new PrintWriter(fileTemp, "UTF-8"))
+                        {
+                        pw.write(sThreadDump);
+                        }
+
+                    final ThreadDumpImpl threadDump = new ThreadDumpImpl(fileTemp, null);
+
+                    DataSource.EVENT_QUEUE.post(new Runnable()
+                        {
+                        public void run() { DataSourceWindowManager.sharedInstance().openDataSource(threadDump); }
+                        });
+                    }
+                catch (IOException e)
+                    {
+                    e.printStackTrace();
+                    }
                 }
-        }
+            }
 
     /**
      * Generate a thread dump and save the output in the {@link StringBuilder}.
