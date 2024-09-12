@@ -588,22 +588,16 @@ public class CoherenceMemberPanel
                 // create a temp file
                 try
                     {
-                    File   fileTemp = null;
-                    String sPrefix  = "node-" + nNode + "-";
+                    String sPrefix     = "node-" + nNode + "-";
+                    File  fileTempDir = new File(System.getProperty("java.io.tmpdir"));
+                    File  fileTemp    = File.createTempFile(sPrefix, null, fileTempDir);
+                    fileTemp.setReadable(false);
+                    fileTemp.setWritable(false);
+                    fileTemp.setExecutable(false);
+                    fileTemp.setReadable(true, true);
+                    fileTemp.setWritable(true, true);
+                    fileTemp.setExecutable(true, true);
 
-                    if (System.getProperty("os.name").toLowerCase().contains("win"))
-                        {
-                        fileTemp = Files.createTempFile(sPrefix, "suffix").toFile();
-                        fileTemp.setReadable(true, true);
-                        fileTemp.setWritable(true, true);
-                        fileTemp.setExecutable(true, true);
-                        }
-                    else
-                        {
-                        FileAttribute<Set<PosixFilePermission>> attr =
-                                PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------"));
-                        fileTemp = Files.createTempFile(sPrefix , null, attr).toFile();
-                        }
 
                     try (PrintWriter pw = new PrintWriter(fileTemp, "UTF-8"))
                         {
