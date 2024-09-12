@@ -49,17 +49,13 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.attribute.FileAttribute;
-import java.nio.file.attribute.PosixFilePermission;
-import java.nio.file.attribute.PosixFilePermissions;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import java.util.Set;
 import java.util.logging.Logger;
 import com.oracle.coherence.plugin.visualvm.threaddump.ThreadDumpImpl;
 import javax.swing.*;
@@ -278,7 +274,6 @@ public class CoherenceMemberPanel
             {
             GraphHelper.addValuesToClusterMemoryGraph(f_memoryGraph, cTotalMemory, cTotalMemoryUsed);
             }
-
         }
 
     @Override
@@ -591,13 +586,17 @@ public class CoherenceMemberPanel
                     String sPrefix     = "node-" + nNode + "-";
                     File  fileTempDir = new File(System.getProperty("java.io.tmpdir"));
                     File  fileTemp    = File.createTempFile(sPrefix, null, fileTempDir);
-                    fileTemp.setReadable(false);
-                    fileTemp.setWritable(false);
-                    fileTemp.setExecutable(false);
-                    fileTemp.setReadable(true, true);
-                    fileTemp.setWritable(true, true);
-                    fileTemp.setExecutable(true, true);
+                    boolean fResult1  = fileTemp.setReadable(false);
+                    boolean fResult2 = fileTemp.setWritable(false);
+                    boolean fResult3 = fileTemp.setExecutable(false);
+                    boolean fResult4 = fileTemp.setReadable(true, true);
+                    boolean fResult5 = fileTemp.setWritable(true, true);
+                    boolean fResult6 = fileTemp.setExecutable(true, true);
 
+                    if (!fResult1 || !fResult2 || !fResult3 || !fResult4 || !fResult5 || !fResult6)
+                        {
+                        throw new RuntimeException("unable to set file permissions for " + fileTemp.getAbsolutePath());
+                        }
 
                     try (PrintWriter pw = new PrintWriter(fileTemp, "UTF-8"))
                         {
