@@ -586,16 +586,19 @@ public class CoherenceMemberPanel
                     String sPrefix     = "node-" + nNode + "-";
                     File  fileTempDir = new File(System.getProperty("java.io.tmpdir"));
                     File  fileTemp    = File.createTempFile(sPrefix, null, fileTempDir);
-                    boolean fResult1  = fileTemp.setReadable(false);
-                    boolean fResult2 = fileTemp.setWritable(false);
-                    boolean fResult3 = fileTemp.setExecutable(false);
-                    boolean fResult4 = fileTemp.setReadable(true, true);
-                    boolean fResult5 = fileTemp.setWritable(true, true);
-                    boolean fResult6 = fileTemp.setExecutable(true, true);
-
-                    if (!fResult1 || !fResult2 || !fResult3 || !fResult4 || !fResult5 || !fResult6)
+                    if (!System.getProperty("os.name").toLowerCase().contains("win"))
                         {
-                        throw new RuntimeException("unable to set file permissions for " + fileTemp.getAbsolutePath());
+                        boolean fResult1  = fileTemp.setReadable(false);
+                        boolean fResult2 = fileTemp.setWritable(false);
+                        boolean fResult3 = fileTemp.setExecutable(false);
+                        boolean fResult4 = fileTemp.setReadable(true, true);
+                        boolean fResult5 = fileTemp.setWritable(true, true);
+                        boolean fResult6 = fileTemp.setExecutable(true, true);
+
+                        if (!fResult1 || !fResult2 || !fResult3 || !fResult4 || !fResult5 || !fResult6)
+                            {
+                            throw new RuntimeException("unable to set file permissions for " + fileTemp.getAbsolutePath());
+                            }
                         }
 
                     try (PrintWriter pw = new PrintWriter(fileTemp, "UTF-8"))
