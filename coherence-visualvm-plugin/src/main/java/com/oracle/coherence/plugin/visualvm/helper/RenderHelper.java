@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -652,14 +652,15 @@ public class RenderHelper
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
             boolean hasFocus, int row, int column)
             {
-            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            Component c     = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            String    sText = getText();
 
-            if ("ERROR".equals(getText()))
+            if ("ERROR".equals(sText))
                 {
                 setBackground(Color.red);
                 setForeground(Color.white);
                 }
-            else if ("BACKLOG_EXCESSIVE".equals(getText()))
+            else if ("BACKLOG_EXCESSIVE".equals(sText) || sText != null && sText.contains("_WAIT"))
                 {
                 setBackground(Color.orange);
                 setForeground(Color.black);
