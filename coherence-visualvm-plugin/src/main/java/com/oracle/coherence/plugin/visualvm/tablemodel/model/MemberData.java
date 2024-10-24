@@ -102,11 +102,11 @@ public class MemberData
                                (Integer) data.getColumn(MemberData.MAX_MEMORY)
                                - (Integer) data.getColumn(MemberData.FREE_MEMORY));
 
-                data.setColumn(MemberData.MACHINE_NAME, (String) getAttributeValueAsString(listAttr, ATTR_MACHINE_NAME));
-                data.setColumn(MemberData.UNICAST_ADDRESS, (String) getAttributeValueAsString(listAttr, ATTR_UNICAST_ADDRESS));
+                data.setColumn(MemberData.MACHINE_NAME, getAttributeValueAsString(listAttr, ATTR_MACHINE_NAME));
+                data.setColumn(MemberData.UNICAST_ADDRESS,getAttributeValueAsString(listAttr, ATTR_UNICAST_ADDRESS));
 
-                data.setColumn(MemberData.ROLE_NAME, (String) getAttributeValueAsString(listAttr, ATTR_ROLE_NAME));
-                data.setColumn(MemberData.PRODUCT_EDITION, (String) getAttributeValueAsString(listAttr, ATTR_PRODUCT_EDITION));
+                data.setColumn(MemberData.ROLE_NAME, getAttributeValueAsString(listAttr, ATTR_ROLE_NAME));
+                data.setColumn(MemberData.PRODUCT_EDITION, getAttributeValueAsString(listAttr, ATTR_PRODUCT_EDITION));
                 data.setColumn(MemberData.PORT, Integer.parseInt(getAttributeValueAsString(listAttr, ATTR_UNICAST_PORT)));
                 data.setColumn(MemberData.STORAGE_ENABLED, "true");
 
@@ -210,37 +210,37 @@ public class MemberData
     /**
      * Array index for node id.
      */
-    public static int NODE_ID = 0;
+    public static final int NODE_ID = 0;
 
     /**
      * Array index for machine name.
      */
-    public static int MACHINE_NAME = 1;
+    public static final int MACHINE_NAME = 1;
 
     /**
      * Array index for address.
      */
-    public static int UNICAST_ADDRESS = 2;
+    public static final int UNICAST_ADDRESS = 2;
 
     /**
      * Array index for port.
      */
-    public static int PORT = 3;
+    public static final int PORT = 3;
 
     /**
      * Array index for role name.
      */
-    public static int ROLE_NAME = 4;
+    public static final int ROLE_NAME = 4;
 
     /**
      * Array index for publisher success rate.
      */
-    public static int PUBLISHER_SUCCESS = 5;
+    public static final int PUBLISHER_SUCCESS = 5;
 
     /**
      * Array index for receiver success rate.
      */
-    public static int RECEIVER_SUCCESS = 6;
+    public static final int RECEIVER_SUCCESS = 6;
 
     /**
      * Array index for send queue size.
@@ -250,27 +250,27 @@ public class MemberData
     /**
      * Array index for max memory.
      */
-    public static int MAX_MEMORY = 8;
+    public static final int MAX_MEMORY = 8;
 
     /**
      * Array index for used memory.
      */
-    public static int USED_MEMORY = 9;
+    public static final int USED_MEMORY = 9;
 
     /**
      * Array index for free memory.
      */
-    public static int FREE_MEMORY = 10;
+    public static final int FREE_MEMORY = 10;
 
     /**
      * Array index for storage-enabled.
      */
-    public static int STORAGE_ENABLED = 11;
+    public static final int STORAGE_ENABLED = 11;
 
     /**
      * Array index for ProductEdition.
      */
-    public static int PRODUCT_EDITION = 12;
+    public static final int PRODUCT_EDITION = 12;
 
     /**
      * The logger object to use.
