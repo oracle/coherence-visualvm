@@ -677,8 +677,8 @@ public class CoherenceMemberPanel
                 // this is the node
                 sb.append(asColumns[MemberData.NODE_ID]).append(": ")
                     .append(entry.getValue().getColumn(MemberData.NODE_ID).toString()).append("\n")
-                    .append(asColumns[MemberData.ADDRESS]).append(": ")
-                    .append(entry.getValue().getColumn(MemberData.ADDRESS).toString()).append("\n")
+                    .append(asColumns[MemberData.MACHINE_NAME]).append(": ")
+                    .append(entry.getValue().getColumn(MemberData.MACHINE_NAME).toString()).append("\n")
                     .append(asColumns[MemberData.PORT]).append(": ")
                     .append(entry.getValue().getColumn(MemberData.PORT).toString()).append("\n")
                     .append(asColumns[MemberData.ROLE_NAME]).append(": ")

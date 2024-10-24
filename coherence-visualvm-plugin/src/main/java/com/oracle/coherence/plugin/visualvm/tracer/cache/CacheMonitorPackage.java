@@ -65,7 +65,7 @@ public class CacheMonitorPackage
     @Override
     public TracerProbeDescriptor[] getProbeDescriptors() {
         m_memorySizeProbeDescriptor = CacheMemorySizeProbe.createDescriptor(f_model != null);
-        m_SizeProbeDescriptor       = CacheSizeProbe.createDescriptor(f_model != null);
+        m_SizeProbeDescriptor       = CacheCountProbe.createDescriptor(f_model != null);
 
         return new TracerProbeDescriptor[] {
             m_memorySizeProbeDescriptor,
@@ -88,7 +88,7 @@ public class CacheMonitorPackage
             {
             if (m_SizeProbe == null)
                 {
-                m_SizeProbe = new CacheSizeProbe(this);
+                m_SizeProbe = new CacheCountProbe(this);
                 }
             return m_SizeProbe;
             }

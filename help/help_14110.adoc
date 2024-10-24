@@ -84,6 +84,7 @@ All attributes are from `Node MBean` (`Coherence:type=Node,nodeId=n`).
 !===
 |**Column** | **Source / Comment**
 |Node Id| nodeId (key)
+|Machine Name | MachineName
 |Unicast Address | UnicastAddress
 |Port | UnicastPort
 |Publisher Success Rate | PublisherSuccessRate

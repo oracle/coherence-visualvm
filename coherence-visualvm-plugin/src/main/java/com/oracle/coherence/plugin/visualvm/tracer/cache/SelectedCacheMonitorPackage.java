@@ -63,7 +63,7 @@ public class SelectedCacheMonitorPackage
 
     @Override
     public TracerProbeDescriptor[] getProbeDescriptors() {
-        m_sizeProbeDescriptor      = SelectedCacheSizeProbe.createDescriptor(f_model != null);
+        m_sizeProbeDescriptor      = SelectedCacheCountProbe.createDescriptor(f_model != null);
         m_memoryProbeDescriptor    = SelectedCacheMemoryProbe.createDescriptor(f_model != null);
         m_listenersProbeDescriptor = SelectedCacheListenersProbe.createDescriptor(f_model != null);
         m_queryProbeDescriptor     = SelectedCacheQueryProbe.createDescriptor(f_model != null);
@@ -83,7 +83,7 @@ public class SelectedCacheMonitorPackage
             {
             if (m_sizeProbe == null)
                 {
-                m_sizeProbe = new SelectedCacheSizeProbe(this);
+                m_sizeProbe = new SelectedCacheCountProbe(this);
                 }
             return m_sizeProbe;
             }

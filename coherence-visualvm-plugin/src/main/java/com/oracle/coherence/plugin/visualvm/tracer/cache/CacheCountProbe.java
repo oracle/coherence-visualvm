@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2007, 2018, Oracle and/or its affiliates. All rights reserved.
+ *  Copyright (c) 2023, 2024, Oracle and/or its affiliates. All rights reserved.
  *  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  *  This code is free software; you can redistribute it and/or modify it
@@ -25,10 +25,9 @@
 
 package com.oracle.coherence.plugin.visualvm.tracer.cache;
 
-
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheDetailData;
+import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheData;
 
 import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe;
 
@@ -41,9 +40,9 @@ import static com.oracle.coherence.plugin.visualvm.Localization.getLocalText;
 /**
  * Tracer probe to return the total number of cache entries across all services.
  *
- * @author tam 2024.03.13
+ * @author tam 2024.03.03
  */
-public class SelectedCacheSizeProbe
+public class CacheCountProbe
         extends AbstractCoherenceMonitorProbe
     {
     // ----- constructors ---------------------------------------------------
@@ -52,7 +51,7 @@ public class SelectedCacheSizeProbe
      * Construct the probe.
      * @param resolver {@link MonitoredDataResolver}.
      */
-    public SelectedCacheSizeProbe(MonitoredDataResolver resolver)
+    public CacheCountProbe(MonitoredDataResolver resolver)
         {
         super(1, createItemDescriptors(), resolver);
         }
@@ -62,7 +61,7 @@ public class SelectedCacheSizeProbe
     @Override
     public long[] getValues(VisualVMModel model)
         {
-        return new long[]{getSelectedCacheSum(model, VisualVMModel.DataType.CACHE_DETAIL, CacheDetailData.SIZE)};
+        return getSingValueSum(model, VisualVMModel.DataType.CACHE, CacheData.SIZE, ZERO_VALUES1);
         }
 
     /**
@@ -72,19 +71,15 @@ public class SelectedCacheSizeProbe
      */
     public static TracerProbeDescriptor createDescriptor(boolean available)
         {
-        return new TracerProbeDescriptor(getLocalText("LBL_selected_cache_size"),
-                getLocalText("LBL_selected_cache_size_desc"), ICON, 10, available);
+        return new TracerProbeDescriptor(getLocalText(LBL),
+                getLocalText("LBL_cache_size_desc"), ICON, 10, available);
         }
 
-    /**
-     * Create the {@link ProbeItemDescriptor}s for this probe.
-     * @return the {@link ProbeItemDescriptor}s for this probe
-     */
     private static ProbeItemDescriptor[] createItemDescriptors()
         {
         return new ProbeItemDescriptor[]
             {
-            ProbeItemDescriptor.continuousLineFillItem(getLocalText("LBL_cache") + " - " + getLocalText(LBL),
+            ProbeItemDescriptor.continuousLineFillItem(getLocalText("LBL_all_caches") + " - " + getLocalText(LBL),
                     getMonitorsString(LBL), ItemValueFormatter.DEFAULT_DECIMAL,
                     1d, 0, 0),
             };
