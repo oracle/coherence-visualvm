@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -332,7 +332,7 @@ public class CoherenceClusterSnapshotPanel
             {
             sb.append("<tr>")
                     .append(td(entry.getValue().getColumn(MemberData.NODE_ID).toString()))
-                    .append(td(entry.getValue().getColumn(MemberData.ADDRESS).toString()))
+                    .append(td(entry.getValue().getColumn(MemberData.MACHINE_NAME).toString()))
                     .append(td(entry.getValue().getColumn(MemberData.PORT).toString()))
                     .append(td(entry.getValue().getColumn(MemberData.ROLE_NAME).toString()))
                     .append(td(getPublisherValue(entry.getValue().getColumn(MemberData.PUBLISHER_SUCCESS).toString())))

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -88,7 +88,7 @@ public class MemberData
 
                 AttributeList listAttr = requestSender.getAttributes(nodeNameObjName,
                   new String[] { ATTR_PUB_SUCCESS_RATE, ATTR_REC_SUCCESS_RATE, ATTR_MEM_MAX_MB,
-                                 ATTR_MEM_AVAIL_MB, ATTR_SEND_Q_SIZE, ATTR_UNICAST_ADDR,
+                                 ATTR_MEM_AVAIL_MB, ATTR_SEND_Q_SIZE, ATTR_MACHINE_NAME,
                                  ATTR_ROLE_NAME, ATTR_UNICAST_PORT, ATTR_PRODUCT_EDITION });
 
                 data.setColumn(MemberData.NODE_ID, nodeId);
@@ -102,7 +102,7 @@ public class MemberData
                                (Integer) data.getColumn(MemberData.MAX_MEMORY)
                                - (Integer) data.getColumn(MemberData.FREE_MEMORY));
 
-                data.setColumn(MemberData.ADDRESS, (String) getAttributeValueAsString(listAttr, ATTR_UNICAST_ADDR));
+                data.setColumn(MemberData.MACHINE_NAME, (String) getAttributeValueAsString(listAttr, ATTR_MACHINE_NAME));
 
                 data.setColumn(MemberData.ROLE_NAME, (String) getAttributeValueAsString(listAttr, ATTR_ROLE_NAME));
                 data.setColumn(MemberData.PRODUCT_EDITION, (String) getAttributeValueAsString(listAttr, ATTR_PRODUCT_EDITION));
@@ -146,7 +146,7 @@ public class MemberData
                        (Integer) data.getColumn(MemberData.MAX_MEMORY)
                        - (Integer) data.getColumn(MemberData.FREE_MEMORY));
 
-        data.setColumn(MemberData.ADDRESS, aoColumns[8].toString());
+        data.setColumn(MemberData.MACHINE_NAME, aoColumns[8].toString());
 
         data.setColumn(MemberData.ROLE_NAME, aoColumns[9].toString());
         data.setColumn(MemberData.PORT, Integer.valueOf(getNumberValue(aoColumns[10].toString())));
@@ -189,7 +189,7 @@ public class MemberData
                 data.setColumn(MemberData.USED_MEMORY,
                         (Integer) data.getColumn(MemberData.MAX_MEMORY)
                                 - (Integer) data.getColumn(MemberData.FREE_MEMORY));
-                data.setColumn(MemberData.ADDRESS, clusterMember.get("unicastAddress").asText());
+                data.setColumn(MemberData.MACHINE_NAME, clusterMember.get("machineName").asText());
                 data.setColumn(MemberData.ROLE_NAME, clusterMember.get("roleName").asText());
                 data.setColumn(MemberData.PRODUCT_EDITION, clusterMember.get("productEdition").asText());
                 data.setColumn(MemberData.PORT, Integer.valueOf(getNumberValue(clusterMember.get("unicastPort").asText())));
@@ -212,7 +212,7 @@ public class MemberData
     /**
      * Array index for address.
      */
-    public static int ADDRESS = 1;
+    public static int MACHINE_NAME = 1;
 
     /**
      * Array index for port.
@@ -302,7 +302,7 @@ public class MemberData
     /**
      * JMX attribute name for Unicast Address.
      */
-    private static final String ATTR_UNICAST_ADDR = "UnicastAddress";
+    private static final String ATTR_MACHINE_NAME = "MachineName";
 
     /**
      * JMX attribute name for Role Name.
