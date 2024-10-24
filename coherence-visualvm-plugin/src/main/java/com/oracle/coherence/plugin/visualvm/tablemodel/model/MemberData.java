@@ -245,7 +245,7 @@ public class MemberData
     /**
      * Array index for send queue size.
      */
-    public static int SENDQ_SIZE = 7;
+    public static final int SENDQ_SIZE = 7;
 
     /**
      * Array index for max memory.
