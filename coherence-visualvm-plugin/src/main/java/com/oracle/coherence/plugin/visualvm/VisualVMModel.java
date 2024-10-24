@@ -1533,7 +1533,8 @@ public class VisualVMModel
      */
     private static final String[] MEMBER_LABELS = new String[]
         {
-        Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText("LBL_unicast_address"),
+        Localization.getLocalText(LBL_NODE_ID),  Localization.getLocalText("LBL_machine_name"),
+        Localization.getLocalText("LBL_unicast_address"),
         Localization.getLocalText("LBL_port"), Localization.getLocalText("LBL_role"),
         Localization.getLocalText("LBL_publisher_rate"), Localization.getLocalText("LBL_receiver_rate"),
         Localization.getLocalText("LBL_send_q"), Localization.getLocalText("LBL_max_memory"),

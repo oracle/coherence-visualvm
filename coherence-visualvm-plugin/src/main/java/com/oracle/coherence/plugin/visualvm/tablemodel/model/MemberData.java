@@ -88,7 +88,7 @@ public class MemberData
 
                 AttributeList listAttr = requestSender.getAttributes(nodeNameObjName,
                   new String[] { ATTR_PUB_SUCCESS_RATE, ATTR_REC_SUCCESS_RATE, ATTR_MEM_MAX_MB,
-                                 ATTR_MEM_AVAIL_MB, ATTR_SEND_Q_SIZE, ATTR_MACHINE_NAME,
+                                 ATTR_MEM_AVAIL_MB, ATTR_SEND_Q_SIZE, ATTR_MACHINE_NAME, ATTR_UNICAST_ADDRESS,
                                  ATTR_ROLE_NAME, ATTR_UNICAST_PORT, ATTR_PRODUCT_EDITION });
 
                 data.setColumn(MemberData.NODE_ID, nodeId);
@@ -103,6 +103,7 @@ public class MemberData
                                - (Integer) data.getColumn(MemberData.FREE_MEMORY));
 
                 data.setColumn(MemberData.MACHINE_NAME, (String) getAttributeValueAsString(listAttr, ATTR_MACHINE_NAME));
+                data.setColumn(MemberData.UNICAST_ADDRESS, (String) getAttributeValueAsString(listAttr, ATTR_UNICAST_ADDRESS));
 
                 data.setColumn(MemberData.ROLE_NAME, (String) getAttributeValueAsString(listAttr, ATTR_ROLE_NAME));
                 data.setColumn(MemberData.PRODUCT_EDITION, (String) getAttributeValueAsString(listAttr, ATTR_PRODUCT_EDITION));
@@ -146,7 +147,8 @@ public class MemberData
                        (Integer) data.getColumn(MemberData.MAX_MEMORY)
                        - (Integer) data.getColumn(MemberData.FREE_MEMORY));
 
-        data.setColumn(MemberData.MACHINE_NAME, aoColumns[8].toString());
+        data.setColumn(MemberData.MACHINE_NAME, aoColumns[11].toString());
+        data.setColumn(MemberData.UNICAST_ADDRESS, aoColumns[8].toString());
 
         data.setColumn(MemberData.ROLE_NAME, aoColumns[9].toString());
         data.setColumn(MemberData.PORT, Integer.valueOf(getNumberValue(aoColumns[10].toString())));
@@ -190,6 +192,7 @@ public class MemberData
                         (Integer) data.getColumn(MemberData.MAX_MEMORY)
                                 - (Integer) data.getColumn(MemberData.FREE_MEMORY));
                 data.setColumn(MemberData.MACHINE_NAME, clusterMember.get("machineName").asText());
+                data.setColumn(MemberData.UNICAST_ADDRESS, clusterMember.get("uncasstAddress").asText());
                 data.setColumn(MemberData.ROLE_NAME, clusterMember.get("roleName").asText());
                 data.setColumn(MemberData.PRODUCT_EDITION, clusterMember.get("productEdition").asText());
                 data.setColumn(MemberData.PORT, Integer.valueOf(getNumberValue(clusterMember.get("unicastPort").asText())));
@@ -210,59 +213,64 @@ public class MemberData
     public static int NODE_ID = 0;
 
     /**
-     * Array index for address.
+     * Array index for machine name.
      */
     public static int MACHINE_NAME = 1;
 
     /**
+     * Array index for address.
+     */
+    public static int UNICAST_ADDRESS = 2;
+
+    /**
      * Array index for port.
      */
-    public static int PORT = 2;
+    public static int PORT = 3;
 
     /**
      * Array index for role name.
      */
-    public static int ROLE_NAME = 3;
+    public static int ROLE_NAME = 4;
 
     /**
      * Array index for publisher success rate.
      */
-    public static int PUBLISHER_SUCCESS = 4;
+    public static int PUBLISHER_SUCCESS = 5;
 
     /**
      * Array index for receiver success rate.
      */
-    public static int RECEIVER_SUCCESS = 5;
+    public static int RECEIVER_SUCCESS = 6;
 
     /**
      * Array index for send queue size.
      */
-    public static int SENDQ_SIZE = 6;
+    public static int SENDQ_SIZE = 7;
 
     /**
      * Array index for max memory.
      */
-    public static int MAX_MEMORY = 7;
+    public static int MAX_MEMORY = 8;
 
     /**
      * Array index for used memory.
      */
-    public static int USED_MEMORY = 8;
+    public static int USED_MEMORY = 9;
 
     /**
      * Array index for free memory.
      */
-    public static int FREE_MEMORY = 9;
+    public static int FREE_MEMORY = 10;
 
     /**
      * Array index for storage-enabled.
      */
-    public static int STORAGE_ENABLED = 10;
+    public static int STORAGE_ENABLED = 11;
 
     /**
      * Array index for ProductEdition.
      */
-    public static int PRODUCT_EDITION = 11;
+    public static int PRODUCT_EDITION = 12;
 
     /**
      * The logger object to use.
@@ -303,6 +311,11 @@ public class MemberData
      * JMX attribute name for Unicast Address.
      */
     private static final String ATTR_MACHINE_NAME = "MachineName";
+
+    /**
+     * JMX attribute name for Unicast Address.
+     */
+    private static final String ATTR_UNICAST_ADDRESS = "UnicastAddress";
 
     /**
      * JMX attribute name for Role Name.
