@@ -36,7 +36,7 @@
         <delim>{tab}</delim>
 
         <query>
-            <pattern>Coherence:type=GrpcNamedCacheProxy,*</pattern>
+            <pattern>Coherence:type=%MBEAN%,*</pattern>
             <filter-ref>equals</filter-ref>
         </query>
 

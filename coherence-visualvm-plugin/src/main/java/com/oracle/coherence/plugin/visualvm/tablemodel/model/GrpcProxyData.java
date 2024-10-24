@@ -27,12 +27,15 @@ package com.oracle.coherence.plugin.visualvm.tablemodel.model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.logging.Logger;
 
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
+import com.oracle.coherence.plugin.visualvm.helper.JMXRequestSender;
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
+import javax.management.ObjectName;
 
 /**
  * A class to hold basic gRPC Proxy data.
@@ -79,9 +82,36 @@ public class GrpcProxyData
         data.setColumn(RESPONSES_SENT_COUNT, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
         data.setColumn(MESSAGES_RECEIVED_COUNT, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
         data.setColumn(REQUEST_DURATION_MEAN, Float.parseFloat(aoColumns[nStart++].toString()));
-        data.setColumn(MESSAGE_DURATION_MEAN, Float.parseFloat(aoColumns[nStart++].toString()));
+        data.setColumn(MESSAGE_DURATION_MEAN, Float.parseFloat(aoColumns[nStart].toString()));
 
         return data;
+        }
+
+    @Override
+    public String preProcessReporterXML(VisualVMModel model, String sReporterXML)
+        {
+        String sMBeanName = "GrpcNamedCacheProxy"; // v0 default
+
+        try {
+            // determine if v0 or v1 of gRPC proxy is being used.
+            RequestSender requestSender = model.getRequestSender();
+            if (requestSender instanceof JMXRequestSender)
+                {
+                // check for JMX MBean of type Coherence:type=GrpcProxy
+                JMXRequestSender jmxRequestSender = (JMXRequestSender) requestSender;
+                Set<ObjectName>  setNames         = jmxRequestSender.getV1GrpcProxyMBean();
+                if (setNames != null && !setNames.isEmpty())
+                    {
+                    sMBeanName = "GrpcProxy";
+                    }
+                }
+            }
+        catch (Exception eIgnore)
+            {
+            // ignore
+            }
+
+        return sReporterXML.replaceAll("%MBEAN%", escape(sMBeanName));
         }
 
     @Override
