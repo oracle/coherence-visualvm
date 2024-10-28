@@ -491,7 +491,7 @@ public class VisualVMModel
                                 // manual check as version numbering changed after 35
                                 nVersion = 353;
                                 }
-                            else if (sCoherenceVersion.startsWith("2"))
+                            else if (sCoherenceVersion.startsWith("2") || sCoherenceVersion.startsWith("3"))
                                 {
                                 // check for versions such as 20.06 or 20.06.01 and convert them to an ever-increasing number
                                 // 20.06    -> 2006000

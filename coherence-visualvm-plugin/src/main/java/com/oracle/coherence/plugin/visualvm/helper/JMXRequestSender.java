@@ -454,6 +454,13 @@ public class JMXRequestSender
                     new String[] {String.class.getName()});
         }
 
+    public Set<ObjectName> getV1GrpcProxyMBean()
+            throws Exception
+        {
+        return f_connection.queryNames(new ObjectName("Coherence:type=GrpcProxy,*"), null);
+        }
+
+
     @Override
     public String[] getSnapshots(String sService, String sDomainPartition)
             throws Exception
