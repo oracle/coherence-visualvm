@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -59,7 +59,7 @@ public class CacheFrontDetailData
         AttributeList listAttr = sender.getAttributes(objName,
             new String[]{ ATTR_SIZE, ATTR_UNITS, ATTR_UNIT_FACTOR, ATTR_CACHE_HITS,
                           ATTR_CACHE_MISSES, ATTR_TOTAL_GETS, ATTR_TOTAL_PUTS,
-                          ATTR_HIT_PROBABILITY });
+                          ATTR_HIT_PROBABILITY, ATTR_CACHE_PRUNES, ATTR_CACHE_PRUNES_MILLIS });
 
         data.setColumn(CacheFrontDetailData.NODE_ID, Integer.valueOf(objName.getKeyProperty("nodeId")));
 
@@ -68,6 +68,8 @@ public class CacheFrontDetailData
         data.setColumn(CacheFrontDetailData.CACHE_MISSES, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_CACHE_MISSES)));
         data.setColumn(CacheFrontDetailData.TOTAL_GETS, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_TOTAL_GETS)));
         data.setColumn(CacheFrontDetailData.TOTAL_PUTS, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_TOTAL_PUTS)));
+        data.setColumn(CacheFrontDetailData.CACHE_PRUNES, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_CACHE_PRUNES)));
+        data.setColumn(CacheFrontDetailData.CACHE_PRUNES_MILLIS, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_CACHE_PRUNES_MILLIS)));
         data.setColumn(CacheFrontDetailData.HIT_PROBABILITY, Double.parseDouble(getAttributeValueAsString(listAttr, ATTR_HIT_PROBABILITY)));
 
         return data;
@@ -84,7 +86,9 @@ public class CacheFrontDetailData
         data.setColumn(CacheFrontDetailData.TOTAL_PUTS, Long.valueOf(getNumberValue(aoColumns[8].toString())));
         data.setColumn(CacheFrontDetailData.CACHE_HITS, Long.valueOf(getNumberValue(aoColumns[9].toString())));
         data.setColumn(CacheFrontDetailData.CACHE_MISSES, Integer.valueOf(getNumberValue(aoColumns[10].toString())));
-        data.setColumn(CacheFrontDetailData.HIT_PROBABILITY, Float.valueOf(aoColumns[11].toString()));
+        data.setColumn(CacheFrontDetailData.CACHE_PRUNES, Long.valueOf(getNumberValue(aoColumns[11].toString())));
+        data.setColumn(CacheFrontDetailData.CACHE_PRUNES_MILLIS, Long.valueOf(getNumberValue(aoColumns[12].toString())));
+        data.setColumn(CacheFrontDetailData.HIT_PROBABILITY, Float.valueOf(aoColumns[13].toString()));
 
         return data;
         }
@@ -124,7 +128,18 @@ public class CacheFrontDetailData
     public static final int CACHE_MISSES = 5;
 
     /**
+     * Array index for cache prunes.
+     */
+    public static final int CACHE_PRUNES = 6;
+
+    /**
+     * Array index for cache prunes millis.
+     */
+    public static final int CACHE_PRUNES_MILLIS = 7;
+
+    /**
      * Array index for hit probability.
      */
-    public static final int HIT_PROBABILITY = 6;
+    public static final int HIT_PROBABILITY = 8;
+
     }

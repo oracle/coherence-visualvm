@@ -174,6 +174,8 @@ public class CoherenceCachePanel
 
         RenderHelper.setColumnRenderer(f_tableDetail, CacheDetailData.CACHE_HITS, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_tableDetail, CacheDetailData.CACHE_MISSES, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableDetail, CacheDetailData.CACHE_PRUNES, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_tableDetail, CacheDetailData.CACHE_PRUNES_MILLIS, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_tableDetail, CacheDetailData.MEMORY_BYTES, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_tableDetail, CacheDetailData.TOTAL_GETS, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_tableDetail, CacheDetailData.TOTAL_PUTS, new RenderHelper.IntegerRenderer());
