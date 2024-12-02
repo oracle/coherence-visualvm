@@ -153,7 +153,7 @@ public class CacheDetailData
         AttributeList listAttr = requestSender.getAttributes(objName,
             new String[]{ ATTR_SIZE, ATTR_UNITS, ATTR_UNIT_FACTOR, ATTR_CACHE_HITS,
                           ATTR_CACHE_MISSES, ATTR_TOTAL_GETS, ATTR_TOTAL_PUTS,
-                          ATTR_HIT_PROBABILITY });
+                          ATTR_HIT_PROBABILITY, ATTR_CACHE_PRUNES, ATTR_CACHE_PRUNES_MILLIS });
 
         data.setColumn(CacheDetailData.NODE_ID, Integer.valueOf(objName.getKeyProperty("nodeId")));
 
@@ -164,6 +164,8 @@ public class CacheDetailData
         data.setColumn(CacheDetailData.CACHE_MISSES, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_CACHE_MISSES)));
         data.setColumn(CacheDetailData.TOTAL_GETS, Long.parseLong(getAttributeValueAsString(listAttr, ATTR_TOTAL_GETS)));
         data.setColumn(CacheDetailData.TOTAL_PUTS,  Long.parseLong(getAttributeValueAsString(listAttr, ATTR_TOTAL_PUTS)));
+        data.setColumn(CacheDetailData.CACHE_PRUNES,  Long.parseLong(getAttributeValueAsString(listAttr, ATTR_CACHE_PRUNES)));
+        data.setColumn(CacheDetailData.CACHE_PRUNES_MILLIS,  Long.parseLong(getAttributeValueAsString(listAttr, ATTR_CACHE_PRUNES_MILLIS)));
         data.setColumn(CacheDetailData.HIT_PROBABILITY, Double.parseDouble(getAttributeValueAsString(listAttr, ATTR_HIT_PROBABILITY)));
 
         return data;
@@ -186,7 +188,9 @@ public class CacheDetailData
         data.setColumn(CacheDetailData.TOTAL_PUTS, Long.valueOf(getNumberValue(aoColumns[8].toString())));
         data.setColumn(CacheDetailData.CACHE_HITS, Long.valueOf(getNumberValue(aoColumns[9].toString())));
         data.setColumn(CacheDetailData.CACHE_MISSES, Integer.valueOf(getNumberValue(aoColumns[10].toString())));
-        data.setColumn(CacheDetailData.HIT_PROBABILITY, Float.valueOf(aoColumns[11].toString()));
+        data.setColumn(CacheDetailData.CACHE_PRUNES, Long.valueOf(getNumberValue(aoColumns[11].toString())));
+        data.setColumn(CacheDetailData.CACHE_PRUNES_MILLIS, Long.valueOf(getNumberValue(aoColumns[12].toString())));
+        data.setColumn(CacheDetailData.HIT_PROBABILITY, Float.valueOf(aoColumns[13].toString()));
 
         return data;
         }
@@ -278,6 +282,10 @@ public class CacheDetailData
                             Long.valueOf(nodeCacheMember.get("cacheHits").asText()));
                     data.setColumn(CacheDetailData.CACHE_MISSES,
                             Integer.valueOf(nodeCacheMember.get("cacheMisses").asText()));
+                    data.setColumn(CacheDetailData.CACHE_PRUNES,
+                            Long.valueOf(nodeCacheMember.get("cachePrunes").asText()));
+                    data.setColumn(CacheDetailData.CACHE_PRUNES_MILLIS,
+                            Long.valueOf(nodeCacheMember.get("cachePrunesMillis").asText()));
                     data.setColumn(CacheDetailData.HIT_PROBABILITY,
                             Float.valueOf(nodeCacheMember.get("hitProbability").floatValue()));
 
@@ -345,9 +353,19 @@ public class CacheDetailData
     public static final int CACHE_MISSES = 6;
 
     /**
+     * Array index for cache prunes.
+     */
+    public static final int CACHE_PRUNES = 7;
+
+    /**
+     * Array index for cache prunes millis.
+     */
+    public static final int CACHE_PRUNES_MILLIS = 8;
+
+    /**
      * Array index for hit probability.
      */
-    public static final int HIT_PROBABILITY = 7;
+    public static final int HIT_PROBABILITY = 9;
 
     /**
      * Report for cache details data;
@@ -439,4 +457,14 @@ public class CacheDetailData
      * JMX attribute name for Hit Probability.
      */
     protected static final String ATTR_HIT_PROBABILITY = "HitProbability";
+    
+    /**
+     * JMX attribute name for Cache Prunes.
+     */
+    protected static final String ATTR_CACHE_PRUNES = "CachePrunes";
+
+    /**
+     * JMX attribute name for Cache Prunes Millis.
+     */
+    protected static final String ATTR_CACHE_PRUNES_MILLIS = "CachePrunesMillis";
     }

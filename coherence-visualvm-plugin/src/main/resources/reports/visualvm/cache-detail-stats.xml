@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-  Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+  Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
   This code is free software; you can redistribute it and/or modify it
@@ -100,19 +100,27 @@
 				<name>CacheMisses</name>
 			</column>
 
+			<column id="CachePrunes">
+				<name>CachePrunes</name>
+			</column>
+
+			<column id="CachePrunesMillis">
+				<name>CachePrunesMillis</name>
+			</column>
+
 			<column id="HitProbability">
 				<name>HitProbability</name>
 			</column>
 
-            <column id="Units">
-                <name>Units</name>
-                <hidden>true</hidden>
-            </column>
+			<column id="Units">
+					<name>Units</name>
+					<hidden>true</hidden>
+			</column>
 
-            <column id="UnitFactor">
-                <name>UnitFactor</name>
-                <hidden>true</hidden>
-            </column>
+			<column id="UnitFactor">
+					<name>UnitFactor</name>
+					<hidden>true</hidden>
+			</column>
 		</row>
 	</report>
 </report-config>

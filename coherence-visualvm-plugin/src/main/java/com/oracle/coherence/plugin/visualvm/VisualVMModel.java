@@ -1490,7 +1490,8 @@ public class VisualVMModel
         Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText(LBL_SIZE),
         Localization.getLocalText(LBL_MEMORY_BYTES), Localization.getLocalText(LBL_TOTAL_GETS),
         Localization.getLocalText(LBL_TOTAL_PUTS), Localization.getLocalText(LBL_CACHE_HITS),
-        Localization.getLocalText(LBL_CACHE_MISSES), Localization.getLocalText("LBL_hit_probability")
+        Localization.getLocalText(LBL_CACHE_MISSES), Localization.getLocalText("LBL_cache_prunes"),
+        Localization.getLocalText("LBL_cache_prunes_millis"), Localization.getLocalText("LBL_hit_probability")
         };
 
     /**
@@ -1512,6 +1513,7 @@ public class VisualVMModel
         Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText(LBL_SIZE),
         Localization.getLocalText(LBL_TOTAL_GETS), Localization.getLocalText(LBL_TOTAL_PUTS),
         Localization.getLocalText(LBL_CACHE_HITS), Localization.getLocalText(LBL_CACHE_MISSES),
+        Localization.getLocalText("LBL_cache_prunes"), Localization.getLocalText("LBL_cache_prunes_millis"),
         Localization.getLocalText("LBL_hit_probability")
         };
 
