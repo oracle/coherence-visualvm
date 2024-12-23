@@ -46,6 +46,7 @@ jobs:
         coherenceVersion:
           - 24.09.1-SNAPSHOT
           - 22.06.11-SNAPSHOT
+          - 14.1.2-0-1-SNAPSHOT
 
     steps:
     - name: Checkout
