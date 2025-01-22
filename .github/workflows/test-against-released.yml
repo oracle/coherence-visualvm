@@ -1,5 +1,5 @@
 #
-#  Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
+#  Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
 #  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 #
 #  This code is free software; you can redistribute it and/or modify it
@@ -41,12 +41,13 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - 14.1.1-0-18
           - 14.1.1-0-19
+          - 14.1.1-0-20
           - 22.06.10
-          - 22.06.9
-          - 24.09
+          - 22.06.11
+          - 24.09.2
           - 14.1.2-0-0
+          - 14.1.2-0-1
 
     steps:
     - name: Checkout
