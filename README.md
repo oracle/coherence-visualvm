@@ -78,7 +78,7 @@ Once the Plugin is installed, you can double-click on a Coherence process in the
 
 > Note: If you are connecting to a JVM running Helidon 4.x, and it fails, check the log file in `VisualVM->About->Log File`.
 > If you see the following exception: `java.io.InvalidClassException: filter status: REJECTED`, add "java.rmi.*" to the `patterns` entry in 
-> `src/main/resources/META-INF/helidon/serial-config.properties`.
+> `src/main/resources/META-INF/helidon/serial-config.properties` in your application.
 
 ### 2. Connecting via Management over REST
 
