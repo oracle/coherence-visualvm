@@ -74,7 +74,11 @@ Other useful resources:
 
 ### 1. Connecting Directly to a Process
 
-Once the Plugin is installed, you can double-click on a Coherence process in the left pane, usually `com.tangosol.net.DefaultCacheServer`, after which a `Coherence` tab will be displayed.
+Once the Plugin is installed, you can double-click on a Coherence process in the left pane, usually `com.tangosol.net.DefaultCacheServer` or `com.tangosol.net.Coherence`, after which a `Coherence` tab will be displayed.
+
+> Note: If you are connecting to a JVM running Helidon 4.x  and it fails, check the log file in `VisualVM->About->Log File.
+> and If you see the following exception: `java.io.InvalidClassException: filter status: REJECTED`, add "java.rmi.*" to the patterns entry in 
+> `src/main/resources/META-INF/helidon/serial-config.properties`.
 
 ### 2. Connecting via Management over REST
 
@@ -133,6 +137,7 @@ connect via REST as described above or if you want to connect to the `domain run
 7. Right-Click on the connection and select `Open`. The Coherence tab will be displayed.
 
    If you wish to secure access to the REST endpoints or via JMX, please refer to either the [Coherence Documentation](https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.2206/index.html) or relevant JMX security documentation.
+
 
 ## <a id="prefs"></a> Changing the Plugin Behaviour via the Options Tab
 
