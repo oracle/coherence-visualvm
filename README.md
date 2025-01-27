@@ -212,6 +212,13 @@ From the VisualVM website:
 
 After installation, when you connect to a cluster via JMX, you will see the `Tracer` tab as shown below:
 
+*Installation Note*
+
+When you install / update the Coherence VisualVM plugin, the “Tracer-Monitor Probes” plugin dependency will be installed if you do not already have it installed. 
+
+If your VisualVM installation does not have access to the Internet to download this dependency, you should download and install the Tracer framework 
+from [the VisualVM download site](https://github.com/oracle/visualvm/releases/download/2.1.2/org-graalvm-visualvm-modules-tracer.nbm).
+
 ![Tracer Tab](assets/visualvm-tracer.png)
 
 There are a number of expandable groups allowing you to choose Coherence related probes to display on the timeline including:
