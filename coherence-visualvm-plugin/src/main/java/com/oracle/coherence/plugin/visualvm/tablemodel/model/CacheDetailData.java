@@ -258,6 +258,13 @@ public class CacheDetailData
         JsonNode rootNode         = requestSender.getDataForCacheMembers(sServiceName, selectedCache.getY(), sDomainPartition);
         JsonNode nodeCacheMembers = rootNode.get("items");
 
+        // get columns
+
+        boolean fIsBack = m_type == CacheType.BACK_TIER;
+
+        // the following offset is required due to the difference in the column numbers for front and back
+        int     nOffset = fIsBack ? 0 : 1;
+
         if (nodeCacheMembers != null && nodeCacheMembers.isArray())
             {
             for (int i = 0; i < nodeCacheMembers.size(); i++)
@@ -268,26 +275,24 @@ public class CacheDetailData
                     {
                     Data data = new CacheDetailData();
 
-                    data.setColumn(CacheDetailData.NODE_ID,
-                            Integer.valueOf(nodeCacheMember.get("nodeId").asText()));
-                    data.setColumn(CacheDetailData.SIZE,
-                            Integer.valueOf(nodeCacheMember.get("size").asText()));
-                    data.setColumn(CacheDetailData.MEMORY_BYTES,
-                            nodeCacheMember.get("units").longValue() * nodeCacheMember.get("unitFactor").longValue());
-                    data.setColumn(CacheDetailData.TOTAL_GETS,
-                            Long.valueOf(nodeCacheMember.get("totalGets").asText()));
-                    data.setColumn(CacheDetailData.TOTAL_PUTS,
-                            Long.valueOf(nodeCacheMember.get("totalPuts").asText()));
-                    data.setColumn(CacheDetailData.CACHE_HITS,
-                            Long.valueOf(nodeCacheMember.get("cacheHits").asText()));
-                    data.setColumn(CacheDetailData.CACHE_MISSES,
-                            Integer.valueOf(nodeCacheMember.get("cacheMisses").asText()));
+                    data.setColumn(CacheDetailData.NODE_ID, Integer.valueOf(nodeCacheMember.get("nodeId").asText()));
+                    data.setColumn(CacheDetailData.SIZE, Integer.valueOf(nodeCacheMember.get("size").asText()));
+                    if (fIsBack)
+                        {
+                        data.setColumn(CacheDetailData.MEMORY_BYTES,
+                                nodeCacheMember.get("units").longValue() * nodeCacheMember.get("unitFactor").longValue());
+                        }
 
-                    data.setColumn(CacheDetailData.CACHE_PRUNES,
+                    data.setColumn(CacheDetailData.TOTAL_GETS - nOffset, Long.valueOf(nodeCacheMember.get("totalGets").asText()));
+                    data.setColumn(CacheDetailData.TOTAL_PUTS - nOffset, Long.valueOf(nodeCacheMember.get("totalPuts").asText()));
+                    data.setColumn(CacheDetailData.CACHE_HITS - nOffset, Long.valueOf(nodeCacheMember.get("cacheHits").asText()));
+                    data.setColumn(CacheDetailData.CACHE_MISSES - nOffset, Integer.valueOf(nodeCacheMember.get("cacheMisses").asText()));
+
+                    data.setColumn(CacheDetailData.CACHE_PRUNES - nOffset,
                             Long.valueOf(getSafeValue(nodeCacheMember, "cachePrunes", "0")));
-                    data.setColumn(CacheDetailData.CACHE_PRUNES_MILLIS,
+                    data.setColumn(CacheDetailData.CACHE_PRUNES_MILLIS - nOffset,
                             Long.valueOf(getSafeValue(nodeCacheMember, "cachePrunesMillis", "0")));
-                    data.setColumn(CacheDetailData.HIT_PROBABILITY,
+                    data.setColumn(CacheDetailData.HIT_PROBABILITY - nOffset,
                             Float.valueOf(nodeCacheMember.get("hitProbability").floatValue()));
 
                     mapData.put(data.getColumn(0), data);
