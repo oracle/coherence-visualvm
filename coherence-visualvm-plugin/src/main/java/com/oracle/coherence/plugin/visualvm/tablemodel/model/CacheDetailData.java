@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -282,10 +282,11 @@ public class CacheDetailData
                             Long.valueOf(nodeCacheMember.get("cacheHits").asText()));
                     data.setColumn(CacheDetailData.CACHE_MISSES,
                             Integer.valueOf(nodeCacheMember.get("cacheMisses").asText()));
+
                     data.setColumn(CacheDetailData.CACHE_PRUNES,
-                            Long.valueOf(nodeCacheMember.get("cachePrunes").asText()));
+                            Long.valueOf(getSafeValue(nodeCacheMember, "cachePrunes", "0")));
                     data.setColumn(CacheDetailData.CACHE_PRUNES_MILLIS,
-                            Long.valueOf(nodeCacheMember.get("cachePrunesMillis").asText()));
+                            Long.valueOf(getSafeValue(nodeCacheMember, "cachePrunesMillis", "0")));
                     data.setColumn(CacheDetailData.HIT_PROBABILITY,
                             Float.valueOf(nodeCacheMember.get("hitProbability").floatValue()));
 
