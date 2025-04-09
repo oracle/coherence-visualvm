@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -110,6 +110,31 @@ public abstract class AbstractData
      */
     protected void preProcessReporterData(VisualVMModel model)
         {
+        }
+
+    /**
+     * Returns the string representation of a {@link JsonNode} and key.
+     * @param node {@link JsonNode} to inspect
+     * @param sKey key to retrieve
+     * @return the string representation
+     */
+    protected String getSafeValue(JsonNode node, String sKey)
+        {
+        return getSafeValue(node, sKey, null);
+        }
+
+    /**
+     * Returns the string representation of a {@link JsonNode} and key.
+     * @param node {@link JsonNode} to inspect
+     * @param sKey key to retrieve
+     * @param sDefault default value
+     *
+     * @return the string representation
+     */
+    protected String getSafeValue(JsonNode node, String sKey, String sDefault)
+        {
+        JsonNode jsonNode = node.get(sKey);
+        return jsonNode != null ? jsonNode.asText() : sDefault;
         }
 
     /**

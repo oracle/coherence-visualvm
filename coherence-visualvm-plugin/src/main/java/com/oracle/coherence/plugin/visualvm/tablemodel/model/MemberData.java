@@ -191,8 +191,8 @@ public class MemberData
                 data.setColumn(MemberData.USED_MEMORY,
                         (Integer) data.getColumn(MemberData.MAX_MEMORY)
                                 - (Integer) data.getColumn(MemberData.FREE_MEMORY));
-                data.setColumn(MemberData.MACHINE_NAME, clusterMember.get("machineName").asText());
-                data.setColumn(MemberData.UNICAST_ADDRESS, clusterMember.get("uncasstAddress").asText());
+                data.setColumn(MemberData.MACHINE_NAME, getSafeValue(clusterMember, "machineName"));
+                data.setColumn(MemberData.UNICAST_ADDRESS, clusterMember.get("unicastAddress").asText());
                 data.setColumn(MemberData.ROLE_NAME, clusterMember.get("roleName").asText());
                 data.setColumn(MemberData.PRODUCT_EDITION, clusterMember.get("productEdition").asText());
                 data.setColumn(MemberData.PORT, Integer.valueOf(getNumberValue(clusterMember.get("unicastPort").asText())));
