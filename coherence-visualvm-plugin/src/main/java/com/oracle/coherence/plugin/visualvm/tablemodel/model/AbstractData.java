@@ -113,7 +113,7 @@ public abstract class AbstractData
         }
 
     /**
-     * Returns the string representation of a {@link JsonNode} and key
+     * Returns the string representation of a {@link JsonNode} and key.
      * @param node {@link JsonNode} to inspect
      * @param sKey key to retrieve
      * @return the string representation
@@ -124,7 +124,7 @@ public abstract class AbstractData
         }
 
     /**
-     * Returns the string representation of a {@link JsonNode} and key
+     * Returns the string representation of a {@link JsonNode} and key.
      * @param node {@link JsonNode} to inspect
      * @param sKey key to retrieve
      * @param sDefault default value
