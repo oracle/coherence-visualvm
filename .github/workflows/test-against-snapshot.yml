@@ -44,10 +44,10 @@ jobs:
       fail-fast: false
       matrix:
         coherenceVersion:
-          - 25.03.1-SNAPSHOT
+          - 25.03.2-SNAPSHOT
           - 25.09-SNAPSHOT
-          - 22.06.12-SNAPSHOT
-          - 14.1.2-0-2-SNAPSHOT
+          - 22.06.13-SNAPSHOT
+          - 14.1.2-0-3-SNAPSHOT
 
     steps:
     - name: Checkout
