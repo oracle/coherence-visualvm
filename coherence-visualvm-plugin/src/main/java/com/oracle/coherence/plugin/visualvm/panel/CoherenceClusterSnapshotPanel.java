@@ -629,12 +629,14 @@ public class CoherenceClusterSnapshotPanel
             {
             sb.append("<tr>")
                     .append(td(getMemoryFormat(entry.getValue().getColumn(GrpcProxyData.NODE_ID).toString())))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(GrpcProxyData.SUCCESSFUL_REQUEST_COUNT).toString())))
-                    .append(td(getMemoryFormat(entry.getValue().getColumn(GrpcProxyData.ERROR_REQUEST_COUNT).toString())))
                     .append(td(getMemoryFormat(entry.getValue().getColumn(GrpcProxyData.RESPONSES_SENT_COUNT).toString())))
                     .append(td(getMemoryFormat(entry.getValue().getColumn(GrpcProxyData.MESSAGES_RECEIVED_COUNT).toString())))
+                    .append(td(getMemoryFormat(entry.getValue().getColumn(GrpcProxyData.ERROR_REQUEST_COUNT).toString())))
                     .append(td(getLatencyValue(entry.getValue().getColumn(GrpcProxyData.REQUEST_DURATION_MEAN).toString())))
                     .append(td(getLatencyValue(entry.getValue().getColumn(GrpcProxyData.MESSAGE_DURATION_MEAN).toString())))
+                    .append(td(getLatencyValue(entry.getValue().getColumn(GrpcProxyData.MESSAGE_DURATION_MAX).toString())))
+                    .append(td(getLatencyValue(entry.getValue().getColumn(GrpcProxyData.TASK_ACTIVE_MILLIS).toString())))
+                    .append(td(getLatencyValue(entry.getValue().getColumn(GrpcProxyData.TASK_BACKLOG).toString())))
                     .append("</tr>");
             }
 

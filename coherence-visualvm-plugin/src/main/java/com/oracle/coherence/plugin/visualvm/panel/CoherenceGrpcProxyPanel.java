@@ -103,12 +103,14 @@ public class CoherenceGrpcProxyPanel
 
         // define renderers for the columns
         RenderHelper.setColumnRenderer(f_table, GrpcProxyData.NODE_ID, new RenderHelper.IntegerRenderer());
-        RenderHelper.setColumnRenderer(f_table, GrpcProxyData.SUCCESSFUL_REQUEST_COUNT, new RenderHelper.IntegerRenderer());
-        RenderHelper.setColumnRenderer(f_table, GrpcProxyData.ERROR_REQUEST_COUNT, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, GrpcProxyData.RESPONSES_SENT_COUNT, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, GrpcProxyData.MESSAGES_RECEIVED_COUNT, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_table, GrpcProxyData.ERROR_REQUEST_COUNT, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, GrpcProxyData.REQUEST_DURATION_MEAN, new RenderHelper.DecimalRenderer());
         RenderHelper.setColumnRenderer(f_table, GrpcProxyData.MESSAGE_DURATION_MEAN, new RenderHelper.DecimalRenderer());
+        RenderHelper.setColumnRenderer(f_table, GrpcProxyData.MESSAGE_DURATION_MAX, new RenderHelper.DecimalRenderer());
+        RenderHelper.setColumnRenderer(f_table, GrpcProxyData.TASK_ACTIVE_MILLIS, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_table, GrpcProxyData.TASK_BACKLOG, new RenderHelper.IntegerRenderer());
         RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
         // Add some space

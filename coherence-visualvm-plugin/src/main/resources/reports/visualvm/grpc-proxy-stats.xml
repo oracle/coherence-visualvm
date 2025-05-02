@@ -46,14 +46,6 @@
                 <name>nodeId</name>
                 <header>Node Id</header>
             </column>
-            
-            <column id="SuccessfulRequestCount">
-                <name>SuccessfulRequestCount</name>
-            </column>
-            
-            <column id="ErrorRequestCount">
-                <name>ErrorRequestCount</name>
-            </column>
 
             <column id="ResponsesSentCount">
                 <name>ResponsesSentCount</name>
@@ -61,6 +53,10 @@
 
             <column id="MessagesReceivedCount">
                 <name>MessagesReceivedCount</name>
+            </column>
+
+            <column id="ErrorRequestCount">
+                <name>ErrorRequestCount</name>
             </column>
 
             <column id="RequestDurationMean">
@@ -71,32 +67,16 @@
                 <name>MessageDurationMean</name>
             </column>
 
-            <column id="RequestDurationMax">
-                <name>RequestDurationMax</name>
-            </column>
-
-            <column id="RequestDurationMin">
-                <name>RequestDurationMin</name>
-            </column>
-            
             <column id="MessageDurationMax">
                 <name>MessageDurationMax</name>
             </column>
 
-            <column id="MessageDurationMin">
-                <name>MessageDurationMin</name>
-            </column>
-            
-            <column id="DaemonCount">
-                <name>DaemonCount</name>
+            <column id="TaskActiveMillis">
+                <name>TaskActiveMillis</name>
             </column>
 
             <column id="TaskBacklog">
                 <name>TaskBacklog</name>
-            </column>
-
-            <column id="MaxTaskBacklog">
-                <name>MaxTaskBacklog</name>
             </column>
         </row>
     </report>

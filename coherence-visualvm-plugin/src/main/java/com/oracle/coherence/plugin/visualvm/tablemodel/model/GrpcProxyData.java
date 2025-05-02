@@ -52,7 +52,7 @@ public class GrpcProxyData
      */
     public GrpcProxyData()
         {
-        super(MESSAGE_DURATION_MEAN + 1);
+        super(TASK_BACKLOG + 1);
         }
 
     // ----- DataRetriever methods ------------------------------------------
@@ -76,12 +76,14 @@ public class GrpcProxyData
         int  nStart = 1;
 
         data.setColumn(NODE_ID, Integer.valueOf(getNumberValue(aoColumns[nStart++].toString())));
-        data.setColumn(SUCCESSFUL_REQUEST_COUNT, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
-        data.setColumn(ERROR_REQUEST_COUNT, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
         data.setColumn(RESPONSES_SENT_COUNT, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
         data.setColumn(MESSAGES_RECEIVED_COUNT, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
+        data.setColumn(ERROR_REQUEST_COUNT, Long.valueOf(getNumberValue(aoColumns[nStart++].toString())));
         data.setColumn(REQUEST_DURATION_MEAN, Float.parseFloat(aoColumns[nStart++].toString()));
-        data.setColumn(MESSAGE_DURATION_MEAN, Float.parseFloat(aoColumns[nStart].toString()));
+        data.setColumn(MESSAGE_DURATION_MEAN, Float.parseFloat(aoColumns[nStart++].toString()));
+        data.setColumn(MESSAGE_DURATION_MAX, Float.parseFloat(aoColumns[nStart++].toString()));
+        data.setColumn(TASK_ACTIVE_MILLIS, Long.valueOf(aoColumns[nStart++].toString()));
+        data.setColumn(TASK_BACKLOG, Long.valueOf(aoColumns[nStart].toString()));
 
         return data;
         }
@@ -117,34 +119,44 @@ public class GrpcProxyData
     public static final int NODE_ID = 0;
 
     /**
-     * Array index for SuccessfulRequestCount.
-     */
-    public static final int SUCCESSFUL_REQUEST_COUNT = 1;
-
-    /**
-     * Array index for ErrorRequestCount.
-     */
-    public static final int ERROR_REQUEST_COUNT = 2;
-
-    /**
      * Array index for ResponsesSentCount.
      */
-    public static final int RESPONSES_SENT_COUNT = 3;
+    public static final int RESPONSES_SENT_COUNT = 1;
 
     /**
      * Array index for MessagesReceivedCount.
      */
-    public static final int MESSAGES_RECEIVED_COUNT = 4;
+    public static final int MESSAGES_RECEIVED_COUNT = 2;
+
+    /**
+     * Array index for ErrorRequestCount.
+     */
+    public static final int ERROR_REQUEST_COUNT = 3;
 
     /**
      * Array index for RequestDurationMean.
      */
-    public static final int REQUEST_DURATION_MEAN = 5;
+    public static final int REQUEST_DURATION_MEAN = 4;
 
     /**
      * Array index for MessageDurationMean.
      */
-    public static final int MESSAGE_DURATION_MEAN = 6;
+    public static final int MESSAGE_DURATION_MEAN = 5;
+
+    /**
+     * Array index for MessageDurationMax.
+     */
+    public static final int MESSAGE_DURATION_MAX = 6;
+
+    /**
+     * Array index for TaskActiveMillis.
+     */
+    public static final int TASK_ACTIVE_MILLIS = 7;
+
+    /**
+     * Array index for TaskBacklog.
+     */
+    public static final int TASK_BACKLOG = 8;
 
     /**
      * The logger object to use.
