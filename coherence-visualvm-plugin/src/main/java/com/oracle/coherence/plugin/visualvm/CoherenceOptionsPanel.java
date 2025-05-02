@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2025 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -105,6 +105,7 @@ public class CoherenceOptionsPanel
         {
         GlobalPreferences preferences = GlobalPreferences.sharedInstance();
         m_refreshTime.setValue(preferences.getRefreshTime());
+        m_gRPCVersion.setValue(preferences.getGrpcVersion());
         m_logQueryTimes.setSelected(preferences.isLogQueryTimes());
         m_disableMBeanCheck.setSelected(preferences.isMBeanCheckDisabled());
         m_restRequestTimout.setValue(preferences.getRestTimeout());
@@ -132,6 +133,7 @@ public class CoherenceOptionsPanel
         preferences.setClusterSnapshotEnabled(m_enableClusterSnapshot.isSelected());
         preferences.setAdminFunctionsEnabled(m_adminFunctionsEnabled.isSelected());
         preferences.setSSLCertValidationDisabled(m_disableSSLCertValidation.isSelected());
+        preferences.setGrpcVersion((Integer) m_gRPCVersion.getValue());
         }
 
     /**
@@ -195,23 +197,43 @@ public class CoherenceOptionsPanel
         c.insets = new Insets(3, 0, 3, 0);
         add(plottersUnits, c);
 
+        // ---- gRPC Version Label
+        JLabel plottersLabelgRPC = new JLabel();
+        Mnemonics.setLocalizedText(plottersLabelgRPC, getLocalText("LBL_grpc_version"));
+        GridBagConstraints c2 = new GridBagConstraints();
+        c2.gridx = 0;
+        c2.gridy = 2;
+        c2.anchor = GridBagConstraints.WEST;
+        c2.insets = new Insets(3, 15, 3, 0);
+        add(plottersLabelgRPC, c2);
+
+        m_gRPCVersion = new JSpinner();
+        m_gRPCVersion.setToolTipText(getLocalText("TTIP_grpc_version"));
+        m_gRPCVersion.setModel(new SpinnerNumberModel(0, 0, 1, 1));
+        c2 = new GridBagConstraints();
+        c2.gridx = 1;
+        c2.gridy = 2;
+        c2.anchor = GridBagConstraints.WEST;
+        c2.insets = new Insets(3, 5, 3, 4);
+        add(m_gRPCVersion, c2);
+
         m_logQueryTimes = new JCheckBox();
         m_logQueryTimes.setToolTipText(getLocalText("TTIP_log_query_times"));
-        addCheckBox(2, "LBL_log_query_times", m_logQueryTimes);
+        addCheckBox(3, "LBL_log_query_times", m_logQueryTimes);
 
         m_disableMBeanCheck = new JCheckBox();
         m_disableMBeanCheck.setToolTipText(getLocalText("TTIP_disable_mbean_check"));
-        addCheckBox(3, "LBL_disable_mbean_check", m_disableMBeanCheck);
+        addCheckBox(4, "LBL_disable_mbean_check", m_disableMBeanCheck);
 
         // ---- REST ----
-        addHeader(4, "LBL_rest");
+        addHeader(5, "LBL_rest");
 
         // ---- REST Request Timeout ----
         JLabel lblRest = new JLabel();
         Mnemonics.setLocalizedText(lblRest, getLocalText("LBL_rest_request_timeout"));
         c = new GridBagConstraints();
         c.gridx = 0;
-        c.gridy = 5;
+        c.gridy = 6;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(3, 15, 3, 0);
         add(lblRest, c);
@@ -222,7 +244,7 @@ public class CoherenceOptionsPanel
         m_restRequestTimout.setModel(new SpinnerNumberModel(30000, 1000, 99999999, 1000));
         c = new GridBagConstraints();
         c.gridx = 1;
-        c.gridy = 5;
+        c.gridy = 6;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(3, 5, 3, 4);
         add(m_restRequestTimout, c);
@@ -231,37 +253,37 @@ public class CoherenceOptionsPanel
         Mnemonics.setLocalizedText(requestUnits, getLocalText("LBL_millis")); // NOI18N
         c = new GridBagConstraints();
         c.gridx = 2;
-        c.gridy = 5;
+        c.gridy = 6;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(3, 0, 3, 0);
         add(requestUnits, c);
 
         m_enableRestDebug = new JCheckBox();
         m_enableRestDebug.setToolTipText(getLocalText("TTIP_rest_debug"));
-        addCheckBox(6, "LBL_enable_rest_debug", m_enableRestDebug);
+        addCheckBox(7, "LBL_enable_rest_debug", m_enableRestDebug);
 
         m_disableSSLCertValidation = new JCheckBox();
         m_disableSSLCertValidation.setToolTipText(getLocalText("TTIP_ssl_disable"));
-        addCheckBox(7, "LBL_disable_cert_validation", m_disableSSLCertValidation);
+        addCheckBox(8, "LBL_disable_cert_validation", m_disableSSLCertValidation);
 
         // ---- Other / Experimental ----
-        addHeader(8, "LBL_other");
+        addHeader(9, "LBL_other");
 
         m_enablePersistenceList = new JCheckBox();
         m_enablePersistenceList.setToolTipText(getLocalText("TTIP_persistence_list"));
-        addCheckBox(9, "LBL_enable_persistence_list", m_enablePersistenceList);
+        addCheckBox(10, "LBL_enable_persistence_list", m_enablePersistenceList);
 
         m_enableZoom = new JCheckBox();
         m_enableZoom.setToolTipText(getLocalText("TTIP_zoom_enabled"));
-        addCheckBox(10, "LBL_enable_zoom", m_enableZoom);
+        addCheckBox(11, "LBL_enable_zoom", m_enableZoom);
 
         m_enableClusterSnapshot = new JCheckBox();
         m_enableClusterSnapshot.setToolTipText(getLocalText("TTIP_enable_cluster_snapshot"));
-        addCheckBox(11, "LBL_enable_cluster_snapshot", m_enableClusterSnapshot);
+        addCheckBox(12, "LBL_enable_cluster_snapshot", m_enableClusterSnapshot);
 
         m_adminFunctionsEnabled = new JCheckBox();
         m_adminFunctionsEnabled.setToolTipText(getLocalText("TTIP_enable_cluster_head_dump"));
-        addCheckBox(12, "LBL_enable_admin_functions", m_adminFunctionsEnabled);
+        addCheckBox(13, "LBL_enable_admin_functions", m_adminFunctionsEnabled);
 
         m_btnAnalyzeUnavailableTime = new JButton(Localization.getLocalText("LBL_analyze_log_file"));
         m_btnAnalyzeUnavailableTime.setMnemonic(KeyEvent.VK_A);
@@ -286,7 +308,7 @@ public class CoherenceOptionsPanel
 
         c = new GridBagConstraints();
         c.gridx = 0;
-        c.gridy = 13;
+        c.gridy = 14;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(3, 15, 3, 0);
         add(m_btnAnalyzeUnavailableTime, c);
@@ -304,7 +326,7 @@ public class CoherenceOptionsPanel
         // filler
         c = new GridBagConstraints();
         c.gridx = 0;
-        c.gridy = 16;
+        c.gridy = 17;
         c.weightx = 1;
         c.weighty = 1;
         c.anchor = GridBagConstraints.NORTHWEST;
@@ -364,6 +386,7 @@ public class CoherenceOptionsPanel
     private void startTrackingChanges()
         {
         m_refreshTime.getModel().addChangeListener(f_changeListener);
+        m_gRPCVersion.getModel().addChangeListener(f_changeListener);
         m_logQueryTimes.getModel().addChangeListener(f_changeListener);
         m_disableMBeanCheck.getModel().addChangeListener(f_changeListener);
         m_enableRestDebug.getModel().addChangeListener(f_changeListener);
@@ -694,6 +717,11 @@ public class CoherenceOptionsPanel
      * Refresh time spinner.
      */
     private JSpinner m_refreshTime;
+
+    /**
+     * gRPC version spinner..
+     */
+    private JSpinner m_gRPCVersion;
 
     /**
      * Reqest request time spinner.

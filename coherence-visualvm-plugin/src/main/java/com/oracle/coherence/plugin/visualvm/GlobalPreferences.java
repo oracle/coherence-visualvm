@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021, 2025 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -37,6 +37,7 @@ import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_DISABLE_MB
 import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_LOG_QUERY_TIMES;
 import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_PERSISTENCE_LIST_ENABLED;
 import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_REFRESH_TIME;
+import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_GRPC_VERSION;
 import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_REPORTER_DISABLED;
 import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_REST_DEBUG;
 import static com.oracle.coherence.plugin.visualvm.VisualVMModel.PROP_REST_TIMEOUT;
@@ -129,6 +130,16 @@ public class GlobalPreferences
             getRestTimeout();
             }
 
+        sValue = System.getProperty(PROP_GRPC_VERSION);
+        if (sValue != null)
+            {
+            setGrpcVersion(Integer.parseInt(sValue));
+            }
+        else
+            {
+            getGrpcVersion();
+            }
+
         sValue = System.getProperty(PROP_REST_DEBUG);
         if (sValue != null)
             {
@@ -196,6 +207,26 @@ public class GlobalPreferences
     public void setRefreshTime(int refreshTime)
         {
         setIntegerProperty(REFRESH_TIME, refreshTime);
+        }
+
+    /**
+     * Set the value for gRPC Version.
+     *
+     * @param grpcVersion the value for grpcVersion
+     */
+    public void setGrpcVersion(int grpcVersion)
+        {
+        setIntegerProperty(GRPC_VERSION, grpcVersion);
+        }
+
+    /**
+     * Returns the value for refresh time or the default if it doesn't exist.
+     *
+     * @return the value for refresh time
+     */
+    public int getGrpcVersion()
+        {
+        return getIntegerProperty(GRPC_VERSION, Integer.parseInt(GRPC_VERSION_DEFAULT));
         }
 
     /**
@@ -511,6 +542,11 @@ public class GlobalPreferences
     private static final String REFRESH_TIME_DEFAULT = "30";
 
     /**
+     * Default for grpc version.
+     */
+    private static final String GRPC_VERSION_DEFAULT = "1";
+
+    /**
      * Preference key for log query times.
      */
     private static final String LOG_QUERY_TIMES = "logQueryTimes";
@@ -564,6 +600,11 @@ public class GlobalPreferences
      * Preference key for persistence list enabled.
      */
     private static final String PERSISTENCE_LIST_ENABLED = "persistenceListEnabled";
+
+    /**
+     * Preference key for gRPC Version.
+     */
+    private static final String GRPC_VERSION = "grpcVersion";
 
     /**
      * Default for persistence list enabled.

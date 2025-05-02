@@ -30,6 +30,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.List;
 import java.util.Map.Entry;
+
+import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
@@ -87,7 +89,11 @@ public class CoherenceGrpcProxyPanel
         f_txtTotalRespSent = getTextField(5, JTextField.RIGHT);
         pnlHeader.add(getLocalizedLabel("LBL_total_grpc_resp_sent", f_txtTotalRespSent));
         pnlHeader.add(f_txtTotalRespSent);
-        
+
+        f_txtGrpcProxyVersion = getTextField(5, JTextField.RIGHT);
+        pnlHeader.add(getLocalizedLabel("LBL_grpc_version2", f_txtGrpcProxyVersion));
+        pnlHeader.add(f_txtGrpcProxyVersion);
+
         // create the table
         f_tmodel = new GrpcProxyTableModel(VisualVMModel.DataType.GRPC_PROXY.getMetadata());
 
@@ -97,12 +103,14 @@ public class CoherenceGrpcProxyPanel
 
         // define renderers for the columns
         RenderHelper.setColumnRenderer(f_table, GrpcProxyData.NODE_ID, new RenderHelper.IntegerRenderer());
-        RenderHelper.setColumnRenderer(f_table, GrpcProxyData.SUCCESSFUL_REQUEST_COUNT, new RenderHelper.IntegerRenderer());
-        RenderHelper.setColumnRenderer(f_table, GrpcProxyData.ERROR_REQUEST_COUNT, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, GrpcProxyData.RESPONSES_SENT_COUNT, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, GrpcProxyData.MESSAGES_RECEIVED_COUNT, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_table, GrpcProxyData.ERROR_REQUEST_COUNT, new RenderHelper.IntegerRenderer());
         RenderHelper.setColumnRenderer(f_table, GrpcProxyData.REQUEST_DURATION_MEAN, new RenderHelper.DecimalRenderer());
         RenderHelper.setColumnRenderer(f_table, GrpcProxyData.MESSAGE_DURATION_MEAN, new RenderHelper.DecimalRenderer());
+        RenderHelper.setColumnRenderer(f_table, GrpcProxyData.MESSAGE_DURATION_MAX, new RenderHelper.DecimalRenderer());
+        RenderHelper.setColumnRenderer(f_table, GrpcProxyData.TASK_ACTIVE_MILLIS, new RenderHelper.IntegerRenderer());
+        RenderHelper.setColumnRenderer(f_table, GrpcProxyData.TASK_BACKLOG, new RenderHelper.IntegerRenderer());
         RenderHelper.setHeaderAlignment(f_table, SwingConstants.CENTER);
 
         // Add some space
@@ -147,6 +155,8 @@ public class CoherenceGrpcProxyPanel
         long  nSentCount        = 0L;
         long  nRecCount         = 0L;
         int   cCount            = 0;
+
+        f_txtGrpcProxyVersion.setText("V" + Integer.toString(GlobalPreferences.sharedInstance().getGrpcVersion()));
 
         if (m_GrpcData != null)
             {
@@ -232,6 +242,11 @@ public class CoherenceGrpcProxyPanel
      * The total number of responses sent.
      */
     private final JTextField f_txtTotalRespSent;
+
+    /**
+     * gRPC Proxy version showing.
+     */
+    private final JTextField f_txtGrpcProxyVersion;
 
     /**
      * The graph of gRPC Proxy Messages.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -1601,10 +1601,11 @@ public class VisualVMModel
      */
     private static final String[] GRPC_PROXY_LABELS = new String[]
         {
-        Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText("LBL_successful_requests"),
-        Localization.getLocalText("LBL_error_requests"), Localization.getLocalText("LBL_responses_sent"),
-        Localization.getLocalText("LBL_messages_received"), Localization.getLocalText("LBL_request_duration_mean"),
-        Localization.getLocalText("LBL_message_duration_mean")
+        Localization.getLocalText(LBL_NODE_ID), Localization.getLocalText("LBL_responses_sent"),
+        Localization.getLocalText("LBL_messages_received"),  Localization.getLocalText("LBL_error_requests"),
+        Localization.getLocalText("LBL_request_duration_mean"), Localization.getLocalText("LBL_message_duration_mean"),
+        Localization.getLocalText("LBL_message_duration_max"), Localization.getLocalText("LBL_task_active"),
+        Localization.getLocalText("LBL_task_backlog")
         };
 
     /**
@@ -1767,6 +1768,11 @@ public class VisualVMModel
      * Property to disable use of the Coherence Reporter.
      */
     public static final String PROP_REPORTER_DISABLED = "coherence.plugin.visualvm.reporter.disabled";
+
+    /**
+     * Property to set the gRPC Version to show.
+     */
+    public static final String PROP_GRPC_VERSION = "coherence.plugin.visualvm.grpc.version";
 
     /**
      * Property to enable dropdown list of snapshots when performing snapshot operations.
