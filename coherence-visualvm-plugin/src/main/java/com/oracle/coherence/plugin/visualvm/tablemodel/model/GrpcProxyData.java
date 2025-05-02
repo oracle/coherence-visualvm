@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,15 +27,14 @@ package com.oracle.coherence.plugin.visualvm.tablemodel.model;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.logging.Logger;
 
+import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.helper.HttpRequestSender;
-import com.oracle.coherence.plugin.visualvm.helper.JMXRequestSender;
+
 import com.oracle.coherence.plugin.visualvm.helper.RequestSender;
-import javax.management.ObjectName;
 
 /**
  * A class to hold basic gRPC Proxy data.
@@ -90,26 +89,12 @@ public class GrpcProxyData
     @Override
     public String preProcessReporterXML(VisualVMModel model, String sReporterXML)
         {
-        String sMBeanName = "GrpcNamedCacheProxy"; // v0 default
+        // get the gRPC version from the preferences
+        int nVersion = GlobalPreferences.sharedInstance().getGrpcVersion();
 
-        try {
-            // determine if v0 or v1 of gRPC proxy is being used.
-            RequestSender requestSender = model.getRequestSender();
-            if (requestSender instanceof JMXRequestSender)
-                {
-                // check for JMX MBean of type Coherence:type=GrpcProxy
-                JMXRequestSender jmxRequestSender = (JMXRequestSender) requestSender;
-                Set<ObjectName>  setNames         = jmxRequestSender.getV1GrpcProxyMBean();
-                if (setNames != null && !setNames.isEmpty())
-                    {
-                    sMBeanName = "GrpcProxy";
-                    }
-                }
-            }
-        catch (Exception eIgnore)
-            {
-            // ignore
-            }
+        String sMBeanName = nVersion == 0 ? "GrpcNamedCacheProxy" : "GrpcProxy";
+
+        LOGGER.info("Grpc proxy version: " + nVersion);
 
         return sReporterXML.replaceAll("%MBEAN%", escape(sMBeanName));
         }

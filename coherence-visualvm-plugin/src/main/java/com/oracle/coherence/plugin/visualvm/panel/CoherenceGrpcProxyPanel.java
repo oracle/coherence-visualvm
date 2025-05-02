@@ -30,6 +30,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.List;
 import java.util.Map.Entry;
+
+import com.oracle.coherence.plugin.visualvm.GlobalPreferences;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.helper.GraphHelper;
 import com.oracle.coherence.plugin.visualvm.helper.RenderHelper;
@@ -87,7 +89,11 @@ public class CoherenceGrpcProxyPanel
         f_txtTotalRespSent = getTextField(5, JTextField.RIGHT);
         pnlHeader.add(getLocalizedLabel("LBL_total_grpc_resp_sent", f_txtTotalRespSent));
         pnlHeader.add(f_txtTotalRespSent);
-        
+
+        f_txtGrpcProxyVersion = getTextField(5, JTextField.RIGHT);
+        pnlHeader.add(getLocalizedLabel("LBL_grpc_version2", f_txtGrpcProxyVersion));
+        pnlHeader.add(f_txtGrpcProxyVersion);
+
         // create the table
         f_tmodel = new GrpcProxyTableModel(VisualVMModel.DataType.GRPC_PROXY.getMetadata());
 
@@ -147,6 +153,8 @@ public class CoherenceGrpcProxyPanel
         long  nSentCount        = 0L;
         long  nRecCount         = 0L;
         int   cCount            = 0;
+
+        f_txtGrpcProxyVersion.setText("V" + Integer.toString(GlobalPreferences.sharedInstance().getGrpcVersion()));
 
         if (m_GrpcData != null)
             {
@@ -232,6 +240,11 @@ public class CoherenceGrpcProxyPanel
      * The total number of responses sent.
      */
     private final JTextField f_txtTotalRespSent;
+
+    /**
+     * gRPC Proxy version showing.
+     */
+    private final JTextField f_txtGrpcProxyVersion;
 
     /**
      * The graph of gRPC Proxy Messages.

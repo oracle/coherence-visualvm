@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -1767,6 +1767,11 @@ public class VisualVMModel
      * Property to disable use of the Coherence Reporter.
      */
     public static final String PROP_REPORTER_DISABLED = "coherence.plugin.visualvm.reporter.disabled";
+
+    /**
+     * Property to set the gRPC Version to show.
+     */
+    public static final String PROP_GRPC_VERSION = "coherence.plugin.visualvm.grpc.version";
 
     /**
      * Property to enable dropdown list of snapshots when performing snapshot operations.
