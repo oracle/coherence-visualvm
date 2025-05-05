@@ -92,6 +92,7 @@ public class CoherenceGrpcProxyPanel
 
         f_txtGrpcProxyVersion = getTextField(5, JTextField.RIGHT);
         pnlHeader.add(getLocalizedLabel("LBL_grpc_version2", f_txtGrpcProxyVersion));
+        f_txtGrpcProxyVersion.setToolTipText(getLocalizedText("TTIP_grpc_version2"));
         pnlHeader.add(f_txtGrpcProxyVersion);
 
         // create the table
