@@ -4,6 +4,7 @@
 
 ![CI Build](https://github.com/oracle/coherence-visualvm/workflows/Java%20CI%20-%20Released%20versions/badge.svg)
 ![Release](https://img.shields.io/github/v/release/oracle/coherence-visualvm)
+![Downloads](https://img.shields.io/github/downloads/oracle/coherence-visualvm/total)
 ![Sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=oracle_coherence-visualvm&metric=alert_status)
 
 The Coherence-VisualVM Plugin (the Plugin) provides management and monitoring of a single Coherence cluster using the VisualVM management utility.
@@ -33,13 +34,13 @@ NOTE: The most current version of the Plugin requires VisualVM release 2.1 or la
 
 The Plugin will connect to and display data for the following Coherence versions:
 
-* **Community Editions**: 24.03.x, 23.09.x, 22.06.x, 14.1.1.0.x
+* **Community Editions**: 25.09.x, 22.06.x, 14.1.1.0.x, 14.1.2.0.x
 
-* **Commercial Editions**: 14.1.1.2206.x, 14.1.1.0.x and 12.2.1.4.x
+* **Commercial Editions**: 14.1.2.0.x, 14.1.1.2206.x, 14.1.1.0.x and 12.2.1.4.x
 
 >Note: If you wish to connect to Coherence version 12.2.1.4.x via REST you should have Coherence version 12.2.1.4.7 or greater.
 
->Note: Support for versions older than Commercial Edition 3.7, and Community Edition 21.12 is now deprecated and no longer supported. The plugin may still work with these older versions, but is not guaranteed to continue to. Please upgrade to the latest Coherence versions available for continued support.
+>Note: Support for versions older than Commercial Edition 3.7, and Community Edition 24.09 is now deprecated and no longer supported. The plugin may still work with these older versions, but is not guaranteed to continue to. Please upgrade to the latest Coherence versions available for continued support.
 
 
 ## Installation
