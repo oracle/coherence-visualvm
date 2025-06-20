@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -82,11 +82,11 @@ public class CoherenceGrpcProxyPanel
         pnlHeader.add(getLocalizedLabel("LBL_total_grpc_servers", f_txtTotalGrpcProxyServers));
         pnlHeader.add(f_txtTotalGrpcProxyServers);
 
-        f_txtTotalMsgRec = getTextField(5, JTextField.RIGHT);
+        f_txtTotalMsgRec = getTextField(9, JTextField.RIGHT);
         pnlHeader.add(getLocalizedLabel("LBL_total_grpc_msg_rec", f_txtTotalMsgRec));
         pnlHeader.add(f_txtTotalMsgRec);
 
-        f_txtTotalRespSent = getTextField(5, JTextField.RIGHT);
+        f_txtTotalRespSent = getTextField(9, JTextField.RIGHT);
         pnlHeader.add(getLocalizedLabel("LBL_total_grpc_resp_sent", f_txtTotalRespSent));
         pnlHeader.add(f_txtTotalRespSent);
 
