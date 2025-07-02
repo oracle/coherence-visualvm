@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-  Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
+  Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
   This code is free software; you can redistribute it and/or modify it
@@ -33,7 +33,7 @@
   <parent>
     <groupId>com.oracle.coherence.plugin.visualvm</groupId>
     <artifactId>coherence-visualvm-main</artifactId>
-    <version>1.7.4-SNAPSHOT</version>
+    <version>1.7.5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
