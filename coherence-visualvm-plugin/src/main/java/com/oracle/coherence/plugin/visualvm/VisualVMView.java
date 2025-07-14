@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -58,11 +58,9 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -165,6 +163,12 @@ public class VisualVMView
         if (m_application != null)
             {
             addModelForApplication(m_application, model);
+            }
+
+        if (m_application == null)
+            {
+            // this is called from REST, so create a dummy application, so the visual VM Model gets cleaned up
+            m_application = new MockApplication(String.valueOf(f_counter.incrementAndGet()));
             }
 
         boolean fClusterSnapshotEnabled = com.oracle.coherence.plugin.visualvm.GlobalPreferences
@@ -516,4 +520,6 @@ public class VisualVMView
      * Set of panels to refresh and update.
      */
     private final Set<AbstractCoherencePanel> f_setPanels = new LinkedHashSet<>();
+
+    private static final AtomicInteger f_counter = new AtomicInteger(0);
     }
