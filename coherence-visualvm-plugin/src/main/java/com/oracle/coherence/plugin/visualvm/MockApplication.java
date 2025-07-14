@@ -25,7 +25,8 @@
 package com.oracle.coherence.plugin.visualvm;
 
 import org.graalvm.visualvm.application.Application;
-import org.graalvm.visualvm.host.Host;
+
+import static org.graalvm.visualvm.host.Host.UNKNOWN_HOST;
 
 /**
  * MockApplication is a class used to register a REST connection to fix
@@ -38,11 +39,10 @@ public class MockApplication extends Application
     /**
      * Constructs a new MockApplication instance.
      *
-     * @param host the host associated with this application
      * @param id the unique identifier for this application
      */
-    public MockApplication(Host host, String id)
+    public MockApplication(String id)
         {
-        super(host, id);
+        super(UNKNOWN_HOST, id);
         }
     }

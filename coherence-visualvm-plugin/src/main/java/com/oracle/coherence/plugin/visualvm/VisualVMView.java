@@ -81,8 +81,6 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 
-import static org.graalvm.visualvm.host.Host.UNKNOWN_HOST;
-
 
 /**
  * The implementation of the {@link DataSourceView} for displaying the Coherence
@@ -169,8 +167,8 @@ public class VisualVMView
 
         if (m_application == null)
             {
-            // this is called from REST, so create a dummy application, so the visual VM mode gets cleaned up
-            m_application = new MockApplication(UNKNOWN_HOST, String.valueOf(f_counter.incrementAndGet()));
+            // this is called from REST, so create a dummy application, so the visual VM Model gets cleaned up
+            m_application = new MockApplication(String.valueOf(f_counter.incrementAndGet()));
             }
 
         boolean fClusterSnapshotEnabled = com.oracle.coherence.plugin.visualvm.GlobalPreferences
