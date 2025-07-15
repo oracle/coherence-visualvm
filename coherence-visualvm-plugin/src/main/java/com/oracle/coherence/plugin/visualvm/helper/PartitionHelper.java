@@ -31,7 +31,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
+
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -88,7 +88,7 @@ public class PartitionHelper
                 }
 
             sOwnership = jsonOwnership.asText();
-            if (sOwnership.length() == 0)
+            if (sOwnership.isEmpty())
                 {
                 throw new PartitionParsingException("empty ownership node");
                 }

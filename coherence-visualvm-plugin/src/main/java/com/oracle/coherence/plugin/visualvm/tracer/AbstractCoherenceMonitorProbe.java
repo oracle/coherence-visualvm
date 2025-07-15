@@ -64,7 +64,7 @@ public abstract class AbstractCoherenceMonitorProbe
          * @param itemDescriptors  the item description
          * @param resolver         the {@link MonitoredDataResolver}
          */
-    public AbstractCoherenceMonitorProbe(int valuesCount, ProbeItemDescriptor[] itemDescriptors,
+    protected AbstractCoherenceMonitorProbe(int valuesCount, ProbeItemDescriptor[] itemDescriptors,
                                   MonitoredDataResolver resolver)
         {
         super(itemDescriptors);
