@@ -30,7 +30,7 @@ import com.oracle.coherence.plugin.visualvm.VisualVMModel;
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.FederationData;
 import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe;
 import com.oracle.coherence.plugin.visualvm.tracer.CustomFormatter;
-import org.graalvm.visualvm.modules.tracer.ItemValueFormatter;
+
 import org.graalvm.visualvm.modules.tracer.ProbeItemDescriptor;
 import org.graalvm.visualvm.modules.tracer.TracerProbeDescriptor;
 

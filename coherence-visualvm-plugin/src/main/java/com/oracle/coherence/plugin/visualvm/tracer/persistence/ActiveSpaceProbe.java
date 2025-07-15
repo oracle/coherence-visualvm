@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2007, 2018, Oracle and/or its affiliates. All rights reserved.
+ *  Copyright (c) 2007, 2025, Oracle and/or its affiliates. All rights reserved.
  *  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  *  This code is free software; you can redistribute it and/or modify it
@@ -27,7 +27,7 @@ package com.oracle.coherence.plugin.visualvm.tracer.persistence;
 
 import com.oracle.coherence.plugin.visualvm.Localization;
 import com.oracle.coherence.plugin.visualvm.VisualVMModel;
-import com.oracle.coherence.plugin.visualvm.tablemodel.model.CacheData;
+
 import com.oracle.coherence.plugin.visualvm.tablemodel.model.PersistenceData;
 import com.oracle.coherence.plugin.visualvm.tracer.AbstractCoherenceMonitorProbe;
 import org.graalvm.visualvm.modules.tracer.ItemValueFormatter;
