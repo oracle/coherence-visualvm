@@ -67,8 +67,8 @@ Other useful resources:
 * [The Coherence Community - All things Coherence](https://coherence.community/)
 * [VisualVM Home Page](https://visualvm.github.io/)
 * [Coherence Community Edition on GitHub](https://github.com/oracle/coherence)
-* [Various Coherence Examples](https://coherence.community/latest/22.09/docs/#/examples/guides/000-overview)
-* [The Coherence Operator - Run your clusters in Kubernetes](https://github.com/oracle/coherence-operator)
+* [Various Coherence Examples](https://docs.coherence.community/coherence/docs/latest/examples/README)
+* [The Coherence Operator - Run your clusters in Kubernetes](https://github.com/oracle/coherence-operator/)
 
 
 ## <a id="connect"></a> Connecting to a Coherence Cluster
