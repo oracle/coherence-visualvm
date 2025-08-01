@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
+Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
 DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
 This code is free software; you can redistribute it and/or modify it
@@ -64,7 +64,7 @@ All attributes are from `Coherence:type=Platform,Domain=java.lang,subType=Operat
 |Percentage Free Memory | Calculated
 !===
 
-See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDIBBJC[ClusterNodeMBean] documentation for more information.
+See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDIBBJC[ClusterNode MBean] documentation for more information.
 
 [#MemberTableModel]
 === Members Table
@@ -88,7 +88,7 @@ All attributes are from `Node MBean` (`Coherence:type=Node,nodeId=n`).
 |Storage Enabled | true if any services are storage enabled on this member
 !===
 
-See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDIBBJC[ClusterNodeMBean] documentation for more information.
+See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDIBBJC[ClusterNode MBean] documentation for more information.
 
 [#ServiceTableModel]
 === Services Table
@@ -110,7 +110,7 @@ All attributes are summarized from `Service MBean` (`Coherence:type=Service,name
 |Pending | RequestPendingCount
 !===
 
-See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDEBJIC[ServiceMBean] documentation for more information.
+See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDEBJIC[Service MBean] documentation for more information.
 
 [#ServiceMemberTableModel]
 === Services Detail Table
@@ -130,7 +130,7 @@ All attributes are from `Service MBean` for specific nodes. (`Coherence:type=Ser
 |Request Avge (ms) | RequestAverageDuration
 !===
 
-See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDEBJIC[ServiceMBean] documentation for more information.
+See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDEBJIC[Service MBean] documentation for more information.
 
 [#CacheTableModel]
 === Cache Summary Table
@@ -149,7 +149,7 @@ All attributes are summarized from `Cache MBean` (`Coherence:type=CacheMBean,tie
 |Unit Calculator | If MemoryUnits is true then BINARY otherwise FIXED
 !===
 
-See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm[CacheMBean] documentation for more information.
+See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm[Cache MBean] documentation for more information.
 
 [#CacheDetailTableModel]
 === Cache Details Table
@@ -171,7 +171,7 @@ All attributes are from `Cache MBean` (`Coherence:type=CacheMBean,tier=back`).
 |Hit Probability| HitProbability
 !===
 
-See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm[CacheMBean] documentation for more information.
+See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm[Cache MBean] documentation for more information.
 
 ==== Front Cache Size and Access Details Table
 This table shows cache front details regarding the selected cache.
@@ -199,7 +199,7 @@ All attributes are from `StorageManager` (`Coherence:type=StorageManager,service
 |Index Total Millis (ms) | IndexingTotalMillis (not available in all Coherence versions)
 !===
 
-See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDGABID[StorageManagerMBean] documentation for more information.
+See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDGABID[StorageManager MBean] documentation for more information.
 
 
 [#ProxyTableModel]
@@ -222,8 +222,8 @@ All attributes are summarised from `ConnectionManager MBean` where `Procotol=tcp
 |Total Msgs Sent | TotalMessagesSent
 !===
 
-See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDCIIIH[ConnectionManagerMBean]
-or https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDGBBEJ[ConnectionMBean] documentation for more information.
+See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDCIIIH[ConnectionManager MBean]
+or https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDGBBEJ[Connection MBean] documentation for more information.
 
 [#ProxyConnectionsTableModel]
 === Proxy Connections Table
@@ -246,7 +246,7 @@ All attributes are summarised from `Connection MBean`  (`Coherence:type=Connecti
 |Role | ClientRole
 !===
 
-See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDGBBEJ[ConnectionMBean] documentation for more information.
+See https://docs.oracle.com/middleware/1212/coherence/COHMG/appendix_mbean.htm#CHDGBBEJ[Connection MBean] documentation for more information.
 
 [#ElasticData]
 === Elastic Data Tables
