@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-Copyright (c) 2020, 2024 Oracle and/or its affiliates. All rights reserved.
+Copyright (c) 2020, 2025 Oracle and/or its affiliates. All rights reserved.
 DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
 
 This code is free software; you can redistribute it and/or modify it
@@ -71,7 +71,7 @@ All attributes are from `Coherence:type=Platform,Domain=java.lang,subType=Operat
 |Percentage Free Memory | Calculated
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-0AB8710B-2A1D-432D-AFBF-8E73B8230D51[ClusterNodeMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-0AB8710B-2A1D-432D-AFBF-8E73B8230D51[ClusterNode MBean] documentation for more information.
 
 [#MemberTableModel]
 === Members Table
@@ -95,7 +95,7 @@ All attributes are from `Node MBean` (`Coherence:type=Node,nodeId=n`).
 |Storage Enabled | true if any services are storage enabled on this member
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-0AB8710B-2A1D-432D-AFBF-8E73B8230D51[ClusterNodeMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-0AB8710B-2A1D-432D-AFBF-8E73B8230D51[ClusterNode MBean] documentation for more information.
 
 [#ServiceTableModel]
 === Services Table
@@ -117,7 +117,7 @@ All attributes are summarized from `Service MBean` (`Coherence:type=Service,name
 |Pending | RequestPendingCount
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-0C5A3074-50D1-4B15-A4C2-E014E5F4827B[ServiceMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-0C5A3074-50D1-4B15-A4C2-E014E5F4827B[Service MBean] documentation for more information.
 
 [#ServiceMemberTableModel]
 === Services Detail Table
@@ -137,7 +137,7 @@ All attributes are from `Service MBean` for specific nodes. (`Coherence:type=Ser
 |Request Avge (ms) | RequestAverageDuration
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-0C5A3074-50D1-4B15-A4C2-E014E5F4827B[ServiceMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-0C5A3074-50D1-4B15-A4C2-E014E5F4827B[Service MBean] documentation for more information.
 
 [#CacheTableModel]
 === Cache Summary Table
@@ -156,7 +156,7 @@ All attributes are summarized from `Cache MBean` (`Coherence:type=CacheMBean,tie
 |Unit Calculator | If MemoryUnits is true then BINARY otherwise FIXED
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html[CacheMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html[Cache MBean] documentation for more information.
 
 [#CacheDetailTableModel]
 === Cache Details Table
@@ -178,7 +178,7 @@ All attributes are from `Cache MBean` (`Coherence:type=CacheMBean,tier=back`).
 |Hit Probability| HitProbability
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html[CacheMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html[Cache MBean] documentation for more information.
 
 ==== Front Cache Size and Access Details Table
 This table shows cache front details regarding the selected cache.
@@ -206,7 +206,7 @@ All attributes are from `StorageManager MBean` (`Coherence:type=StorageManager,s
 |Index Total Millis (ms) | IndexingTotalMillis (not available in all Coherence versions)
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-8F929EB2-2101-4F1C-A7E6-ACB80C67F0F6[StorageManagerMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-8F929EB2-2101-4F1C-A7E6-ACB80C67F0F6[StorageManager MBean] documentation for more information.
 
 [#FederationTableModel]
 === Federation Summary Table
@@ -226,8 +226,8 @@ All attributes are summarised from `Destination MBean` and `Origin MBean` (Coher
 |Current Msgs Rec /sec | MsgsRecSecs summed by service / participant from DestinationMBean
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-858AA9C4-A756-4E64-8ACC-61AAE94C9387[OriginMBean] and
-https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-E936E914-6967-4E44-B8B6-FEBDF10CBE67[DestinationMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-858AA9C4-A756-4E64-8ACC-61AAE94C9387[Origin MBean] and
+https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-E936E914-6967-4E44-B8B6-FEBDF10CBE67[Destination MBean] documentation for more information.
 
 [#FederationOutboundTableModel]
 === Federation Outbound Table
@@ -248,7 +248,7 @@ All attributes are from `Destination MBean` (Coherence:type=Federation,subType=D
 |Total Msgs Unacked | TotalMsgUnacked
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-E936E914-6967-4E44-B8B6-FEBDF10CBE67[DestinationMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-E936E914-6967-4E44-B8B6-FEBDF10CBE67[Destination MBean] documentation for more information.
 
 [#FederationInboundTableModel]
 === Federation Inbound Table
@@ -269,7 +269,7 @@ All attributes are from `Origin MBean` (Coherence:type=Federation,subType=Origin
 |Total Msgs Unacked | TotalMsgUnacked
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-858AA9C4-A756-4E64-8ACC-61AAE94C9387[OriginMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-858AA9C4-A756-4E64-8ACC-61AAE94C9387[Origin MBean] documentation for more information.
 
 [#ProxyTableModel]
 === Proxy Servers Table
@@ -291,8 +291,8 @@ All attributes are summarised from `ConnectionManager MBean` where `Procotol=tcp
 |Total Msgs Sent | TotalMessagesSent
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-022FB1A1-F377-405A-A424-2CB1781330C1[ConnectionManagerMBean]
-or https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-F247B2A6-85A6-4F87-AD69-C0E184EF25D5[ConnectionMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-022FB1A1-F377-405A-A424-2CB1781330C1[ConnectionManager MBean]
+or https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-F247B2A6-85A6-4F87-AD69-C0E184EF25D5[Connection MBean] documentation for more information.
 
 [#ProxyConnectionsTableModel]
 === Proxy Connections Table
@@ -315,7 +315,7 @@ All attributes are summarised from `Connection MBean`  (`Coherence:type=Connecti
 |Role | ClientRole
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-F247B2A6-85A6-4F87-AD69-C0E184EF25D5[ConnectionMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-F247B2A6-85A6-4F87-AD69-C0E184EF25D5[Connection MBean] documentation for more information.
 
 
 [#HttpProxyTableModel]
@@ -336,7 +336,7 @@ All attributes are summarised from `ConnectionManager MBean` where `Procotol=htt
 |Avge Request Time (ms) | Average of AverageRequestTime for all members running this service
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-022FB1A1-F377-405A-A424-2CB1781330C1[ConnectionManagerMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-022FB1A1-F377-405A-A424-2CB1781330C1[ConnectionManager MBean] documentation for more information.
 
 [#HttpProxyMemberTableModel]
 === Http Servers Detail Table
@@ -355,7 +355,7 @@ All attributes are from `ConnectionManager MBean` where `Procotol=http` (`Cohere
 |Total Errors | TotalErrorCount
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-022FB1A1-F377-405A-A424-2CB1781330C1[ConnectionManagerMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-022FB1A1-F377-405A-A424-2CB1781330C1[ConnectionManager MBean] documentation for more information.
 
 [#PersistenceTableModel]
 === Persistence Table
@@ -378,8 +378,8 @@ All attributes are summarized from `Service MBean` (`Coherence:type=Service,name
 |Status | OperationStatus
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-0C5A3074-50D1-4B15-A4C2-E014E5F4827B[ServiceMBean] or
-https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-5B207607-9C4E-4F44-AE00-AC869369AF5A[PersistenceManagerMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-0C5A3074-50D1-4B15-A4C2-E014E5F4827B[Service MBean] or
+https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-5B207607-9C4E-4F44-AE00-AC869369AF5A[PersistenceManager MBean] documentation for more information.
 
 [#ElasticData]
 === Elastic Data Tables
@@ -508,4 +508,4 @@ All attributes are calculated from begin / end JMX notifications from `Coherence
 |Message| Description of the operation
 !===
 
-See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-5B207607-9C4E-4F44-AE00-AC869369AF5A[PersistenceManagerMBean] documentation for more information.
+See https://docs.oracle.com/en/middleware/fusion-middleware/coherence/12.2.1.4/manage/oracle-coherence-mbeans-reference.html#GUID-5B207607-9C4E-4F44-AE00-AC869369AF5A[PersistenceManager MBean] documentation for more information.
