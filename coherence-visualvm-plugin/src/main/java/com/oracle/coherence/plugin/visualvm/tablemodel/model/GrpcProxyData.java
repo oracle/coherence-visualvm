@@ -96,8 +96,6 @@ public class GrpcProxyData
 
         String sMBeanName = nVersion == 0 ? "GrpcNamedCacheProxy" : "GrpcProxy";
 
-        LOGGER.info("Grpc proxy version: " + nVersion);
-
         return sReporterXML.replaceAll("%MBEAN%", escape(sMBeanName));
         }
 

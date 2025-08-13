@@ -77,7 +77,7 @@
     <hamcrest.version>2.2</hamcrest.version>
     <maven.version>3.6.0</maven.version>
 
-    <oracle.bedrock.version>6.0.0</oracle.bedrock.version>
+    <oracle.bedrock.version>7.0.9</oracle.bedrock.version>
 
     <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
     <maven.bundle.plugin.version>4.2.1</maven.bundle.plugin.version>
