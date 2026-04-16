@@ -26,14 +26,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Run Macaron check-github-actions policy
         uses: oracle/macaron@b31acfe389133a5587d9639063ec70cb84e7bc47 # v0.23.0
         with:
-          repo_path: https://github.com/${{ github.repository }}
-          # repo_path: ./
+          repo_path: ./
+          defaults_path: .github/macaron/defaults.ini
           policy_file: check-github-actions
-          policy_purl: pkg:github/${{ github.repository }}@${{ github.sha }}
+          policy_purl: pkg:github.com/${{ github.repository }}@.*
           reports_retention_days: 90
-
